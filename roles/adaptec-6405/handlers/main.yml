@@ -1,0 +1,11 @@
+---
+- name: restart msm
+  service:
+    name: "{{item}}"
+    state: restarted
+    enabled: yes
+  with_items:
+    - stor_cimserver
+    - stor_agent
+    - stor_tomcat
+

@@ -1,0 +1,33 @@
+---
+- name: Install and Configure Satellite Server from Base RHEL Installation
+  hosts: satellite6
+  become: true
+
+  roles:
+    - role: sm-register
+      tags: ['sm-register']
+
+    - role: selinux
+      tags: ['selinux']
+
+    - role: ssh-config
+      tags: ['ssh-config']
+
+    - role: shell-env 
+      tags: ['shell-env']
+
+    - role: time-client
+      tags: ['time-client']
+
+    - role: apply-updates
+      tags: ['apply-updates']
+
+    - role: reboot-if-required
+      tags: ['reboot-if-required']
+
+    - role: sat-inst
+      tags: ['sat-inst','sat-config']
+
+    - role: reboot-if-required
+      tags: ['reboot-if-required']
+

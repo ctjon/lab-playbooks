@@ -1,0 +1,277 @@
+---
+- name: Invoke hammer to create {{satellite_organization}} organization
+  command: hammer organization create --name {{satellite_organization}}
+  register: result
+  failed_when: "result.rc != 0 and result.rc != 65"
+  changed_when: "result.rc == 0"
+  # rc 65 = Could not create the organization: Name has already been taken
+  tags: test
+
+- name: display result
+  debug:
+    var: result.rc
+  tags: test
+
+- name: create {{user_home_dir}}/sat_files directory
+  file:
+    path: "{{user_home_dir}}/sat_files"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0700
+    state: directory
+
+- name: copy manifest to satellite server
+  copy:
+    src: files/manifest_{{satellite_organization}}.zip
+    dest: "{{user_home_dir}}/sat_files/manifest_{{satellite_organization}}.zip"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0644
+
+- name: Invoke hammer to install manifest for {{satellite_organization}}
+  command: hammer  subscription upload --file {{user_home_dir}}/sat_files/manifest_{{satellite_organization}}.zip --organization {{satellite_organization}}
+  register: result
+  failed_when: "result.rc != 0 and result.rc != 70"
+  changed_when: "result.rc == 0"
+  # rc 70 = Error: Import is the same as existing data
+
+- name: Invoke hammer to create domain {{domain}}
+  command: hammer domain create --name {{domain}}
+  register: result
+  failed_when: "result.rc != 0 and result.rc != 65"
+  changed_when: "result.rc == 0"
+  # rc 65 = Could not create the domain: Domain already exists
+  tags: test
+
+
+ - name: Invoke hammer to create location {{location_names}}
+   command: hammer location create --name {{item}}
+   with_items:
+     - "{{location_names}}"
+   register: result
+   failed_when: "result.rc != 0 and result.rc != 65"
+   changed_when: "result.rc == 0"
+   # rc 65 = Could not create the location: Name has already been taken
+   tags: test
+
+
+- name: Invoke hammer to assign locations to {{satellite_organization}}
+  command: hammer location add-organization --name {{item}} --organization {{satellite_organization}}
+  with_items:
+    - "{{location_names}}"
+  register: result
+  failed_when: "result.rc != 0 and result.rc != 65"
+  changed_when: "result.rc == 0"
+  # rc 65 = Could not create the location: Name has already been taken
+  tags: test
+
+- name: Invoke hammer to assign locations to {{satellite_organization}}
+  command: hammer location add-organization --name {{item}} --organization {{satellite_organization}}
+  with_items:
+    - "{{location_names}}"
+  register: result
+  failed_when: "result.rc != 0 and result.rc != 65"
+  changed_when: "result.rc == 0"
+  # rc 65 = Could not create the location: Name has already been taken
+  tags: test
+
+- name: display result
+  debug:
+    var: result.rc
+  tags: test
+
+- name: Invoke hammer to add domain {{domain}} to {{satellite_organization}}
+  command: hammer organization add-domain --name {{satellite_organization}} --domain {{domain}}
+  register: result
+  failed_when: "result.rc != 0 and result.rc != 65"
+  changed_when: "result.rc == 0"
+  # rc 65 = Could not add the domain to org: Domain already added to org
+  tags: test
+
+- name: display result
+  debug:
+    var: result.rc
+  tags: test
+
+ - name: Invoke hammer to update domain {{domain}} with location_names
+   command: hammer domain update --name {{domain}} --organization {{satellite_organization}} --locations {{item}}
+   with_items:
+     - "{{location_names}}"
+   register: result
+   failed_when: "result.rc != 0 and result.rc != 65"
+   changed_when: "result.rc == 0"
+   # rc 65 = Could not add the locations to the domain
+   tags: test
+
+- name: Invoke hammer to update domain {{domain}} with Home-Office
+  command: hammer domain update --name {{domain}} --organization {{satellite_organization}} --locations "Home-Office"
+  register: result
+  failed_when: "result.rc != 0 and result.rc != 65"
+  changed_when: "result.rc == 0"
+  # rc 65 = Could not add the locations to the domain
+  tags: test
+
+- name: display result
+  debug:
+    var: result.rc
+  tags: test
+
+- name: Invoke hammer to update domain {{domain}} with organization_names
+  command: hammer domain update --name {{domain}} --organization {{item}}
+  with_items:
+    - "{{satellite_organization}}"
+  register: result
+  failed_when: "result.rc != 0 and result.rc != 65"
+  changed_when: "result.rc == 0"
+  # rc 65 = Could not add the locations to the domain
+  tags: test
+
+- name: Invoke hammer to create location Home-Office
+  command: hammer location create --name Home-Office
+  register: result
+  failed_when: "result.rc != 0 and result.rc != 65"
+  changed_when: "result.rc == 0"
+  tags: test
+
+
+##############################################################################
+# Configure RHEL Repos                                                         #
+################################################################################
+- name: Invoke hammer to enable repositories with versions
+  command: hammer repository-set enable --organization {{satellite_organization}} --product '{{item.product}}' --basearch='{{item.basearch}}' --releasever='{{item.version}}' --name '{{item.product_name}}'
+  with_items:
+    - "{{versioned_repos}}"
+  register: result
+  tags: 
+    - enable_repos
+  failed_when: "result.rc != 0 and result.rc != 70"
+  changed_when: "result.rc == 0"
+  # rc 70 = Error: 409 Conflict - Could not enable repository(already enabled)
+
+- name: Invoke hammer to enable repositories without versions
+  command: hammer repository-set enable --organization {{satellite_organization}} --product '{{item.product}}' --basearch='{{item.basearch}}' --name '{{item.product_name}}'
+  with_items:
+    - "{{non_versioned_repos}}"
+  register: result
+  tags: 
+    - enable_repos
+  failed_when: "result.rc != 0 and result.rc != 70"
+  changed_when: "result.rc == 0"
+  # rc 70 = Error: 409 Conflict - Could not enable repository(already enabled)
+
+- name: define subnet
+  command: hammer subnet create --name my_subnet --network 172.16.1.0 --mask 255.255.255.0 --gateway 172.16.1.1 --dns-primary 172.16.1.3 --domains internal.tjon.net --organization {{satellite_organization}} --location "Home-Office"
+  register: result
+  failed_when: "result.rc != 0 and result.rc != 65"
+  changed_when: "result.rc == 0"
+  # rc 65 = Could not create network
+  tags: 
+    - test
+
+ - name: Invoke hammer to create environments
+   command: hammer lifecycle-environment create --name {{item}} --organization {{satellite_organization}} --prior Library
+   register: result
+   failed_when: "result.rc != 0 and result.rc != 65"
+   changed_when: "result.rc == 0"
+   # rc 65 = Could not create the lifecycle-environment: Name has already been taken
+   with_items:
+     - "{{environments}}"
+   tags: 
+     - test
+
+- name: Invoke hammer to create environments
+  command: hammer lifecycle-environment create --name ctjon-Lab --organization {{satellite_organization}} --prior Library
+  register: result
+  failed_when: "result.rc != 0 and result.rc != 65"
+  changed_when: "result.rc == 0"
+  # rc 65 = Could not create the lifecycle-environment: Name has already been taken
+  tags: 
+    - test
+
+- name: Invoke hammer to create an activation key
+  command: hammer activation-key create --name ak-satclients --organization {{satellite_organization}} --lifecycle-environment {{item}}
+  register: result
+  failed_when: "result.rc != 0 and result.rc != 65"
+  changed_when: "result.rc == 0"
+  # rc 65 = Could not create the activation_key: Name has already been taken
+  with_items:
+    - "{{environments}}"
+  tags: 
+    - enable_repos
+
+- name: Invoke hammer to create a synchronization plan
+  command: hammer sync-plan create --name "{{satellite_organization}}_sync_plan" --enabled=true --interval hourly --organization {{satellite_organization}} --sync-date {{ansible_date_time.date}}
+  register: result
+  failed_when: "result.rc != 0 and result.rc != 65"
+  changed_when: "result.rc == 0"
+  # rc 65 = Could not create the synchronization plan: already exists
+
+- name: Invoke hammer to create hostgroups
+  command: hammer hostgroup create --name {{item.name}} --environment {{item.env}} --architecture {{item.arch}} --organization {{item.organization}} --location {{item.location}}
+  register: result
+  failed_when: "result.rc != 0 and result.rc != 65"
+  changed_when: "result.rc == 0"
+  # rc 65 = Could not create the organization: already exists
+  with_items:
+    - "{{host_groups}}"
+
+ - name: Invoke hammer to sync RedHat repositories
+   command: hammer repository synchronize --product '{{item.product}}' --name {'{item.product_name}}' --organization {{satellite_organization}} --async
+   with_items:
+     - "{{versioned_repos}}"
+     - "{{non_versioned_repos}}"
+   tags: 
+     - sync_repos
+
+################################################################################
+# Configure EPEL                                                               #
+################################################################################
+- name: Configure EPEL
+  block:
+    - name: get EPEL Keys
+      get_url:
+        url: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{item}}"
+        dest: "{{user_home_dir}}/sat_files/RPM-GPG-KEY-EPEL-{{item}}"
+        mode: 0644
+      with_items:
+        - "{{epel_versions}}"
+
+    - name: Invoke Hammer to Install EPEL Keys
+      command: hammer gpg create --key {{user_home_dir}}/sat_files/RPM-GPG-KEY-EPEL-{{item}} --name EPEL-{{item}} --organization {{satellite_organization}}
+      with_items:
+        - "{{epel_versions}}"
+      register: result
+      failed_when: "result.rc != 0 and result.rc != 65"
+      changed_when: "result.rc == 0"
+      # rc 65 = Could not create the key: Name has already been taken
+
+    - name: Invoke Hammer to create EPEL Products
+      command: hammer product create --name="EPEL" --organization {{satellite_organization}}
+      register: result
+      failed_when: "result.rc != 0 and result.rc != 65"
+      changed_when: "result.rc == 0"
+      # rc 65 = Could not create the product: Name has already been taken
+
+    - name: Invoke Hammer to create EPEL Repositories
+      command: hammer repository create --name="EPEL-{{item}}" --organization {{satellite_organization}} --product="EPEL" --content-type yum --publish-via-http=true --url=https://dl.fedoraproject.org/pub/epel/{{item}}/x86_64/
+      with_items:
+        - "{{epel_versions}}"
+      register: result
+      failed_when: "result.rc != 0 and result.rc != 65"
+      changed_when: "result.rc == 0"
+      # rc 65 = Could not create the repository: Name has already been taken
+  when: sync_epel == true
+  tags:
+    - enable_repos
+    - configure_epel
+
+#  - name: Invoke hammer to sync EPEL repositories
+#    command: hammer repository synchronize --name '{{item}}' --organization {{satellite_organization}} --async
+#    with_items:
+#      - "EPEL-{{epel_versions}}"
+#    tags: 
+#      - enable_repos
+#      - sync_repos
+################################################################################
+
+

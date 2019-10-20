@@ -1,0 +1,65 @@
+# {{ ansible_managed }}
+
+LABEL Main Menu
+        MENU LABEL Main Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/default
+
+LABEL Linux Menu
+        MENU LABEL Linux Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/LinuxMenu
+
+#
+# Fedora 30
+#
+label Fedora-30-x86_64 Server
+  menu label Install Fedora-30-x86_64 Server
+  kernel images/fedora/30/x86_64/vmlinuz
+  append initrd=images/fedora/30/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US bootdev=eth0 ip=dhcp 
+inst.stage2={{linux_install_server_url}}/fedora/releases/30/Server/x86_64/os/ inst.repo={{linux_install_server_url}}/fedora/releases/30/Server/x86_64/os/
+
+label Fedora-30-x86_64 Workstation
+  menu label Install Fedora-30-x86_64 Workstation
+  kernel images/fedora/30/x86_64/vmlinuz
+  append initrd=images/fedora/30/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US bootdev=eth0 ip=dhcp inst.stage2={{linux_install_server_url}}/fedora/releases/30/Server/x86_64/os/ inst.repo={{linux_install_server_url}}/fedora/releases/30/Workstation/x86_64/os/
+
+label Fedora-30-x86_64-rescue
+  menu label Rescue Fedora-30-x86_64 system
+  kernel images/fedora/30/x86_64/vmlinuz
+  append initrd=images/fedora/30/x86_64/initrd.img net.ifnames=0 biosdevname=0 rescue
+
+#
+# Fedora 29
+#
+label Fedora-29-x86_64 Server
+  menu label Install Fedora-29-x86_64 Server
+  kernel images/fedora/29/x86_64/vmlinuz
+  append initrd=images/fedora/29/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US bootdev=eth0 ip=dhcp 
+inst.stage2={{linux_install_server_url}}/fedora/releases/29/Server/x86_64/os/ inst.repo={{linux_install_server_url}}/fedora/releases/29/Server/x86_64/os/
+
+label Fedora-29-x86_64 Workstation
+  menu label Install Fedora-29-x86_64 Workstation
+  kernel images/fedora/29/x86_64/vmlinuz
+  append initrd=images/fedora/29/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US bootdev=eth0 ip=dhcp inst.stage2={{linux_install_server_url}}/fedora/releases/29/Server/x86_64/os/ inst.repo={{linux_install_server_url}}/fedora/releases/29/Workstation/x86_64/os/
+
+label Fedora-29-x86_64-rescue
+  menu label Rescue Fedora-29-x86_64 system
+  kernel images/fedora/29/x86_64/vmlinuz
+  append initrd=images/fedora/29/x86_64/initrd.img net.ifnames=0 biosdevname=0 rescue
+
+#
+# test-fedora30 server
+#
+label test-fedora30
+  menu label Install Fedora 30 Test Server
+  kernel images/fedora/30/x86_64/vmlinuz
+  append initrd=images/fedora/30/x86_64/initrd.img inst.repo={{linux_install_server_url}}/fedora/releases/30/Everything/x86_64/os inst.stage2={{linux_install_server_url}}/fedora/releases/30/Everything/x86_64/os net.ifnames=0 biosdevname=0 noipv6 bootdev=eth0 ip=dhcp inst.ks={{linux_install_server_url}}/ks-configs/test-fedora30-ks.cfg 
+
+#
+# test-fedora29 server
+#
+label test-fedora29
+  menu label Install Fedora 29 Test Server
+  kernel images/fedora/29/x86_64/vmlinuz
+  append initrd=images/fedora/29/x86_64/initrd.img inst.repo={{linux_install_server_url}}/fedora/releases/29/Everything/x86_64/os inst.stage2={{linux_install_server_url}}/fedora/releases/29/Everything/x86_64/os net.ifnames=0 biosdevname=0 noipv6 bootdev=eth0 ip=dhcp inst.ks={{linux_install_server_url}}/ks-configs/test-fedora29-ks.cfg 

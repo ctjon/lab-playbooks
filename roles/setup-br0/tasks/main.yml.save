@@ -1,0 +1,72 @@
+---
+- name: install bridge-utils package
+  package:
+    name: bridge-utils
+    state: latest
+
+#- name: add br0 bridge
+#  command: brctl addbr br0
+#  ignore_errors: yes
+
+#- name: add eth0 interface
+#  command: brctl addif br0 eth0
+#  ignore_errors: yes
+
+- name: install /etc/sysconfig/network-scripts/ifcfg-br0 template
+  template:
+    src: ifcfg-br0.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-br0
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart network
+
+- name: install /etc/sysconfig/network-scripts/ifcfg-eth0
+  copy:
+    src: ifcfg-eth0
+    dest: /etc/sysconfig/network-scripts/ifcfg-eth0
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart network
+
+- name: install /etc/sysconfig/network-scripts/ifcfg-eth1
+  copy:
+    src: ifcfg-eth1
+    dest: /etc/sysconfig/network-scripts/ifcfg-eth1
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart network
+
+- name: install /etc/sysconfig/network-scripts/ifcfg-eth2
+  copy:
+    src: ifcfg-eth2
+    dest: /etc/sysconfig/network-scripts/ifcfg-eth2
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart network
+
+- name: install /etc/sysconfig/network-scripts/ifcfg-eth3
+  copy:
+    src: ifcfg-eth3
+    dest: /etc/sysconfig/network-scripts/ifcfg-eth3
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart network
+
+- firewalld:
+    zone: "{{public_firewall_zone}}"
+    interface: "{{primary_bridge}}"
+    permanent: true
+    state: enabled
+
+- name: Set ip forwarding and reload if necessary
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes

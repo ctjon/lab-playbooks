@@ -1,0 +1,44 @@
+# {{ ansible_managed }}
+
+LABEL Main Menu
+        MENU LABEL Main Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/default
+
+LABEL Linux Menu
+        MENU LABEL Linux Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/LinuxMenu
+
+#
+# synchost8-p51s server
+#
+label synchost8-p51s
+  menu label Install RHEL8 SyncHost
+  kernel images/rhel/8/x86_64/vmlinuz
+  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/synchost8-p51s-ks.cfg
+
+#
+# synchost7-p51s server
+#
+label synchost7-p51s
+  menu label Install RHEL7 SyncHost
+  kernel images/rhel/7/x86_64/vmlinuz
+  append initrd=images/rhel/7/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/synchost7-p51s-ks.cfg
+
+#
+# synchost6-p51s server
+#
+label synchost6-p51s
+  menu label Install RHEL6 SyncHost
+  kernel images/rhel/6/x86_64/vmlinuz
+  append initrd=images/rhel/6/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/synchost6-p51s-ks.cfg
+
+#
+# synchost5-p51s server
+#
+label synchost5-p51s
+  menu label Install RHEL5 SyncHost
+  kernel images/rhel/5/x86_64/vmlinuz
+  append initrd=images/rhel/5/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/synchost5-p51s-ks.cfg
+

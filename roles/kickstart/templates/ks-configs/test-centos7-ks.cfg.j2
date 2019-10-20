@@ -1,0 +1,71 @@
+#version=DEVEL
+# System authorization information
+auth --enableshadow --passalgo=sha512
+# Use network installation
+url --url="{{linux_install_server_url}}/centos/7/os/x86_64/"
+# Use graphical install
+graphical
+# Run the Setup Agent on first boot
+firstboot --enable
+ignoredisk --only-use=sda
+# Keyboard layouts
+# old format: keyboard us
+# new format:
+keyboard --vckeymap=us --xlayouts='us'
+# System language
+lang en_US.UTF-8
+
+# Network information
+network  --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.35 --nameserver={{dns_servers|join(",")}} --netmask={{primary_netmask}} --activate --hostname=test-centos7.{{domain_name}}
+
+# Root password
+rootpw --iscrypted $6$EWvRuPP7F8pRTFrm$749vEu5HoijsEhVWzw691ZquSDP.FmK2Qc56HGpgE03pHMgxIMlal4YPM/BrmwfA10q0nKUDxkC7D21H1q7xH/
+# System services
+services --enabled="chronyd"
+# System timezone
+timezone America/Phoenix --isUtc
+reboot
+user --groups=wheel --name=chris --uid=1000 --password=$6$Cn2vwW.vUq0qFXYG$P6ogDQM8pvhpGk/InzJ4Lh9eiO/lnsJiF6rb3jYAKA4jreq5hGCXg2Gu.v6zIW1bNeSCLix0k0Pq2MXn8OLAu/ --iscrypted --gecos="Chris Tjon"
+# System bootloader configuration
+bootloader --location=mbr --boot-drive=sda
+# Partition clearing information
+clearpart --all --initlabel
+# Disk partitioning information
+part /boot --fstype="ext4" --ondisk=sda --size=256
+part pv.409 --fstype="lvmpv" --ondisk=sda --grow
+volgroup rootvg --pesize=4096 pv.409 
+logvol /  --fstype="ext4" --size=1024 --label="root" --name=rootlv --vgname=rootvg
+logvol /usr  --fstype="ext4" --size=4096 --label="usr" --name=usrlv --vgname=rootvg
+logvol /home  --fstype="ext4" --size=512 --label="home" --name=homelv --vgname=rootvg
+logvol swap  --fstype="swap" --size=2048 --name=swaplv --vgname=rootvg
+logvol /opt  --fstype="ext4" --size=32 --label="opt" --name=optlv --vgname=rootvg
+logvol /var  --fstype="ext4" --size=1024 --label="var" --name=varlv --vgname=rootvg
+logvol /tmp  --fstype="ext4" --size=1024 --label="tmp" --name=tmplv --vgname=rootvg
+
+%packages
+@^minimal
+@core
+yum-utils
+
+%end
+
+%addon com_redhat_kdump --disable --reserve-mb='auto'
+
+%end
+
+%anaconda
+pwpolicy root --minlen=6 --minquality=1 --notstrict --nochanges --notempty
+pwpolicy user --minlen=6 --minquality=1 --notstrict --nochanges --emptyok
+pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
+%end
+
+%post
+
+# install ssh key for chris
+curl {{config_files_url}}/chris-server0-id_rsa.pub -o /home/chris/.ssh/authorized_keys  --create-dirs
+curl  {{config_files_url}}/chris-x1carbon-id_rsa.pub >> /home/chris/.ssh/authorized_keys
+chown -R chris:chris /home/chris/.ssh
+chmod 700 /home/chris/.ssh
+chmod 600 /home/chris/.ssh/authorized_keys
+restorecon -RFv /home/chris/.ssh/authorized_keys
+%end

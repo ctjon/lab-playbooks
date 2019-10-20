@@ -1,0 +1,13 @@
+---
+- name: include password data file
+  include_vars:
+    file: password.yml
+
+- name: install ykpers
+  package:
+    name: ykpers
+    state: latest
+
+#- name: insert password in 2nd configuration of yubikey
+#  command: "ykpersonalize -2 -oappend-cr -a{{password}} -o-man-update"
+#  become: yes

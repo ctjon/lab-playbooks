@@ -1,0 +1,19 @@
+# The first-listed virtual host is also the default for *:80
+{% for item in vhosts %}
+<VirtualHost *:80>
+    ServerName {{ansible_hostname}}.{{ansible_domain}}
+    ServerAlias {{item.name}}.{{ansible_domain}}
+    DocumentRoot {{item.document_root}}
+</VirtualHost>
+
+<Directory {{item.document_root}}>
+    Options Indexes FollowSymLinks
+    IndexOptions NameWidth=*
+    AllowOverride None
+    Require all granted
+    Order allow,deny
+    Allow from {{primary_subnet}}
+    Allow from 127
+</Directory>
+
+{% endfor %}

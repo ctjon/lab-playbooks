@@ -1,0 +1,84 @@
+#!/bin/sh
+#
+# rsync of Fedora Distribution
+# {{ ansible_managed }}
+#
+
+export SRCDIR=rsync://{{linux_rsync_server}}/fedora/
+export TGTDIR={{linux_install_server_path}}/fedora/
+echo "********************************************************************************"
+echo "* Syncing Fedora Repos                                                         *"
+echo "********************************************************************************"
+mkdir -p $TGTDIR
+
+{% if sync_script_retries == true %}
+# set return code to be false to force first iteration of while loop ironically this give error cause it is an error:-)
+$? = 1
+
+while [ "$?" -ne "0" ]
+do
+	sleep 10
+{% endif %}
+	date
+	rsync -aHKvz --keep-dirlinks --delete --delete-during \
+	--delete-excluded --progress \
+{% for item in linux_repo_includes_list %}
+	--include='{{item}}' \
+{% endfor %}
+{% for item in linux_repo_excludes_list %}
+	--exclude='{{item}}' \
+{% endfor %}
+	--exclude='core/' \
+	--exclude='releases/7/' \
+	--exclude='releases/8/' \
+	--exclude='releases/9/' \
+	--exclude='releases/1[0-9]/' \
+	--exclude='releases/2[0-8]/' \
+	--exclude='updates/7/' \
+	--exclude='updates/8/' \
+	--exclude='updates/9/' \
+	--exclude='updates/1[0-9]/' \
+	--exclude='updates/2[0-8]/' \
+ 	$SRCDIR $TGTDIR
+{% if sync_script_retries == true %}
+done
+{% endif %}
+
+export SRCDIR=rsync://{{linux_rsync_server}}/fedora-secondary/
+export TGTDIR={{linux_install_server_path}}/fedora-secondary/
+echo "********************************************************************************"
+echo "* Syncing Fedora Secondary Repos                                               *"
+echo "********************************************************************************"
+mkdir -p $TGTDIR
+
+{% if sync_script_retries == true %}
+# set return code to be false to force first iteration of while loop ironically this give error cause it is an error:-)
+$? = 1
+
+while [ "$?" -ne "0" ]
+do
+	sleep 10
+{% endif %}
+	rsync -aHKvz --keep-dirlinks --delete --delete-during \
+	--delete-excluded --progress \
+{% for item in linux_repo_includes_list %}
+	--include={{item}} \
+{% endfor %}
+{% for item in linux_repo_excludes_list %}
+	--exclude={{item}} \
+{% endfor %}
+	--exclude='core/' \
+	--exclude='releases/7/' \
+	--exclude='releases/8/' \
+	--exclude='releases/9/' \
+	--exclude='releases/1[0-9]/' \
+	--exclude='releases/2[0-8]/' \
+	--exclude='updates/7/' \
+	--exclude='updates/8/' \
+	--exclude='updates/9/' \
+	--exclude='updates/1[0-9]/' \
+	--exclude='updates/2[0-8]/' \
+ 	$SRCDIR $TGTDIR
+{% if sync_script_retries == true %}
+done
+{% endif %}

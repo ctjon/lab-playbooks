@@ -1,0 +1,347 @@
+#
+# host_vars file for server0
+#
+
+use_ssh_agent: yes
+copy_ssh_keys: yes
+setup_ansible_config: yes
+setup_git_update: yes
+ssh_private_key_list:
+  - ctjon.pem
+  - ctjon-github_rsa
+
+ssh_public_key_list:
+  - ctjon-github_rsa
+
+TIMEZONE: "America/Phoenix"
+time_servers:
+  - time.internal.tjon.net
+#  - 0.rhel.pool.ntp.org
+#  - 1.rhel.pool.ntp.org
+#  - 2.rhel.pool.ntp.org
+#  - 3.rhel.pool.ntp.org
+
+################################################################################
+# Network Configuration Parameters                                             #
+################################################################################
+domain_name: internal.tjon.net
+primary_subnet: 172.16.1.0/24
+primary_ipaddr: 172.16.1.3
+primary_prefix: 24
+primary_short_net: 172.16.1
+primary_netmask: 255.255.255.0
+primary_gateway: 172.16.1.1
+dns_servers: 
+ - 172.16.1.3
+ - 172.16.1.1
+ - 8.8.8.8
+primary_interface: eth0
+primary_bridge: br0
+
+################################################################################
+# Installation Source Parameters                                               #
+################################################################################
+linux_install_server_url: "http://install.internal.tjon.net/Linux"
+linux_install_server_hostname: server0
+config_files_url: "http://install.internal.tjon.net/ConfigFiles"
+
+################################################################################
+# Time Server Configuration Parameters                                         #
+################################################################################
+time_client_servers:
+  - "time.{{domain_name}}"
+
+################################################################################
+# TFTP Boot Server Parameters                                                  #
+################################################################################
+tftpbootdir: /var/lib/tftpboot
+installdir: /export/install
+
+################################################################################
+# HTTP Server Parameters                                                       #
+################################################################################
+vhosts: 
+  - {name: server0, document_root: /var/www/html, alias: server0, fcontext: httpd_sys_content_t}
+  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t}
+  - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t}
+#  - {name: satcontent, document_root: /export/satcontent, alias: install, fcontext: public_content_rw_t}
+
+################################################################################
+# Firewall Configuration Parameters                                            #
+################################################################################
+public_firewall_zone: FedoraServer
+trusted_firewall_zone: FedoraServer
+additional_fw_ports:
+  - 8443
+
+################################################################################
+# SSH Configuration Parameters                                                 #
+################################################################################
+#ssh_root_login_permited: "yes"
+#allowed_ssh_users: chris root
+ssh_root_login_permited: "no"
+allowed_ssh_users: chris
+
+################################################################################
+# DNSMASQ Configuration Parameters                                             #
+################################################################################
+dnsmasq_interfaces:
+  - "{{primary_interface}}"
+#  - "{{primary_bridge}}"
+dhcp_enabled: false
+pxe_enabled: true
+dnsmasq_dhcp_interfaces:
+
+################################################################################
+# Samba Configuration Parameters                                               #
+################################################################################
+samba_workgroup: TJON
+samba_netbios_name: SERVER0
+
+samba_trusted_interfaces:
+  - "{{primary_interface}}"
+#  - "{{primary_bridge}}"
+
+samba_trusted_subnets:
+  - 172.16.1.0/24
+  - 172.16.5.0/24
+  - 172.16.6.0/24
+
+samba_trusted_write_users:
+  - chris
+
+samba_shares:
+  - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
+  - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
+  - {path: /export/iTunes, name: iTunesLibrary, public: 'yes', guest_ok: 'no', browseable: 'yes', writeable: 'yes', printable: 'no'}
+#  - {path: /export/satcontent, name: Satellite6_Content, public: 'yes', guest_ok: 'no', browseable: 'yes', writeable: 'no', printable: 'no'}
+
+################################################################################
+# KVM Virtualization Configuration Parameters                                  #
+################################################################################
+virt_nets:
+
+virt_users:
+  - chris
+
+vm_storage_vg: raid10vg
+vm_storage_lv: vm_images_lv
+vm_storage_lv_size: 1024g
+vm_storage_path: /var/lib/libvirt/images
+vm_storage_fs_type: ext4
+vm_bridge_interface: "{{primary_bridge}}"
+
+################################################################################
+# SSH Keys to Install on Managed Hosts                                         #
+################################################################################
+ssh_keys_required:
+  - chris-p51s-id_rsa.pub
+
+################################################################################
+# Kickstart Config Parameters                                                  #
+################################################################################
+ks_configs_list:
+  - x1carbon-fedora-initial-ks.cfg
+  - x1carbon-fedora-preserve-ks.cfg
+  - x1carbon-rhel8-initial-ks.cfg
+  - x1carbon-rhel8-preserve-ks.cfg
+  - test-centos6-ks.cfg
+  - test-centos7-ks.cfg
+  - test-centos8-ks.cfg
+  - test-fedora29-ks.cfg
+  - test-fedora30-ks.cfg
+  - test-rhel5-ks.cfg
+  - test-rhel6-ks.cfg
+  - test-rhel7-ks.cfg
+  - test-rhel8-ks.cfg
+  - gitlab-ks.cfg
+  - p51s-ks.cfg
+  - satellite6-ks.cfg
+  - satclient0-ks.cfg
+  - satclient1-ks.cfg
+  - satclient2-ks.cfg
+  - satclient3-ks.cfg
+  - server0-ks.cfg
+  - synchost5-ks.cfg
+  - synchost6-ks.cfg
+  - synchost7-ks.cfg
+  - synchost8-ks.cfg
+  - tower-ks.cfg
+  - tower-nodeA-ks.cfg
+  - vpnserver-ks.cfg
+
+pxelinux_files:
+    - LinuxMenu
+    - centos
+    - fedora
+    - rhel-satclients
+    - rhel
+    - rhel-synchosts
+    - rhel-testvms
+    - tower-cluster
+    - x1carbon
+    - OpenBSD
+    - vmware
+    - ubuntu
+
+################################################################################
+# REPO Configuration Parameters - FROM HERE TO EOF                             #
+################################################################################
+repo_owner: chris
+repo_owner_homedir: /home/chris
+start_hour_offset: 0
+
+sync_scripts_list:
+  - sync-fedora.sh
+  - sync-centos.sh
+  - sync-epel.sh
+  - sync-epel-archive.sh
+  - sync-openbsd.sh
+  - sync-virtio-win.sh
+
+sync_script_retries: true
+
+linux_repo_includes_list:
+  - x86_64
+  - source
+  - SRPMS
+  - aarch64
+  - ppc
+  - ppc64
+  - ppc64le
+  - "*.qcow2"
+
+linux_repo_excludes_list:
+  - development
+  - updates/testing
+  - releases/test
+  - debug
+  - beta
+  - testing
+  - arm
+  - armhfp
+  - i386
+  - alpha
+  - ia64
+  - s390
+  - s390x
+  - "*.iso"
+  - "*.torrent"
+  - "*.box"
+  - "*.raw.xz"
+
+ubuntu_repo_includes_list:
+  - "xenial*"  # 16.04.6 LTS Xenial Xerus
+
+ubuntu_repo_excludes_list:
+  - binary-i386
+  - "devel*"
+  - "precise*" # 12.04.5 LTS Precise Pangolin
+  - "trusty*"  # 14.04.6 LTS Trusty Tahr
+  - "artful*"  # 17.10.1 Artful Ardvark
+  - "bionic*"  # 18.04.2 LTS Bionic Beaver
+  - "cosmic*"  # 18.10 Cosmic Cuttlefish
+  - "disco*"   # 19.04 Beta Disco Dingo
+
+openbsd_repo_includes_list:
+  - amd64
+  - arm
+  - armish
+  - armv7
+  - arm64
+  - aarch64
+
+openbsd_repo_excludes_list:
+  - alpha
+  - snapshots
+  - songs
+  - sh
+  - aviion
+  - beagle
+  - hp300
+  - hppa
+  - i386
+  - landisk
+  - loongson
+  - luna88k
+  - macppc
+  - mips64
+  - mips64el
+  - m68k
+  - m88k
+  - mvme68k
+  - mvme88k
+  - octeon
+  - powerpc
+  - sgi
+  - socppc
+  - sparc
+  - sparc64
+  - vax
+  - zaurus
+  - '*.torrent'
+
+linux_distros:
+  - rhel
+  - centos
+  - fedora
+
+rhel_versions:
+  - 5
+  - 6
+  - 7
+  - 8
+
+# rhel versions that include upgrade.img
+rhel_upgrade_versions:
+  - 7
+
+rhel_architectures:
+  - x86_64
+
+centos_versions:
+  - 6
+  - 7
+  - 8
+
+centos_architectures:
+  - x86_64
+
+fedora_versions:
+  - 29
+  - 30
+
+# fedora versions that include upgrade.img
+fedora_upgrade_versions:
+  - 29
+  - 30
+
+fedora_architectures:
+  - x86_64
+  - aarch64
+
+fedora_secondary_architectures:
+  - ppc
+  - ppc64
+  - ppc64le
+
+ubuntu_server_versions:
+  - 16.04.6
+
+ubuntu_server_architectures:
+  - amd64
+
+openbsd_versions:
+  - 6.6
+
+openbsd_prev_dot_release: 5
+
+openbsd_architectures:
+  - amd64
+
+vmware_versions:
+  - 6.7.0
+
+vmware_architectures:
+  - x86_64
+

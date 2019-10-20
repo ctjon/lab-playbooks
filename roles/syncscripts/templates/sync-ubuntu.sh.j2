@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+# rsync of Ubuntu Distribution
+# {{ ansible_managed }}
+#
+
+echo "********************************************************************************"
+echo "* UPDATING Ubuntu BINARIES                                                     *"
+echo "********************************************************************************"
+export SRCDIR=rsync://{{ubuntu_rsync_server}}/ubuntu/
+export TGTDIR={{linux_install_server_path}}/ubuntu-reposyncs/
+
+{% if sync_script_retries == true %}
+# set return code to be false to force first iteration of while loop ironically this give error because it is an error:-)
+$? = 1
+
+while [ "$?" -ne "0" ]
+do
+	sleep 10
+{% endif %}
+	date
+	rsync -aHKvz --keep-dirlinks --delete-during --delete-excluded \
+	--progress \
+{% for item in ubuntu_repo_includes_list %}
+        --include '{{item}}' \
+{% endfor %}
+{% for item in ubuntu_repo_excludes_list %}
+        --exclude '{{item}}' \
+{% endfor %}
+ 	$SRCDIR $TGTDIR
+{% if sync_script_retries == true %}
+done
+{% endif %}

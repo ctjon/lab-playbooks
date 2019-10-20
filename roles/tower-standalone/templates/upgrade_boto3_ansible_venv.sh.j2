@@ -1,0 +1,8 @@
+#!/bin/bash
+source /var/lib/awx/venv/ansible/bin/activate
+{% if ansible_python.version.major == 3 %}
+pip3 install boto3 --upgrade
+{% else %}
+pip install boto3 --upgrade
+{% endif %}
+deactivate

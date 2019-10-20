@@ -1,0 +1,87 @@
+---
+- name: install httpd and firewalld
+  package:
+    name: httpd,firewalld
+    state: latest
+
+- name: deploy vhosts.conf for installation server
+  template:
+    src: vhosts.conf.j2
+    dest: /etc/httpd/conf.d/vhosts.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart httpd
+
+- name: start and enable httpd
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name: deploy welcome.conf for installation server
+  copy:
+    src: welcome.conf
+    dest: /etc/httpd/conf.d/welcome.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart httpd
+
+- name: deploy /var/www/html/index.html for installation server
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644
+
+- name: make sure firewalld is running and enabled
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: open firewall ports for http
+  firewalld:
+    zone: "{{trusted_firewall_zone}}"
+    service: http
+    immediate: yes
+    state: enabled
+    permanent: yes
+
+- name: set permissions on vhost directories
+  file:
+    path: "{{item.document_root}}"
+    owner: chris
+    group: chris
+    mode: '0755'
+  with_items: "{{ vhosts }}"
+    
+- name: set selinux context for vhosts
+  sefcontext:
+    target: "'{{item.document_root}}(/.*)?'"
+    setype: "{{item.fcontext}}"
+    state: present
+  with_items: "{{ vhosts }}"
+
+- name: create logs directory
+  file:
+    path: "/{{ansible_user_id}}/logs"
+    owner: root
+    group: root
+    mode: 0700
+    state: directory
+    
+- name: create crontab entries to set selinux context on repos
+  cron:
+    name: "repos restorecon"
+    user: "root"
+    minute: "30"
+    hour: "5"
+    job: "/usr/sbin/restorecon -RFv /export > /{{ansible_user_id}}/logs/restorecon.log 2>&1"
+
+- name: Apply new SELinux file context to vhosts directories
+  command: restorecon -FR {{item.document_root}}
+  with_items: "{{ vhosts }}"
+...  

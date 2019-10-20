@@ -1,0 +1,123 @@
+[rhel-{{ansible_distribution_major_version}}-for-x86_64-appstream-rpms-{{linux_install_server_hostname}}]
+baseurl = {{linux_install_server_url}}/rhel-reposyncs/{{ansible_distribution_major_version}}/{{ansible_architecture}}/rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-appstream-rpms/
+enabled = 1
+failovermethod = priority
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+keepcache = 0
+metadata_expire = 1d
+name = {{linux_install_server_hostname}}-rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-appstream-rpms
+repo_gpgcheck = 0
+skip_if_unavailable = 0
+
+[rhel-{{ansible_distribution_major_version}}-for-x86_64-baseos-rpms-{{linux_install_server_hostname}}]
+baseurl = {{linux_install_server_url}}/rhel-reposyncs/{{ansible_distribution_major_version}}/{{ansible_architecture}}/rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-baseos-rpms/
+enabled = 1
+failovermethod = priority
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+keepcache = 0
+metadata_expire = 1d
+name = {{linux_install_server_hostname}}-rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-baseos-rpms
+repo_gpgcheck = 0
+skip_if_unavailable = 0
+
+[rhel-{{ansible_distribution_major_version}}-for-x86_64-highavailability-rpms-{{linux_install_server_hostname}}]
+baseurl = {{linux_install_server_url}}/rhel-reposyncs/{{ansible_distribution_major_version}}/{{ansible_architecture}}/rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-highavailability-rpms/
+enabled = 1
+failovermethod = priority
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+keepcache = 0
+metadata_expire = 1d
+name = {{linux_install_server_hostname}}-rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-highavailability-rpms
+repo_gpgcheck = 0
+skip_if_unavailable = 0
+
+[rhel-{{ansible_distribution_major_version}}-for-x86_64-supplementary-rpms-{{linux_install_server_hostname}}]
+baseurl = {{linux_install_server_url}}/rhel-reposyncs/{{ansible_distribution_major_version}}/{{ansible_architecture}}/rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-supplementary-rpms/
+enabled = 1
+failovermethod = priority
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+keepcache = 0
+metadata_expire = 1d
+name = {{linux_install_server_hostname}}-rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-supplementary-rpms
+repo_gpgcheck = 0
+skip_if_unavailable = 0
+
+[ansible-2-for-rhel-{{ansible_distribution_major_version}}-x86_64-rpms-{{linux_install_server_hostname}}]
+baseurl = {{linux_install_server_url}}/rhel-reposyncs/{{ansible_distribution_major_version}}/{{ansible_architecture}}/ansible-2-for-rhel-{{ansible_distribution_major_version}}-{{ansible_architecture}}-rpms
+enabled = 1
+failovermethod = priority
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+keepcache = 0
+metadata_expire = 1d
+name = {{linux_install_server_hostname}}-ansible-2-for-rhel-{{ansible_distribution_major_version}}-x86_64-rpms
+repo_gpgcheck = 0
+skip_if_unavailable = 0
+
+
+[rhel-{{ansible_distribution_major_version}}-for-x86_64-appstream-source-rpms-{{linux_install_server_hostname}}]
+baseurl = {{linux_install_server_url}}/rhel-reposyncs/{{ansible_distribution_major_version}}/{{ansible_architecture}}/rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-appstream-source-rpms/
+enabled = 1
+failovermethod = priority
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+keepcache = 0
+metadata_expire = 1d
+name = {{linux_install_server_hostname}}-rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-appstream-source-rpms
+repo_gpgcheck = 0
+skip_if_unavailable = 0
+
+[rhel-{{ansible_distribution_major_version}}-for-x86_64-baseos-source-rpms-{{linux_install_server_hostname}}]
+baseurl = {{linux_install_server_url}}/rhel-reposyncs/{{ansible_distribution_major_version}}/{{ansible_architecture}}/rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-baseos-source-rpms/
+enabled = 1
+failovermethod = priority
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+keepcache = 0
+metadata_expire = 1d
+name = {{linux_install_server_hostname}}-rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-baseos-source-rpms
+repo_gpgcheck = 0
+skip_if_unavailable = 0
+
+[rhel-{{ansible_distribution_major_version}}-for-x86_64-highavailability-source-rpms-{{linux_install_server_hostname}}]
+baseurl = {{linux_install_server_url}}/rhel-reposyncs/{{ansible_distribution_major_version}}/{{ansible_architecture}}/rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-highavailability-source-rpms/
+enabled = 1
+failovermethod = priority
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+keepcache = 0
+metadata_expire = 1d
+name = {{linux_install_server_hostname}}-rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-highavailability-source-rpms
+repo_gpgcheck = 0
+skip_if_unavailable = 0
+
+[rhel-{{ansible_distribution_major_version}}-for-x86_64-supplementary-source-rpms-{{linux_install_server_hostname}}]
+baseurl = {{linux_install_server_url}}/rhel-reposyncs/{{ansible_distribution_major_version}}/{{ansible_architecture}}/rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-supplementary-source-rpms/
+enabled = 1
+failovermethod = priority
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+keepcache = 0
+metadata_expire = 1d
+name = {{linux_install_server_hostname}}-rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-supplementary-source-rpms
+repo_gpgcheck = 0
+skip_if_unavailable = 0
+
+[ansible-2-for-rhel-{{ansible_distribution_major_version}}-x86_64-source-rpms-{{linux_install_server_hostname}}]
+baseurl = {{linux_install_server_url}}/rhel-reposyncs/{{ansible_distribution_major_version}}/{{ansible_architecture}}/ansible-2-for-rhel-{{ansible_distribution_major_version}}-{{ansible_architecture}}-source-rpms
+enabled = 1
+failovermethod = priority
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+keepcache = 0
+metadata_expire = 1d
+name = {{linux_install_server_hostname}}-ansible-2-for-rhel-{{ansible_distribution_major_version}}-x86_64-source-rpms
+repo_gpgcheck = 0
+skip_if_unavailable = 0
+
+
+

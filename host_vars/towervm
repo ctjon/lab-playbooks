@@ -1,0 +1,13 @@
+---
+use_ssh_agent: yes
+copy_ssh_keys: yes
+setup_ansible_config: yes
+setup_git_update: yes
+ssh_private_key_list:
+  - ctjon-aws_id_rsa
+  - chris-tjon-github_rsa
+  - ctjon-github_rsa
+
+my_tower_version: 3.5.0-1
+tower_install_dir: "/opt/tower"
+

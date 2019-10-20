@@ -1,0 +1,83 @@
+#
+# Playbook to Perform Common Configuration on {RHEL,CentOS}-7 Systems
+# Author: Chris Tjon
+#
+# Tasks Performed:
+#  - Install Of GPG Keys for Distribution Repo and EPEL
+#  - Configuration of Local Distribution Repo and Local EPEL Repo
+#  - Disable Public Internet Repos for Distribution and EPEL
+#  - Install Required Packages
+#  - Configure for Retention of only latest kernel 
+#
+---
+- name: rhel-centos7.yml - Install RHEL GPG Key and Repo Files
+  block:
+    - name: rhel-centos7.yml - install RHEL rpm_gpg_key
+      rpm_key:
+        state: present
+        key: "{{ rhel_gpg_key_url }}"
+
+    - name: rhel-centos7.yml - install custom rhel repo files
+      template:
+        src: tjon-rhel.repo.j2
+        dest: /etc/yum.repos.d/tjon-rhel.repo
+        owner: root
+        group: root
+        mode: 0644
+  when: 
+    - ansible_distribution == "RedHat"
+
+- name: rhel-centos7.yml - Install CentOS GPG Key and Repo Files
+  block:
+    - name: rhel-centos7.yml - install CentOS rpm_gpg_key
+      rpm_key:
+        state: present
+        key: "{{ centos_gpg_key_url }}"
+
+    - name: rhel-centos7.yml - install custom CentOS repo files
+      template:
+        src: tjon-centos.repo.j2
+        dest: /etc/yum.repos.d/tjon-centos.repo
+        owner: root
+        group: root
+        mode: 0644
+  when: 
+    - ansible_distribution == "CentOS"
+
+- name: rhel-centos7.yml - install EPEL rpm_gpg_key
+  rpm_key:
+    state: present
+    key: "{{ epel_gpg_key_url }}"
+
+- name: rhel-centos7.yml - install custom epel repo files
+  template:
+    src: tjon-epel.repo.j2
+    dest: /etc/yum.repos.d/tjon-epel.repo
+    owner: root
+    group: root
+    mode: 0644
+
+- name: rhel-centos7.yml - Install yum-utils
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - yum-utils
+
+- name: rhel-centos7.yml - disable RHEL/CentOS internet repositories
+  command: yum-config-manager --disable "{{ item }}" --save
+  with_items: 
+    - "{{ rhel_repos_list }}"
+    - "{{ epel_repos_list }}"
+  when: ansible_distribution == "RedHat"
+
+- name: rhel-centos7.yml - disable RHEL/CentOS internet repositories
+  command: yum-config-manager --disable "{{ item }}" --save
+  with_items: 
+    - "{{ centos_repos_list }}"
+    - "{{ epel_repos_list }}"
+  when: ansible_distribution == "CentOS"
+
+- name: rhel-centos7.yml - Clean up all but the most recent kernel
+  command: package-cleanup --oldkernels --count="{{installed_kernel_limit}}" -y
+...

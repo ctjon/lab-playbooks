@@ -1,0 +1,92 @@
+---
+- name: create scripts and logs directories in {{repo_owner_homedir}}
+  file:
+    path: "{{repo_owner_homedir}}/{{item}}"
+    owner: "{{repo_owner}}"
+    group: "{{repo_owner}}"
+    mode: 0755
+    state: directory
+  with_items:
+    - scripts
+    - scripts/{{ansible_hostname}}
+    - logs
+
+- name: deploy sync scripts
+  template:
+    src: "{{item}}.j2"
+    dest: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/{{item}}"
+    owner: "{{repo_owner}}"
+    group: "{{repo_owner}}"
+    mode: 0755
+  with_items:
+    - "{{sync_scripts_list}}"
+
+- name: create crontab entries for {{repo_owner}} to run sync-rhel-reposyncs.sh
+  cron:
+    name: "sync-rhel-reposyncs.sh"
+    user: "{{repo_owner}}"
+    minute: "30"
+    hour: "{{0 + start_hour_offset}}"
+    job: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/sync-rhel-reposyncs.sh > {{repo_owner_homedir}}/logs/sync-rhel-reposyncs.log 2>&1"
+
+- name: create crontab entries for {{repo_owner}} to run sync-fedora.sh
+  cron:
+    name: "sync-fedora.sh"
+    user: "{{repo_owner}}"
+    minute: "30"
+    hour: "{{0 + start_hour_offset}}"
+    job: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/sync-fedora.sh > {{repo_owner_homedir}}/logs/sync-fedora.log 2>&1"
+
+- name: create crontab entries for {{repo_owner}} to run sync-centos.sh
+  cron:
+    name: "sync-centos.sh"
+    user: "{{repo_owner}}"
+    minute: "30"
+    hour: "{{1 + start_hour_offset}}"
+    job: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/sync-centos.sh > {{repo_owner_homedir}}/logs/sync-centos.log 2>&1"
+
+- name: create crontab entries for {{repo_owner}} to run sync-epel.sh
+  cron:
+    name: "sync-epel.sh"
+    user: "{{repo_owner}}"
+    minute: "30"
+    hour: "{{2 + start_hour_offset}}"
+    job: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/sync-epel.sh > {{repo_owner_homedir}}/logs/sync-epel.log 2>&1"
+
+- name: create crontab entries for {{repo_owner}} to run sync-epel-archive.sh
+  cron:
+    name: "sync-epel-archive.sh"
+    user: "{{repo_owner}}"
+    minute: "0"
+    hour: "{{3 + start_hour_offset}}"
+    job: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/sync-epel-archive.sh > {{repo_owner_homedir}}/logs/sync-epel-archive.log 2>&1"
+
+- name: create crontab entries for {{repo_owner}} to run sync-openbsd.sh
+  cron:
+    name: "sync-openbsd.sh"
+    user: "{{repo_owner}}"
+    minute: "30"
+    hour: "{{4 + start_hour_offset}}"
+    job: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/sync-openbsd.sh > {{repo_owner_homedir}}/logs/sync-openbsd.log 2>&1"
+
+- name: create crontab entries for {{repo_owner}} to run sync-virtio-win.sh
+  cron:
+    name: "sync-sync-virtio-win.sh"
+    user: "{{repo_owner}}"
+    minute: "45"
+    hour: "{{4 + start_hour_offset}}"
+    job: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/sync-virtio-win.sh > {{repo_owner_homedir}}/logs/sync-virtio-win.log 2>&1"
+
+- name: create crontab entries to reset permissions on repos
+  cron:
+    name: "repos chmod"
+    user: "root"
+    minute: "20"
+    hour: "{{5 + start_hour_offset}}"
+    job: "/usr/bin/chown -R {{repo_owner}}:{{repo_owner}} /export/{archive,install} > /{{ansible_user_id}}/logs/chown-export.log 2>&1"
+
+#- name: run the sync-scripts
+#  command: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/{{item}}"
+#  with_items:
+#    - "{{sync_scripts_list}}"
+...

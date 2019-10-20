@@ -1,0 +1,38 @@
+---
+- name: Set Timezone
+  command: timedatectl set-timezone {{TIMEZONE}}
+
+- name: install chrony and firewalld
+  package:
+    name: chrony,firewalld
+    state: latest
+
+- name: setup chrony.conf file
+  template:
+    src: chrony.conf.j2
+    dest: /etc/chrony.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart chronyd
+
+- name: start and enable chronyd
+  service:
+    name: chronyd
+    state: started
+    enabled: yes
+
+- name: make sure firewalld is running and enabled
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: open firewall ports for chrony
+  firewalld:
+    zone: "{{trusted_firewall_zone}}"
+    service: ntp
+    immediate: yes
+    state: enabled
+    permanent: yes
+...

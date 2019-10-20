@@ -1,0 +1,36 @@
+[base-{{linux_install_server_hostname}}]
+baseurl = {{linux_install_server_url}}/centos/{{ansible_distribution_major_version}}/os/{{ansible_architecture}}/
+enabled = 1
+failovermethod = priority
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centos-{{ansible_distribution_major_version}}-{{ansible_architecture}}
+keepcache = 0
+metadata_expire = 1d
+name = {{linux_install_server_hostname}}-CentOS{{ansible_distribution_major_version}}-{{ansible_architecture}}-base
+repo_gpgcheck = 0
+skip_if_unavailable = 0
+
+[updates-{{linux_install_server_hostname}}]
+baseurl = {{linux_install_server_url}}/centos/{{ansible_distribution_major_version}}/updates/{{ansible_architecture}}/
+enabled = 1
+failovermethod = priority
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centos-{{ansible_distribution_major_version}}-{{ansible_architecture}}
+keepcache = 0
+metadata_expire = 1d
+name = {{linux_install_server_hostname}}-CentOS{{ansible_distribution_major_version}}-{{ansible_architecture}}-updates
+repo_gpgcheck = 0
+skip_if_unavailable = 0
+
+[extras-{{linux_install_server_hostname}}]
+baseurl = {{linux_install_server_url}}/centos/{{ansible_distribution_major_version}}/extras/{{ansible_architecture}}/
+enabled = 1
+failovermethod = priority
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centos-{{ansible_distribution_major_version}}-{{ansible_architecture}}
+keepcache = 0
+metadata_expire = 1d
+name = {{linux_install_server_hostname}}-CentOS{{ansible_distribution_major_version}}-{{ansible_architecture}}-extras
+repo_gpgcheck = 0
+skip_if_unavailable = 0
+

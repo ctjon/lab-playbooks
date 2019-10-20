@@ -1,0 +1,75 @@
+log file = /var/log/rsync.log
+pid file = /var/run/rsyncd.pid
+lock file = /var/run/rsync.lock
+
+[archive]
+        path = /export/archive
+        comment = Server0 Archive Repo
+        read only = yes
+        hosts allow = {{primary_subnet}}
+        hosts deny = *
+
+[rhel-reposyncs]
+        path = /export/install/Linux/rhel-reposyncs
+        comment = Server0 RHEL RepoSyncs Installation Repos
+        read only = yes
+        hosts allow = {{primary_subnet}}
+        hosts deny = *
+        list = true
+
+[centos]
+        path = /export/install/Linux/centos
+        comment = Server0 CentOS Installation Repo
+        read only = yes
+        hosts allow = {{primary_subnet}}
+        hosts deny = *
+        list = true
+
+[fedora]
+        path = /export/install/Linux/fedora
+        comment = Server0 Fedora Installation Repo
+        read only = yes
+        hosts allow = {{primary_subnet}}
+        hosts deny = *
+        list = true
+
+[fedora-secondary]
+        path = /export/install/Linux/fedora-secondary
+        comment = Server0 Fedora Secondary Installation Repo
+        read only = yes
+        hosts allow = {{primary_subnet}}
+        hosts deny = *
+        list = true
+
+[fedora-epel]
+        path = /export/install/Linux/epel
+        comment = Server0 EPEL Installation Repo
+        read only = yes
+        hosts allow = {{primary_subnet}}
+        hosts deny = *
+        list = true
+
+[epel-archive]
+        path = /export/install/Linux/epel-archive
+        comment = Server0 EPEL Archive Installation Repo
+        read only = yes
+        hosts allow = {{primary_subnet}}
+        hosts deny = *
+        list = true
+
+[openbsd]
+        path = /export/install/OpenBSD
+        comment = Server0 OpenBSD Installation Repo
+        read only = yes
+        hosts allow = {{primary_subnet}}
+        hosts deny = *
+        list = true
+
+[virtio-win]
+        path = /export/install/Linux/virtio-win
+        comment = Server0 Windows KVM VirtIO Drivers Installation Repo
+        read only = yes
+        hosts allow = {{primary_subnet}}
+        hosts deny = *
+        list = true
+

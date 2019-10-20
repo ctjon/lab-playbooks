@@ -1,0 +1,87 @@
+#
+# Playbook to Perform Common Configuration on {RHEL,CentOS}-8 Systems
+# Author: Chris Tjon
+#
+# Tasks Performed:
+#  - Install Of GPG Keys for Distribution Repo and EPEL
+#  - Configuration of Local Distribution Repo and Local EPEL Repo
+#  - Disable Public Internet Repos for Distribution and EPEL
+#  - Install Required Packages
+#  - Configure for Retention of only latest kernel 
+#
+---
+- name: rhel-centos8.yml - Install RHEL-8 GPG Key and Repo Files
+  block:
+    - name: Disable RHEL 8 Subscription Manager Repos
+      yum_repository:
+        name: "{{item}}"
+        state: absent
+      with_items:
+        - "{{ rhel8_repos_list }}"
+
+    - name: rhel-centos8.yml - install RHEL8 rpm_gpg_key
+      rpm_key:
+        state: present
+        key: "{{ rhel8_gpg_key_url }}"
+
+    - name: rhel-centos8.yml - install custom rhel repo files
+      template:
+        src: tjon-rhel8.repo.j2
+        dest: /etc/yum.repos.d/tjon-rhel.repo
+        owner: root
+        group: root
+        mode: 0644
+  when: ansible_distribution == "RedHat"
+
+- name: rhel-centos8.yml - Install CentOS GPG Key and Repo Files
+  block:
+    - name: rhel-centos8.yml - install CentOS rpm_gpg_key
+      rpm_key:
+        state: present
+        key: "{{ centos_gpg_key_url }}"
+
+    - name: Disable CentOS 8 Internet Repos
+      yum_repository:
+        name: "{{item}}"
+        state: absent
+      with_items:
+        - "{{ centos_repos_list }}"
+
+    - name: rhel-centos8.yml - install custom CentOS repo files
+      template:
+        src: tjon-centos.repo.j2
+        dest: /etc/yum.repos.d/tjon-centos.repo
+        owner: root
+        group: root
+        mode: 0644
+  when: ansible_distribution == "CentOS"
+
+#- name: rhel-centos8.yml - install EPEL rpm_gpg_key
+#  rpm_key:
+#    state: present
+#    key: "{{ epel_gpg_key_url }}"
+#
+#- name: rhel-centos8.yml - install custom epel repo files
+#  template:
+#    src: tjon-epel.repo.j2
+#    dest: /etc/yum.repos.d/tjon-epel.repo
+#    owner: root
+#    group: root
+#    mode: 0644
+#
+#- name: rhel-centos8.yml - disable EPEL internet repositories
+#  yum_repository:
+#    name: "{{item}}"
+#    state: absent
+#  with_items:
+#    - "{{ epel_repos_list }}"
+
+- name: configure system to keep only 2 most recent kernels
+  replace:
+    path: /etc/yum.conf
+    regexp: '^installonly_limit=.+\n'
+    replace: 'installonly_limit="{{installed_kernel_limit}}"\n'
+    owner: root
+    group: root
+    mode: 0644
+...

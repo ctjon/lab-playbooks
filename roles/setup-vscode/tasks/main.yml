@@ -1,0 +1,26 @@
+---
+- name: Add Microsoft GPG key
+  rpm_key:
+    key: https://packages.microsoft.com/keys/microsoft.asc
+    state: present
+
+- name: setup repo to install vscode
+  yum_repository:
+    name: vscode
+    description: Visual Studio Code
+    file: /etc/yum.repos.d/vscode
+    baseurl: https://packages.microsoft.com/yumrepos/vscode
+    enabled: yes
+    metadata_expire: 7d
+    repo_gpgcheck: 0
+    #type: rpm
+    gpgcheck: yes
+    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+    skip_if_unavailable: false
+    keepcache: "0"
+    failovermethod: priority
+
+- name: Install Visual Studio Code and other packages
+  dnf:
+    name: code
+    state: latest

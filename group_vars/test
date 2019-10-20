@@ -1,0 +1,7 @@
+################################################################################
+# Installation Source Parameters                                               #
+################################################################################
+linux_install_server_url: "http://install.internal.tjon.net/Linux"
+linux_install_server_hostname: server0
+config_files_url: "http://install.internal.tjon.net/ConfigFiles"
+

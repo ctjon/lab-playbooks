@@ -1,0 +1,33 @@
+# {{ansible_managed}}
+
+# .bash_profile
+
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+	. ~/.bashrc
+fi
+
+# User specific environment and startup programs
+
+PATH=$PATH:$HOME/.local/bin:$HOME/bin
+
+export PATH
+export PS1="`whoami`@`hostname -s`:\$PWD> "
+
+{% if setup_ansible_config == true %}
+#export ANSIBLE_CONFIG=~{{ansible_user}}/playbooks/ansible.cfg
+export ANSIBLE_NOCOWS=1
+{% endif %}
+
+{% if use_ssh_agent == true %}
+echo "setting up ssh-agent"
+eval "$(ssh-agent -s)"
+{% for item in ssh_private_key_list %}
+ssh-add ~{{ansible_user}}/.ssh/{{item}}
+{% endfor %}
+{% endif %}
+
+{% if setup_git_update == true %}
+alias gcp="git add .;git commit -m 'Latest Commits' ; git push"
+{% endif %}
+

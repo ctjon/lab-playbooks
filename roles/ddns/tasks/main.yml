@@ -1,0 +1,25 @@
+---
+- name: install ddns client software
+  yum:
+    name: noip
+    state: latest
+  notify: restart noip service
+
+- name: install noip config file
+  copy:
+    src: "no-ip2.conf.{{ansible_hostname}}"
+    dest: /etc/no-ip2.conf
+    mode: 600
+    owner: root
+    group: root
+  notify: restart noip service
+
+- name: install noip service definition
+  copy:
+    src: noip2.service
+    dest: /etc/systemd/system/noip2.service
+    mode: 755
+    owner: root
+    group: root
+  notify: reload systemd
+

@@ -1,0 +1,43 @@
+#!/bin/sh
+#
+# Sync OpenBSD Repo Locally
+# {{ ansible_managed }}
+#
+
+export SRCDIR=rsync://{{openbsd_rsync_server_path}}
+export TGTDIR={{openbsd_install_server_path}}
+
+echo "********************************************************************************"
+echo "* UPDATING OpenBSD BINARIES                                                    *"
+echo "********************************************************************************"
+
+{% if sync_script_retries == true %}
+# set return code to be false to force first iteration of while loop ironically this give error cause it is an error:-)
+$? = 1
+
+while [ "$?" -ne "0" ]
+do
+        sleep 10
+{% endif %}
+	rsync -aHKvz --keep-dirlinks --delete-during \
+	--delete-excluded --progress \
+{% for item in openbsd_repo_includes_list %}
+        --include={{item}} \
+{% endfor %}
+{% for item in openbsd_repo_excludes_list %}
+        --exclude={{item}} \
+{% endfor %}
+	--exclude='2.*' \
+	--exclude='3.*' \
+	--exclude='4.*' \
+	--exclude='5.*' \
+	--exclude='6.[0-{{openbsd_prev_dot_release}}]*' \
+	--exclude='patches/2.*' \
+	--exclude='patches/3.*' \
+	--exclude='patches/4.*' \
+	--exclude='patches/5.*' \
+	--exclude='patches/6.[0-{{openbsd_prev_dot_release}}]*' \
+ 	$SRCDIR $TGTDIR
+{% if sync_script_retries == true %}
+done
+{% endif %}

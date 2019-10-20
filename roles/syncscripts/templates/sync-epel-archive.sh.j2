@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# rsync of EPEL Archive for RHEL 5
+# {{ ansible_managed }}
+#
+
+export SRCDIR=rsync://mirrors.rit.edu/fedora-buffet/archive/epel/
+export TGTDIR={{linux_install_server_path}}/epel-archive
+echo "********************************************************************************"
+echo "* UPDATING EPEL ARCHIVE BINARIES                                               *"
+echo "********************************************************************************"
+
+{% if sync_script_retries == true %}
+# set return code to be false to force first iteration of while loop ironically this give error cause it is an error:-)
+$? = 1
+
+while [ "$?" -ne "0" ]
+do
+        sleep 10
+{% endif %}
+	date
+	rsync -aHvz --keep-dirlinks --delete-during --delete-excluded \
+	--progress \
+{% for item in linux_repo_includes_list %}
+        --include '{{item}}' \
+{% endfor %}
+{% for item in linux_repo_excludes_list %}
+        --exclude '{{item}}' \
+{% endfor %}
+	--exclude='4' \
+	--exclude='4AS' \
+	--exclude='4ES' \
+	--exclude='4WS' \
+	--exclude='RPM-GPG-KEY-EPEL-4' \
+	--exclude='RPM-GPG-KEY-EPEL' \
+ 	$SRCDIR $TGTDIR
+{% if sync_script_retries == true %}
+done
+{% endif %}

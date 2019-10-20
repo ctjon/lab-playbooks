@@ -1,0 +1,35 @@
+---
+- name: setup plex repo
+  yum_repository:
+    name: PlexRepo
+    description: "Plex Installation Repository"
+    file: /etc/yum.repos.d/PlexRepo
+    baseurl: https://downloads.plex.tv/repo/rpm/$basearch/
+    enabled: yes
+    metadata_expire: 1d
+    repo_gpgcheck: 0
+    #type: rpm
+    gpgcheck: yes
+    gpgkey: https://downloads.plex.tv/plex-keys/PlexSign.key
+    skip_if_unavailable: false
+    keepcache: false
+    failovermethod: priority
+
+- name: install Plex Media Server
+  package:
+    name: plexmediaserver
+    state: latest
+
+- name: open firewall port for plex server
+  firewalld:
+    zone: "{{trusted_firewall_zone}}"
+    service: plex
+    immediate: yes
+    state: enabled
+    permanent: yes
+
+- name: enable and start plex service
+  service:
+    name: plexmediaserver
+    state: restarted
+    enabled: yes

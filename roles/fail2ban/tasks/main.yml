@@ -1,0 +1,86 @@
+---
+- name: debug ansible_distribution var
+  debug:
+    var: ansible_distribution
+
+- name: debug ansible_distribution_major_version var
+  debug:
+    var: ansible_distribution_major_version
+
+- name: Install and/or Update fail2ban on RHEL-5
+  command: yum -y install fail2ban
+  args:
+    warn: false
+  when:
+    - ansible_distribution == "RedHat"
+    - ansible_distribution_major_version == "5"
+
+- name: Install and/or Update fail2ban on RHEL6
+  package:
+    name: fail2ban
+    state: latest
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "6"
+
+- name: Install and/or Update fail2ban on RHEL7+
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - fail2ban-server
+    - fail2ban-firewalld
+  when:
+    - ((ansible_distribution == "RedHat" or ansible_distribution == "CentOS") and  (ansible_distribution_major_version == "7")) or ((ansible_distribution == "Fedora") and (ansible_distribution_major_version >= "28"))
+- name: Start and Enable fail2ban
+  service:
+    name: fail2ban
+    state: started
+    enabled: yes
+
+#- name: deploy fail2ban on RHEL-5
+#  block:
+#    - name: deploy fail2ban.conf.rhel5 template
+#      template:
+#        src: fail2ban.conf.rhel5.j2
+#        dest: /etc/fail2ban/fail2ban.conf
+#        owner: root
+#        group: root
+#        mode: 0644
+#      notify: restart fail2ban
+#
+#    - name: deploy jail.local.rhel5 template
+#      template:
+#        src: jail.local.rhel5.j2
+#        dest: /etc/fail2ban/jail.local
+#        owner: root
+#        group: root
+#        mode: 0644
+#      notify: restart fail2ban
+#  when:
+#    - ansible_distribution == "RedHat"
+#    - ansible_distribution_major_version == "5"
+
+- name: deploy fail2ban on Everything Else
+  block:
+#    - name: deploy fail2ban.conf template
+#      template:
+#        src: fail2ban.conf.j2
+#        dest: /etc/fail2ban/fail2ban.conf
+#        owner: root
+#        group: root
+#        mode: 0644
+#      notify: restart fail2ban
+
+    - name: deploy jail.local template
+      template:
+        src: jail.local.j2
+        dest: /etc/fail2ban/jail.local
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart fail2ban
+#  when:
+#    - ((ansible_distribution == "RedHat" or ansible_distribution == "CentOS") and (ansible_distribution_major_version > "5")) or ((ansible_distribution == "Fedora") and (ansible_distribution_major_version >= "28"))
+
+...

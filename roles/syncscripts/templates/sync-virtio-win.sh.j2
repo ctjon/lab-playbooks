@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+export SRCDIR={{virtio_win_rsync_path}}
+export TGTDIR={{linux_install_server_path}}/virtio-win
+
+mkdir -p $TGTDIR
+
+{% if sync_script_retries == true %}
+# set return code to be false to force first iteration of while loop ironically this give error cause it is an error:-)
+$? = 1
+
+while [ "$?" -ne "0" ]
+do
+	sleep 10
+{% endif %}
+	date
+	rsync -aHKvz --keep-dirlinks --delete --delete-during \
+	--delete-excluded --progress \
+ 	$SRCDIR $TGTDIR
+{% if sync_script_retries == true %}
+done
+{% endif %}
+

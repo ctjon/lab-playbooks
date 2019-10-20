@@ -1,0 +1,19 @@
+---
+- name: Get EC2 Instance Facts
+  ec2_instance_facts:
+    region: "{{ aws_region }}"
+    filters:
+      "tag:Name": "{{ aws_win_prefix }}{{aws_instance_name}}{{item}}"
+  with_sequence: count="{{ aws_instance_count }}"
+  register: ec2
+
+- name: Destroy {{aws_instance_count}} AWS Windows Instance(s)
+  ec2:
+    region: "{{ aws_region }}"
+    state: absent
+    instance_ids: "{{ item.instances | map(attribute='instance_id') | list }}"
+  with_items:
+    - "{{ ec2.results }}"
+  when: item.instances.0 is defined and item.instances.0.instance_id is defined
+  delegate_to: localhost
+

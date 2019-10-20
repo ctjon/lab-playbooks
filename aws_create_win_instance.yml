@@ -1,0 +1,8 @@
+---
+#
+# AWS Windows Test
+#
+- hosts: localhost
+  roles:
+    - role: aws_create_win_instance
+      tags: ['aws_create_win_instance']

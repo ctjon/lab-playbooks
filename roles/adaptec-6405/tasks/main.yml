@@ -1,0 +1,88 @@
+---
+- name: Download MaxView Storage Management Packages
+  get_url:
+    url: http://archive.internal.tjon.net/Adaptec/msm_linux_x64_v2_05_22932.tgz
+    dest: /tmp/msm_linux_x64_v2_05_22932.tgz
+    owner: root
+    group: root
+    mode: 0700
+
+- name: create /tmp/msm directory
+  file:
+    path: /tmp/msm
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: unpack MaxView Storage Management Packages
+  unarchive:
+    src: /tmp/msm_linux_x64_v2_05_22932.tgz
+    dest: /tmp/msm
+    remote_src: yes
+    creates: /tmp/msm/manager
+
+- name: install MaxView Storage Management Packages
+  package:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - /tmp/msm/cmdline/rpm/Arcconf-2.05-22932.x86_64.rpm
+    - expect
+#    - /tmp/msm/manager/StorMan-2.05-22932.x86_64.rpm # Damn Interactive Install
+
+- name: set selinux permissions
+  file:
+    path: "{{item}}"
+    seuser: system_u
+    serole: object_r
+    setype: initrc_exec_t
+    selevel: s0
+  with_items:
+    - /etc/rc.d/init.d/stor_agent
+    - /etc/rc.d/init.d/stor_cimserver
+    - /etc/rc.d/init.d/stor_tomcat
+
+- name: disable and stop MaxView Storage Management services
+  service:
+    name: "{{item}}"
+    state: stopped
+    enabled: no
+  with_items:
+    - stor_cimserver
+    - stor_agent
+    - stor_tomcat
+
+#- name: Install StorMan via expect because Microsemi made the rpm interactive - BE PATIENT!
+#  script: files/install-StorMan.sh
+#  register: result
+#  #remote_src: yes
+
+#- name: dump result
+#  debug:
+#    var: result.stdout
+
+#- name: enable and start MaxView Storage Management services
+#  service:
+#    name: "{{item}}"
+#    state: started
+#    enabled: yes
+#  with_items:
+#    - stor_cimserver
+#    - stor_agent
+#    - stor_tomcat
+
+#- name: open firewall for MaxView Storage Management
+#  firewalld:
+#    zone: "{{trusted_firewall_zone}}"
+#    port: "{{item}}"
+#    immediate: yes
+#    state: enabled
+#    permanent: yes
+#  with_items:
+#    - 5988-5989/tcp 
+#    - 8443/tcp
+#    - 34570-34580/tcp
+#    - 34570/udp
+#    - 34577-34580/udp
+

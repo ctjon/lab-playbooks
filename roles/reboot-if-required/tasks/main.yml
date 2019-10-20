@@ -1,0 +1,82 @@
+---
+- name: RHEL/CentOS 6+ Reboot
+  block:
+    - name: RHEL/CentOS 6+ - check to see if we need a reboot
+      shell: "needs-restarting|grep '^[0-9]'|wc -l"
+      register: result
+
+#    - name: RHEL/CentOS 6+ Reboot - display result
+#      debug:
+#        var: result.stdout
+#
+    - name: RHEL/CentOS 6+ - Reboot Servers
+      reboot:
+      become: true
+      async: 0
+      poll: 0
+      when: result.stdout > "0"
+  when: 
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version >= "6"
+
+- name: Fedora 29+ Reboot
+  block:
+    - name: Fedora 29+ - check to see if we need a reboot
+      shell: "dnf needs-restarting|wc -l"
+      register: result
+      args:
+        warn: false
+
+#    - name: Fedora 29+ Reboot - display result
+#      debug:
+#        var: result.stdout
+#
+    - name: Fedora 29+ - Reboot Servers
+      reboot:
+      become: true
+      async: 0
+      poll: 0
+      when: result.stdout > "0"
+  when: 
+    - ansible_distribution == "Fedora"
+    - ansible_distribution_major_version >= "29"
+
+- name: RHEL5 Reboot
+  block: 
+    - name: RHEL5 Reboot - Check current running kernel 
+      command: uname -r
+      register: running_kernel
+
+#    - name: RHEL5 Reboot - display running kernel
+#      debug:
+#        var: running_kernel.stdout
+#
+    - name: RHEL5 Reboot - Check latest kernel installed
+      shell: "rpm -q kernel|tail -1|cut -c8-"
+      register: latest_installed_kernel
+      args:
+        warn: false
+
+#    - name: RHEL5 Reboot - display latest kernel installed
+#      debug:
+#        var: latest_installed_kernel.stdout
+#
+    - name: RHEL5 Reboot - Reboot Servers if Necessary
+      reboot:
+      become: true
+      async: 0
+      poll: 0
+      when: latest_installed_kernel.stdout != running_kernel.stdout
+
+  when: ((ansible_distribution == "RedHat" or ansible_distribution == "CentOS") and (ansible_distribution_major_version == "5"))
+
+- name: wait for Servers to reboot
+  wait_for:
+    port: 22
+    host: "{{ inventory_hostname }}"
+    state: started
+    delay: 30
+    timeout: 900 # set this long for the case of selinux autorelabeling
+  become: false
+  delegate_to: localhost
+...

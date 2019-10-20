@@ -1,0 +1,120 @@
+---
+#
+# Configure Server0
+#
+
+- hosts: server0
+  become: yes
+
+  roles:
+    - role: selinux
+      tags: ['selinux']
+
+    - role: dnsmasq
+      tags: ['dnsmasq']
+
+    - role: http-repo
+      tags: ['http-repo']
+
+#    - role: adaptec-6405
+#      tags: ['adaptec-6405']
+
+    - role: config-local-repos
+      tags: ['config-local-repos']
+
+    - role: apply-updates
+      tags: ['apply-updates']
+
+    - role: time-server
+      tags: ['time-server']
+
+#    - role: setup-br0 
+#      tags: ['setup-br0']
+
+    - role: ssh-config
+      tags: ['ssh-config']
+
+    - role: shell-env #including both ssh-keys on server and p51s ??
+      tags: ['shell-env']
+
+    - role: syncscripts
+      tags: ['syncscripts']
+
+    - role: kickstart
+      tags: ['kickstart']
+
+    - role: samba-server
+      tags: ['samba-server']
+
+#    - role: virt-server
+#      tags: ['virt-server']
+
+    - role: nfs-server
+      tags: ['nfs-server']
+
+    - role: rsync-server
+      tags: ['rsync-server']
+
+#    - role: apcupsd
+#      tags: ['apcupsd']
+
+#    - role: postfix
+#      tags: ['postfix']
+
+    - role: ddns
+      tags: ['ddns']
+
+    - role: openvpn-server
+      tags: ['openvpn-server']
+
+    - role: fail2ban
+      tags: ['fail2ban']
+
+#    - role: yubikey
+#      tags: ['yubikey']
+
+#    - role: syslog
+#      tags: ['syslog']
+
+#    - role: backup
+#      tags: ['backup']
+
+    - role: reboot-if-required
+      tags: ['reboot-if-required']
+
+
+  tasks:
+    - name: install other packages 
+      package:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - mediawriter
+        - icedtea-web
+        - elfutils-devel
+        - grive2
+        - kernel-devel
+        - nmap
+        - gcc
+        - gdb
+        - lftp
+        - ftp
+        - iptraf-ng
+        - nmon
+        - iperf
+        - vnstat
+        - sysstat
+        - openscap
+        - openscap-scanner
+        - openscap-utils
+        - openscap-python3
+        - openscap-containers
+        - openscap-daemon
+        - python3-boto
+        - python3-botocore
+        - python3-boto3
+        - python3-pyvmomi
+        - ansible
+        - openwsman-winrs.x86_64
+      tags:
+        - localpkgs

@@ -1,0 +1,9 @@
+---
+- name: set windows hostname
+  win_hostname:
+    name: "{{new_win_hostname}}"
+  register: result
+
+- name: Reboot
+  win_reboot:
+  when: result.reboot_required

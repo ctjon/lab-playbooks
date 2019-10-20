@@ -1,0 +1,18 @@
+---
+#aws_access_key:
+#aws_secret_key:
+aws_win_prefix: ctjon_win_
+aws_instance_name: default
+aws_region: us-west-1 
+#aws_zone: us-west-1c
+#aws_image: ami-0bb7f096ddf7390b7
+#aws_instance_type: t2.micro
+#aws_key_pair_name: ctjon 
+#aws_security_group: demo
+#aws_sg_id: sg-64299403
+#aws_vpc_id: vpc-7b35821e
+#aws_vpc_subnet_id: subnet-6f16cb36
+aws_instance_count: 3
+aws_win_vm_group: ctjon_windows
+#public_ip_needed: yes
+#admin_password: "Ans1bl3R0cks"

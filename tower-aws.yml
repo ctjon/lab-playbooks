@@ -1,0 +1,42 @@
+---
+#
+# Configure tower in aws
+#
+
+- hosts: tower-aws
+  become: yes
+
+  roles:
+    - role: sm-register
+      tags: ['sm-register']
+
+    - role: setup-epel
+      tags: ['setup-epel']
+
+    - role: shell-env
+      tags: ['shell-env']
+
+    - role: ssh-config
+      tags: ['ssh-config']
+
+    - role: fail2ban
+      tags: ['fail2ban']
+
+    - role: selinux
+      tags: ['selinux']
+
+    - role: tower-standalone
+      tags: ['tower-standalone']
+
+    - role: setup-azure
+      tags: ['setup-azure']
+
+    - role: setup-awscli
+      tags: ['setup-awscli']
+
+    - role: apply-updates
+      tags: ['apply-updates']
+
+    - role: reboot-if-required
+      tags: ['reboot-if-required']
+

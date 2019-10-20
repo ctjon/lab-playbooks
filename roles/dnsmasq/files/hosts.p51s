@@ -1,0 +1,54 @@
+#{{ ansible_managed }}
+
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+#192.168.10.1	p51s.p51s.tjon.net p51s install.p51s.tjon.net archive.p51s.tjon.net time.p51s.tjon.net time
+192.168.11.1	p51s.p51s.tjon.net p51s install.p51s.tjon.net archive.p51s.tjon.net time.p51s.tjon.net time
+192.168.11.3	adserver-p51s.p51s.tjon.net adserver-p51s
+192.168.11.5	satellite6-p51s.p51s.tjon.net satellite6-p51s
+192.168.11.6	synchost7-p51s.p51s.tjon.net synchost7-p51s
+192.168.11.7	synchost6-p51s.p51s.tjon.net synchost6-p51s
+192.168.11.8	synchost5-p51s.p51s.tjon.net synchost5-p51s
+192.168.11.9	synchost8-p51s.p51s.tjon.net synchost8-p51s
+192.168.11.10	cyberark1.p51s.tjon.net cyberark1
+192.168.11.30   test-rhel8-p51s.p51s.tjon.net test-rhel8-p51s
+192.168.11.31   test-rhel7-p51s.p51s.tjon.net test-rhel7-p51s
+192.168.11.32   test-rhel6-p51s.p51s.tjon.net test-rhel6-p51s
+192.168.11.33   test-rhel5-p51s.p51s.tjon.net test-rhel5-p51s
+192.168.11.34   test-centos8-p51s.p51s.tjon.net test-centos8-p51s
+192.168.11.35   test-centos7-p51s.p51s.tjon.net test-centos7-p51s
+192.168.11.36   test-centos6-p51s.p51s.tjon.net test-centos6-p51s
+192.168.11.37   test-centos5-p51s.p51s.tjon.net test-centos5-p51s
+192.168.11.38   test-fedora30-p51s.p51s.tjon.net test-fedora30-p51s
+192.168.11.39   test-fedora29-p51s.p51s.tjon.net test-fedora29-p51s
+172.16.1.1	gatekeeper.internal.tjon.net gatekeeper
+172.16.1.2	vmserver.internal.tjon.net vmserver
+172.16.1.3	server0.internal.tjon.net server0 install.internal.tjon.net archive.internal.tjon.net time.internal.tjon.net satcontent.internal.tjon.net satcontent
+172.16.1.4	vpnserver.internal.tjon.net vpnserver
+172.16.1.5	satellite6.internal.tjon.net satellite6
+172.16.1.6	itunesserver.internal.tjon.net itunesserver
+172.16.1.10	virtualpc.internal.tjon.net virtualpc
+172.16.1.11	synchost6.internal.tjon.net synchost6
+172.16.1.12	synchost7.internal.tjon.net synchost7
+172.16.1.13	synchost5.internal.tjon.net synchost5
+172.16.1.18     tower.internal.tjon.net tower
+172.16.1.22	adserver.internal.tjon.net adserver
+172.16.1.30   test-rhel8.internal.tjon.net test-rhel8
+172.16.1.31   test-rhel7.internal.tjon.net test-rhel7
+172.16.1.32   test-rhel6.internal.tjon.net test-rhel6
+172.16.1.33   test-rhel5.internal.tjon.net test-rhel5
+172.16.1.34   test-centos8.internal.tjon.net test-centos8
+172.16.1.35   test-centos7.internal.tjon.net test-centos7
+172.16.1.36   test-centos6.internal.tjon.net test-centos6
+172.16.1.37   test-centos5.internal.tjon.net test-centos5
+172.16.1.38   test-fedora30.internal.tjon.net test-fedora30
+172.16.1.39   test-fedora29.internal.tjon.net test-fedora29
+172.16.1.40    	satclient0.internal.tjon.net satclient0
+172.16.1.41    	satclient1.internal.tjon.net satclient1
+172.16.1.42    	satclient2.internal.tjon.net satclient2
+172.16.1.43    	satclient3.internal.tjon.net satclient3
+172.16.1.251	gatekeeper-old.internal.tjon.net gatekeeper-old
+
+192.168.254.1   p51s-isolated.p51s.tjon.net p51s-isolated
+
+54.183.210.65 ec2-54-183-210-65.us-west-1.compute.amazonaws.com tower-aws

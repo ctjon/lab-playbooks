@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# rsync of RHEL Reposyncs from server0
+# {{ ansible_managed }}
+#
+
+echo "********************************************************************************"
+echo "* UPDATING RHEL Reposyncs                                                      *"
+echo "********************************************************************************"
+export SRCDIR=rsync://{{linux_rsync_server}}/rhel-reposyncs/
+export TGTDIR={{linux_install_server_path}}/rhel-reposyncs/
+
+time rsync -aHKvz --keep-dirlinks --delete-during --delete-excluded --progress \
+ 	$SRCDIR $TGTDIR
+

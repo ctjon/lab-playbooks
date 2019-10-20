@@ -1,0 +1,16 @@
+---
+# vars file for apcupsd
+
+upsname: apcups_{{ansible_hostname}}
+logdir: /var/log/apcupsd
+on_battery_delay: 6
+battery_level: 5
+remaining_minutes: 5
+timeout: 0           # 0 disables
+annoy: 300
+annoy_delay: 60
+no_logon: disable
+kill_delay: 0
+netserver_on_off: ON
+events_file_maxK: 1000
+

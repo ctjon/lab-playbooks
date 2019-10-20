@@ -1,0 +1,52 @@
+---
+- name: disable fedora internet repositories
+  command: dnf config-manager --set-disabled "{{ item }}" --save
+  with_items: "{{fedora_repos_list}}"
+  args:
+    warn: false # set warn=false to avoid warnings about dnf command/module
+
+#
+# Special case to setup base repo because it is in the os subdirectory, unlike
+# updates and extras which are in directories with the same name:-(
+#
+- name: setup Fedora repos to install from {{linux_install_server_url}}
+  yum_repository:
+    name: fedora-{{linux_install_server_hostname}}
+    description: "Fedora-{{linux_install_server_hostname}} $releasever - $basearch"
+    file: /etc/yum.repos.d/tjon-fedora
+    baseurl: "{{ linux_install_server_url }}/fedora/releases/$releasever/Everything/$basearch/os/"
+    enabled: yes
+    metadata_expire: 1d
+    repo_gpgcheck: 0
+    #type: rpm
+    gpgcheck: yes
+    gpgkey: "{{fedora_gpg_key_file}}"
+    skip_if_unavailable: false
+    keepcache: "0"
+    failovermethod: priority
+
+- name: setup Fedora repos to install from {{linux_install_server_url}}/fedora
+  yum_repository:
+    name: updates-{{linux_install_server_hostname}}
+    description: "Fedora-Updates-{{linux_install_server_hostname}} $releasever - $basearch"
+    file: /etc/yum.repos.d/tjon-fedora
+    baseurl: "{{ linux_install_server_url }}/fedora/updates/$releasever/Everything/$basearch/"
+    enabled: yes
+    metadata_expire: 1d
+    repo_gpgcheck: 0
+    #type: rpm
+    gpgcheck: yes
+    gpgkey: "{{fedora_gpg_key_file}}"
+    skip_if_unavailable: false
+    keepcache: "0"
+    failovermethod: priority
+
+- name: configure system to keep only 2 most recent kernels
+  replace:
+    path: /etc/dnf/dnf.conf
+    regexp: '^installonly_limit=.+\n'
+    replace: 'installonly_limit="{{installed_kernel_limit}}"\n'
+    owner: root
+    group: root
+    mode: 0644
+...

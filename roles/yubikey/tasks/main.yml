@@ -1,0 +1,74 @@
+---
+- name: install pam_yubico
+  package:
+    name: pam_yubico
+    state: latest
+
+- name: configure /etc/pam.d/login before "auth       substack     system-auth"
+  lineinfile:
+    path: /etc/pam.d/login
+    line: 'auth       sufficient   pam_yubico.so debug id=1'
+    insertbefore: "auth       substack     system-auth"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: configure /etc/pam.d/sshd before "auth       substack     password-auth"
+  lineinfile:
+    path: /etc/pam.d/sshd
+    line: 'auth       sufficient   pam_yubico.so debug id=1'
+    insertbefore: "auth       substack     password-auth"
+    owner: root
+    group: root
+    mode: 0644
+
+#- name: configure /etc/pam.d/sudo before "auth       include     system-auth"
+#  lineinfile:
+#    path: /etc/pam.d/sudo
+#    line: 'auth       sufficient   pam_yubico.so debug id=1'
+#    insertbefore: "auth       include      system-auth"
+#    owner: root
+#    group: root
+#    mode: 0644
+
+- name: create "~{{yubikey_owner}}/.yubico directory"
+  file:
+    path: ~{{yubikey_owner}}/.yubico
+    owner: "{{yubikey_owner}}"
+    group: "{{yubikey_owner}}"
+    mode: 0700
+    state: directory
+    seuser: system_u
+    serole: object_r
+    setype: ssh_home_t
+    selevel: s0
+
+- name: deploy "~{{yubikey_owner}}/.yubico/authorized_yubikeys file"
+  template:
+    src: authorized_yubikeys.j2
+    dest: "~{{yubikey_owner}}/.yubico/authorized_yubikeys"
+    owner: "{{yubikey_owner}}"
+    group: "{{yubikey_owner}}"
+    mode: 0600
+    seuser: system_u
+    serole: object_r
+    setype: ssh_home_t
+    selevel: s0
+
+- name: Set allow_ypbind flag on and keep it persistent across reboots
+  seboolean:
+    name: allow_ypbind
+    state: yes
+    persistent: yes
+
+- name: set selinux context for /root/.yubico whether used or not
+  file:
+    path: /root/.yubico
+    owner: "root"
+    group: "root"
+    mode: 0700
+    state: directory
+    seuser: system_u
+    serole: object_r
+    setype: ssh_home_t
+    selevel: s0

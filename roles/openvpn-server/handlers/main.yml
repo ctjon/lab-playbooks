@@ -1,0 +1,16 @@
+---
+- name: Restart Firewalld
+  service:
+    name: firewalld
+    state: restarted
+    enabled: yes
+
+- name: Restart OpenVPN 
+  service:
+    name: "{{item}}"
+    enabled: yes
+    state: restarted
+  with_items:
+    - openvpn-server@1194udp
+    - openvpn-server@1194tcp
+

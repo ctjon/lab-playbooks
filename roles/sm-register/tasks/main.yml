@@ -1,0 +1,16 @@
+---
+- name: include sm_creds
+  include_vars:
+    file: sm_creds.yml
+
+- name: Use subscription-manager to Register System RHEL 5/6/7/8
+  redhat_subscription:
+    state: present
+    username: "{{ sm_login }}"
+    password: "{{ sm_passwd }}"
+    pool_ids: "{{ my_pool_ids }}"
+    force_register: no
+  when:
+    - ansible_distribution == "RedHat"
+    - ansible_distribution_major_version >= "5"
+

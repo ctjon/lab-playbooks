@@ -1,0 +1,13 @@
+---
+- name: restart nfs server
+  service:
+    name: nfs-server
+    enabled: yes
+    state: restarted
+
+- name: restart firewalld
+  service:
+    name: firewalld
+    enabled: yes
+    state: restarted
+

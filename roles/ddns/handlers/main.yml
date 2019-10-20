@@ -1,0 +1,10 @@
+---
+- name: reload systemd
+  command: systemctl daemon-reload
+
+- name: restart noip service
+  service:
+    name: noip2
+    enabled: yes
+    state: restarted
+

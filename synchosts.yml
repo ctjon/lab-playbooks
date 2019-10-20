@@ -1,0 +1,56 @@
+---
+#
+# Configure synchosts
+#
+
+- hosts: synchosts
+  become: yes
+  vars:
+    installed_kernel_limit: 2
+
+  roles:
+    - role: sm-register
+      tags: ['sm-register']
+
+    - role: selinux
+      tags: ['selinux']
+
+    - role: shell-env
+      tags: ['shell-env']
+
+    - role: time-client
+      tags: ['time-client']
+
+    - role: ssh-config
+      tags: ['ssh-config']
+
+    - role: shell-env #including both ssh-keys on server and p51s ??
+      tags: ['shell-env']
+
+    - role: apply-updates
+      tags: ['apply-updates']
+
+    - role: synchost-config
+      tags: ['synchost-config']
+
+    - role: reboot-if-required
+      tags: ['reboot-if-required']
+
+  tasks:
+    - name: rhel5.yml - Clean up all but the most recent kernel
+      command: package-cleanup --oldkernels --count="{{installed_kernel_limit}}" -y
+      when:
+        - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+        - ansible_distribution_major_version <= "7"
+
+    - name: configure system to keep only 2 most recent kernels
+      replace:
+        path: /etc/yum.conf
+        regexp: '^installonly_limit=.+\n'
+        replace: 'installonly_limit="{{installed_kernel_limit}}"\n'
+        owner: root
+        group: root
+        mode: 0644
+      when:
+        - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+        - ansible_distribution_major_version >= "8"

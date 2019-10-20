@@ -1,0 +1,15 @@
+[Unit]
+Description=noip2 dynamic DNS service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/noip2
+ExecStop=/usr/bin/pkill noip2
+ExecRestart=/usr/bin/pkill noip2;sleep 10;/usr/sbin/noip2
+
+[Install]
+WantedBy=multi-user.target
+
+

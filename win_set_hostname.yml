@@ -1,0 +1,8 @@
+---
+#
+# AWS Windows Test
+#
+- hosts: aws_win_hosts
+  roles:
+    - role: win_set_hostname
+      tags: ['win_set_hostname']

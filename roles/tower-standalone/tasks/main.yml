@@ -1,0 +1,186 @@
+---
+- name: include tower_creds
+  include_vars:
+    file: tower_creds.yml
+
+- name: create directories
+  file:
+    name: "{{item}}"
+    state: directory
+    owner: "{{ansible_user}}"
+    group: "{{ansible_user}}"
+    mode: 0755
+  with_items:
+    - "{{tower_install_dir}}"
+    - "{{tower_install_dir}}/scripts"
+    - "{{tower_install_dir}}/logs"
+
+- name: get tower installation installation archive
+  get_url:
+    url: https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-{{my_tower_version}}.tar.gz
+    dest: "{{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}.tar.gz"
+    mode: 0644
+
+- name: install EPEL Repository
+  package:
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    state: latest
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "7"
+
+
+- name: Add rhel-7-server-ansible-2-rpms repository
+  command: yum-config-manager --enable rhel-7-server-ansible-2-rpms
+
+- name: install ansible
+  package:
+    name: ansible
+    state: latest
+
+- name: install tar command
+  package:
+    name: tar
+    state: latest
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "8"
+
+- name: unpack tower installation archive
+  unarchive:
+    src: "{{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}.tar.gz"
+    dest: "{{tower_install_dir}}"
+    remote_src: yes
+    creates: "{{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}"
+
+- name: setup tower inventory file
+  template:
+    src: tower-standalone-inventory.j2
+    dest: "{{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}/inventory"
+    owner: "{{ansible_user_id}}"
+    group: "{{ansible_user_id}}"
+    mode: 0600
+
+- name: copy backup file to tower server
+  copy:
+    src: tower-backup-latest.tar.gz
+    dest: "{{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}/tower-backup-latest.tar.gz"
+    owner: "{{ansible_user_id}}"
+    group: "{{ansible_user_id}}"
+    mode: 0644
+
+- name: copy scripts to tower server
+  copy:
+    src: "{{item}}"
+    dest: "{{tower_install_dir}}/scripts/{{item}}"
+    owner: "{{ansible_user_id}}"
+    group: "{{ansible_user_id}}"
+    mode: 0755
+  with_items:
+    - callback-example.sh
+    - get-tower.sh
+    - get-tower-bundle.sh
+    - ldapsearch.sh
+    - post.sh
+    - venv.sh
+
+- name: setup tower upgrade, backup, and cleanup scripts
+  template:
+    src: "{{item}}.j2"
+    dest: "{{tower_install_dir}}/scripts/{{item}}"
+    owner: "{{ansible_user_id}}"
+    group: "{{ansible_user_id}}"
+    mode: 0755
+  with_items:
+    - tower-backup.sh
+    - tower-cleanup.sh
+    - upgrade_boto3_ansible_venv.sh
+    - upgrade_boto3_tower_venv.sh
+
+- name: create crontab entry to take a nightly backup of tower
+  cron:
+    name: "Nightly Tower Backup"
+    user: "root"
+    minute: "0"
+    hour: "0"
+    job: "{{tower_install_dir}}/scripts/tower-backup.sh- > {{tower_install_dir}}/logs/ansible-tower-setup-{{my_tower_version}}/backup.log 2>&1"
+
+- name: create crontab entry to cleanup tower backups nightly
+  cron:
+    name: "Nightly Tower Backup Cleanup"
+    user: "root"
+    minute: "0"
+    hour: "0"
+    job: "{{tower_install_dir}}/scripts/tower-cleanup.sh > {{tower_install_dir}}/logs/ansible-tower-setup-{{my_tower_version}}/cleanup.log 2>&1"
+
+- name: make sure firewalld is running and enabled
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: open firewall ports for tower
+  firewalld:
+    zone: public
+    service: "{{item}}"
+    immediate: yes
+    state: enabled
+    permanent: yes
+  with_items:
+    - https
+
+- name: setup python2-pip
+  yum:
+    name: python2-pip
+    state: latest
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version <= "7"
+
+- name: setup python3-pip
+  yum:
+    name: python3-pip
+    state: latest
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "8"
+
+
+- name: setup boto3 for python2 system
+  command: pip install boto3 --upgrade
+  become: true
+  when: ansible_python.version.major == 2
+
+- name: setup boto3 for python3 system
+  command: pip3 install boto3 --upgrade
+  become: true
+  when: ansible_python.version.major == 3
+
+- name: setup ansible tower via setup.sh
+  command: "./setup.sh"
+  args:
+    chdir: "{{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}"
+  become: true
+
+- name: setup boto3 for ansible venv
+  command: "{{tower_install_dir}}/scripts/upgrade_boto3_ansible_venv.sh"
+  become: true
+
+- name: setup boto3 for tower venv
+  command: "{{tower_install_dir}}/scripts/upgrade_boto3_tower_venv.sh"
+  become: true
+
+#- name: restore ansible tower via "setup.sh -r"
+#  command: "{{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}/setup.sh -r {{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}/ansible-tower-latest.tar.gz"
+#  become: true
+
+- name: restore ansible tower via "setup.sh -r"
+  command: "./setup.sh -r ansible-tower-latest.tar.gz"
+  args:
+    chdir: "{{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}"
+  become: true
+
+- name: Unconditionally reboot the machine with all defaults
+  reboot:
+  become: true
+...

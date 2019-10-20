@@ -1,0 +1,21 @@
+sat_version: 6.5
+ansible_repo_version: 2.7
+rhel_release: 7
+TIMEZONE: "America/Phoenix"
+user: chris
+user_home_dir: "/home/{{user}}"
+environments:
+  - "Lab"
+  - "Dev"
+  - "QA"
+  - "Prod"
+location_names: 
+  - "PHX"
+  - "RDU"
+satellite_organization: ctjon-org
+foreman_initial_organization: ctjon-org
+foreman_initial_location: PHX
+foreman_proxy_dns: true
+foreman_proxy_tftp: true
+foreman_admin_username: "admin"
+foreman_admin_password: "redhat"

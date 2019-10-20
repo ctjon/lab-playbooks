@@ -1,0 +1,48 @@
+#!/bin/sh
+#
+# rsync of CentOS Binary Distribution
+# {{ ansible_managed }}
+#
+
+echo "********************************************************************************"
+echo "* UPDATING CENTOS BINARIES                                                     *"
+echo "********************************************************************************"
+export SRCDIR=rsync://{{linux_rsync_server}}/centos/
+export TGTDIR={{linux_install_server_path}}/centos/
+
+{% if sync_script_retries == true %}
+# set return code to be false to force first iteration of while loop ironically this give error because it is an error:-)
+$? = 1
+
+while [ "$?" -ne "0" ]
+do
+	sleep 10
+{% endif %}
+	date
+	rsync -aHKvz --keep-dirlinks --delete-during --delete-excluded \
+	--progress \
+{% for item in linux_repo_includes_list %}
+        --include '{{item}}' \
+{% endfor %}
+{% for item in linux_repo_excludes_list %}
+        --exclude '{{item}}' \
+{% endfor %}
+	--exclude='2' \
+	--exclude='2.?' \
+	--exclude='3' \
+	--exclude='3.*' \
+	--exclude='4' \
+	--exclude='4.*' \
+	--exclude='5' \
+	--exclude='5.*' \
+	--exclude='RPM-GPG-KEY-beta' \
+	--exclude='RPM-GPG-KEY-CentOS-3' \
+	--exclude='RPM-GPG-KEY-CentOS-4' \
+	--exclude='RPM-GPG-KEY-centos4' \
+	--exclude='HEADER.html' \
+	--exclude='HEADER_AD.html' \
+	--exclude='HEADER.images/' \
+ 	$SRCDIR $TGTDIR
+{% if sync_script_retries == true %}
+done
+{% endif %}

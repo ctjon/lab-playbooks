@@ -1,0 +1,93 @@
+#!/bin/bash
+#set -x
+#
+# Sync RedHAt Repos Locally
+# {{ ansible_managed }}
+#
+
+
+VERSION="{{ansible_distribution_major_version}}"
+ARCH=`uname -i`
+
+#MNTDIR=/mnt/hgfs/Install
+#TARGETDIR=/mnt/hgfs/Install/Linux/rhel-reposyncs/$VERSION/$ARCH
+#HOST_IP=192.168.10.1
+
+MNTDIR=/mnt/install
+TARGETDIR=/mnt/install/Linux/rhel-reposyncs/$VERSION/$ARCH
+HOST_IP=server0
+
+TMPFILE=/tmp/repolist
+HOST_LOG_DIR=/home/chris/logs
+HOST_LOG_USER=chris
+GUEST_LOG_DIR=/home/chris/logs
+
+#/usr/bin/vmhgfs-fuse /mnt/hgfs -o allow_other
+
+if [ ! -d $MNTDIR ]
+then
+	mount $MNTDIR
+	if [ $? != 0 ]
+	then
+		echo "reposync.sh failed to mount $MNTDIR - exiting"
+		exit -1
+	fi
+fi
+
+echo "********************************************************************************"
+echo "* Starting RepoSync for RHEL$VERSION"
+echo "* MNTDIR=$MNTDIR"
+echo "* TARGETDIR=$TARGETDIR"
+echo "* TMPFILE=$TMPFILE"
+echo "********************************************************************************"
+
+subscription-manager repos --list|grep "Repo ID:"|grep -iv beta|grep -iv htb|grep -v debug|awk '{print $3}' >$TMPFILE
+#subscription-manager repos --list|grep "Repo ID:"|awk '{print $3}' >$TMPFILE
+
+for i in `cat /tmp/repolist`
+do
+	echo "********************************************************************************"
+	echo "* reposyncing $i at `/bin/date`"
+	echo "********************************************************************************"
+	case $VERSION in
+		5)
+			mkdir -p $TARGETDIR/$i 
+			reposync -d -n -l --repoid=$i --downloadcomps --download_path=$TARGETDIR
+			createrepo -v $TARGETDIR/$i 
+		;;
+		6)
+			mkdir -p $TARGETDIR/$i 
+			reposync -d -n -l --repoid=$i \
+			--downloadcomps --download-metadata \
+			--download_path=$TARGETDIR
+			createrepo -v $TARGETDIR/$i -g comps.xml
+		;;
+		7)
+			mkdir -p $TARGETDIR/$i 
+			reposync -d -n --gpgcheck -l --repoid=$i \
+			--downloadcomps --download-metadata \
+			--download_path=$TARGETDIR
+			createrepo -v $TARGETDIR/$i -g comps.xml
+		;;
+		8)
+			mkdir -p $TARGETDIR/$i 
+			reposync -d 5 -n --repoid=$i \
+			--downloadcomps --download-metadata \
+			--download-path=$TARGETDIR
+			createrepo -v $TARGETDIR/$i -g comps.xml
+		;;
+		*)
+			echo "Unknown Version - exiting"
+		;;
+	esac
+done
+
+	echo "********************************************************************************"
+echo "* reposync for $VERSION completed at `/bin/date`"
+	echo "********************************************************************************"
+
+#umount $MNTDIR
+
+#/bin/rm $TMPFILE
+
+/usr/bin/scp $GUEST_LOG_DIR/sync-RHrepo$VERSION.log $HOST_LOG_USER@$HOST_IP:$HOST_LOG_DIR

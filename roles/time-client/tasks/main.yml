@@ -1,0 +1,59 @@
+---
+- name: Set Timezone
+  timezone:
+    name: "{{TIMEZONE}}"
+
+- name: setup time clients for RHEL/Centos/Fedora Systems
+  block:
+    - name: install chrony
+      package:
+        name: chrony
+        state: latest
+
+    - name: setup chrony.conf file
+      template:
+        src: chrony.conf.j2
+        dest: /etc/chrony.conf
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart chronyd
+
+    - name: start and enable chronyd
+      service:
+        name: chronyd
+        state: started
+        enabled: yes
+  when: ((ansible_distribution == "RedHat" or ansible_distribution == "CentOS") and ansible_distribution_major_version >= "7") or (ansible_distribution == "Fedora" and ansible_distribution_major_version >= "28")
+
+- name: setup NTP Client for RHEL-5 Systems
+  block:
+    - name: setup RHEL-5 system timezone
+      template:
+        src: templates/clock.j2
+        dest: /etc/sysconfig/clock
+        owner: root
+        group: root
+        mode: 0644
+      tags: ntpd
+
+    - name: setup RHEL-5 ntp time synchronization
+      template:
+        src: templates/ntp.conf.j2
+        dest: /etc/ntp.conf
+        owner: root
+        group: root
+        mode: 0644
+      tags: ntpd
+
+    - name: restart and enable RHEL-5 ntpd
+      service:
+        name: ntpd
+        state: restarted
+        enabled: yes
+      tags: ntpd
+  when:
+    - ansible_distribution == "RedHat"
+    - ansible_distribution_major_version == "5"
+
+...

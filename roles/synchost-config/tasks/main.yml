@@ -1,0 +1,94 @@
+---
+# Install Prequisite Packages
+# mkdir /mnt/install
+# configure /etc/fstab to mount /mnt/install at boot
+# mount /etc/install
+# install sync-RHrepo.sh
+# crontab sync-RHrepo.sh
+# setup log copy back to server
+# reboot
+
+- name: perform RHEL5 Specific Configuration
+  block:
+    - name: configure to boot to runlevel 3
+      replace:
+        path: /etc/inittab
+        regexp: '^id:5:initdefault:\n'
+        replace: 'id:3:initdefault:\n'
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Install nfs-utils/yum-utils/createrepo Packages
+      command: yum -y install nfs-utils yum-utils createrepo
+      args:
+        warn: false
+  when:
+    - ansible_distribution == "RedHat"
+    - ansible_distribution_major_version == "5"
+
+- name: Install nfs-utils/yum-utils/createrepo for RHEL 6+
+  package:
+    name: nfs-utils, yum-utils, createrepo
+    state: latest
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version > "5"   # 6,7,8...
+
+- name: Create {{ nfs_mount }} mountpoint
+  file:
+    path: "{{ nfs_mount }}"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+
+- name: Configure "{{ nfs_mount }}" fstab entry to auto mount NFS filesystem
+  mount: 
+    name: "{{ nfs_mount }}"
+    src: "{{ nfs_server }}"
+    fstype: nfs
+    opts: hard,intr
+    dump: "0"
+    passno: "2"
+    state: mounted
+
+- name: Create {{ scripts_dir }}
+  file:
+    path: "{{ scripts_dir }}"
+    owner: "{{ scripts_owner }}"
+    group: "{{ scripts_group }}"
+    mode: 0755
+    state: directory
+  
+- name: Create {{ logs_dir }}
+  file:
+    path: "{{ logs_dir }}"
+    owner: "{{ logs_owner }}"
+    group: "{{ logs_group }}"
+    mode: 0755
+    state: directory
+  
+- name: deploy {{script_name}}.j2 to {{scripts_dir}}/{{script_name}}
+  template:
+    src: "{{ script_name }}.j2"
+    dest: "{{ scripts_dir }}/{{ script_name }}"
+    owner: "{{ scripts_owner }}"
+    group: "{{ scripts_group }}"
+    mode: 0755
+  tags: deploy_script
+
+- name: configure cronjob to run script
+  cron:
+    name: "Sync RH Repo"
+    minute: "0"
+    hour: "{{ansible_distribution_major_version|int - 4}}"
+    job: "{{ scripts_dir }}/{{ script_name }} > {{ logs_dir }}/{{ log_name }} 2>&1"
+
+- name: configure cronjob to reset permissions on home directory
+  cron:
+    name: "Reset Permisssions on home directory"
+    minute: "0"
+    hour: "{{ansible_distribution_major_version|int - 3}}"
+    job: "chown -R chris:chris /home/chris"
+...

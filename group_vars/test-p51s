@@ -1,0 +1,8 @@
+################################################################################
+# Installation Source Parameters                                               #
+################################################################################
+linux_install_server_url: "http://install.p51s.tjon.net/Linux"
+linux_install_server_hostname: p51s
+config_files_url: "http://install.p51s.tjon.net/ConfigFiles"
+
+local_time_server: time.p51s.tjon.net

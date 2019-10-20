@@ -1,0 +1,130 @@
+#
+# group_vars/all file for linux_common
+#
+
+#
+# Generic to All Systems
+#
+ansible_user: chris
+use_ssh_agent: no
+copy_ssh_keys: no
+setup_ansible_config: no
+setup_git_update: no
+
+ssh_private_key_list: 
+
+TIMEZONE: "America/Phoenix"
+time_server_servers:
+  - 0.rhel.pool.ntp.org
+  - 1.rhel.pool.ntp.org
+  - 2.rhel.pool.ntp.org
+  - 3.rhel.pool.ntp.org
+
+local_time_server: time.internal.tjon.net
+installed_kernel_limit: 2
+
+################################################################################
+# Installation Source Parameters                                               #
+################################################################################
+config_files_dir: "/export/install/ConfigFiles"
+linux_install_server_url: "http://install.internal.tjon.net/Linux"
+linux_install_server_path: /export/install/Linux
+ks_config_dir: "{{linux_install_server_path}}/ks-configs"
+linux_rsync_server: mirrors.kernel.org
+ubuntu_rsync_server: us.archive.ubuntu.com
+openbsd_install_server_path: /export/install/OpenBSD
+openbsd_rsync_server_path: ftp5.usa.openbsd.org/ftp
+virtio_win_rsync_path: rsync://repos.fedorapeople.org/groups/virt/
+libvirt_users: 
+  - chris
+libvirt_groups: 
+  - wheel
+  - libvirt
+
+################################################################################
+# SSH Configuration Parameters                                                 #
+################################################################################
+ssh_root_login_permited: "no"
+ssh_keygen_users:
+  - root
+  - chris
+allowed_ssh_users: chris
+#
+# SSH Keys that need to be installed
+#
+ssh_keys_location: "{{linux_install_server_url}}/ConfigFiles"
+ssh_keys_required:
+  - chris-p51s-id_rsa.pub
+  - chris-server0-id_rsa.pub
+ansible_XAuthLocation: /usr/bin/xauth
+
+#
+# RHEL 6 and 7 Specifics
+#
+rhel_repo_base_path: "{{linux_install_server_url}}/rhel-reposyncs/{{ansible_distribution_major_version}}/{{ansible_architecture}}"
+rhel_gpg_key_url: "{{ linux_install_server_url }}/rhel/{{ansible_distribution_major_version}}/{{ ansible_architecture }}/RPM-GPG-KEY-redhat-release"
+rhel_gpg_key_file: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+rhel_repos_list:
+  - rhel-{{ansible_distribution_major_version}}-server-rpms
+  - rhel-{{ansible_distribution_major_version}}-server-extras-rpms
+  - rhel-{{ansible_distribution_major_version}}-server-optional-rpms
+  - rhel-{{ansible_distribution_major_version}}-server-rh-common-rpms
+  - rhel-ha-for-rhel-{{ansible_distribution_major_version}}-server-rpms
+
+#
+# RHEL 8 Specifics
+#
+rhel8_repo_base_path: "{{linux_install_server_url}}/rhel-reposyncs/{{ansible_distribution_major_version}}/{{ansible_architecture}}/BaseOS"
+
+rhel8_gpg_key_url: "{{ linux_install_server_url }}/rhel/{{ansible_distribution_major_version}}/{{ ansible_architecture }}/RPM-GPG-KEY-redhat-release"
+
+rhel8_gpg_key_file: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+
+rhel8_repos_list:
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-appstream-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-baseos-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-highavailability-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-resilient-storage-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-supplementary-rpms
+  - ansible-2-for-rhel-{{ansible_distribution_major_version}}-{{ansible_architecture}}-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-appstream-source-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-baseos-source-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-highavailability-source-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-resilient-storage-source-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-supplementary-source-rpms
+  - ansible-2-for-rhel-{{ansible_distribution_major_version}}-{{ansible_architecture}}-source-rpms
+
+#
+# CentOS 6 and 7 Specifics
+#
+centos_repo_base_path: "{{ linux_install_server_url }}/centos/{{ ansible_distribution_major_version }}"
+centos_gpg_key_url: "{{ linux_install_server_url }}/centos/RPM-GPG-KEY-CentOS-{{ ansible_distribution_major_version }}"
+centos_gpg_key_file: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centos-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}"
+centos_repos_list:
+  - base
+  - updates
+  - extras
+  - centosplus
+
+#
+# EPEL 6 and 7 Specifics
+#
+epel_gpg_key_url: "{{ linux_install_server_url }}/epel/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}"
+epel_gpg_key_file: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}"
+epel_repos_list:
+  - epel
+  - epel-source
+  - epel-testing
+  - epel-testing-debuginfo
+  - epel-testing-source
+#  - epel-debuginfo - leaving these to internet archive, don't want to store
+
+#
+# Fedora Specifics
+#
+fedora_repo_base_path: "{{ linux_install_server_url }}/fedora"
+#fedora_gpg_key_url: "{{ linux_install_server_url }}/fedora/RPM-GPG-KEY-CentOS-{{ ansible_distribution_major_version }}"
+fedora_gpg_key_file: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}"
+fedora_repos_list:
+  - fedora
+  - updates

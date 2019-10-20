@@ -1,0 +1,8 @@
+---
+- name: setup masquerade 
+  firewalld:
+    masquerade: yes
+    state: enabled
+    permanent: true
+    zone: {{ public_firewall_zone }}
+

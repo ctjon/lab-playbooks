@@ -1,0 +1,195 @@
+---
+- name: validate cpu architecture supports virtualization
+  shell: egrep '^flags.*(vmx|svm)' /proc/cpuinfo
+  register: cpuinfo
+
+- name: show cpuinfo
+  debug:
+    var: cpuinfo.stdout_lines
+  failed_when: "'vmx' not in cpuinfo.stdout and 'svm' not in cpuinfo.stdout"
+
+- name: Adding user {{ libvirt_users }} to {{libvirt_groups}}
+  user:
+    name={{ item }}
+    groups={{libvirt_groups}}
+    append=yes
+  with_items:
+    - "{{ libvirt_users }}"
+
+- name: create /etc/polkit-1/localauthority/50-local.d/ directory
+  file:
+    path: /etc/polkit-1/localauthority/50-local.d/
+    state: directory
+    owner: root
+    group: polkitd
+    mode: 0750
+
+#- name: install 50-net.tjon-libvirt-remote-access.pkla
+#  template:
+#    src: 50-net.tjon-libvirt-remote-access.pkla.j2
+#    dest: /etc/polkit-1/localauthority/50-local.d/50-net.tjon-libvirt-remote-access.pkla
+#    owner: root
+#    group: polkitd
+#    mode: 0640
+#  register: polkit_result
+
+#- name: reset selinux permissions on /etc/polkit-1/localauthority
+#  command: restorecon -RF /etc/polkit-1/localauthority
+
+#- name: restart polkit service
+#  service:
+#    name: polkit
+#    state: restarted
+#  when: "polkit_result.changed == true"
+
+- name: create vm storage in /var/lib/libvirt/images
+  lvol:
+    vg: "{{ vm_storage_vg }}"
+    lv: "{{ vm_storage_lv }}"
+    size: "{{ vm_storage_lv_size }}"
+    shrink: no
+    resizefs: yes
+
+- name: Create a ext4 filesystem on {{ vm_storage_lv }}
+  filesystem:
+    fstype: "{{ vm_storage_fs_type }}"
+    dev: "/dev/{{vm_storage_vg}}/{{vm_storage_lv}}"
+    force: no
+    resizefs: yes
+
+- name: mount {{vm_storage_path}}
+  mount:
+    path: "{{ vm_storage_path }}"
+    src: "/dev/{{vm_storage_vg}}/{{vm_storage_lv}}"
+    fstype: "{{ vm_storage_fs_type }}"
+    opts: defaults,x-systemd.device-timeout=0
+    state: mounted
+
+- name: Install Packages
+  package:
+    name: python3-libvirt, python3-lxml, libvirt, virt-install, virt-viewer, virt-manager, virt-manager-common, guestfs-browser, libguestfs-tools, python-libguestfs, virt-top, edk2-ovmf, efibootmgr, syslinux, syslinux-extlinux
+    state: latest
+
+- name: start and enable libvirtd service
+  service:
+    name: libvirtd
+    state: started
+    enabled: yes
+
+- name: validate kvm modules loaded properly
+  shell: lsmod |grep kvm
+  register: lsmod_output
+
+- name: show lsmod_output
+  debug:
+    var: lsmod_output.stdout_lines
+  failed_when: "'kvm_intel' not in lsmod_output.stdout and 'kvm_amd' not in cpuinfo.stdout"
+
+- name: destroy default net
+  command: virsh net-destroy default
+  ignore_errors: yes
+
+- name: undefine default net
+  command: virsh net-undefine default
+  ignore_errors: yes
+
+- name: add libvirt_users to libvirt group
+  user: name={{ item }}
+        groups=libvirt
+        append=yes
+  with_items:
+    - "{{libvirt_users}}"
+
+- name: setup virtual networks
+  block:
+    - name: define nets
+      virt_net:
+        command: define
+        name: "{{item}}"
+        xml: '{{ lookup("template", "{{item}}.j2") }}'
+      ignore_errors: yes # set because module fails if network already exists
+      with_items:
+        - "{{virt_nets}}"
+
+    - name: create nets
+      virt_net:
+        command: create
+        name: "{{item}}"
+      ignore_errors: yes #set because module fails if network already exists
+      with_items:
+        - "{{virt_nets}}"
+
+    - name: set nets for autostart
+      virt_net:
+        name: "{{item}}"
+        autostart: yes
+      with_items:
+        - "{{virt_nets}}"
+
+    - name: add virt_nets to internal firewall zone
+      firewalld: 
+        zone: internal
+        interface: "{{item}}"
+        permanent: yes
+        immediate: yes
+        state: enabled
+      with_items:
+        - "{{ virt_nets}}"
+  when: ansible_hostname == "p51s" or ansible_hostname == "x1carbon"
+
+- name: Install virtio-win.repo from /export/install/Linux/virtio-win
+  get_url: 
+    url: "{{linux_install_server_url}}/virtio-win/virtio-win/virtio-win.repo"
+    dest: /etc/yum.repos.d/virtio-win.repo
+    mode: 644
+    owner: root
+    group: root
+
+- name: disable virtio-win internet repositories
+  command: dnf config-manager --set-disabled "{{ item }}" --save
+  with_items: 
+    - "virtio-win-stable"
+    - "virtio-win-latest"
+    - "virtio-win-source"
+  args:
+    warn: false # set warn=false to avoid warnings about dnf command/module
+
+- name: setup virtio-win-stable repo to install from {{linux_install_server_url}}/virtio-win
+  yum_repository:
+    name: virtio-win-stable-{{ansible_hostname}}
+    description: "virtio-win builds roughly matching what was shipped in latest RHEL on local on {{ansible_hostname}}"
+    file: /etc/yum.repos.d/tjon-virtio-win
+    baseurl: "{{ linux_install_server_url }}/virtio-win//virtio-win/repo/stable"
+    enabled: yes
+    gpgcheck: no
+    skip_if_unavailable: true
+
+- name: setup virtio-win-latest repo to install from {{linux_install_server_url}}/virtio-win
+  yum_repository:
+    name: virtio-win-latest-{{ansible_hostname}}
+    description: "Latest virtio-win builds local on {{ansible_hostname}}"
+    file: /etc/yum.repos.d/tjon-virtio-win
+    baseurl: "{{ linux_install_server_url }}/virtio-win//virtio-win/repo/latest"
+    enabled: no
+    gpgcheck: no
+    skip_if_unavailable: true
+
+- name: setup virtio-win-source repo to install from {{linux_install_server_url}}/virtio-win
+  yum_repository:
+    name: virtio-win-source-{{ansible_hostname}}
+    description: "virtio-win SRPMS local on {{ansible_hostname}}"
+    file: /etc/yum.repos.d/tjon-virtio-win
+    baseurl: "{{ linux_install_server_url }}/virtio-win//virtio-win/repo/srpms"
+    enabled: yes
+    gpgcheck: no
+    skip_if_unavailable: true
+
+- name: restore SELinux Context on /etc/yum.repos.d
+  command: restorecon -RFv /etc/yum.repos.d
+
+- name: install virtio-win rpms
+  package:
+    name: virtio-win
+    state: latest
+
+...

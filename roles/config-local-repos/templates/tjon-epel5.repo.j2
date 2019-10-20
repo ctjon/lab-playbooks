@@ -1,0 +1,24 @@
+[epel-{{linux_install_server_hostname}}]
+baseurl = {{linux_install_server_url}}/epel-archive/5/x86_64
+enabled = 1
+failovermethod = priority
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-5-x86_64
+keepcache = 0
+metadata_expire = 1d
+name = {{linux_install_server_hostname}}-EPEL5-x86_64
+repo_gpgcheck = 0
+skip_if_unavailable = 0
+
+[epel-source-{{linux_install_server_hostname}}]
+baseurl = {{linux_install_server_url}}/epel-archive/5/SRPMS
+enabled = 1
+failovermethod = priority
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-5-x86_64
+keepcache = 0
+metadata_expire = 1d
+name = {{linux_install_server_hostname}}-EPEL5-x86_64
+repo_gpgcheck = 0
+skip_if_unavailable = 0
+

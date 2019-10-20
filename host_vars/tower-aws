@@ -1,0 +1,35 @@
+use_ssh_agent: yes
+copy_ssh_keys: yes
+setup_ansible_config: yes
+setup_git_update: yes
+ssh_private_key_list:
+  - ctjon.pem
+  - chris-tjon-github_rsa
+  - ctjon-github_rsa
+
+ssh_public_key_list:
+  - chris-tjon-github_rsa
+  - ctjon-github_rsa
+
+my_tower_version: 3.5.2-1
+tower_install_dir: "/opt/tower"
+
+ssh_root_login_permited: "no"
+
+allowed_ssh_users: ec2-user
+ssh_keygen_users:
+  - root
+  - ec2-user
+
+
+ec2_access_key:
+ec2_secret_key:
+ec2_keypair: ctjon
+ec2_security_group: tower_demo
+ec2_instance_type: m5.large
+ec2_image: ami-18726478
+ec2_region: us-west-1
+# This user name will be set by Tower, when run through Tower
+tower_user_name: ctjon
+
+ansible_user: ec2-user

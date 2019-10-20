@@ -1,0 +1,28 @@
+---
+- name: RHEL5 Specific Confgurations
+  block:
+    - name: RHEL5 - install rhel rpm_gpg_key
+      rpm_key:
+        state: present
+        key: "{{ rhel_gpg_key_url }}"
+
+    - name: RHEL5 - install yum-utils
+      command: yum -y install yum-utils
+      args:
+        warn: false
+
+    - name: RHEL5 - apply updates
+      command: yum -y update
+      args:
+        warn: false
+  when:
+    - ansible_distribution == "RedHat"
+    - ansible_distribution_major_version == "5"
+
+- name: Apply all updates for RHEL6/CentOS/Fedora 6+/28+
+  package:
+    name: "*"
+    state: latest
+  when:
+    - not ((ansible_distribution == "RedHat" or ansible_distribution == "CentOS") and (ansible_distribution_major_version <= "5")) 
+

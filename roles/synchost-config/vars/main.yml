@@ -1,0 +1,12 @@
+scripts_dir: /home/chris/scripts
+script_name: sync-RHrepo.sh
+log_name: sync-RHrepo{{ansible_distribution_major_version}}.log
+scripts_owner: chris
+scripts_group: chris
+scripts_src: /home/chris/scripts
+logs_dir: /home/chris/logs
+logs_owner: chris
+logs_group: chris
+nfs_server: install.internal.tjon.net:/export/install
+nfs_mount: /mnt/install
+

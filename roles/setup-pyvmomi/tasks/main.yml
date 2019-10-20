@@ -1,0 +1,9 @@
+---
+- name: install pyvmomi
+  package:
+    name: python2-pyvmomi, python3-pyvmomi
+    state: latest
+  when:
+    - ansible_distribution == "Fedora"
+    - ansible_distribution_major_version >= "28"
+
