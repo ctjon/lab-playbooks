@@ -33,7 +33,7 @@ clearpart --all --initlabel
 # Disk partitioning information
 part /boot --fstype="ext4" --ondisk=sda --size=256
 part pv.409 --fstype="lvmpv" --ondisk=sda --grow
-volgroup rootvg --pesize=4096 pv.409 
+volgroup rootvg --pesize=4096 pv.409
 logvol /  --fstype="ext4" --size=1024 --label="root" --name=rootlv --vgname=rootvg
 logvol /usr  --fstype="ext4" --size=4096 --label="usr" --name=usrlv --vgname=rootvg
 logvol /home  --fstype="ext4" --size=512 --label="home" --name=homelv --vgname=rootvg
