@@ -31,6 +31,9 @@ primary_prefix: 24
 primary_short_net: 172.16.1
 primary_netmask: 255.255.255.0
 primary_gateway: 172.16.1.1
+search_domains: 
+ - internal.tjon.net
+ - tjon.net
 dns_servers: 
  - 172.16.1.3
  - 172.16.1.1
@@ -167,6 +170,7 @@ ks_configs_list:
   - synchost7-ks.cfg
   - synchost8-ks.cfg
   - tower-ks.cfg
+  - towervm-ks.cfg
   - tower-nodeA-ks.cfg
   - vpnserver-ks.cfg
 
@@ -308,8 +312,8 @@ centos_architectures:
   - x86_64
 
 fedora_versions:
-  - 29
   - 30
+  - 31
 
 # fedora versions that include upgrade.img
 fedora_upgrade_versions:

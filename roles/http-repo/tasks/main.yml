@@ -84,4 +84,5 @@
 - name: Apply new SELinux file context to vhosts directories
   command: restorecon -FR {{item.document_root}}
   with_items: "{{ vhosts }}"
+  tags: restorecon
 ...  

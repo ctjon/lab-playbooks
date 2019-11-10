@@ -1,13 +1,12 @@
-#version=DEVEL
 # System authorization information
 auth --enableshadow --passalgo=sha512
 # Use network installation
-url --url="{{linux_install_server_url}}/rhel/7/x86_64"
+url --url="{{linux_install_server_url}}/rhel/8/x86_64/"
 # Use graphical install
 graphical
 # Run the Setup Agent on first boot
 firstboot --enable
-ignoredisk --only-use=sda
+#ignoredisk --only-use=sda
 # Keyboard layouts
 # old format: keyboard us
 # new format:
@@ -16,37 +15,37 @@ keyboard --vckeymap=us --xlayouts='us'
 lang en_US.UTF-8
 
 # Network information
-network  --hostname=tower-nodeA.{{domain_name}} --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.23 --nameserver={{dns_servers|join(",")}} --netmask={{primary_netmask}} --activate
+network  --hostname=towervm.{{domain_name}} --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.253 --nameserver={{dns_servers|join(",")}} --netmask={{primary_netmask}} --activate
 
 # Root password
-rootpw --iscrypted $6$VeaHKP/A6kFUMSfd$u0GYy.CPbfEKPC.sgnC/7KToFeDvAWUai9clpJCgDKosLNzVIDSGMMzPuhT617DjL4nUTDbyhs/hMvMCvcWCJ1
+rootpw --iscrypted $6$EWvRuPP7F8pRTFrm$749vEu5HoijsEhVWzw691ZquSDP.FmK2Qc56HGpgE03pHMgxIMlal4YPM/BrmwfA10q0nKUDxkC7D21H1q7xH/
 # System services
 services --enabled="chronyd"
 # System timezone
-timezone America/Phoenix --isUtc --ntpservers=time.internal.tjon.net
+timezone America/Phoenix --isUtc
 reboot
-user --groups=wheel --name=chris --uid=1000 --password=$6$i1f1OpEJjZLPJsMt$9lnkjugGqnfX1ICR8et0Nur34/w4ff4/rCEt0M0/6gcjZgW0C5h/GeUbvhjWCscd2H2.WmRH/ni/Libp6bGG/0 --iscrypted --gecos="Chris Tjon"
+user --groups=wheel --name=chris --uid=1000 --password=$6$Cn2vwW.vUq0qFXYG$P6ogDQM8pvhpGk/InzJ4Lh9eiO/lnsJiF6rb3jYAKA4jreq5hGCXg2Gu.v6zIW1bNeSCLix0k0Pq2MXn8OLAu/ --iscrypted --gecos="Chris Tjon"
 # System bootloader configuration
 bootloader --location=mbr --boot-drive=sda
 # Partition clearing information
-clearpart --all --initlabel --drives=sda
-
+zerombr
+#clearpart --all --initlabel
+#clearpart --drives=sda --initlabel
 # Disk partitioning information
-part /boot --fstype="ext4" --ondisk=sda --size=256
-part pv.1 --fstype="lvmpv" --ondisk=sda --grow
-volgroup rootvg --pesize=4096 pv.1
+part /boot --fstype="ext4" --ondrive=sda --size=256
+part pv.409 --fstype="lvmpv" --ondrive=sda --grow
+volgroup rootvg --pesize=4096 pv.409 
 logvol /  --fstype="ext4" --size=1024 --label="root" --name=rootlv --vgname=rootvg
 logvol /usr  --fstype="ext4" --size=4096 --label="usr" --name=usrlv --vgname=rootvg
 logvol /home  --fstype="ext4" --size=512 --label="home" --name=homelv --vgname=rootvg
-logvol swap  --fstype="swap" --size=2048 --name=swaplv --vgname=rootvg
-logvol /opt  --fstype="ext4" --size=32 --label="opt" --name=optlv --vgname=rootvg
+logvol swap  --fstype="swap" --size=4096 --name=swaplv --vgname=rootvg
+logvol /opt  --fstype="ext4" --size=512 --label="opt" --name=optlv --vgname=rootvg
 logvol /var  --fstype="ext4" --size=10240 --label="var" --name=varlv --vgname=rootvg
 logvol /tmp  --fstype="ext4" --size=1024 --label="tmp" --name=tmplv --vgname=rootvg
 
 %packages
-@^minimal
+@^minimal-environment
 @core
-chrony
 
 %end
 
@@ -59,8 +58,8 @@ pwpolicy root --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 pwpolicy user --minlen=6 --minquality=1 --notstrict --nochanges --emptyok
 pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 %end
-%post
 
+%post
 # install ssh key for chris
 curl {{config_files_url}}/chris-server0-id_rsa.pub -o /home/chris/.ssh/authorized_keys  --create-dirs
 curl  {{config_files_url}}/chris-x1carbon-id_rsa.pub >> /home/chris/.ssh/authorized_keys
@@ -68,16 +67,4 @@ chown -R chris:chris /home/chris/.ssh
 chmod 700 /home/chris/.ssh
 chmod 600 /home/chris/.ssh/authorized_keys
 restorecon -RFv /home/chris/.ssh/authorized_keys
-
-
-curl  {{config_files_url}}/setup-tower-cluster-trust.sh >> /root/setup-tower-cluster-trust.sh
-chmod 700 /root/setup-tower-cluster-trust.sh
-chown root:root /root/setup-tower-cluster-trust.sh
-curl https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-latest.tar.gz -o /root/ansible-tower-setup-latest.tar.gz
-
-echo "curl https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-latest.tar.gz -o /root/ansible-tower-setup-latest.tar.gz" >> /root/get-tower.sh
-chmod 700 /root/get-tower.sh
-chown root:root /root/get-tower.sh
-
 %end
-

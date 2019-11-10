@@ -54,19 +54,6 @@
       - "--exclude=images"
   delegate_to: "{{ inventory_hostname }}"
 
-#- name: copy /usr/share/syslinux content to {{tftpbootdir}}
-#  copy:
-#    src: "{{ item }}"
-#    dest: "{{tftpbootdir}}"
-#    owner: "root"
-#    group: "root"
-#    remote_src: yes
-#  with_fileglob:
-#    - "/usr/share/syslinux/*"
-#    - "/usr/share/syslinux/diag"
-#    - "/usr/share/syslinux/dosutil"
-#    - "/usr/share/syslinux/efi64"
-
 - name: create {{tftpbootdir}}/{pxelinux.cfg,images} directories
   file:
     path: "{{tftpbootdir}}/{{item}}"
@@ -270,16 +257,16 @@
   file:
     path: "{{ks_config_dir}}"
     state: directory
-    owner: root
-    group: root
+    owner: chris
+    group: chris
     mode: 0755
 
 - name: deploy {{ks_config_dir}} Files
   template:
     src: "ks-configs/{{item}}.j2"
     dest: "{{ks_config_dir}}/{{item}}"
-    owner: root
-    group: root
+    owner: chris
+    group: chris
     mode: 0644
   with_items:
     - "{{ks_configs_list}}"
@@ -288,8 +275,8 @@
   template:
     src: "{{item}}.j2"
     dest: "{{config_files_dir}}/{{item}}"
-    owner: root
-    group: root
+    owner: chris
+    group: chris
     mode: 0755
   with_items:
     - rhel6-callback-service.sh
@@ -297,3 +284,5 @@
 
 - name: restore selinux context for {{ks_config_dir}}
   command: "restorecon -RFv {{ks_config_dir}}"
+  tags: restorecon
+
