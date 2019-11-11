@@ -3,7 +3,7 @@
 # Configure Ansible Tower Stand Alone
 #
 
-- hosts: tower
+- hosts: towers
   become: yes
 
   roles:

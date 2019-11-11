@@ -40,8 +40,8 @@
   block:
     - name: copy private ssh-keys to remote host
       copy:
-        src: "/home/chris/.ssh/{{item}}"
-        dest: "/home/{{ansible_user}}/.ssh/{{item}}"
+        src: "~{{ansible_user}}/.ssh/{{item}}"
+        dest: "~{{ansible_user}}/.ssh/{{item}}"
         owner: "{{ansible_user}}"
         group: "{{ansible_user}}"
         mode: 0600
@@ -50,8 +50,8 @@
 
     - name: copy public ssh-keys to remote host
       copy:
-        src: "/home/chris/.ssh/{{item}}.pub"
-        dest: "/home/{{ansible_user}}/.ssh/{{item}}.pub"
+        src: "~{{ansible_user}}/.ssh/{{item}}.pub"
+        dest: "~{{ansible_user}}/.ssh/{{item}}.pub"
         owner: "{{ansible_user}}"
         group: "{{ansible_user}}"
         mode: 0600

@@ -29,7 +29,7 @@ user --groups=wheel --name=chris --uid=1000 --password=$6$Cn2vwW.vUq0qFXYG$P6ogD
 bootloader --location=mbr --boot-drive=sda
 # Partition clearing information
 zerombr
-#clearpart --all --initlabel
+clearpart --all --initlabel
 #clearpart --drives=sda --initlabel
 # Disk partitioning information
 part /boot --fstype="ext4" --ondrive=sda --size=256
@@ -40,13 +40,13 @@ logvol /usr  --fstype="ext4" --size=4096 --label="usr" --name=usrlv --vgname=roo
 logvol /home  --fstype="ext4" --size=512 --label="home" --name=homelv --vgname=rootvg
 logvol swap  --fstype="swap" --size=4096 --name=swaplv --vgname=rootvg
 logvol /opt  --fstype="ext4" --size=512 --label="opt" --name=optlv --vgname=rootvg
-logvol /var  --fstype="ext4" --size=10240 --label="var" --name=varlv --vgname=rootvg
+logvol /var  --fstype="ext4" --size=2048 --label="var" --name=varlv --vgname=rootvg
 logvol /tmp  --fstype="ext4" --size=1024 --label="tmp" --name=tmplv --vgname=rootvg
 
 %packages
 @^minimal-environment
 @core
-
+python3
 %end
 
 %addon com_redhat_kdump --disable --reserve-mb='auto'
@@ -63,6 +63,7 @@ pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 # install ssh key for chris
 curl {{config_files_url}}/chris-server0-id_rsa.pub -o /home/chris/.ssh/authorized_keys  --create-dirs
 curl  {{config_files_url}}/chris-x1carbon-id_rsa.pub >> /home/chris/.ssh/authorized_keys
+curl  {{config_files_url}}/chris-mbp-id_rsa.pub >> /home/chris/.ssh/authorized_keys
 chown -R chris:chris /home/chris/.ssh
 chmod 700 /home/chris/.ssh
 chmod 600 /home/chris/.ssh/authorized_keys

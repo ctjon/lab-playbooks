@@ -9,9 +9,8 @@ ssh_private_key_list:
   - ctjon-github_rsa
 
 ssh_public_key_list: 
-  - chris-tjon-github_rsa
   - ctjon-github_rsa
 
-my_tower_version: 3.5.2-1
+my_tower_version: 3.5.3-1
 tower_install_dir: "/opt/tower"
 

@@ -30,13 +30,23 @@
     - ansible_distribution_major_version == "7"
 
 
+- name: Add rhel-6-server-ansible-2-rpms repository
+  command: yum-config-manager --enable rhel-6-server-ansible-2-rpms
+  when: ansible_distribution_major_version == "6"
+
 - name: Add rhel-7-server-ansible-2-rpms repository
   command: yum-config-manager --enable rhel-7-server-ansible-2-rpms
+  when: ansible_distribution_major_version == "7"
+
+- name: Add ansible-2-for-rhel-8-x86_64-rpms repository
+  command: yum-config-manager --enable ansible-2-for-rhel-8-x86_64-rpms
+  when: ansible_distribution_major_version == "8"
 
 - name: install ansible
   package:
     name: ansible
     state: latest
+
 
 - name: install tar command
   package:
@@ -155,6 +165,13 @@
   command: pip3 install boto3 --upgrade
   become: true
   when: ansible_python.version.major == 3
+
+- name: downgrade urllib3 on RHEL8
+  command: pip3 install urllib3==1.24
+  become: true
+#  when: 
+#    - ansible_python.version.major == 3
+#    - ansible_distribution_major_version == 8
 
 - name: setup ansible tower via setup.sh
   command: "./setup.sh"

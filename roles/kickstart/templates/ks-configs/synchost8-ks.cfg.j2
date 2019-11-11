@@ -42,7 +42,7 @@ logvol /usr  --fstype="ext4" --size=4096 --label="usr" --name=usrlv --vgname=roo
 logvol /home  --fstype="ext4" --size=512 --label="home" --name=homelv --vgname=rootvg
 logvol swap  --fstype="swap" --size=2048 --name=swaplv --vgname=rootvg
 logvol /opt  --fstype="ext4" --size=32 --label="opt" --name=optlv --vgname=rootvg
-logvol /var  --fstype="ext4" --size=1024 --label="var" --name=varlv --vgname=rootvg
+logvol /var  --fstype="ext4" --size=2048 --label="var" --name=varlv --vgname=rootvg
 logvol /tmp  --fstype="ext4" --size=1024 --label="tmp" --name=tmplv --vgname=rootvg
 
 %packages
@@ -67,6 +67,7 @@ pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 # install ssh key for chris
 curl {{config_files_url}}/chris-server0-id_rsa.pub -o /home/chris/.ssh/authorized_keys  --create-dirs
 curl  {{config_files_url}}/chris-x1carbon-id_rsa.pub >> /home/chris/.ssh/authorized_keys
+curl  {{config_files_url}}/chris-mbp-id_rsa.pub >> /home/chris/.ssh/authorized_keys
 chown -R chris:chris /home/chris/.ssh
 chmod 700 /home/chris/.ssh
 chmod 600 /home/chris/.ssh/authorized_keys

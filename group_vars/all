@@ -56,6 +56,7 @@ ssh_keys_location: "{{linux_install_server_url}}/ConfigFiles"
 ssh_keys_required:
   - chris-p51s-id_rsa.pub
   - chris-server0-id_rsa.pub
+  - chris-x1carbon-id_rsa.pub
 ansible_XAuthLocation: /usr/bin/xauth
 
 #
