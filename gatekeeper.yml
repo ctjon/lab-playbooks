@@ -1,0 +1,78 @@
+---
+#
+# Configure gatekeeper
+#
+
+- name: configure gatekeeper
+  hosts: gatekeeper
+  become: yes
+
+  roles:
+    - role: sm-register-updates
+      tags: ['sm-resgister']
+
+    - role: ssh-config
+      tags: ['ssh-config']
+
+    - role: shell-env #including both ssh-keys on server and p51s ??
+      tags: ['shell-env']
+
+    - role: selinux
+      tags: ['selinux']
+
+    - role: dnsmasq
+      tags: ['dnsmasq']
+
+    - role: apply-updates
+      tags: ['apply-updates']
+
+    - role: time-server
+      tags: ['time-server']
+
+    - role: setup-epel
+      tags: ['setup-epel']
+
+#    - role: setup-br0 
+#      tags: ['setup-br0']
+
+
+#    - role: postfix
+#      tags: ['postfix']
+
+    - role: ddns
+      tags: ['ddns']
+
+    - role: openvpn-server
+      tags: ['openvpn-server']
+
+    - role: fail2ban
+      tags: ['fail2ban']
+
+#    - role: syslog
+#      tags: ['syslog']
+
+    - role: reboot-if-required
+      tags: ['reboot-if-required']
+
+
+  tasks:
+    - name: install other packages 
+      package:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - nmap
+        - nmap-ncat
+        - iptraf-ng
+        - nmon
+        - iperf
+        - vnstat
+        - sysstat
+        - openscap
+        - openscap-scanner
+        - openscap-utils
+        - openscap-python3
+        - openscap-containers
+        - openscap-daemon
+      tags:
+        - localpkgs

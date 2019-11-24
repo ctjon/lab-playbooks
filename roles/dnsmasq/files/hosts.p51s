@@ -49,6 +49,8 @@
 172.16.1.42    	satclient2.internal.tjon.net satclient2
 172.16.1.43    	satclient3.internal.tjon.net satclient3
 172.16.1.251	gatekeeper-old.internal.tjon.net gatekeeper-old
+172.16.1.252	install-dummy.internal.tjon.net install-dummy
+172.16.1.253	gatekeeper-new.internal.tjon.net gatekeeper-new
 
 192.168.254.1   p51s-isolated.p51s.tjon.net p51s-isolated
 

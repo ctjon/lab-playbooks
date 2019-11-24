@@ -144,6 +144,7 @@ ssh_keys_required:
 # Kickstart Config Parameters                                                  #
 ################################################################################
 ks_configs_list:
+  - gatekeeper-ks.cfg
   - x1carbon-fedora-initial-ks.cfg
   - x1carbon-fedora-preserve-ks.cfg
   - x1carbon-rhel8-initial-ks.cfg

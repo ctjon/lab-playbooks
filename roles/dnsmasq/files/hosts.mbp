@@ -33,5 +33,7 @@
 172.16.1.41     satclient1.internal.tjon.net satclient1
 172.16.1.42     satclient2.internal.tjon.net satclient2
 172.16.1.43     satclient3.internal.tjon.net satclient3
+172.16.1.252	install-dummy.internal.tjon.net install-dummy
+172.16.1.253	gatekeeper-new.internal.tjon.net gatekeeper-new
 172.16.1.254    vmserver-console.internal.tjon.net vmserver-console
 54.183.210.65 ec2-54-183-210-65.us-west-1.compute.amazonaws.com tower-aws
