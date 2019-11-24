@@ -11,7 +11,7 @@ ssh_public_key_list:
   - chris-tjon-github_rsa
   - ctjon-github_rsa
 
-my_tower_version: 3.5.2-1
+my_tower_version: 3.6.0-1
 tower_install_dir: "/opt/tower"
 
 ssh_root_login_permited: "no"

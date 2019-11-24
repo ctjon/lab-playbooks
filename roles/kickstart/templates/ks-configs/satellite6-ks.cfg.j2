@@ -19,7 +19,7 @@ lang en_US.UTF-8
 reboot
 
 # Network information
-network  --hostname=satellite6.{{domain_name}} --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.5 --nameserver={{dns_servers|join(",")}} --netmask={{primary_netmask}} --activate
+network  --hostname=satellite6.{{domain_name}} --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.7 --nameserver={{dns_servers|join(",")}} --netmask={{primary_netmask}} --activate
 
 # Root password
 rootpw --iscrypted $6$KY6TFtdCk7.SV2G5$fb02sjorNVYVi6SAiFLswjDMBzWx7zzKgKmnw9fHR8rR6lsQIL7GP1wVvJn3WoVPCj6hWohW.0aBgAaDBsGux/

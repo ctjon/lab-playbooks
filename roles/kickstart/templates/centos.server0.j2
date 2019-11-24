@@ -16,7 +16,9 @@ LABEL Linux Menu
 label CentOS-8-x86_64-Latest
   menu label Install CentOS-8-x86_64-Latest Server
   kernel images/centos/8/x86_64/vmlinuz
-  append initrd=images/centos/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/centos/8/os/x86_64
+  append initrd=images/centos/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/centos/8/BaseOS/x86_64/os
+
+#http://install.internal.tjon.net/Linux/centos/8/BaseOS/x86_64/os/images/
 
 label CentOS-8-x86_64-rescue
   menu label Rescue CentOS-8-x86_64 system
