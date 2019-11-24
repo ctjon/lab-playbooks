@@ -8,8 +8,8 @@
   become: yes
 
   roles:
-    - role: sm-register-updates
-      tags: ['sm-resgister']
+    - role: sm-register
+      tags: ['sm-register']
 
     - role: ssh-config
       tags: ['ssh-config']
@@ -20,8 +20,11 @@
     - role: selinux
       tags: ['selinux']
 
-    - role: dnsmasq
-      tags: ['dnsmasq']
+    - role: masquerade
+      tags: ['masquerade']
+
+#    - role: bind-server
+#      tags: ['bind-server']
 
     - role: apply-updates
       tags: ['apply-updates']
@@ -50,6 +53,11 @@
 
 #    - role: syslog
 #      tags: ['syslog']
+
+    # use the insights register role from galaxy.ansible.com
+    - role: RedHatInsights.insights-client
+      when: ((ansible_os_family == 'RedHat') && (ansible_distribution_major_version > '5'))
+      tags: ['insights']
 
     - role: reboot-if-required
       tags: ['reboot-if-required']

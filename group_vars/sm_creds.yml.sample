@@ -1,0 +1,10 @@
+# Subscription Manager Info
+redhat_portal_username: username
+redhat_portal_password: password
+insights_display_name: "{{ansible_fqdn}}"
+autoconfig: False
+authmethod: BASIC`
+my_pool_ids:
+  - pool_id_1
+#  - pool_id_2
+#  - pool_id_3

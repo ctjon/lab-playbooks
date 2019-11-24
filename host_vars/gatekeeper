@@ -1,0 +1,57 @@
+#
+# host_vars file for server0
+#
+
+use_ssh_agent: no
+copy_ssh_keys: no
+setup_ansible_config: no
+setup_git_update: no
+ssh_private_key_list:
+  - ctjon.pem
+  - ctjon-github_rsa
+
+ssh_public_key_list:
+  - ctjon-github_rsa
+
+TIMEZONE: "America/Phoenix"
+time_servers:
+  - 0.rhel.pool.ntp.org
+  - 1.rhel.pool.ntp.org
+  - 2.rhel.pool.ntp.org
+  - 3.rhel.pool.ntp.org
+
+################################################################################
+# Network Configuration Parameters                                             #
+################################################################################
+domain_name: internal.tjon.net
+primary_subnet: 172.16.1.0/24
+primary_ipaddr: 172.16.1.253
+primary_prefix: 24
+primary_short_net: 172.16.1
+primary_netmask: 255.255.255.0
+primary_gateway: 172.16.1.1
+search_domains: 
+ - internal.tjon.net
+ - tjon.net
+dns_servers: 
+ - 172.16.1.3
+ - 172.16.1.1
+ - 8.8.8.8
+primary_interface: eth0
+primary_bridge: br0
+
+################################################################################
+# Firewall Configuration Parameters                                            #
+################################################################################
+public_firewall_zone: FedoraServer
+trusted_firewall_zone: FedoraServer
+additional_fw_ports:
+#  - 8443
+
+################################################################################
+# SSH Configuration Parameters                                                 #
+################################################################################
+#ssh_root_login_permited: "yes"
+#allowed_ssh_users: chris root
+ssh_root_login_permited: "no"
+allowed_ssh_users: chris

@@ -27,6 +27,7 @@ firstboot --enable
 services --enabled="chronyd"
 # System timezone
 timezone America/Phoenix --isUtc
+reboot
 user --groups=wheel --name=chris --password=$6$oWM3S2AK4zS.jyDy$716RhjySp6ncIMig2UggFWY5z98sfkmLQLqyWwlw1N4jogYBdjqSRlRjoJd.nr59z7iI68rzP4Y3WLj6Ssr5M. --iscrypted --gecos="Chris Tjon"
 
 # System bootloader configuration
@@ -42,7 +43,7 @@ logvol /usr  --fstype="ext4" --size=4096 --label="usr" --name=usrlv --vgname=roo
 logvol /home  --fstype="ext4" --size=512 --label="home" --name=homelv --vgname=rootvg
 logvol swap  --fstype="swap" --size=2048 --name=swaplv --vgname=rootvg
 logvol /opt  --fstype="ext4" --size=32 --label="opt" --name=optlv --vgname=rootvg
-logvol /var  --fstype="ext4" --size=2048 --label="var" --name=varlv --vgname=rootvg
+logvol /var  --fstype="ext4" --size=3072 --label="var" --name=varlv --vgname=rootvg
 logvol /tmp  --fstype="ext4" --size=1024 --label="tmp" --name=tmplv --vgname=rootvg
 
 %packages
@@ -50,6 +51,7 @@ logvol /tmp  --fstype="ext4" --size=1024 --label="tmp" --name=tmplv --vgname=roo
 @core
 python3
 insights-client
+open-vm-tools
 
 %end
 

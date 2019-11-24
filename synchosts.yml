@@ -33,6 +33,13 @@
     - role: synchost-config
       tags: ['synchost-config']
 
+    # use the insights register role from galaxy.ansible.com
+    - role: RedHatInsights.insights-client
+      when: 
+        - ansible_os_family == "RedHat"
+        - ansible_distribution_major_version >= "6"
+      tags: ['insights']
+
     - role: reboot-if-required
       tags: ['reboot-if-required']
 
