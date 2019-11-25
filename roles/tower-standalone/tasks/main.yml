@@ -173,23 +173,23 @@
 #    - ansible_python.version.major == 3
 #    - ansible_distribution_major_version == 8
 
-- name: setup ansible tower via setup.sh
-  command: "./setup.sh"
-  args:
-    chdir: "{{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}"
-  become: true
+#- name: setup ansible tower via setup.sh
+#  command: "./setup.sh"
+#  args:
+#    chdir: "{{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}"
+#  become: true
 
-- name: setup boto3 for ansible venv
-  command: "{{tower_install_dir}}/scripts/upgrade_boto3_ansible_venv.sh"
-  become: true
+#- name: setup boto3 for ansible venv
+#  command: "{{tower_install_dir}}/scripts/upgrade_boto3_ansible_venv.sh"
+#  become: true
 
-- name: setup boto3 for tower venv
-  command: "{{tower_install_dir}}/scripts/upgrade_boto3_tower_venv.sh"
-  become: true
+#- name: setup boto3 for tower venv
+#  command: "{{tower_install_dir}}/scripts/upgrade_boto3_tower_venv.sh"
+#  become: true
 
-- name: restore ansible tower via "setup.sh -r"
-  command: "{{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}/setup.sh -r {{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}/ansible-tower-latest.tar.gz"
-  become: true
+#- name: restore ansible tower via "setup.sh -r"
+#  command: "{{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}/setup.sh -r {{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}/ansible-tower-latest.tar.gz"
+#  become: true
 
 #- name: restore ansible tower via "setup.sh -r"
 #  command: "./setup.sh -r ansible-tower-latest.tar.gz"
