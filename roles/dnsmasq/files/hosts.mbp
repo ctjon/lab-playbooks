@@ -4,6 +4,7 @@
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 192.168.242.1	mbp.mbp.tjon.net mbp
 192.168.242.4	towervm.mbp.tjon.net towervm
+192.168.242.5	fipstest.mbp.tjon.net fipstest
 172.16.1.1	gatekeeper.internal.tjon.net gatekeeper
 172.16.1.2	vmserver.internal.tjon.net vmserver
 172.16.1.3	server0.internal.tjon.net server0 install.internal.tjon.net archive.internal.tjon.net time.internal.tjon.net satcontent.internal.tjon.net satcontent

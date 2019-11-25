@@ -166,9 +166,9 @@
   become: true
   when: ansible_python.version.major == 3
 
-- name: downgrade urllib3 on RHEL8
-  command: pip3 install urllib3==1.24
-  become: true
+#- name: downgrade urllib3 on RHEL8
+#  command: pip3 install urllib3==1.24
+#  become: true
 #  when: 
 #    - ansible_python.version.major == 3
 #    - ansible_distribution_major_version == 8
@@ -187,15 +187,15 @@
   command: "{{tower_install_dir}}/scripts/upgrade_boto3_tower_venv.sh"
   become: true
 
-#- name: restore ansible tower via "setup.sh -r"
-#  command: "{{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}/setup.sh -r {{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}/ansible-tower-latest.tar.gz"
-#  become: true
-
 - name: restore ansible tower via "setup.sh -r"
-  command: "./setup.sh -r ansible-tower-latest.tar.gz"
-  args:
-    chdir: "{{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}"
+  command: "{{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}/setup.sh -r {{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}/ansible-tower-latest.tar.gz"
   become: true
+
+#- name: restore ansible tower via "setup.sh -r"
+#  command: "./setup.sh -r ansible-tower-latest.tar.gz"
+#  args:
+#    chdir: "{{tower_install_dir}}/ansible-tower-setup-{{my_tower_version}}"
+#  become: true
 
 - name: Unconditionally reboot the machine with all defaults
   reboot:

@@ -52,7 +52,12 @@ label towervm
 label gatekeeper
   menu label gatekeeper
   kernel images/rhel/8/x86_64/vmlinuz
-  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 ipv6.disable=1 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/gatekeeper-ks.cfg
+  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 fips=1 ipv6.disable=1 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/gatekeeper-ks.cfg
+
+label fipstest
+  menu label fipstest
+  kernel images/rhel/8/x86_64/vmlinuz
+  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 fips=1 ipv6.disable=1 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/fipstest-ks.cfg
 
 #
 # Ansible Tower Cluster Installs
