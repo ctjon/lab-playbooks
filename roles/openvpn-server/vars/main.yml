@@ -13,6 +13,7 @@ use_tcp_also: true
 public_ip: 172.16.1.3
 client_list:
   - p51s
+  - mbp
   - x1carbon
   - win10
 openvpn_interface_list:

@@ -1,0 +1,25 @@
+client
+dev tun
+proto udp
+remote {{ public_ip }} {{openvpn_port}}
+nobind
+user nobody
+group nobody
+persist-key
+persist-tun
+ca ca.crt
+cert mbp.crt
+key mbp.key
+{% if two_fa is defined %}
+auth-user-pass
+{% endif %}
+remote-cert-tls server
+tls-auth ta.key 1
+cipher AES-256-CFB8
+tls-cipher TLS-DHE-RSA-WITH-AES-256-CBC-SHA
+auth SHA512
+comp-lzo 
+verb 3
+auth-nocache
+script-security 2
+reneg-sec 10800
