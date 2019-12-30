@@ -8,6 +8,9 @@
   become: yes
 
   roles:
+    - role: masquerade
+      tags: ['masquerade']
+
     - role: sm-register
       tags: ['sm-register']
 
@@ -20,11 +23,14 @@
     - role: selinux
       tags: ['selinux']
 
-    - role: masquerade
-      tags: ['masquerade']
+    - role: setup-epel
+      tags: ['setup-epel']
 
-#    - role: bind-server
-#      tags: ['bind-server']
+    - role: fail2ban
+      tags: ['fail2ban']
+
+    - role: dnsmasq
+      tags: ['dnsmasq']
 
     - role: apply-updates
       tags: ['apply-updates']
@@ -32,32 +38,24 @@
     - role: time-server
       tags: ['time-server']
 
-    - role: setup-epel
-      tags: ['setup-epel']
-
-#    - role: setup-br0 
-#      tags: ['setup-br0']
-
+#    - role: ddns
+#      tags: ['ddns']
 
 #    - role: postfix
 #      tags: ['postfix']
 
-    - role: ddns
-      tags: ['ddns']
-
-    - role: openvpn-server
-      tags: ['openvpn-server']
-
-    - role: fail2ban
-      tags: ['fail2ban']
+#    - role: openvpn-server
+#      tags: ['openvpn-server']
 
 #    - role: syslog
 #      tags: ['syslog']
 
     # use the insights register role from galaxy.ansible.com
     - role: RedHatInsights.insights-client
-      when: ((ansible_os_family == 'RedHat') && (ansible_distribution_major_version > '5'))
       tags: ['insights']
+      when: 
+        - ansible_os_family == "RedHat"
+        - ansible_distribution_major_version > "5"
 
     - role: reboot-if-required
       tags: ['reboot-if-required']
@@ -72,15 +70,15 @@
         - nmap
         - nmap-ncat
         - iptraf-ng
-        - nmon
-        - iperf
-        - vnstat
         - sysstat
         - openscap
         - openscap-scanner
         - openscap-utils
         - openscap-python3
-        - openscap-containers
-        - openscap-daemon
+        #- openscap-containers
+        #- openscap-daemon
+        #- nmon
+        #- iperf
+        #- vnstat
       tags:
         - localpkgs

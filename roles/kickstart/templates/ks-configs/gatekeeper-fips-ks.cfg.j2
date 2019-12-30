@@ -52,7 +52,47 @@ bind-utils
 open-vm-tools
 nmap
 sysstat
+aide
+audispd-plugins
+audit
+dnf-automatic
+fapolicyd
 firewalld
+iptables
+libcap-ng-utils
+libreswan
+openscap
+openscap-scanner
+policycoreutils
+python3-subscription-manager-rhsm
+rng-tools
+rsyslog
+rsyslog-gnutls
+scap-security-guide
+sssd-ipa
+sudo
+tmux
+usbguard
+-abrt
+-abrt-addon-ccpp
+-abrt-addon-kerneloops
+-abrt-addon-python
+-abrt-cli
+-abrt-plugin-logger
+-abrt-plugin-rhtsupport
+-abrt-plugin-sosreport
+-gssproxy
+-iprutils
+-krb5-workstation
+-nfs-utils
+-sendmail
+-tuned
+
+%end
+
+%addon org_fedora_oscap
+    content-type = scap-security-guide
+    profile = xccdf_org.ssgproject.content_profile_ospp
 %end
 
 %addon com_redhat_kdump --disable --reserve-mb='auto'

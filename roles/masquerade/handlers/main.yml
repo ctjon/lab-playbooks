@@ -1,2 +1,9 @@
 ---
 # handlers file for masquerade
+- name: restart Network
+  include_tasks: restart_network.yml
+
+- name: restart firewalld
+  service:
+    name: firewalld
+    state: restarted

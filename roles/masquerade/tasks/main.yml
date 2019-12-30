@@ -1,8 +1,83 @@
 ---
+- name: setup ifcfg-eth0
+  template:
+    src: "ifcfg-eth0.{{ansible_hostname}}.j2"
+    dest: /etc/sysconfig/network-scripts/ifcfg-eth0
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart Network
+
+- name: setup ifcfg-eth1
+  template:
+    src: "ifcfg-eth1.{{ansible_hostname}}.j2"
+    dest: /etc/sysconfig/network-scripts/ifcfg-eth1
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart Network
+
+- name: add {{trusted_firewall_interface}} to {{trusted_firewall_zone}}
+  firewalld:
+    zone: "{{trusted_firewall_zone}}"
+    interface: "{{trusted_firewall_interface}}"
+    permanent: yes
+    state: enabled
+
+- name: add {{public_firewall_interface}} to {{public_firewall_zone}}
+  firewalld:
+    zone: "{{public_firewall_zone}}"
+    interface: "{{public_firewall_interface}}"
+    permanent: yes
+    state: enabled
+
+- name: Set ip forwarding and reload if necessary
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    sysctl_set: yes
+    state: present
+    reload: yes
+
 - name: setup masquerade 
   firewalld:
-    masquerade: yes
+    masquerade: "yes"
     state: enabled
-    permanent: true
-    zone: {{ public_firewall_zone }}
+    permanent: yes
+    zone: "{{ public_firewall_zone }}"
 
+- name: block firewall ports for unwanted services on {{public_firewall_zone}} zone
+  firewalld:
+    service: "{{item}}"
+    state: disabled
+    permanent: yes
+    zone: "{{ public_firewall_zone }}"
+  with_items:
+    - cockpit
+    - dhcpv6-client
+  notify: restart firewalld
+
+- name: enable firewall for sshd on {{public_firewall_zone}} zone
+  firewalld:
+    service: ssh
+    state: enabled
+    permanent: yes
+    zone: "{{ public_firewall_zone }}"
+  when: enable_public_sshd|bool 
+  notify: restart firewalld
+
+- name: disable firewall for sshd on {{public_firewall_zone}} zone
+  firewalld:
+    service: ssh
+    state: disabled
+    permanent: yes
+    zone: "{{ public_firewall_zone }}"
+  when: not enable_public_sshd|bool
+  notify: restart firewalld
+
+- name: open firewall for sshd on {{trusted_firewall_zone}} zone
+  firewalld:
+    service: ssh
+    state: enabled
+    permanent: yes
+    zone: "{{ trusted_firewall_zone }}"

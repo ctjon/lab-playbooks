@@ -25,26 +25,41 @@ time_servers:
 ################################################################################
 domain_name: internal.tjon.net
 primary_subnet: 172.16.1.0/24
-primary_ipaddr: 172.16.1.253
+primary_ipaddr: 172.16.1.1
 primary_prefix: 24
 primary_short_net: 172.16.1
 primary_netmask: 255.255.255.0
 primary_gateway: 172.16.1.1
+mtu_size: 9000
+ipv6_enabled: "no"
 search_domains: 
  - internal.tjon.net
  - tjon.net
 dns_servers: 
- - 172.16.1.3
  - 172.16.1.1
- - 8.8.8.8
 primary_interface: eth0
 primary_bridge: br0
 
 ################################################################################
+# DNSMASQ Configuration Parameters                                             #
+################################################################################
+dnsmasq_interfaces:
+  - eth0
+
+dhcp_enabled: true
+pxe_enabled: true
+
+dnsmasq_dhcp_interfaces:
+  - {name: eth0, dhcp_start: 172.16.1.100, dhcp_end: 172.16.1.200, ntp_server: 172.16.1.1, router: 172.16.1.1, lease: 15m}
+
+################################################################################
 # Firewall Configuration Parameters                                            #
 ################################################################################
-public_firewall_zone: FedoraServer
-trusted_firewall_zone: FedoraServer
+trusted_firewall_interface: eth0
+trusted_firewall_zone: internal
+public_firewall_interface: eth1
+public_firewall_zone: public
+enable_public_sshd: yes
 additional_fw_ports:
 #  - 8443
 

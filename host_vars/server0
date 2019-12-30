@@ -145,6 +145,7 @@ ssh_keys_required:
 ################################################################################
 ks_configs_list:
   - gatekeeper-ks.cfg
+  - gatekeeper-fips-ks.cfg
   - fipstest-ks.cfg
   - x1carbon-fedora-initial-ks.cfg
   - x1carbon-fedora-preserve-ks.cfg

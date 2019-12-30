@@ -1,0 +1,11 @@
+# /etc/sysconfig/network-scripts/ifcfg-eth0
+# {{ansible_managed}}
+TYPE="Ethernet"
+DEVICE="{{trusted_firewall_interface}}"
+ONBOOT="yes"
+BOOTPROTO="static"
+IPADDR="{{primary_ipaddr}}"
+NETMASK="{{primary_netmask}}"
+GATEWAY=""
+MTU="{{mtu_size}}"
+IPV6INIT="{{ipv6_enabled}}"

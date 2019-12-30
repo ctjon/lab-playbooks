@@ -12,7 +12,7 @@
 
 - name: install dnsmasq.conf file
   template:
-    src: dnsmasq.conf.j2
+    src: dnsmasq.conf.{{ansible_hostname}}.j2
     dest: /etc/dnsmasq.conf
     owner: root
     group: dnsmasq
@@ -55,6 +55,7 @@
     state: enabled
     permanent: yes
   notify: restart dnsmasq
+  when: dhcp_enabled == true
 
 - name: install /etc/hosts file
   copy:
@@ -94,19 +95,5 @@
     - "69/tcp"
     - "69/udp"
     - "4011/udp"
-
-- name: Set ip forwarding and reload if necessary
-  sysctl:
-    name: net.ipv4.ip_forward
-    value: "1"
-    sysctl_set: yes
-    state: present
-    reload: yes
-
-- name: install resolv.conf file
-  template:
-    src: resolv.conf.j2
-    dest: /etc/resolv.conf
-    owner: root
-    group: root
-    mode: 0644
+  notify: restart dnsmasq
+...

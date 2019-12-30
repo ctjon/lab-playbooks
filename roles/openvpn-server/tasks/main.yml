@@ -124,8 +124,8 @@
 
 - name: "Create OpenVPN TCP Server Config"
   template: 
-    src: 1194tcp.conf.j2
-    dest: "{{openvpn_server_dir}}/1194tcp.conf"
+    src: 443tcp.conf.j2
+    dest: "{{openvpn_server_dir}}/443tcp.conf"
     owner: "{{openvpn_user}}"
     group: "{{openvpn_group}}"
     mode: 600
@@ -220,20 +220,20 @@
     zone: "{{openvpn_fw_zone}}"
   notify: restart firewalld
 
-#- name: Open OpenVPN Port {{ openvpn_port }}/udp
-#  firewalld:
-#    immediate: yes
-#    port: "{{ openvpn_port }}/udp"
-#    state: enabled
-#    permanent: yes
-#    zone: "{{openvpn_fw_zone}}"
-#  notify: restart firewalld
-#
-#- name: Open OpenVPN Port "{{ openvpn_port }}/tcp"
-#  firewalld:
-#    immediate: yes
-#    port: "{{ openvpn_port }}/tcp"
-#    state: enabled
+- name: Open OpenVPN Port {{ openvpn_udp_port }}/udp
+  firewalld:
+    immediate: yes
+    port: "{{ openvpn_udp_port }}/udp"
+    state: enabled
+    permanent: yes
+    zone: "{{openvpn_fw_zone}}"
+  notify: restart firewalld
+
+- name: Open OpenVPN Port "{{ openvpn_tcp_port }}/tcp"
+  firewalld:
+    immediate: yes
+    port: "{{ openvpn_tcp_port }}/tcp"
+    state: enabled
 #    permanent: yes
 #    zone: "{{openvpn_fw_zone}}"
 #  when: use_tcp_also == true
@@ -270,5 +270,5 @@
     state: started
   with_items:
     - openvpn-server@1194udp
-    - openvpn-server@1194tcp
+    - openvpn-server@443tcp
 

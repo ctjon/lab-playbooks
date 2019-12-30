@@ -1,0 +1,8 @@
+# /etc/sysconfig/network-scripts/ifcfg-eth1
+# {{ansible_managed}}
+TYPE="Ethernet"
+DEVICE="{{public_firewall_interface}}"
+ONBOOT="yes"
+BOOTPROTO="dhcp"
+IPV6INIT="{{ipv6_enabled}}"
+MTU="{{mtu_size}}"
