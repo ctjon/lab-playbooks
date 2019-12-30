@@ -1,0 +1,28 @@
+---
+- name: Install dhcp-server
+  package:
+    name: dhcp-server
+    state: latest
+  notify: restart dhcpd
+
+- name: configure firewall for DHCP services
+  firewalld:
+    zone: "{{trusted_firewall_zone}}"
+    service: dhcp
+    immediate: yes
+    state: enabled
+    permanent: yes
+
+- name: install dhcpd.conf
+  template:
+    src: dhcpd.conf.{{ansible_hostname}}.j2
+    dest: /etc/dhcp/dhcpd.conf
+    owner: root
+    group: dhcpd
+    mode: 0644
+  notify: restart dhcpd
+
+- name: start dhcpd serivce if not running
+  service:
+    name: dhcpd
+    state: started

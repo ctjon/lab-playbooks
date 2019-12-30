@@ -37,8 +37,24 @@ search_domains:
  - tjon.net
 dns_servers: 
  - 172.16.1.1
+ - 172.16.1.3
 primary_interface: eth0
 primary_bridge: br0
+
+################################################################################
+# DHCP Server Configuration Parameters                                         #
+################################################################################
+dhcpd_authoratative: yes
+dhcpd_log_level: local7
+dhcpd_default_lease_time: 600
+dhcpd_max_lease_time: 7200
+dhcpd_ddns_update_style: none
+dhcpd_range_start: 172.16.1.101
+dhcpd_range_end: 172.16.1.200
+dhcpd_bootp_range_start: 172.16.1.201
+dhcpd_bootp_range_end: 172.16.1.240
+my_tftp_server: 172.16.1.3
+my_tftp_bootfile: pxelinux.0
 
 ################################################################################
 # DNSMASQ Configuration Parameters                                             #
@@ -46,7 +62,7 @@ primary_bridge: br0
 dnsmasq_interfaces:
   - eth0
 
-dhcp_enabled: true
+dhcp_enabled: false
 pxe_enabled: true
 
 dnsmasq_dhcp_interfaces:

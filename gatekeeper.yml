@@ -29,6 +29,9 @@
     - role: fail2ban
       tags: ['fail2ban']
 
+    - role: dhcp-server
+      tags: ['dhcp-server']
+
     - role: dnsmasq
       tags: ['dnsmasq']
 
@@ -71,14 +74,10 @@
         - nmap-ncat
         - iptraf-ng
         - sysstat
+        - iperf3
         - openscap
         - openscap-scanner
         - openscap-utils
         - openscap-python3
-        #- openscap-containers
-        #- openscap-daemon
-        #- nmon
-        #- iperf
-        #- vnstat
       tags:
         - localpkgs

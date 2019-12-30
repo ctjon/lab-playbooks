@@ -35,27 +35,27 @@
     enabled: yes
     state: started
 
-- name: configure dnsmasq for DHCP
-  block: 
-    - name: install dnsmasq.d/dhcp.conf file
-      template:
-        src: dhcp.conf.{{ansible_hostname}}.j2
-        dest: /etc/dnsmasq.d/dhcp.conf
-        owner: root
-        group: root
-        mode: 0644
-      notify: restart dnsmasq
-  when: dhcp_enabled == true
+#- name: configure dnsmasq for DHCP
+#  block: 
+#    - name: install dnsmasq.d/dhcp.conf file
+#      template:
+#        src: dhcp.conf.{{ansible_hostname}}.j2
+#        dest: /etc/dnsmasq.d/dhcp.conf
+#        owner: root
+#        group: root
+#        mode: 0644
+#      notify: restart dnsmasq
+#  when: dhcp_enabled == true
 
-- name: configure firewall for DHCP # Need this for PXE
-  firewalld:
-    zone: "{{trusted_firewall_zone}}"
-    service: dhcp
-    immediate: yes
-    state: enabled
-    permanent: yes
-  notify: restart dnsmasq
-  when: dhcp_enabled == true
+#- name: configure firewall for DHCP # Need this for PXE
+#  firewalld:
+#    zone: "{{trusted_firewall_zone}}"
+#    service: dhcp
+#    immediate: yes
+#    state: enabled
+#    permanent: yes
+#  notify: restart dnsmasq
+#  when: dhcp_enabled == true
 
 - name: install /etc/hosts file
   copy:
@@ -90,8 +90,6 @@
     state: enabled
     permanent: yes
   with_items:
-    - "68/tcp"
-    - "68/udp"
     - "69/tcp"
     - "69/udp"
     - "4011/udp"
