@@ -68,7 +68,7 @@
 
 # This should be in the handler but handlers need to support blocks first
 # see https://github.com/ansible/ansible/issues/14270 for details
-- name: set selinux context on /etc/dnsmasq.conf and etc/dnsmasq.d
+- name: restore selinux context on /etc/dnsmasq.conf and etc/dnsmasq.d
   command: restorecon -RFv {{item}}
   with_items:
     - /etc/dnsmasq.conf 

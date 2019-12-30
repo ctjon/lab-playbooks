@@ -1,6 +1,7 @@
 ---
-- name: Set Timezone
-  command: timedatectl set-timezone {{TIMEZONE}}
+- name: Set timezone to {{TIMEZONE}}
+  timezone:
+    name: "{{TIMEZONE}}"
 
 - name: install chrony and firewalld
   package:
