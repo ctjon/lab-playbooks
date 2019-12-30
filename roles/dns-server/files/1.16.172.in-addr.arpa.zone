@@ -1,0 +1,42 @@
+$ORIGIN 1.16.172.in-addr.arpa.
+$TTL 86400
+@  IN  SOA  ns.internal.tjon.net.  gatekeeper.internal.tjon.net. (
+       2001062501  ; serial
+       21600       ; refresh after 6 hours
+       3600        ; retry after 1 hour
+       604800      ; expire after 1 week
+       86400 )     ; minimum TTL of 1 day
+;
+@  IN  NS   ns.internal.tjon.net.
+
+1  IN  PTR  gatekeeper.internal.tjon.net.
+2  IN  PTR  vmserver.internal.tjon.net.
+3  IN  PTR  server0.internal.tjon.net.
+5  IN  PTR  wireless.internal.tjon.net.
+6  IN  PTR  itunesserver.internal.tjon.net.
+7  IN  PTR  satellite6.internal.tjon.net.
+10  IN  PTR  virtualpc.internal.tjon.net.
+11  IN  PTR  synchost6.internal.tjon.net.
+12  IN  PTR  synchost7.internal.tjon.net.
+13  IN  PTR  synchost5.internal.tjon.net.
+14  IN  PTR  synchost8.internal.tjon.net.
+18  IN  PTR  tower.internal.tjon.net.
+19  IN  PTR  gitlab.internal.tjon.net.
+22  IN  PTR  adserver.internal.tjon.net.
+30  IN  PTR  test-rhel8.internal.tjon.net.
+31  IN  PTR  test-rhel7.internal.tjon.net.
+32  IN  PTR  test-rhel6.internal.tjon.net.
+33  IN  PTR  test-rhel5.internal.tjon.net.
+34  IN  PTR  test-centos8.internal.tjon.net.
+35  IN  PTR  test-centos7.internal.tjon.net.
+36  IN  PTR  test-centos6.internal.tjon.net.
+37  IN  PTR  test-centos5.internal.tjon.net.
+38  IN  PTR  test-fedora30.internal.tjon.net.
+39  IN  PTR  test-fedora31.internal.tjon.net.
+40  IN  PTR  satclient0.internal.tjon.net.
+41  IN  PTR  satclient1.internal.tjon.net.
+42  IN  PTR  satclient2.internal.tjon.net.
+43  IN  PTR  satclient3.internal.tjon.net.
+252 IN  PTR  install-dummy.internal.tjon.net.
+253 IN  PTR  gatekeeper-new.internal.tjon.net.
+254 IN  PTR  vmserver-console.internal.tjon.net.

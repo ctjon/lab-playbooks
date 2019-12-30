@@ -1,0 +1,49 @@
+$ORIGIN internal.tjon.net.
+$TTL 86400
+@  IN  SOA  ns.internal.tjon.net. gatekeeper.internal.tjon.net. (
+       2001062501  ; serial
+       21600       ; refresh after 6 hours
+       3600        ; retry after 1 hour
+       604800      ; expire after 1 week
+       86400 )     ; minimum TTL of 1 day
+;
+@  IN  NS   ns.internal.tjon.net.
+;
+gatekeeper       IN  A      172.16.1.1
+ns               IN  A      172.16.1.1
+mail             IN  CNAME  gatekeeper.internal.tjon.net.
+vpnserver        IN  CNAME  gatekeeper.internal.tjon.net.
+time             IN  CNAME  gatekeeper.internal.tjon.net.
+vmserver         IN  A      172.16.1.2
+server0          IN  A      172.16.1.3
+install          IN  CNAME  server0.internal.tjon.net.
+archive          IN  CNAME  server0.internal.tjon.net.
+wireless         IN  A      172.16.1.5
+itunesserver     IN  A      172.16.1.6
+satellite6       IN  A      172.16.1.7
+virtualpc        IN  A      172.16.1.10
+synchost6        IN  A      172.16.1.11
+synchost7        IN  A      172.16.1.12
+synchost5        IN  A      172.16.1.13
+synchost8        IN  A      172.16.1.14
+tower            IN  A      172.16.1.18
+gitlab           IN  A      172.16.1.19
+adserver         IN  A      172.16.1.22
+test-rhel8       IN  A      172.16.1.30
+test-rhel7       IN  A      172.16.1.31
+test-rhel6       IN  A      172.16.1.32
+test-rhel5       IN  A      172.16.1.33
+test-centos8     IN  A      172.16.1.34
+test-centos7     IN  A      172.16.1.35
+test-centos6     IN  A      172.16.1.36
+test-centos5     IN  A      172.16.1.37
+test-fedora30    IN  A      172.16.1.38
+test-fedora31    IN  A      172.16.1.39
+satclient0       IN  A      172.16.1.40
+satclient1       IN  A      172.16.1.41
+satclient2       IN  A      172.16.1.42
+satclient3       IN  A      172.16.1.43
+install-dummy    IN  A      172.16.1.252
+gatekeeper-new   IN  A      172.16.1.253
+vmserver-console IN  A      172.16.1.254
+

@@ -8,3 +8,9 @@ IPV6INIT="{{ipv6_enabled}}"
 MTU="{{mtu_size}}"
 NM_CONTROLLED="yes"
 ZONE="public"
+{% if dns_server|bool == true %}
+PEERDNS="no"
+{% for item in dns_servers %}
+DNS{{loop.index}}={{item}}
+{% endfor %}
+{% endif %}

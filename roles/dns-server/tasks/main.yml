@@ -1,7 +1,7 @@
 ---
-- name: Install bind and bind-utils
+- name: Install bind,bind-chroot, bind-utils, and firewalld
   package:
-    name: bind,bind-utils,firewalld
+    name: bind,bind-chroot,bind-utils,firewalld
     state: latest
   notify: restart named
 
@@ -22,8 +22,20 @@
     mode: 0640
   notify: restart named
 
+- name: deploy zone files
+  copy:
+    src: "{{item}}"
+    dest: "/var/named/{{item}}"
+    mode: 0640
+    owner: root
+    group: named
+  with_items:
+    - "{{zone_file_list}}"
+  notify: restart named
+
 - name: start and enable named service 
   service:
     name: named
     state: started
     enabled: yes
+

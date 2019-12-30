@@ -29,9 +29,11 @@ options {
 	   reduce such attack surface 
 	*/
 	recursion yes;
+//  	forwarders     { {{dns_forwarders| join("; ")}}; };
 
 	dnssec-enable yes;
-	dnssec-validation yes;
+        dnssec-validation yes;
+//	dnssec-validation auto;
 
 	managed-keys-directory "/var/named/dynamic";
 
@@ -52,6 +54,16 @@ logging {
 zone "." IN {
 	type hint;
 	file "named.ca";
+};
+
+zone "internal.tjon.net" {
+        type master;
+        file "/var/named/internal.tjon.net.zone";
+};
+
+zone "1.16.172.in-addr.arpa" {
+        type master;
+        file "/var/named/1.16.172.in-addr.arpa.zone";
 };
 
 include "/etc/named.rfc1912.zones";

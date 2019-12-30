@@ -37,7 +37,6 @@ search_domains:
  - tjon.net
 dns_servers: 
  - 172.16.1.1
- - 172.16.1.3
 primary_interface: eth0
 primary_bridge: br0
 
@@ -50,11 +49,15 @@ openvpn_tcp_server_subnet: 172.16.6.0/24
 ################################################################################
 # DNS Server Configuration Parameters                                          #
 ################################################################################
+dns_server: yes
 dns_listen_ip: "{{primary_ipaddr}}"
 dns_allow_query_nets: 
   - "{{primary_subnet}}"
   - "{{openvpn_udp_server_subnet}}"
   - "{{openvpn_tcp_server_subnet}}"
+zone_file_list:
+  - internal.tjon.net.zone
+  - 1.16.172.in-addr.arpa.zone
 dns_forwarders:
   - 68.105.28.11
   - 68.105.29.11
