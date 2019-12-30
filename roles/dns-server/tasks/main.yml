@@ -1,0 +1,29 @@
+---
+- name: Install bind and bind-utils
+  package:
+    name: bind,bind-utils,firewalld
+    state: latest
+  notify: restart named
+
+- name: configure firewall for DNS services
+  firewalld:
+    zone: "{{trusted_firewall_zone}}"
+    service: dns
+    immediate: yes
+    state: enabled
+    permanent: yes
+
+- name: install named.conf
+  template:
+    src: named.conf.{{ansible_hostname}}.j2
+    dest: /etc/named.conf
+    owner: root
+    group: named
+    mode: 0640
+  notify: restart named
+
+- name: start and enable named service 
+  service:
+    name: named
+    state: started
+    enabled: yes

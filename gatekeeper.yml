@@ -32,8 +32,8 @@
     - role: dhcp-server
       tags: ['dhcp-server']
 
-    - role: dnsmasq
-      tags: ['dnsmasq']
+    - role: dns-server
+      tags: ['dns-server']
 
     - role: apply-updates
       tags: ['apply-updates']

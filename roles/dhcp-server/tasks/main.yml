@@ -22,7 +22,8 @@
     mode: 0644
   notify: restart dhcpd
 
-- name: start dhcpd serivce if not running
+- name: start and enable dhcpd service
   service:
     name: dhcpd
     state: started
+    enabled: yes
