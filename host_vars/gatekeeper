@@ -55,6 +55,10 @@ dns_allow_query_nets:
   - "{{primary_subnet}}"
   - "{{openvpn_udp_server_subnet}}"
   - "{{openvpn_tcp_server_subnet}}"
+dns_forwarders:
+  - 68.105.28.11
+  - 68.105.29.11
+  - 68.105.28.12
 
 ################################################################################
 # DHCP Server Configuration Parameters                                         #
