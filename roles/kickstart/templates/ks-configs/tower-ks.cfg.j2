@@ -2,7 +2,7 @@
 # System authorization information
 auth --enableshadow --passalgo=sha512
 # Use network installation
-url --url="{{linux_install_server_url}}/rhel/7/x86_64/"
+url --url="{{linux_install_server_url}}/rhel/8/x86_64/"
 # Use graphical install
 graphical
 # Run the Setup Agent on first boot
@@ -43,12 +43,11 @@ logvol /var  --fstype="ext4" --size=10240 --label="var" --name=varlv --vgname=ro
 logvol /tmp  --fstype="ext4" --size=1024 --label="tmp" --name=tmplv --vgname=rootvg
 
 %packages
-@^minimal
-@core
+@^minimal-environment
 python3
 net-tools
 bind-utils
-insights-client
+open-vm-tools
 
 %end
 

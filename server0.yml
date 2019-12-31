@@ -13,9 +13,6 @@
     - role: http-repo
       tags: ['http-repo']
 
-#    - role: adaptec-6405
-#      tags: ['adaptec-6405']
-
     - role: config-local-repos
       tags: ['config-local-repos']
 
@@ -55,20 +52,14 @@
 #    - role: apcupsd
 #      tags: ['apcupsd']
 
-#    - role: postfix
-#      tags: ['postfix']
-
-#    - role: ddns
-#      tags: ['ddns']
+    - role: ddns
+      tags: ['ddns']
 
     - role: openvpn-server
       tags: ['openvpn-server']
 
     - role: fail2ban
       tags: ['fail2ban']
-
-#    - role: yubikey
-#      tags: ['yubikey']
 
 #    - role: syslog
 #      tags: ['syslog']
