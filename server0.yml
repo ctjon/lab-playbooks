@@ -10,9 +10,6 @@
     - role: selinux
       tags: ['selinux']
 
-    - role: dnsmasq
-      tags: ['dnsmasq']
-
     - role: http-repo
       tags: ['http-repo']
 
@@ -28,8 +25,8 @@
     - role: time-server
       tags: ['time-server']
 
-#    - role: setup-br0 
-#      tags: ['setup-br0']
+    - role: tftp-server
+      tags: ['tftp-server']
 
     - role: ssh-config
       tags: ['ssh-config']

@@ -1,0 +1,29 @@
+---
+- name: Install tftp-server
+  package:
+    name: tftp-server,firewalld
+    state: latest
+  notify: restart tftp
+
+- name: configure firewall for TFTP services
+  firewalld:
+    zone: "{{trusted_firewall_zone}}"
+    service: tftp
+    immediate: yes
+    state: enabled
+    permanent: yes
+
+#- name: install dhcpd.conf
+#  template:
+#    src: dhcpd.conf.{{ansible_hostname}}.j2
+#    dest: /etc/dhcp/dhcpd.conf
+#    owner: root
+#    group: dhcpd
+#    mode: 0644
+#  notify: restart dhcpd
+
+- name: start and enable tftp service
+  service:
+    name: tftp
+    state: started
+    enabled: yes

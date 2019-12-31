@@ -1,7 +1,7 @@
 ---
 - name: Install dhcp-server
   package:
-    name: dhcp-server
+    name: dhcp-server,firewalld
     state: latest
   notify: restart dhcpd
 
