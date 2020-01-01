@@ -5,7 +5,6 @@ setup_ansible_config: yes
 setup_git_update: yes
 ssh_private_key_list: 
   - ctjon.pem
-  - chris-tjon-github_rsa
   - ctjon-github_rsa
 
 ssh_public_key_list: 
