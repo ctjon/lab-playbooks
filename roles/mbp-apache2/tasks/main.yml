@@ -1,0 +1,73 @@
+---
+- name: deploy /etc/apache2/httpd.conf
+  template:
+    src: httpd.conf.j2
+    dest: /etc/apache2/httpd.conf
+    owner: root
+    group: wheel
+    mode: 0644
+  become: yes
+  notify: restart apache2
+
+- name: deploy /etc/apache2/extra/httpd-userdir.conf
+  template:
+    src: httpd-userdir.conf.j2
+    dest: /etc/apache2/extra/httpd-userdir.conf
+    owner: root
+    group: wheel
+    mode: 0644
+  become: yes
+  notify: restart apache2
+
+- name: deploy /etc/apache2/users/{{ansible_user}}.conf
+  template:
+    src: "{{ansible_user}}.conf.j2"
+    dest: "/etc/apache2/users/{{ansible_user}}.conf"
+    owner: root
+    group: wheel
+    mode: 0644
+  become: yes
+  notify: restart apache2
+
+- name: make sure ~{{ansible_user}}/Sites exists
+  file:
+    path: "~{{ansible_user}}/Sites"
+    state: directory
+    owner: "{{ansible_user}}"
+    group: staff
+    mode: 0755
+
+- name: deploy ~{{ansible_user}}/Sites/index.html.en for testing
+  template:
+    src: index.html.en.j2
+    dest: "~{{ansible_user}}/Sites/index.html.en"
+    owner: "{{ansible_user}}"
+    group: staff
+    mode: 0644
+
+- name: deploy ~{{ansible_user}}/Sites/info.php for testing
+  copy:
+    src: info.php
+    dest: "~{{ansible_user}}/Sites/info.php"
+    owner: "{{ansible_user}}"
+    group: staff
+    mode: '0755'
+    
+- name: deploy ~{{ansible_user}}/Sites/info.pl for testing
+  copy:
+    src: info.pl
+    dest: "~{{ansible_user}}/Sites/info.pl"
+    owner: "{{ansible_user}}"
+    group: staff
+    mode: '0755'
+
+- name: make sure apache2 is enabled
+  command: "launchctl load -w /System/Library/LaunchDaemons/org.apache.httpd.plist"
+  become: yes
+  register: launchctl_result
+  changed_when: launchctl_result.rc != 0
+  # *****
+  # Should really have a "creates" to avoid running when unnecessary but I haven't figured out 
+  # what it creates yet
+    
+...  

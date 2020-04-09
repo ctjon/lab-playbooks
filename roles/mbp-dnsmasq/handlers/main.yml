@@ -1,0 +1,8 @@
+---
+# handlers file for mbp-dnsmasq
+
+- name: restart dnsmasq
+  shell: "launchctl stop homebrew.mxcl.dnsmasq; launchctl start homebrew.mxcl.dnsmasq"
+  become: yes
+
+

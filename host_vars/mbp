@@ -1,0 +1,77 @@
+#
+# host_vars file for mbp
+#
+
+#copy_ssh_keys: yes
+#setup_ansible_config: yes
+#setup_git_update: yes
+#ssh_private_key_list:
+#  - ctjon.pem
+#  - ctjon-github_rsa
+
+#ssh_public_key_list:
+#  - ctjon-github_rsa
+
+################################################################################
+# Network Configuration Parameters                                             #
+################################################################################
+domain_name: mbp.tjon.net
+nat_subnet: 192.168.242.0/24
+nat_ipaddr: 192.168.242.1
+nat_prefix: 24
+nat_short_net: 192.168.242
+nat_netmask: 255.255.255.0
+nat_gateway: 192.168.242.2
+search_domains: 
+ - mbp.tjon.net
+dns_servers: 
+ - 192.168.242.1
+nat_interface: vmnet8
+
+################################################################################
+# Installation Source Parameters                                               #
+################################################################################
+linux_install_server_url: "http://install.mbp.tjon.net/~chris/Install/Linux"
+linux_install_server_hostname: mbp
+config_files_url: "http://{{linux_install_server_url}}/ConfigFiles"
+config_files_dir: "~{{ansible_user}}/Sites/Install/ConfigFiles"
+linux_config_files_url: "http://{{linux_install_server_url}}/Linux/ConfigFiles"
+linux_config_files_dir: "~{{ansible_user}}/Sites/Install/Linux/ConfigFiles"
+linux_install_server_path: "~{{ansible_user}}/Sites/Install/Linux"
+ks_config_dir: "{{linux_install_server_path}}/ks-configs"
+
+################################################################################
+# DNSMASQ Configuration Parameters                                             #
+################################################################################
+dnsmasq_interfaces:
+  - lo0
+  - "{{nat_interface}}"
+
+################################################################################
+# SSH Keys to Install on Managed Hosts                                         #
+################################################################################
+ssh_keys_required:
+  - chris-p51s-id_rsa.pub
+
+################################################################################
+# Kickstart Config Parameters                                                  #
+################################################################################
+ks_configs_list:
+  - callback-example-ks.cfg
+  - fipstest-ks.cfg
+  - synchost5-ks.cfg
+  - synchost6-ks.cfg
+  - synchost7-ks.cfg
+  - synchost8-ks.cfg
+  - test-centos6-ks.cfg
+  - test-centos7-ks.cfg
+  - test-centos8-ks.cfg
+  - test-fedora30-ks.cfg
+  - test-fedora31-ks.cfg
+  - test-rhel5-ks.cfg
+  - test-rhel6-ks.cfg
+  - test-rhel7-ks.cfg
+  - test-rhel8-ks.cfg
+  - tower-nodeA-ks.cfg
+  - towervm-ks.cfg
+

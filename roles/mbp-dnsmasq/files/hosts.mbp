@@ -1,0 +1,14 @@
+#{{ ansible_managed }}
+
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.242.1	mbp.mbp.tjon.net mbp install
+192.168.242.1	gateway.mbp.tjon.net gateway
+192.168.242.4	towervm.mbp.tjon.net towervm
+192.168.242.5	synchost5.mbp.tjon.net synchost5
+192.168.242.6	synchost6.mbp.tjon.net synchost6
+192.168.242.7	synchost7.mbp.tjon.net synchost7
+192.168.242.8	synchost8.mbp.tjon.net synchost8
+192.168.242.15	fipstest.mbp.tjon.net fipstest
+172.16.1.1	gatekeeper.internal.tjon.net gatekeeper
+54.183.210.65 ec2-54-183-210-65.us-west-1.compute.amazonaws.com tower-aws

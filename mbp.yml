@@ -1,0 +1,18 @@
+---
+#
+# Configure mbp
+#
+
+- hosts: mbp
+  become: yes
+
+  roles:
+    - role: mbp-apache2
+      tags: ['mbp-apache2']
+
+    - role: mbp-dnsmasq
+      tags: ['mbp-dnsmasq']
+
+    - role: mbp-ksconfigs
+      tags: ['mbp-ksconfigs']
+

@@ -1,0 +1,50 @@
+---
+- name: Update homebrew first and upgrade formula dnsmasq to latest available with brew
+  homebrew:
+    name: dnsmasq
+    state: latest
+    update_homebrew: yes
+  become: yes
+  become_user: "{{ansible_user}}"  # brew does not like running as root
+
+- name: install dnsmasq.conf file
+  template:
+    src: dnsmasq.conf.{{ansible_hostname}}.j2
+    dest: /usr/local/etc/dnsmasq.conf
+    owner: root
+    group: wheel
+    mode: 0644
+  notify: restart dnsmasq
+
+- name: install /etc/hosts file
+  copy:
+    src: "hosts.{{ansible_hostname}}"
+    dest: /etc/hosts
+    owner: root
+    group: wheel
+    mode: 0644
+  notify: restart dnsmasq
+
+- name: get plist_filename
+  shell: brew list dnsmasq | grep /homebrew.mxcl.dnsmasq.plist$
+  register: plist_filename
+  become: yes
+  become_user: "{{ansible_user}}"  # brew does not like running as root
+  changed_when: plist_filename.rc != 0
+
+- name: dump plist_filename
+  debug: 
+    var: plist_filename.stdout
+
+- name: Copy the daemon configuration file into place
+  command: "cp {{plist_filename.stdout}} /Library/LaunchDaemons/"
+  args:
+    creates: /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist
+
+- name: make sure dnsmasq is enabled
+  command: "launchctl load -w /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist"
+  become: yes
+  register: launchctl_result
+  changed_when: launchctl_result.rc != 0
+
+...
