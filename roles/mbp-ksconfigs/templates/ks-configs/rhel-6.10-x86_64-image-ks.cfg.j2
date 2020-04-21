@@ -64,6 +64,11 @@ perl-DBD-SQLite
 
 %post
 
+# install bash_profile for root
+curl  {{config_files_url}}/bash_profile >> /root/.bash_profile
+chmod 600 /root/.bash_profile
+chown root:root /root/.bash_profile
+
 # install bash_profile for chris
 curl  {{config_files_url}}/bash_profile >> /home/chris/.bash_profile
 chmod 600 /home/chris/.bash_profile

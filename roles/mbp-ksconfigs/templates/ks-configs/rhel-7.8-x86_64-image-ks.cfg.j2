@@ -37,6 +37,7 @@ part /boot --fstype="xfs" --ondisk=sda --size=256
 part /boot/efi --fstype="efi" --ondisk=sda --size=256 --fsoptions="umask=0077,shortname=winnt"
 volgroup rootvg --pesize=4096 pv.852
 logvol /tmp  --fstype="xfs" --size=1024 --label="tmp" --name=tmplv --vgname=rootvg
+logvol /opt  --fstype="xfs" --size=32 --label="opt" --name=optlv --vgname=rootvg
 logvol /home  --fstype="xfs" --size=512 --label="home" --name=homelv --vgname=rootvg
 logvol /usr  --fstype="xfs" --size=4096 --label="usr" --name=usrlv --vgname=rootvg
 logvol swap  --fstype="swap" --size=1024 --name=swaplv --vgname=rootvg
@@ -66,17 +67,22 @@ pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 
 %post
 
+# install bash_profile for root
+curl  {{config_files_url}}/bash_profile >> /root/.bash_profile
+chmod 600 /root/.bash_profile
+chown root:root /root/.bash_profile
+
 # install bash_profile for chris
 curl  {{config_files_url}}/bash_profile >> /home/chris/.bash_profile
 chmod 600 /home/chris/.bash_profile
 chown chris:chris /home/chris/.bash_profile
 
 # install ssh key for chris
-mkdir /home/chris/.ssh
-chmod 700 /home/chris/.ssh
+mkdir -p /home/chris/.ssh
 curl  {{config_files_url}}/chris-mbp-id_rsa.pub >> /home/chris/.ssh/authorized_keys
-chmod 600 /home/chris/.ssh/authorized_keys
 chown -R chris:chris /home/chris/.ssh
+chmod 700 /home/chris/.ssh
+chmod 600 /home/chris/.ssh/authorized_keys
 restorecon -RFv /home/chris/.ssh/authorized_keys
 
 %end
