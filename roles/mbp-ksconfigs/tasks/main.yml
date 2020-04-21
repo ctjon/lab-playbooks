@@ -37,3 +37,23 @@
   with_items:
     - rhel6-callback-service.sh
     - rhel7-callback.service
+
+- name: make sure {{config_files_dir}} exists
+  file:
+    path: "{{config_files_dir}}"
+    state: directory
+    owner: chris
+    group: staff
+    mode: 0755
+
+- name: copy bash_profile {{config_files_url}}
+  copy:
+    src: "{{item}}"
+    dest: "{{config_files_dir}}"
+    owner: chris
+    group: staff
+    mode: 0644
+  with_items:
+    - bash_profile
+    - chris-mbp-id_rsa.pub
+    - sudoers

@@ -2,6 +2,6 @@
 # handlers file for mbp-apache2
 
 - name: restart apache2
-  command: "apachectl graceful"
+  command: "apachectl restart"
   become: yes
 

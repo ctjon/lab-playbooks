@@ -64,6 +64,7 @@ pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 
 %post
 # install ssh key for chris
+mkdir /home/chris/.ssh
 curl  {{config_files_url}}/chris-mbp-id_rsa.pub >> /home/chris/.ssh/authorized_keys
 chown -R chris:chris /home/chris/.ssh
 chmod 700 /home/chris/.ssh

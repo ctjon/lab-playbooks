@@ -1,0 +1,82 @@
+#version=DEVEL
+# System authorization information
+auth --enableshadow --passalgo=sha512
+# Use CDROM installation media
+cdrom
+# Use graphical install
+graphical
+# Run the Setup Agent on first boot
+firstboot --enable
+ignoredisk --only-use=sda
+# Keyboard layouts
+keyboard --vckeymap=us --xlayouts='us'
+# System language
+lang en_US.UTF-8
+
+# Network information
+network  --bootproto=dhcp --device=eth0 --activate
+network  --hostname=rhel7.{{domain_name}}
+
+repo --name="Server-HighAvailability" --baseurl=file:///run/install/repo/addons/HighAvailability
+repo --name="Server-ResilientStorage" --baseurl=file:///run/install/repo/addons/ResilientStorage
+# Root password
+rootpw --iscrypted $6$zeztc2WjQegC9nAI$pG9jAu/7M0QjbwaFOqLAsDMqQoapfrFATiqRODxab7oCfXPfjehsRPdydwhDLp645a8FFg6mv3qHEYn.cuxkq0
+# System services
+services --disabled="chronyd"
+# System timezone
+timezone America/Phoenix --isUtc --nontp
+reboot
+user --groups=wheel --name=chris --password=$6$YygZTa20CfVV.3ZG$8MWNCwNMZDdYQYco4Hz68n4Q51/jxa/yJcRH40TVnV8S0RoynqSALj6fTkzM1IXfy2TuOMXijLKTvQCZsIs630 --iscrypted --gecos="Chris Tjon"
+# System bootloader configuration
+bootloader --location=mbr --boot-drive=sda
+# Partition clearing information
+clearpart --all --initlabel
+# Disk partitioning information
+part pv.852 --fstype="lvmpv" --ondisk=sda --size=9732
+part /boot --fstype="xfs" --ondisk=sda --size=256
+part /boot/efi --fstype="efi" --ondisk=sda --size=256 --fsoptions="umask=0077,shortname=winnt"
+volgroup rootvg --pesize=4096 pv.852
+logvol /tmp  --fstype="xfs" --size=1024 --label="tmp" --name=tmplv --vgname=rootvg
+logvol /home  --fstype="xfs" --size=512 --label="home" --name=homelv --vgname=rootvg
+logvol /usr  --fstype="xfs" --size=4096 --label="usr" --name=usrlv --vgname=rootvg
+logvol swap  --fstype="swap" --size=1024 --name=swaplv --vgname=rootvg
+logvol /var  --fstype="xfs" --size=2048 --label="var" --name=varlv --vgname=rootvg
+logvol /  --fstype="xfs" --size=1024 --label="root" --name=rootlv --vgname=rootvg
+
+%packages
+@^minimal
+@core
+net-tools
+bind-utils
+yum-utils
+insights-client
+open-vm-tools
+
+%end
+
+%addon com_redhat_kdump --disable --reserve-mb='auto'
+
+%end
+
+%anaconda
+pwpolicy root --minlen=6 --minquality=1 --notstrict --nochanges --notempty
+pwpolicy user --minlen=6 --minquality=1 --notstrict --nochanges --emptyok
+pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
+%end
+
+%post
+
+# install bash_profile for chris
+curl  {{config_files_url}}/bash_profile >> /home/chris/.bash_profile
+chmod 600 /home/chris/.bash_profile
+chown chris:chris /home/chris/.bash_profile
+
+# install ssh key for chris
+mkdir /home/chris/.ssh
+chmod 700 /home/chris/.ssh
+curl  {{config_files_url}}/chris-mbp-id_rsa.pub >> /home/chris/.ssh/authorized_keys
+chmod 600 /home/chris/.ssh/authorized_keys
+chown -R chris:chris /home/chris/.ssh
+restorecon -RFv /home/chris/.ssh/authorized_keys
+
+%end
