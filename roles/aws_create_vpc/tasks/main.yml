@@ -24,6 +24,11 @@
     var: my_vpc
   when: debug_flag is defined
 
+- name: display open_ports_list
+  debug: 
+    var: open_ports_list
+  when: debug_flag is defined
+
 - name: create security group "{{ ec2_security_group_name }}"
   ec2_group:
     name: "{{ ec2_security_group_name }}"
