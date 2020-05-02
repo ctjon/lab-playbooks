@@ -59,9 +59,10 @@ ssh_keys_required:
 ks_configs_list:
   - callback-example-ks.cfg
   - fipstest-ks.cfg
-  - rhel-6.10-x86_64-image-ks.cfg
-  - rhel-7.8-x86_64-image-ks.cfg
-  - rhel-8.1-x86_64-image-ks.cfg
+  - rhel-5-x86_64-image-ks.cfg
+  - rhel-6-x86_64-image-ks.cfg
+  - rhel-7-x86_64-image-ks.cfg
+  - rhel-8-x86_64-image-ks.cfg
   - synchost5-ks.cfg
   - synchost6-ks.cfg
   - synchost7-ks.cfg
