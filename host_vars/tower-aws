@@ -43,7 +43,7 @@ ec2_instance_type: t2.micro
 ec2_instance_count: 3
 ec2_tag: "{{user_name}}"
 ec2_hosts: all
-ec2_ansible_group: "{{user_name}}_test"
+ec2_ansible_group: "{{user_name}}_group"
 open_ports_list:
   - 22
   - 443

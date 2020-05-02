@@ -16,10 +16,9 @@ ec2_route_table_name: "{{user_name}}_route_table"
 ec2_tag_name_prefix: "{{user_name}}"
 ec2_tag: "{{user_name}}"
 ec2_hosts: all
-ec2_ansible_group: "{{user_name}}_test"
+ec2_ansible_group: "{{user_name}}_group"
 open_ports_list:
   - 22
-  - 80
 
 # Other Variables
 instance_count: 3
