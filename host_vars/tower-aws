@@ -22,8 +22,8 @@ ssh_keygen_users:
   - root
   - ec2-user
 
-
 user_name: ctjon
+
 # AWS Specific Variables
 ec2_access_key:
 ec2_secret_key:
@@ -38,7 +38,7 @@ ec2_security_group_name: "{{user_name}}_sg"
 ec2_route_table_name: "{{user_name}}_route_table"
 ec2_tag_name_prefix: "{{user_name}}"
 ec2_instance_type: m5.large
-ec2_image: ami-18726478
+ec2_image: ami-0c3af551419ae1d86 # RHEL 8.1
 ec2_instance_type: t2.micro
 ec2_instance_count: 3
 ec2_tag: "{{user_name}}"
@@ -51,12 +51,11 @@ open_ports_list:
 # Other Variables
 instance_count: 3
 wait_for_port: 22
-tower_user_name: "{{user_name}}"
 debug_flag: true
 critical_vm: 'True'
 my_email_address: "{{user_name}}@redhat.com"
 
 # This user name will be set by Tower, when run through Tower
-tower_user_name: ctjon
+tower_user_name: "{{user_name}}"
 
 ansible_user: ec2-user
