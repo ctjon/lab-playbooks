@@ -11,4 +11,4 @@
 192.168.242.8	synchost8.mbp.tjon.net synchost8
 192.168.242.15	fipstest.mbp.tjon.net fipstest
 172.16.1.1	gatekeeper.internal.tjon.net gatekeeper
-54.183.210.65 ec2-54-183-210-65.us-west-1.compute.amazonaws.com tower-aws
+18.144.171.54   ec2-18-144-171-54.us-west-1.compute.amazonaws.com tower-aws

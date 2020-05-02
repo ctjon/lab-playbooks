@@ -1,0 +1,29 @@
+# Define user_name here or as an extra_var
+user_name: ctjon
+
+# AWS Specific Variables
+ec2_access_key:
+ec2_secret_key:
+ec2_zone:
+ec2_vpc_net_name: "{{user_name}}_vpc"
+ec2_vpc_subnet_name: "{{user_name}}_subnet"
+ec2_igw_name: "{{user_name}}_igw"
+ec2_keypair: "{{user_name}}-mbp"
+ec2_region: us-west-1
+ec2_cidr: 192.168.100.0/24
+ec2_security_group_name: "{{user_name}}_sg"
+ec2_route_table_name: "{{user_name}}_route_table"
+ec2_tag_name_prefix: "{{user_name}}"
+ec2_tag: "{{user_name}}"
+ec2_hosts: all
+ec2_ansible_group: "{{user_name}}_test"
+open_ports_list:
+  - 22
+  - 80
+
+# Other Variables
+instance_count: 3
+wait_for_port: 22
+tower_user_name: "{{user_name}}"
+debug_flag: true
+my_email_address: "{{user_name}}@redhat.com"
