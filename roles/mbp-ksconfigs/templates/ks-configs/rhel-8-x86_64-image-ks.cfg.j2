@@ -28,10 +28,10 @@ timezone America/Phoenix --isUtc
 reboot
 user --groups=wheel --name=chris --password=$6$0EoRuofzMQyHfnq6$QvKt4CQH4VN7xjdxXmE7wVzCv.ukSJQRaQcXZTdbJ6jDlnezjGXmS4XCIgK9r8hglEPGoXYDPlnlOXkamh6sa. --iscrypted --gecos="Chris Tjon"
 # Disk partitioning information
-part pv.351 --fstype="lvmpv" --ondisk=nvme0n1 --size=9224
+part pv.1 --fstype="lvmpv" --ondisk=nvme0n1 --grow
 part /boot --fstype="xfs" --ondisk=nvme0n1 --size=228 --label=boot
 part /boot/efi --fstype="efi" --ondisk=nvme0n1 --size=256 --fsoptions="umask=0077,shortname=winnt" --label=bootefi
-volgroup rootvg --pesize=4096 pv.351
+volgroup rootvg --pesize=4096 pv.1
 logvol /home --fstype="xfs" --size=512 --label="home" --name=homelv --vgname=rootvg
 logvol /usr --fstype="xfs" --size=4096 --label="usr" --name=usrlv --vgname=rootvg
 logvol /var --fstype="xfs" --size=2048 --label="var" --name=varlv --vgname=rootvg
