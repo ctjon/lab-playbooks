@@ -63,10 +63,22 @@ pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 
 %post
 
+# install bash_profile for root
+curl  {{config_files_url}}/bash_profile >> /root/.bash_profile
+chmod 600 /root/.bash_profile
+chown root:root /root/.bash_profile
+
+# install bash_profile for chris
+curl  {{config_files_url}}/bash_profile >> /home/chris/.bash_profile
+chmod 600 /home/chris/.bash_profile
+chown chris:chris /home/chris/.bash_profile
+
 # install ssh key for chris
+mkdir -p /home/chris/.ssh
 curl  {{config_files_url}}/chris-mbp-id_rsa.pub >> /home/chris/.ssh/authorized_keys
 chown -R chris:chris /home/chris/.ssh
 chmod 700 /home/chris/.ssh
 chmod 600 /home/chris/.ssh/authorized_keys
 restorecon -RFv /home/chris/.ssh/authorized_keys
+
 %end
