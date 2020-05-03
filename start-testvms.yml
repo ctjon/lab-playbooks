@@ -4,6 +4,7 @@
 #
 
 - hosts: mbp
+  gather_facts: no
   
   tasks:
 #    - name: display group members to start using with_items
@@ -25,7 +26,7 @@
       with_items:
         - "{{ groups['test'] }}"
       
-    - name: Wait for SSH connection to Tower Instance
+    - name: Wait for SSH connection to Test Instances
       wait_for:
         host: "{{ item }}"
         port: 22
@@ -34,6 +35,17 @@
         state: started
       with_items:
         - "{{ groups['test'] }}"
+      async: 250
+      poll: 0
+      register: wait_result
+
+    - name: wait_for - check on async task
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      register: job_result
+      until: job_result.finished
+      retries: 300
+      with_items: "{{wait_result.results}}"
 
     - name: verify ansible is working
       ping:
