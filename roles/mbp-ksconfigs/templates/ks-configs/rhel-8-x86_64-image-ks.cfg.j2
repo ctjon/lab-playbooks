@@ -12,8 +12,7 @@ keyboard --vckeymap=us --xlayouts='us'
 lang en_US.UTF-8
 
 # Network information
-network  --bootproto=dhcp --device=eth0 --activate
-network  --hostname=rhel8.mbp.tjon.net
+network  --bootproto=dhcp --device=eth0 --activate --hostname=rhel8.mbp.tjon.net
 repo --name="AppStream" --baseurl=file:///run/install/repo/AppStream
 # Root password
 rootpw --iscrypted $6$X8ZY7ZVUE7TLA/dJ$05I1nOHoDtdg3x6J920VlrmiSblCKACpGdf25Yw97MUJp/2QeGIxTK7CWC194akcIBxVI99TxTkt3aQre6FfE0

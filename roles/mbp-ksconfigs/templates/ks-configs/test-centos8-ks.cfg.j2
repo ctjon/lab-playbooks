@@ -4,9 +4,11 @@ ignoredisk --only-use=sda
 clearpart --none --initlabel
 # Use graphical install
 graphical
-repo --name="AppStream" --baseurl="{{linux_install_server_url}}/centos/8/x86_64/AppStream"
+#repo --name="AppStream" --baseurl="{{linux_install_server_url}}/centos/8/x86_64/AppStream"
+repo --name="AppStream" --baseurl=file:///run/install/repo/AppStream
 # Use network installation
-url --url="{{linux_install_server_url}}/centos/8/x86_64/"
+#url --url="{{linux_install_server_url}}/centos/8/x86_64/"
+cdrom
 # Keyboard layouts
 # old format: keyboard us
 # new format:
@@ -15,8 +17,8 @@ keyboard --vckeymap=us --xlayouts='us'
 lang en_US.UTF-8
 
 # Network information
-# Network information
-network  --hostname=test-centos8.{{domain_name}} --bootproto=static --device=eth0 --gateway={{nat_gateway}} --ip={{nat_short_net}}.34 --nameserver={{dns_servers|join(",")}} --netmask={{nat_netmask}} --activate
+network --bootproto=static --device=eth0 --gateway={{nat_gateway}} --ip={{nat_short_net}}.34 --nameserver={{dns_servers|join(",")}} --netmask={{nat_netmask}} --activate
+network  --hostname=test-centos8.{{domain_name}} 
 
 # Root password
 rootpw --iscrypted $6$9vrA/lrxWT8.nHLB$zacDVevdnsOAfMNaysD.1sJz83LKfXOUiE3WZ9SszluLyEBlX7cDbuKzgjv0sQw.xhsXjwH0xIpuX4uIXLkph/
@@ -28,6 +30,9 @@ firstboot --enable
 services --enabled="chronyd"
 # System timezone
 timezone America/Phoenix --isUtc
+reboot
+
+part /boot/efi --fstype=ext4 --size=256
 user --groups=wheel --name=chris --password=$6$oWM3S2AK4zS.jyDy$716RhjySp6ncIMig2UggFWY5z98sfkmLQLqyWwlw1N4jogYBdjqSRlRjoJd.nr59z7iI68rzP4Y3WLj6Ssr5M. --iscrypted --gecos="Chris Tjon"
 
 # System bootloader configuration
@@ -36,6 +41,7 @@ bootloader --location=mbr --boot-drive=sda
 clearpart --all --initlabel
 # Disk partitioning information
 part /boot --fstype="ext4" --ondisk=sda --size=256
+part /boot/efi --fstype="efi" --ondisk=sda --size=256 --fsoptions="umask=0077,shortname=winnt" --label=bootefi
 part pv.409 --fstype="lvmpv" --ondisk=sda --grow
 volgroup rootvg --pesize=4096 pv.409 
 logvol /  --fstype="ext4" --size=1024 --label="root" --name=rootlv --vgname=rootvg
@@ -65,10 +71,23 @@ pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 
 
 %post
+
+# install bash_profile for root
+curl  {{config_files_url}}/bash_profile >> /root/.bash_profile
+chmod 600 /root/.bash_profile
+chown root:root /root/.bash_profile
+
+# install bash_profile for chris
+curl  {{config_files_url}}/bash_profile >> /home/chris/.bash_profile
+chmod 600 /home/chris/.bash_profile
+chown chris:chris /home/chris/.bash_profile
+
 # install ssh key for chris
+mkdir -p /home/chris/.ssh
 curl  {{config_files_url}}/chris-mbp-id_rsa.pub >> /home/chris/.ssh/authorized_keys
 chown -R chris:chris /home/chris/.ssh
 chmod 700 /home/chris/.ssh
 chmod 600 /home/chris/.ssh/authorized_keys
 restorecon -RFv /home/chris/.ssh/authorized_keys
+
 %end

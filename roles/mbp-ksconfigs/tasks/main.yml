@@ -57,3 +57,4 @@
     - bash_profile
     - chris-mbp-id_rsa.pub
     - sudoers
+    - sudoers-rhel5

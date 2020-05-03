@@ -1,16 +1,15 @@
 #version=DEVEL
 # System authorization information
 auth --enableshadow --passalgo=sha512
-# Use network installation
-url --url="{{linux_install_server_url}}/rhel/7/x86_64/"
+# Use CDROM installation media
+#url --url="{{linux_install_server_url}}/rhel/7/x86_64/"
+cdrom
 # Use graphical install
 graphical
 # Run the Setup Agent on first boot
 firstboot --enable
 ignoredisk --only-use=sda
 # Keyboard layouts
-# old format: keyboard us
-# new format:
 keyboard --vckeymap=us --xlayouts='us'
 # System language
 lang en_US.UTF-8
@@ -18,34 +17,41 @@ lang en_US.UTF-8
 # Network information
 network  --hostname=test-rhel7.{{domain_name}} --bootproto=static --device=eth0 --gateway={{nat_gateway}} --ip={{nat_short_net}}.31 --nameserver={{dns_servers|join(",")}} --netmask={{nat_netmask}} --activate
 
+repo --name="Server-HighAvailability" --baseurl=file:///run/install/repo/addons/HighAvailability
+repo --name="Server-ResilientStorage" --baseurl=file:///run/install/repo/addons/ResilientStorage
 # Root password
-rootpw --iscrypted $6$EWvRuPP7F8pRTFrm$749vEu5HoijsEhVWzw691ZquSDP.FmK2Qc56HGpgE03pHMgxIMlal4YPM/BrmwfA10q0nKUDxkC7D21H1q7xH/
+rootpw --iscrypted $6$zeztc2WjQegC9nAI$pG9jAu/7M0QjbwaFOqLAsDMqQoapfrFATiqRODxab7oCfXPfjehsRPdydwhDLp645a8FFg6mv3qHEYn.cuxkq0
 # System services
-services --enabled="chronyd"
+services --disabled="chronyd"
 # System timezone
-timezone America/Phoenix --isUtc
+timezone America/Phoenix --isUtc --nontp
 reboot
-user --groups=wheel --name=chris --uid=1000 --password=$6$Cn2vwW.vUq0qFXYG$P6ogDQM8pvhpGk/InzJ4Lh9eiO/lnsJiF6rb3jYAKA4jreq5hGCXg2Gu.v6zIW1bNeSCLix0k0Pq2MXn8OLAu/ --iscrypted --gecos="Chris Tjon"
+user --groups=wheel --name=chris --password=$6$YygZTa20CfVV.3ZG$8MWNCwNMZDdYQYco4Hz68n4Q51/jxa/yJcRH40TVnV8S0RoynqSALj6fTkzM1IXfy2TuOMXijLKTvQCZsIs630 --iscrypted --gecos="Chris Tjon"
 # System bootloader configuration
 bootloader --location=mbr --boot-drive=sda
 # Partition clearing information
 clearpart --all --initlabel
 # Disk partitioning information
-part /boot --fstype="ext4" --ondisk=sda --size=256
-part pv.409 --fstype="lvmpv" --ondisk=sda --grow
-volgroup rootvg --pesize=4096 pv.409
-logvol /  --fstype="ext4" --size=1024 --label="root" --name=rootlv --vgname=rootvg
-logvol /usr  --fstype="ext4" --size=4096 --label="usr" --name=usrlv --vgname=rootvg
-logvol /home  --fstype="ext4" --size=512 --label="home" --name=homelv --vgname=rootvg
-logvol swap  --fstype="swap" --size=2048 --name=swaplv --vgname=rootvg
-logvol /opt  --fstype="ext4" --size=32 --label="opt" --name=optlv --vgname=rootvg
-logvol /var  --fstype="ext4" --size=1024 --label="var" --name=varlv --vgname=rootvg
-logvol /tmp  --fstype="ext4" --size=1024 --label="tmp" --name=tmplv --vgname=rootvg
+part pv.852 --fstype="lvmpv" --ondisk=sda --grow
+part /boot --fstype="xfs" --ondisk=sda --size=256
+part /boot/efi --fstype="efi" --ondisk=sda --size=256 --fsoptions="umask=0077,shortname=winnt"
+volgroup rootvg --pesize=4096 pv.852
+logvol /tmp  --fstype="xfs" --size=1024 --label="tmp" --name=tmplv --vgname=rootvg
+logvol /opt  --fstype="xfs" --size=32 --label="opt" --name=optlv --vgname=rootvg
+logvol /home  --fstype="xfs" --size=512 --label="home" --name=homelv --vgname=rootvg
+logvol /usr  --fstype="xfs" --size=4096 --label="usr" --name=usrlv --vgname=rootvg
+logvol swap  --fstype="swap" --size=1024 --name=swaplv --vgname=rootvg
+logvol /var  --fstype="xfs" --size=2048 --label="var" --name=varlv --vgname=rootvg
+logvol /  --fstype="xfs" --size=1024 --label="root" --name=rootlv --vgname=rootvg
 
 %packages
 @^minimal
 @core
+net-tools
+bind-utils
 yum-utils
+insights-client
+open-vm-tools
 
 %end
 
@@ -60,10 +66,23 @@ pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 %end
 
 %post
+
+# install bash_profile for root
+curl  {{config_files_url}}/bash_profile >> /root/.bash_profile
+chmod 600 /root/.bash_profile
+chown root:root /root/.bash_profile
+
+# install bash_profile for chris
+curl  {{config_files_url}}/bash_profile >> /home/chris/.bash_profile
+chmod 600 /home/chris/.bash_profile
+chown chris:chris /home/chris/.bash_profile
+
 # install ssh key for chris
+mkdir -p /home/chris/.ssh
 curl  {{config_files_url}}/chris-mbp-id_rsa.pub >> /home/chris/.ssh/authorized_keys
 chown -R chris:chris /home/chris/.ssh
 chmod 700 /home/chris/.ssh
 chmod 600 /home/chris/.ssh/authorized_keys
 restorecon -RFv /home/chris/.ssh/authorized_keys
+
 %end

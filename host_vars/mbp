@@ -70,8 +70,8 @@ ks_configs_list:
   - test-centos6-ks.cfg
   - test-centos7-ks.cfg
   - test-centos8-ks.cfg
-  - test-fedora30-ks.cfg
   - test-fedora31-ks.cfg
+  - test-fedora32-ks.cfg
   - test-rhel5-ks.cfg
   - test-rhel6-ks.cfg
   - test-rhel7-ks.cfg

@@ -1,6 +1,7 @@
 #version=DEVEL
 install
-url --url="{{linux_install_server_url}}/centos/6/os/x86_64"
+#url --url="{{linux_install_server_url}}/centos/6/os/x86_64"
+cdrom
 lang en_US.UTF-8
 keyboard us
 network  --onboot yes --bootproto=static --device=eth0 --gateway={{nat_gateway}} --ip={{nat_short_net}}.36 --nameserver={{dns_servers|join(",")}} --netmask={{nat_netmask}} --hostname=test-centos6.{{domain_name}} --activate
@@ -20,6 +21,7 @@ bootloader --location=mbr --driveorder=sda --append="crashkernel=auto rhgb quiet
 clearpart --all
 zerombr
 part /boot --fstype=ext4 --size=256
+part /boot/efi --fstype=ext4 --size=256
 part pv.01 --grow --size=200
 volgroup rootvg --pesize=4096 pv.01
 logvol /home --fstype=ext4 --name=homelv --vgname=rootvg --size=512
@@ -39,13 +41,25 @@ libselinux-python
 
 %post
 
+# install bash_profile for root
+curl  {{config_files_url}}/bash_profile >> /root/.bash_profile
+chmod 600 /root/.bash_profile
+chown root:root /root/.bash_profile
+
+# install bash_profile for chris
+curl  {{config_files_url}}/bash_profile >> /home/chris/.bash_profile
+chmod 600 /home/chris/.bash_profile
+chown chris:chris /home/chris/.bash_profile
+
 # install ssh key for chris
+mkdir -p /home/chris/.ssh
 curl  {{config_files_url}}/chris-mbp-id_rsa.pub >> /home/chris/.ssh/authorized_keys
 chown -R chris:chris /home/chris/.ssh
 chmod 700 /home/chris/.ssh
 chmod 600 /home/chris/.ssh/authorized_keys
 restorecon -RFv /home/chris/.ssh/authorized_keys
 
+# install sudoers
 curl {{config_files_url}}/sudoers -o /etc/sudoers
 chown -R root:root /etc/sudoers
 chmod 440 /etc/sudoers
