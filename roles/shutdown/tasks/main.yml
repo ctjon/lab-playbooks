@@ -7,24 +7,19 @@
     - ansible_distribution_major_version <= "6"
 
 - name: shutdown RHEL/CentOS 7 and newer
-  command: /usr/sbin/shutdown -h +1
+  command: /usr/sbin/shutdown -h +1 #### for some reason "now" doesn't work?
   become: yes
   when:
     - ((ansible_distribution == "RedHat") or (ansible_distribution == "CentOS"))
     - ansible_distribution_major_version >= "7"
 
 - name: shutdown Fedora 30 and newer
-  command: /usr/sbin/shutdown -h +1
+  command: /usr/sbin/shutdown -h +1 #### for some reason "now" doesn't work?
   become: yes
   when:
     - ansible_distribution == "Fedora"
     - ansible_distribution_major_version >= "30"
 
-- name: wait for shutdown to complete
-  wait_for:
-    host: "{{ ansible_ssh_host }}"
-    port: 22
-    delay: 10
-    state: stopped
-    timeout: 60
-  delegate_to: localhost
+- name: wait 1 minute for shutdown
+  pause:
+    minutes: 1
