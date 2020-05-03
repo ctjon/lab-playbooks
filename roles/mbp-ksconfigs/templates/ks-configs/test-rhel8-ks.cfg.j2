@@ -1,7 +1,8 @@
 #version=RHEL8
 ignoredisk --only-use=nvme0n1
 # Partition clearing information
-clearpart --all --initlabel
+clearpart --drives=nvme0n1 --all
+zerombr
 # Use graphical install
 graphical
 # Use CDROM installation media

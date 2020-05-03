@@ -2,6 +2,8 @@
 # host_vars file for mbp
 #
 
+vmdir: /Users/chris/VirtualMachines
+
 #copy_ssh_keys: yes
 #setup_ansible_config: yes
 #setup_git_update: yes

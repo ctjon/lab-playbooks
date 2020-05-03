@@ -30,7 +30,8 @@ user --groups=wheel --name=chris --password=$6$YygZTa20CfVV.3ZG$8MWNCwNMZDdYQYco
 # System bootloader configuration
 bootloader --location=mbr --boot-drive=sda
 # Partition clearing information
-clearpart --all --initlabel
+clearpart --drives=sda --all
+zerombr
 # Disk partitioning information
 part pv.852 --fstype="lvmpv" --ondisk=sda --grow
 part /boot --fstype="xfs" --ondisk=sda --size=256

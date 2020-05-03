@@ -1,0 +1,10 @@
+---
+#
+# Configure Test VMs
+#
+
+- hosts: test
+  become: yes
+
+  roles:
+    - role: shutdown

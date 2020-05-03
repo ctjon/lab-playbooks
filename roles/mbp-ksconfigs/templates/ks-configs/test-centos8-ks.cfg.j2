@@ -1,7 +1,5 @@
 #version=RHEL8
 ignoredisk --only-use=sda
-# Partition clearing information
-clearpart --none --initlabel
 # Use graphical install
 graphical
 #repo --name="AppStream" --baseurl="{{linux_install_server_url}}/centos/8/x86_64/AppStream"
@@ -37,7 +35,8 @@ user --groups=wheel --name=chris --password=$6$oWM3S2AK4zS.jyDy$716RhjySp6ncIMig
 # System bootloader configuration
 bootloader --location=mbr --boot-drive=sda
 # Partition clearing information
-clearpart --all --initlabel
+clearpart --drives=sda --all
+zerombr
 # Disk partitioning information
 part /boot --fstype="ext4" --ondisk=sda --size=256
 part /boot/efi --fstype="efi" --ondisk=sda --size=256 --fsoptions="umask=0077,shortname=winnt" --label=bootefi
@@ -54,6 +53,7 @@ logvol /tmp  --fstype="ext4" --size=1024 --label="tmp" --name=tmplv --vgname=roo
 %packages
 @^minimal-environment
 @core
+open-vm-tools
 python3
 
 %end

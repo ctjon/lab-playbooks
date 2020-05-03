@@ -30,7 +30,8 @@ user --groups=wheel --name=chris --uid=1000 --password=$6$Cn2vwW.vUq0qFXYG$P6ogD
 # System bootloader configuration
 bootloader --location=mbr --boot-drive=sda
 # Partition clearing information
-clearpart --all --initlabel
+clearpart --drives=sda --all
+zerombr
 # Disk partitioning information
 part /boot --fstype="ext4" --ondisk=sda --size=256
 part /boot/efi --fstype="efi" --ondisk=sda --size=256 --fsoptions="umask=0077,shortname=winnt" --label=bootefi
@@ -48,6 +49,7 @@ logvol /tmp  --fstype="ext4" --size=1024 --label="tmp" --name=tmplv --vgname=roo
 %packages
 #@^minimal-environment
 @core
+open-vm-tools
 
 %end
 

@@ -1,0 +1,39 @@
+---
+#
+# Configure Test VMs
+#
+
+- hosts: mbp
+  
+  tasks:
+#    - name: display group members to start using with_items
+#      debug:
+#        var: "{{ item }}"
+#      with_items:
+#        - "{{ groups['test'] }}"
+
+#    - name: display group members to start using loop/loop_control
+#      debug:
+#        var: "{{ item }}"
+#      loop:
+#        - "{{ groups['test'] |flatten(levels=1) }}"
+#      loop_control:
+#        pause: 3
+
+    - name: use vmrun to boot test vms
+      shell: "vmrun -T fusion start {{vmdir}}/{{item}}.vmwarevm/{{item}}.vmx nogui"
+      with_items:
+        - "{{ groups['test'] }}"
+      
+    - name: Wait for SSH connection to Tower Instance
+      wait_for:
+        host: "{{ item }}"
+        port: 22
+        delay: 60
+        timeout: 320
+        state: started
+      with_items:
+        - "{{ groups['test'] }}"
+
+    - name: verify ansible is working
+      ping:
