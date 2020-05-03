@@ -47,4 +47,42 @@
   register: launchctl_result
   changed_when: launchctl_result.rc != 0
 
+- name: Install vmnet2 configuration for our dhcp subnet
+  blockinfile:
+    path: "/Library/Preferences/VMware Fusion/networking"
+    insertafter: "answer VNET_8_VIRTUAL_ADAPTER yes"
+    block: |
+      answer VNET_2_DHCP no
+      answer VNET_2_DHCP_CFG_HASH 426816EE2E53C8928665362420C44C79BC2ECCA2
+      answer VNET_2_HOSTONLY_NETMASK 255.255.255.0
+      answer VNET_2_HOSTONLY_SUBNET 192.168.242.0
+      answer VNET_2_NAT yes
+      answer VNET_2_VIRTUAL_ADAPTER yes
+
+- name: make /usr/local/etc/dnsmasq.d directory
+  file:
+    path: /usr/local/etc/dnsmasq.d
+    state: directory
+    owner: root
+    group: wheel
+    mode: 0755
+  
+- name: install dhcpd.conf file
+  template:
+    src: dhcpd.conf.{{ansible_hostname}}.j2
+    dest: /usr/local/etc/dhcpd.conf
+    owner: root
+    group: wheel
+    mode: 0644
+  notify: restart dnsmasq
+
+- name: install pxe.conf file
+  template:
+    src: pxe.conf.{{ansible_hostname}}.j2
+    dest: /usr/local/etc/pxe.conf
+    owner: root
+    group: wheel
+    mode: 0644
+  notify: restart dnsmasq
+
 ...

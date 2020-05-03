@@ -28,7 +28,7 @@ search_domains:
  - mbp.tjon.net
 dns_servers: 
  - 192.168.242.1
-nat_interface: vmnet8
+nat_interface: vmnet2
 
 ################################################################################
 # Installation Source Parameters                                               #
@@ -48,6 +48,15 @@ ks_config_dir: "{{linux_install_server_path}}/ks-configs"
 dnsmasq_interfaces:
   - lo0
   - "{{nat_interface}}"
+
+dhcp_enabled: true
+pxe_enabled: true
+
+dnsmasq_dhcp_interfaces:
+  - {name: vmnet2, dhcp_start: 192.168.242.100, dhcp_end: 192.168.242.254, ntp_server: 192.168.242.1, router: 192.168.242.2, lease: 15m}
+
+### THIS DOESN'T Work:-(
+#  - {name: "{{nat_interface}}", dhcp_start: "{{nat_short_net}}".100, dhcp_end: "{{nat_short_net}}".254, ntp_server: "{{nat_short_net}}".1, router: "{{nat_short_net}}".2, lease: 15m}
 
 ################################################################################
 # SSH Keys to Install on Managed Hosts                                         #
@@ -80,4 +89,5 @@ ks_configs_list:
   - test-rhel8-ks.cfg
   - tower-nodeA-ks.cfg
   - towervm-ks.cfg
+
 
