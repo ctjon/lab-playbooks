@@ -17,9 +17,7 @@ keyboard --vckeymap=us --xlayouts='us'
 lang en_US.UTF-8
 
 # Network information
-#network  --bootproto=static --device=eth0 --gateway={{nat_gateway}} --ip={{nat_short_net}}.38 nameserver={{dns_servers|join(",")}} --netmask={{nat_netmask}} --activate
-network  --bootproto=static --device=ens33 --gateway={{nat_gateway}} --ip={{nat_short_net}}.38 nameserver={{dns_servers|join(",")}} --netmask={{nat_netmask}} --activate
-network --hostname=test-fedora32.{{domain_name}} 
+network --hostname=test-fedora32.{{domain_name}} --bootproto=static --device=eth0 --gateway={{nat_gateway}} --ip={{nat_short_net}}.38 --nameserver={{dns_servers|join(",")}} --netmask={{nat_netmask}} --activate
 
 # Root password
 rootpw --iscrypted $6$EWvRuPP7F8pRTFrm$749vEu5HoijsEhVWzw691ZquSDP.FmK2Qc56HGpgE03pHMgxIMlal4YPM/BrmwfA10q0nKUDxkC7D21H1q7xH/

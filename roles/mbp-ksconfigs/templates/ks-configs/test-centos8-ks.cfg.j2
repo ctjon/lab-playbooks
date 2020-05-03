@@ -32,7 +32,6 @@ services --enabled="chronyd"
 timezone America/Phoenix --isUtc
 reboot
 
-part /boot/efi --fstype=ext4 --size=256
 user --groups=wheel --name=chris --password=$6$oWM3S2AK4zS.jyDy$716RhjySp6ncIMig2UggFWY5z98sfkmLQLqyWwlw1N4jogYBdjqSRlRjoJd.nr59z7iI68rzP4Y3WLj6Ssr5M. --iscrypted --gecos="Chris Tjon"
 
 # System bootloader configuration
