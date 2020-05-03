@@ -14,7 +14,7 @@
     - ansible_distribution_major_version >= "7"
 
 - name: shutdown Fedora 30 and newer
-  command: /usr/bin/shutdown -h +1
+  command: /usr/sbin/shutdown -h +1
   become: yes
   when:
     - ansible_distribution == "Fedora"
