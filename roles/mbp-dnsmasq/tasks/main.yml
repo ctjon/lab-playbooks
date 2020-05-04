@@ -1,5 +1,5 @@
 ---
-- name: Update homebrew first and upgrade formula dnsmasq to latest available with brew
+- name: Update homebrew first and upgrade formula dnsmasq to latest with brew
   homebrew:
     name: dnsmasq
     state: latest
@@ -58,7 +58,16 @@
       answer VNET_2_HOSTONLY_SUBNET 192.168.242.0
       answer VNET_2_NAT yes
       answer VNET_2_VIRTUAL_ADAPTER yes
+  notify: restart_vmware_networking
 
+- name: make /usr/local/var/lib/tftpboot directory
+  file:
+    path: /usr/local/var/lib/tftpboot
+    state: directory
+    owner: root
+    group: wheel
+    mode: 0755
+  
 - name: make /usr/local/etc/dnsmasq.d directory
   file:
     path: /usr/local/etc/dnsmasq.d
@@ -70,7 +79,7 @@
 - name: install dhcpd.conf file
   template:
     src: dhcpd.conf.{{ansible_hostname}}.j2
-    dest: /usr/local/etc/dhcpd.conf
+    dest: /usr/local/etc/dnsmasq.d/dhcpd.conf
     owner: root
     group: wheel
     mode: 0644
@@ -79,7 +88,7 @@
 - name: install pxe.conf file
   template:
     src: pxe.conf.{{ansible_hostname}}.j2
-    dest: /usr/local/etc/pxe.conf
+    dest: /usr/local/etc/dnsmasq.d/pxe.conf
     owner: root
     group: wheel
     mode: 0644

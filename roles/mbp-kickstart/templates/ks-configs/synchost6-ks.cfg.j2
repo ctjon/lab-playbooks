@@ -1,0 +1,60 @@
+#version=DEVEL
+install
+url --url={{linux_install_server_url}}/rhel/6/x86_64
+lang en_US.UTF-8
+keyboard us
+network --onboot yes --device eth0 --bootproto static --ip {{primary_short_net}}.11 --netmask {{primary_netmask}} --gateway {{primary_gateway}} --nameserver {{dns_servers|join(",")}} --hostname synchost6.{{domain_name}} --domain {{domain_name}}
+rootpw  --iscrypted $6$nVsdpkRk7J4y2SkE$5y9qq3w2ydPTN6o3gDFk2DRzrl8HNfMfVfVJ8ZgIcyHe6UAGl8aB5i/RXrmSqrmh942KsWMg0nearqEzom8Kn0
+firewall --service=ssh
+authconfig --enableshadow --passalgo=sha512
+selinux --enforcing
+timezone --utc America/Phoenix
+reboot
+user --groups=wheel --name=chris --uid=1000 --password=$6$Cn2vwW.vUq0qFXYG$P6ogDQM8pvhpGk/InzJ4Lh9eiO/lnsJiF6rb3jYAKA4jreq5hGCXg2Gu.v6zIW1bNeSCLix0k0Pq2MXn8OLAu/ --iscrypted --gecos="Chris Tjon"
+
+bootloader --location=mbr --driveorder=sda --append="crashkernel=auto rhgb quiet"
+# The following is the partition information you requested
+# Note that any partitions you deleted are not expressed
+# here so unless you clear all partitions first, this is
+# not guaranteed to work
+clearpart --all
+zerombr
+part /boot --fstype=ext4 --size=256
+part pv.01 --grow --size=200
+volgroup rootvg --pesize=4096 pv.01
+logvol / --fstype=ext4 --name=rootlv --vgname=rootvg --size=1024
+logvol /usr --fstype=ext4 --name=usrlv --vgname=rootvg --size=4096
+logvol /home --fstype=ext4 --name=homelv --vgname=rootvg --size=512
+logvol swap --name=swaplv --vgname=rootvg --size=2048
+logvol /opt --fstype=ext4 --name=optlv --vgname=rootvg --size=32
+logvol /var --fstype=ext4 --name=varlv --vgname=rootvg --size=4096
+logvol /tmp --fstype=ext4 --name=tmplv --vgname=rootvg --size=1024
+
+%packages
+#@^minimal
+@core
+@server-policy
+openssh-clients
+libselinux-python
+yum-utils
+insights-client
+%end
+
+%post
+
+# install ssh key for chris
+curl {{config_files_url}}/chris-server0-id_rsa.pub -o /home/chris/.ssh/authorized_keys  --create-dirs
+curl  {{config_files_url}}/chris-x1carbon-id_rsa.pub >> /home/chris/.ssh/authorized_keys
+curl  {{config_files_url}}/chris-mbp-id_rsa.pub >> /home/chris/.ssh/authorized_keys
+chown -R chris:chris /home/chris/.ssh
+chmod 700 /home/chris/.ssh
+chmod 600 /home/chris/.ssh/authorized_keys
+restorecon -RFv /home/chris/.ssh/authorized_keys
+
+curl {{config_files_url}}/sudoers -o /etc/sudoers
+chown -R root:root /etc/sudoers
+chmod 440 /etc/sudoers
+restorecon -RFv /etc/sudoers
+
+%end
+

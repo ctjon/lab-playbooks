@@ -1,0 +1,44 @@
+# {{ ansible_managed }}
+
+LABEL Main Menu
+        MENU LABEL Main Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/default
+
+LABEL Linux Menu
+        MENU LABEL Linux Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/LinuxMenu
+
+#
+# test-rhel8 server
+#
+label test-rhel8
+  menu label Install RHEL8 Test Server
+  kernel images/rhel/8/x86_64/vmlinuz
+  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/test-rhel8-ks.cfg
+
+#
+# test-rhel7 server
+#
+label test-rhel7
+  menu label Install RHEL7 Test Server
+  kernel images/rhel/7/x86_64/vmlinuz
+  append initrd=images/rhel/7/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/test-rhel7-ks.cfg
+
+#
+# test-rhel6 server
+#
+label test-rhel6
+  menu label Install RHEL6 Test Server
+  kernel images/rhel/6/x86_64/vmlinuz
+  append initrd=images/rhel/6/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/test-rhel6-ks.cfg
+
+#
+# test-rhel5 server
+#
+label test-rhel5
+  menu label Install RHEL5 Test Server
+  kernel images/rhel/5/x86_64/vmlinuz
+  append initrd=images/rhel/5/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/test-rhel5-ks.cfg
+

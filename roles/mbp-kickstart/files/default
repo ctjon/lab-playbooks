@@ -1,0 +1,39 @@
+# {{ ansible_managed }}
+
+default vesamenu.c32
+default menu.c32
+prompt 0
+timeout 300
+
+ONTIMEOUT local
+
+MENU TITLE PXE Main Menu
+
+LABEL local
+        MENU LABEL Boot local hard drive
+        LOCALBOOT 0
+
+LABEL Linux
+        MENU Linux Installs
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/LinuxMenu
+
+LABEL vmware
+        MENU LABEL VMware ESXi
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/vmware
+
+LABEL OpenBSD
+        MENU LABEL OpenBSD
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/OpenBSD
+
+LABEL Windows
+        MENU LABEL Windows
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Windows
+
+LABEL FreeDOS
+	MENU LABEL FreeDOS
+	KERNEL memdisk
+	APPEND initrd=images/FreeDOS/fdboot.img

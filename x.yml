@@ -1,0 +1,12 @@
+---
+#
+# register Test VMs
+#
+
+- hosts: test-rhel8
+  become: yes
+
+  roles:
+    - role: sm-register
+      tags: ['sm-register']
+
