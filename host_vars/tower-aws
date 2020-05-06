@@ -3,16 +3,12 @@ copy_ssh_keys: yes
 setup_ansible_config: yes
 setup_git_update: yes
 ssh_private_key_list:
-  - id_rsa
-  - chris-tjon-github_rsa
   - ctjon-github_rsa
 
 ssh_public_key_list:
-  - id_rsa
-  - chris-tjon-github_rsa
   - ctjon-github_rsa
 
-my_tower_version: 3.6.2-1
+my_tower_version: 3.6.4-1
 tower_install_dir: "/opt/tower"
 
 ssh_root_login_permited: "no"
@@ -38,8 +34,7 @@ ec2_security_group_name: "{{user_name}}_sg"
 ec2_route_table_name: "{{user_name}}_route_table"
 ec2_tag_name_prefix: "{{user_name}}"
 ec2_instance_type: m5.large
-ec2_image: ami-0c3af551419ae1d86 # RHEL 8.1
-ec2_instance_type: t2.micro
+ec2_image: ami-0ebff4493a767ad26 # RHEL 8.2 from RedHat
 ec2_instance_count: 3
 ec2_tag: "{{user_name}}"
 ec2_hosts: all
