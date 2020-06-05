@@ -20,4 +20,6 @@
 192.168.242.37  test-fedora31.mbp.tjon.net test-fedora31
 192.168.242.38  test-fedora32.mbp.tjon.net test-fedora32
 172.16.1.1	gatekeeper.internal.tjon.net gatekeeper
+172.16.1.2	vmserver.internal.tjon.net vmserver
+172.16.1.3	server0.internal.tjon.net server0
 50.18.226.197   ec2-50-18-226-197.us-west-1.compute.amazonaws.com tower-aws

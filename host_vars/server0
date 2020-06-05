@@ -72,8 +72,8 @@ vhosts:
 ################################################################################
 # Firewall Configuration Parameters                                            #
 ################################################################################
-public_firewall_zone: FedoraServer
-trusted_firewall_zone: FedoraServer
+public_firewall_zone: public
+trusted_firewall_zone: public
 additional_fw_ports:
   - 8443
 
@@ -352,3 +352,5 @@ vmware_versions:
 vmware_architectures:
   - x86_64
 
+
+centos_gpg_key_url: /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
