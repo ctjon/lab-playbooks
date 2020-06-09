@@ -13,9 +13,9 @@
     - role: mbp-dnsmasq
       tags: ['mbp-dnsmasq']
 
-    - role: mbp-kickstart
-      tags: ['mbp-kickstart']
+#    - role: mbp-kickstart
+#      tags: ['mbp-kickstart']
 
-    - role: mbp-ksconfigs
-      tags: ['mbp-ksconfigs']
+#    - role: mbp-ksconfigs
+#      tags: ['mbp-ksconfigs']
 

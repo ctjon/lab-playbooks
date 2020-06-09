@@ -10,6 +10,9 @@
     - role: selinux
       tags: ['selinux']
 
+    - role: dnsmasq
+      tags: ['dnsmasq']
+
     - role: http-repo
       tags: ['http-repo']
 

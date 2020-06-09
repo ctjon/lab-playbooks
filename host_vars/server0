@@ -154,8 +154,8 @@ ks_configs_list:
   - test-centos6-ks.cfg
   - test-centos7-ks.cfg
   - test-centos8-ks.cfg
-  - test-fedora29-ks.cfg
-  - test-fedora30-ks.cfg
+  - test-fedora31-ks.cfg
+  - test-fedora32-ks.cfg
   - test-rhel5-ks.cfg
   - test-rhel6-ks.cfg
   - test-rhel7-ks.cfg
@@ -212,11 +212,6 @@ linux_repo_includes_list:
   - x86_64
   - source
   - SRPMS
-  - aarch64
-  - ppc
-  - ppc64
-  - ppc64le
-  - "*.qcow2"
 
 linux_repo_excludes_list:
   - development
@@ -225,6 +220,10 @@ linux_repo_excludes_list:
   - debug
   - beta
   - testing
+  - aarch64
+  - ppc
+  - ppc64
+  - ppc64le
   - arm
   - armhfp
   - i386
@@ -233,6 +232,7 @@ linux_repo_excludes_list:
   - s390
   - s390x
   - "*.iso"
+  - "*.qcow2"
   - "*.torrent"
   - "*.box"
   - "*.raw.xz"
@@ -252,13 +252,13 @@ ubuntu_repo_excludes_list:
 
 openbsd_repo_includes_list:
   - amd64
+
+openbsd_repo_excludes_list:
   - arm
   - armish
   - armv7
   - arm64
   - aarch64
-
-openbsd_repo_excludes_list:
   - alpha
   - snapshots
   - songs
@@ -315,22 +315,22 @@ centos_architectures:
   - x86_64
 
 fedora_versions:
-  - 30
   - 31
+  - 32
 
 # fedora versions that include upgrade.img
 fedora_upgrade_versions:
-  - 29
-  - 30
+  - 31
+  - 32
 
 fedora_architectures:
   - x86_64
-  - aarch64
+  #- aarch64
 
 fedora_secondary_architectures:
-  - ppc
-  - ppc64
-  - ppc64le
+  #- ppc
+  #- ppc64
+  #- ppc64le
 
 ubuntu_server_versions:
   - 16.04.6
@@ -339,9 +339,9 @@ ubuntu_server_architectures:
   - amd64
 
 openbsd_versions:
-  - 6.6
+  - 6.7
 
-openbsd_prev_dot_release: 5
+openbsd_prev_dot_release: 6
 
 openbsd_architectures:
   - amd64

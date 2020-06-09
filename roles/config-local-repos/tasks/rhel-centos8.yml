@@ -45,11 +45,11 @@
         name: "{{item}}"
         state: absent
       with_items:
-        - "{{ centos_repos_list }}"
+        - "{{ centos8_repos_list }}"
 
     - name: rhel-centos8.yml - install custom CentOS repo files
       template:
-        src: tjon-centos.repo.j2
+        src: tjon-centos8.repo.j2
         dest: /etc/yum.repos.d/tjon-centos.repo
         owner: root
         group: root

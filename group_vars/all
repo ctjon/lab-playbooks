@@ -108,6 +108,14 @@ centos_repos_list:
   - centosplus
 
 #
+# CentOS 8 Specifics
+#
+centos8_repos_list:
+  - AppStream
+  - Base
+  - extras
+
+#
 # EPEL 6 and 7 Specifics
 #
 epel_gpg_key_url: "{{ linux_install_server_url }}/epel/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}"
