@@ -7,8 +7,8 @@
 172.16.1.1	gatekeeper.internal.tjon.net gatekeeper
 172.16.1.2	vmserver.internal.tjon.net vmserver
 172.16.1.3	server0.internal.tjon.net server0 install.internal.tjon.net archive.internal.tjon.net time.internal.tjon.net satcontent.internal.tjon.net satcontent
-172.16.1.4	vpnserver.internal.tjon.net vpnserver
-172.16.1.5	wireless.internal.tjon.net wireless
+172.16.1.4	tower.internal.tjon.net tower
+172.16.1.5	virtualpc.internal.tjon.net virtualpc
 172.16.1.6	itunesserver.internal.tjon.net itunesserver
 172.16.1.7	satellite6.internal.tjon.net satellite6
 172.16.1.10	virtualpc.internal.tjon.net virtualpc
