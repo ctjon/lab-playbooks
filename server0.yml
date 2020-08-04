@@ -3,15 +3,17 @@
 # Configure Server0
 #
 
+# CentOS 8 Prerequisites: 
+#	python3
+#	policycoreutils-python3
+#	rsync
+
 - hosts: server0
   become: yes
 
   roles:
     - role: selinux
       tags: ['selinux']
-
-    - role: dnsmasq
-      tags: ['dnsmasq']
 
     - role: http-repo
       tags: ['http-repo']
@@ -52,17 +54,17 @@
     - role: rsync-server
       tags: ['rsync-server']
 
+    - role: setup-epel
+      tags: ['setup-epel']
+
 #    - role: apcupsd
 #      tags: ['apcupsd']
 
-    - role: ddns
-      tags: ['ddns']
+#    - role: openvpn-server
+#      tags: ['openvpn-server']
 
-    - role: openvpn-server
-      tags: ['openvpn-server']
-
-    - role: fail2ban
-      tags: ['fail2ban']
+#    - role: fail2ban
+#      tags: ['fail2ban']
 
 #    - role: syslog
 #      tags: ['syslog']
@@ -87,7 +89,6 @@
         name: "{{ item }}"
         state: latest
       with_items:
-        - icedtea-web
         - elfutils-devel
         - kernel-devel
         - nmap
@@ -95,10 +96,6 @@
         - gdb
         - lftp
         - ftp
-        - iptraf-ng
-        - nmon
-        - vnstat
-        - sysstat
         - openscap
         - openscap-scanner
         - openscap-utils
@@ -115,9 +112,6 @@
         name: "{{ item }}"
         state: latest
       with_items:
-        - mediawriter
-        - grive2
-        - iperf
         - openscap-containers
         - openscap-daemon
         - python3-boto

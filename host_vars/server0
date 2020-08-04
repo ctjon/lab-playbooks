@@ -289,9 +289,9 @@ openbsd_repo_excludes_list:
   - '*.torrent'
 
 linux_distros:
-  - rhel
   - centos
   - fedora
+  - rhel
 
 rhel_versions:
   - 5

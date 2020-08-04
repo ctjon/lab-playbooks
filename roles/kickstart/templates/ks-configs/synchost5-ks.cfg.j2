@@ -24,7 +24,7 @@ bootloader --location=mbr --driveorder=sda --append="rhgb quiet"
 # not guaranteed to work
 zerombr
 clearpart --all --drives=sda
-part /boot --fstype ext3 --size=256
+part /boot --fstype ext3 --size=512
 part pv.2 --size=0 --grow --ondisk=sda
 volgroup rootvg --pesize=32768 pv.2
 logvol /var --fstype ext3 --name=varlv --vgname=rootvg --size=2048

@@ -1,83 +1,13 @@
 ---
 #
-# Configure gatekeeper
+# Configure gatekeeper with openwrt
 #
 
-- name: configure gatekeeper
+- name: configure gatekeeper with openwrt
   hosts: gatekeeper
   become: yes
 
   roles:
-    - role: masquerade
-      tags: ['masquerade']
 
-    - role: sm-register
-      tags: ['sm-register']
-
-    - role: ssh-config
-      tags: ['ssh-config']
-
-    - role: shell-env #including both ssh-keys on server and p51s ??
-      tags: ['shell-env']
-
-    - role: selinux
-      tags: ['selinux']
-
-    - role: setup-epel
-      tags: ['setup-epel']
-
-    - role: fail2ban
-      tags: ['fail2ban']
-
-    - role: dhcp-server
-      tags: ['dhcp-server']
-
-    - role: dns-server
-      tags: ['dns-server']
-
-    - role: apply-updates
-      tags: ['apply-updates']
-
-    - role: time-server
-      tags: ['time-server']
-
-#    - role: ddns
-#      tags: ['ddns']
-
-#    - role: postfix
-#      tags: ['postfix']
-
-#    - role: openvpn-server
-#      tags: ['openvpn-server']
-
-#    - role: syslog
-#      tags: ['syslog']
-
-    # use the insights register role from galaxy.ansible.com
-    - role: RedHatInsights.insights-client
-      tags: ['insights']
-      when: 
-        - ansible_os_family == "RedHat"
-        - ansible_distribution_major_version > "5"
-
-    - role: reboot-if-required
-      tags: ['reboot-if-required']
-
-
-  tasks:
-    - name: install other packages 
-      package:
-        name: "{{ item }}"
-        state: latest
-      with_items:
-        - nmap
-        - nmap-ncat
-        - iptraf-ng
-        - sysstat
-        - iperf3
-        - openscap
-        - openscap-scanner
-        - openscap-utils
-        - openscap-python3
-      tags:
-        - localpkgs
+    - role: wrt-dnsmasq
+      tags: ['wrt-dnsmasq']

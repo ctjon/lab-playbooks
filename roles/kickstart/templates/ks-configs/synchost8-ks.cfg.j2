@@ -35,7 +35,7 @@ bootloader --location=mbr --boot-drive=sda
 # Partition clearing information
 clearpart --all --initlabel
 # Disk partitioning information
-part /boot --fstype="ext4" --ondisk=sda --size=256
+part /boot --fstype="ext4" --ondisk=sda --size=512
 part pv.409 --fstype="lvmpv" --ondisk=sda --grow
 volgroup rootvg --pesize=4096 pv.409 
 logvol /  --fstype="ext4" --size=1024 --label="root" --name=rootlv --vgname=rootvg
