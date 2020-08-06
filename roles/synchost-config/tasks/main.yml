@@ -8,13 +8,10 @@
 # setup log copy back to server
 # reboot
 
-- name: Install nfs-utils/yum-utils/createrepo for RHEL 6+
+- name: Install nfs-utils/yum-utils/createrepo 
   package:
     name: nfs-utils, yum-utils, createrepo
     state: latest
-  when:
-    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
-    - ansible_distribution_major_version > "5"   # 6,7,8...
 
 - name: Create {{ nfs_mount }} mountpoint
   file:
