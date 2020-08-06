@@ -4,9 +4,9 @@ ignoredisk --only-use=sda
 clearpart --none --initlabel
 # Use graphical install
 graphical
-repo --name="AppStream" --baseurl="{{linux_install_server_url}}/centos/8/x86_64/AppStream"
+repo --name="AppStream" --baseurl="{{linux_install_server_url}}/centos/8/AppStream/x86_64/os"
 # Use network installation
-url --url="{{linux_install_server_url}}/centos/8/x86_64/"
+url --url="{{linux_install_server_url}}/centos/8/BaseOS/x86_64/os"
 # Keyboard layouts
 # old format: keyboard us
 # new format:

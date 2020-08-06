@@ -35,9 +35,7 @@ search_domains:
  - internal.tjon.net
  - tjon.net
 dns_servers: 
- - 172.16.1.3
  - 172.16.1.1
- - 8.8.8.8
 primary_interface: eth0
 primary_bridge: br0
 
@@ -144,8 +142,6 @@ ssh_keys_required:
 # Kickstart Config Parameters                                                  #
 ################################################################################
 ks_configs_list:
-  - gatekeeper-ks.cfg
-  - gatekeeper-fips-ks.cfg
   - fipstest-ks.cfg
   - x1carbon-fedora-initial-ks.cfg
   - x1carbon-fedora-preserve-ks.cfg
@@ -154,14 +150,12 @@ ks_configs_list:
   - test-centos6-ks.cfg
   - test-centos7-ks.cfg
   - test-centos8-ks.cfg
-  - test-fedora31-ks.cfg
   - test-fedora32-ks.cfg
   - test-rhel5-ks.cfg
   - test-rhel6-ks.cfg
   - test-rhel7-ks.cfg
   - test-rhel8-ks.cfg
   - gitlab-ks.cfg
-  - p51s-ks.cfg
   - satellite6-ks.cfg
   - satclient0-ks.cfg
   - satclient1-ks.cfg
@@ -173,9 +167,7 @@ ks_configs_list:
   - synchost7-ks.cfg
   - synchost8-ks.cfg
   - tower-ks.cfg
-  - towervm-ks.cfg
   - tower-nodeA-ks.cfg
-  - vpnserver-ks.cfg
 
 pxelinux_files:
     - LinuxMenu
@@ -315,12 +307,10 @@ centos_architectures:
   - x86_64
 
 fedora_versions:
-  - 31
   - 32
 
 # fedora versions that include upgrade.img
 fedora_upgrade_versions:
-  - 31
   - 32
 
 fedora_architectures:

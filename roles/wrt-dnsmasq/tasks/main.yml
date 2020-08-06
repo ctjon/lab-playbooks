@@ -1,44 +1,22 @@
 ---
-#- name: install dnsmasq.conf file
-#  template:
-#    src: dnsmasq.conf.{{ansible_hostname}}.j2
-#    dest: /etc/dnsmasq.conf
-#    owner: root
-#    group: dnsmasq
-#    mode: 0644
-#  notify: restart dnsmasq
-#
-#- name: install dnsmasq.d/pxe.conf file
-#  template:
-#    src: pxe.conf.{{ansible_hostname}}.j2
-#    dest: /etc/dnsmasq.d/pxe.conf
-#    owner: root
-#    group: root
-#    mode: 0644
-#  notify: restart dnsmasq
-#  when: pxe_enabled == true
-#
-#- name: configure dnsmasq for DHCP
-#  block: 
-#    - name: install dnsmasq.d/dhcp.conf file
-#      template:
-#        src: dhcp.conf.{{ansible_hostname}}.j2
-#        dest: /etc/dnsmasq.d/dhcp.conf
-#        owner: root
-#        group: root
-#        mode: 0644
-#      notify: restart dnsmasq
-#  when: dhcp_enabled == true
+- name: install dnsmasq.conf file
+  template:
+    src: dnsmasq.conf.{{ansible_hostname}}.j2
+    dest: /etc/dnsmasq.conf
+    owner: root
+    group: dnsmasq
+    mode: 0644
+  notify: restart dnsmasq
 
-#- name: configure firewall for DHCP # Need this for PXE
-#  firewalld:
-#    zone: "{{trusted_firewall_zone}}"
-#    service: dhcp
-#    immediate: yes
-#    state: enabled
-#    permanent: yes
-#  notify: restart dnsmasq
-#  when: dhcp_enabled == true
+- name: modify dhcp config
+  blockinfile:
+    path: /etc/config/dhcp
+    block: |
+      config boot 'linux'
+      	option filename 'pxelinux.0'
+      	option serveraddress '172.16.1.3'
+      	option servername 'server0.internal.tjon.net'
+  notify: restart dnsmasq
 
 - name: install /etc/hosts file
   copy:

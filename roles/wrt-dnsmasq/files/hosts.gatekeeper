@@ -12,3 +12,15 @@ ff02::2 ip6-allrouters
 172.16.1.5	virtualpc.internal.tjon.net virtualpc
 172.16.1.6	itunesserver.internal.tjon.net itunesserver
 172.16.1.7	satellite6.internal.tjon.net satellite6
+172.16.1.11	synchost6.internal.tjon.net synchost6
+172.16.1.12	synchost7.internal.tjon.net synchost7
+172.16.1.13	synchost5.internal.tjon.net synchost5
+172.16.1.14	synchost8.internal.tjon.net synchost8
+172.16.1.30	test-rhel8.internal.tjon.net test-rhel8
+172.16.1.31	test-rhel7.internal.tjon.net test-rhel7
+172.16.1.32	test-rhel6.internal.tjon.net test-rhel6
+172.16.1.33	test-rhel5.internal.tjon.net test-rhel5
+172.16.1.34	test-centos8.internal.tjon.net test-centos8
+172.16.1.35	test-centos7.internal.tjon.net test-centos7
+172.16.1.36	test-centos6.internal.tjon.net test-centos6
+172.16.1.38	test-fedora32.internal.tjon.net test-fedora32

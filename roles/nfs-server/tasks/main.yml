@@ -39,7 +39,7 @@
   when:
     - (((ansible_distribution == "RedHat" or ansible_distribution == "CentOS") and ansible_distribution_major_version >= "8") or ((ansible_distribution == "Fedora") and (ansible_distribution_major_version >= "30")))
 
-- name: configure firewall for NFS
+- name: configure firewall services for NFS
   firewalld: 
     service: "{{ item }}"
     permanent: yes
@@ -48,4 +48,17 @@
     - nfs
     - mountd
     - rpc-bind
+  notify: restart firewalld
+
+- name: configure firewall ports for NFS
+  firewalld: 
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+  with_items:
+    - 54302/tcp
+    - 20048/tcp
+    - 46666/tcp
+    - 42955/tcp
+    - 875/tcp
   notify: restart firewalld

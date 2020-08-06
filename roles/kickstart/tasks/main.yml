@@ -42,8 +42,8 @@
 
 - name: synchronize /usr/share/syslinux content to {{tftpbootdir}}
   synchronize:
-    src: /usr/share/syslinux
-    dest: /usr/share/syslinux
+    src: "/usr/share/syslinux/"
+    dest: "{{tftpbootdir}}"
     archive: yes
     delete: yes
     links: yes
