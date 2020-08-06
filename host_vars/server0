@@ -151,7 +151,6 @@ ks_configs_list:
   - test-centos7-ks.cfg
   - test-centos8-ks.cfg
   - test-fedora32-ks.cfg
-  - test-rhel5-ks.cfg
   - test-rhel6-ks.cfg
   - test-rhel7-ks.cfg
   - test-rhel8-ks.cfg
@@ -162,7 +161,6 @@ ks_configs_list:
   - satclient2-ks.cfg
   - satclient3-ks.cfg
   - server0-ks.cfg
-  - synchost5-ks.cfg
   - synchost6-ks.cfg
   - synchost7-ks.cfg
   - synchost8-ks.cfg
@@ -286,7 +284,6 @@ linux_distros:
   - rhel
 
 rhel_versions:
-  - 5
   - 6
   - 7
   - 8

@@ -64,16 +64,3 @@ label RHEL-6-x86_64-rescue
   kernel images/rhel/6/x86_64/vmlinuz
   append initrd=images/rhel/6/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp repo={{linux_install_server_url}}/rhel/6/x86_64 rescue
 
-#
-# RHEL 5
-#
-label RHEL-5-x86_64-Latest
-  menu label Install RHEL-5-x86_64-Latest Server
-  kernel images/rhel/5/x86_64/vmlinuz
-  append initrd=images/rhel/5/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp repo={{linux_install_server_url}}/rhel/5/x86_64
-
-label RHEL-5-x86_64-rescue
-  menu label Rescue RHEL-5-x86_64 System
-  kernel images/rhel/5/x86_64/vmlinuz
-  append initrd=images/rhel/5/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp repo={{linux_install_server_url}}/rhel/5/x86_64 rescue
-

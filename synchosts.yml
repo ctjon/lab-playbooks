@@ -24,6 +24,9 @@
     - role: ssh-config
       tags: ['ssh-config']
 
+    - role: setup-epel
+      tags: ['setup-epel']
+
     - role: shell-env #including both ssh-keys on server and p51s ??
       tags: ['shell-env']
 

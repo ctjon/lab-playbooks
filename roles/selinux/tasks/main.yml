@@ -2,21 +2,6 @@
 # enable and configure selinux
 #
 
-- name: RHEL5 - disable selinux for RHEL5
-  replace:
-    path: /etc/selinux/config
-    regexp: '^SELINUX={{item}}\n'
-    replace: 'SELINUX=disabled\n'
-    owner: root
-    group: root
-    mode: 0644
-  with_items:
-    - enforcing
-    - permissive
-  when:
-    - ansible_distribution == "RedHat"
-    - ansible_distribution_major_version == "5"
-
 - name: Install Fedora 28+ dnf/python3 Packages
   package:
     name: dnf-utils, libselinux-python3, libsemanage-python3
