@@ -8,25 +8,6 @@
 # setup log copy back to server
 # reboot
 
-- name: perform RHEL5 Specific Configuration
-  block:
-    - name: configure to boot to runlevel 3
-      replace:
-        path: /etc/inittab
-        regexp: '^id:5:initdefault:\n'
-        replace: 'id:3:initdefault:\n'
-        owner: root
-        group: root
-        mode: 0644
-
-    - name: Install nfs-utils/yum-utils/createrepo Packages
-      command: yum -y install nfs-utils yum-utils createrepo
-      args:
-        warn: false
-  when:
-    - ansible_distribution == "RedHat"
-    - ansible_distribution_major_version == "5"
-
 - name: Install nfs-utils/yum-utils/createrepo for RHEL 6+
   package:
     name: nfs-utils, yum-utils, createrepo

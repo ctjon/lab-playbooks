@@ -34,11 +34,3 @@ label synchost6
   kernel images/rhel/6/x86_64/vmlinuz
   append initrd=images/rhel/6/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/synchost6-ks.cfg
 
-#
-# synchost5 server
-#
-label synchost5
-  menu label Install RHEL5 SyncHost
-  kernel images/rhel/5/x86_64/vmlinuz
-  append initrd=images/rhel/5/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/synchost5-ks.cfg
-

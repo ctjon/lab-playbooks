@@ -41,35 +41,6 @@
     - ansible_distribution == "Fedora"
     - ansible_distribution_major_version >= "29"
 
-- name: RHEL5 Reboot
-  block: 
-    - name: RHEL5 Reboot - Check current running kernel 
-      command: uname -r
-      register: running_kernel
-
-#    - name: RHEL5 Reboot - display running kernel
-#      debug:
-#        var: running_kernel.stdout
-#
-    - name: RHEL5 Reboot - Check latest kernel installed
-      shell: "rpm -q kernel|tail -1|cut -c8-"
-      register: latest_installed_kernel
-      args:
-        warn: false
-
-#    - name: RHEL5 Reboot - display latest kernel installed
-#      debug:
-#        var: latest_installed_kernel.stdout
-#
-    - name: RHEL5 Reboot - Reboot Servers if Necessary
-      reboot:
-      become: true
-      async: 0
-      poll: 0
-      when: latest_installed_kernel.stdout != running_kernel.stdout
-
-  when: ((ansible_distribution == "RedHat" or ansible_distribution == "CentOS") and (ansible_distribution_major_version == "5"))
-
 - name: wait for Servers to reboot
   wait_for:
     port: 22

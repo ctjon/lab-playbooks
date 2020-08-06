@@ -24,17 +24,11 @@
     group: root
     mode: 0600
 
-- name: install xauth for systems other than RHEL5 or RHEL8
+- name: install xauth for systems other RHEL8
   package:
     name: xauth
     state: latest
-  when: not ((ansible_distribution == "RedHat") and ((ansible_distribution_major_version == "5") or (ansible_distribution_major_version == "8")))
-
-- name: install xauth for RHEL5 systems 
-  command: yum -y install xauth
-  args:
-    warn: false
-  when: ((ansible_distribution == "RedHat") and (ansible_distribution_major_version == "5"))
+  when: not ((ansible_distribution == "RedHat") and (ansible_distribution_major_version == "8"))
 
 - name: copy ssh-keys to remote host
   block:

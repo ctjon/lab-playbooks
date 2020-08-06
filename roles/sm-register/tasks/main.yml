@@ -3,7 +3,7 @@
   include_vars:
     file: group_vars/sm_creds.yml
 
-- name: Use subscription-manager to Register System RHEL 5/6/7/8
+- name: Use subscription-manager to Register System RHEL 6/7/8
   redhat_subscription:
     state: present
     username: "{{ redhat_portal_username }}"
@@ -12,5 +12,5 @@
     force_register: no
   when:
     - ansible_distribution == "RedHat"
-    - ansible_distribution_major_version >= "5"
+    - ansible_distribution_major_version >= "6"
 

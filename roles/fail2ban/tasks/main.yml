@@ -7,14 +7,6 @@
   debug:
     var: ansible_distribution_major_version
 
-- name: Install and/or Update fail2ban on RHEL5
-  command: yum -y install fail2ban
-  args:
-    warn: false
-  when:
-    - ansible_distribution == "RedHat"
-    - ansible_distribution_major_version == "5"
-
 - name: Install and/or Update fail2ban on RHEL6
   package:
     name: fail2ban
@@ -38,29 +30,6 @@
     name: fail2ban
     state: started
     enabled: yes
-
-#- name: deploy fail2ban on RHEL5
-#  block:
-#    - name: deploy fail2ban.conf.rhel5 template
-#      template:
-#        src: fail2ban.conf.rhel5.j2
-#        dest: /etc/fail2ban/fail2ban.conf
-#        owner: root
-#        group: root
-#        mode: 0644
-#      notify: restart fail2ban
-#
-#    - name: deploy jail.local.rhel5 template
-#      template:
-#        src: jail.local.rhel5.j2
-#        dest: /etc/fail2ban/jail.local
-#        owner: root
-#        group: root
-#        mode: 0644
-#      notify: restart fail2ban
-#  when:
-#    - ansible_distribution == "RedHat"
-#    - ansible_distribution_major_version == "5"
 
 - name: deploy fail2ban on Everything Else
   block:

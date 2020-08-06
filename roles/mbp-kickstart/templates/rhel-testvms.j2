@@ -34,11 +34,3 @@ label test-rhel6
   kernel images/rhel/6/x86_64/vmlinuz
   append initrd=images/rhel/6/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/test-rhel6-ks.cfg
 
-#
-# test-rhel5 server
-#
-label test-rhel5
-  menu label Install RHEL5 Test Server
-  kernel images/rhel/5/x86_64/vmlinuz
-  append initrd=images/rhel/5/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/test-rhel5-ks.cfg
-
