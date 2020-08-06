@@ -47,7 +47,7 @@
       tags: ['reboot-if-required']
 
   tasks:
-    - name: rhel5.yml - Clean up all but the most recent kernel
+    - name: Clean up all but the most recent kernel
       command: package-cleanup --oldkernels --count="{{installed_kernel_limit}}" -y
       when:
         - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
