@@ -53,20 +53,12 @@
     hour: "{{2 + start_hour_offset}}"
     job: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/sync-epel.sh > {{repo_owner_homedir}}/logs/sync-epel.log 2>&1"
 
-- name: create crontab entries for {{repo_owner}} to run sync-epel-archive.sh
-  cron:
-    name: "sync-epel-archive.sh"
-    user: "{{repo_owner}}"
-    minute: "0"
-    hour: "{{3 + start_hour_offset}}"
-    job: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/sync-epel-archive.sh > {{repo_owner_homedir}}/logs/sync-epel-archive.log 2>&1"
-
 - name: create crontab entries for {{repo_owner}} to run sync-openbsd.sh
   cron:
     name: "sync-openbsd.sh"
     user: "{{repo_owner}}"
     minute: "30"
-    hour: "{{4 + start_hour_offset}}"
+    hour: "{{3 + start_hour_offset}}"
     job: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/sync-openbsd.sh > {{repo_owner_homedir}}/logs/sync-openbsd.log 2>&1"
 
 - name: create crontab entries for {{repo_owner}} to run sync-virtio-win.sh

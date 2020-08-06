@@ -192,7 +192,6 @@ sync_scripts_list:
   - sync-fedora.sh
   - sync-centos.sh
   - sync-epel.sh
-  - sync-epel-archive.sh
   - sync-openbsd.sh
   - sync-virtio-win.sh
 
