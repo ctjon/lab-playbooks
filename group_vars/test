@@ -1,3 +1,8 @@
+use_ssh_agent: no
+copy_ssh_keys: no
+setup_ansible_config: no
+setup_git_update: no
+
 ################################################################################
 # Installation Source Parameters                                               #
 ################################################################################

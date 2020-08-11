@@ -36,17 +36,17 @@ bootloader --location=mbr --boot-drive=vda
 zerombr
 clearpart --all --initlabel
 # Disk partitioning information
-part /boot --fstype="ext4" --ondisk=vda --size=256
+part /boot --fstype="ext4" --ondisk=vda --size=512
 part pv.182 --fstype="lvmpv" --ondisk=vda --grow
 volgroup sat6vg --pesize=4096 pv.182
 logvol /usr  --fstype="ext4" --size=4096 --name=usrlv --vgname=sat6vg
-logvol /var/lib/pulp  --fstype="ext4" --size=512000 --name=var_lib_pulplv --vgname=sat6vg
+logvol /var/lib/pulp  --fstype="ext4" --size=300000 --name=var_lib_pulplv --vgname=sat6vg
 logvol /var/lib/tftpboot  --fstype="ext4" --size=1024 --name=var_lib_tftpbootlv --vgname=sat6vg
 logvol /var/cache/pulp  --fstype="ext4" --size=20480 --name=var_cache_pulplv --vgname=sat6vg
 logvol /var/log  --fstype="ext4" --size=2048 --name=loglv --vgname=sat6vg
 logvol /var/cache  --fstype="ext4" --size=4096 --name=cachelv --vgname=sat6vg
 logvol /opt  --fstype="ext4" --size=3072 --name=optlv --vgname=sat6vg
-logvol /  --fstype="ext4" --size=512 --name=rootlv --vgname=sat6vg
+logvol /  --fstype="ext4" --size=1024 --name=rootlv --vgname=sat6vg
 logvol /home  --fstype="ext4" --size=1024 --name=homelv --vgname=sat6vg
 logvol swap  --fstype="swap" --size=8192 --name=swaplv --vgname=sat6vg
 logvol /var/lib/mongodb  --fstype="ext4" --size=51200 --name=var_lib_mongodblv --vgname=sat6vg
