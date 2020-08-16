@@ -1,0 +1,36 @@
+---
+#
+# Configure Dell Optiplex
+#
+
+- hosts: optiplex
+  become: yes
+
+  roles:
+    - role: config-local-repos
+      tags: ['config-local-repos']
+
+    - role: apply-updates
+      tags: ['apply-updates']
+
+    - role: ssh-config
+      tags: ['ssh-config']
+
+    - role: time-client
+      tags: ['time-client']
+
+    - role: selinux
+      tags: ['selinux']
+
+    - role: shell-env
+      tags: ['shell-env']
+
+    - role: fail2ban
+      tags: ['fail2ban']
+      when: ansible_distribution_major_version != "8"
+
+#    - role: syslog
+#      tags: ['syslog']
+
+    - role: reboot-if-required
+      tags: ['reboot-if-required']

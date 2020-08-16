@@ -279,7 +279,14 @@ centos_versions:
   - 6
   - 7
 
-centos_architectures:
+centos6_architectures:
+  - i386
+  - x86_64
+
+centos7_architectures:
+  - x86_64
+
+centos8_architectures:
   - x86_64
 
 fedora_versions:

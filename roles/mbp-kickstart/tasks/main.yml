@@ -85,43 +85,74 @@
 ################################################################################
 # CentOS images Files copies                                                   #
 ################################################################################
-- name: create CentOS {{tftpbootdir}}/images/linux/centos/version/arch directories
+- name: create CentOS 6 {{tftpbootdir}}/images/linux/centos/version/arch directories
   file:
-    path: "{{tftpbootdir}}/images/centos/{{item[0]}}/{{item[1]}}"
+    path: "{{tftpbootdir}}/images/centos/6/{{item}}"
     owner: root
-    group: wheel
+    group: root
     mode: 0755
     state: directory
     recurse: yes
-  with_nested:
-    - "{{centos_versions}}"
-    - "{{centos_architectures}}"
+  with_items:
+    - "{{centos6_architectures}}"
 
-- name: synchronize CentOS 7- pxeboot content to {{tftpbootdir}}/images/centos
+- name: synchronize CentOS 6 content to {{tftpbootdir}}/images/centos
   synchronize:
-    src: "{{installdir}}/Linux/centos/{{item[0]}}/os/{{item[1]}}/images/pxeboot/"
-    dest: "{{tftpbootdir}}/images/centos/{{item[0]}}/{{item[1]}}/"
+    src: "{{installdir}}/Linux/centos/6/os/{{item}}/images/pxeboot/"
+    dest: "{{tftpbootdir}}/images/centos/6/{{item}}/"
     archive: yes
     delete: yes
     links: yes
     times: yes
   delegate_to: "{{ inventory_hostname }}"
-  with_nested:
-    - [ '6', '7' ]
-    - "{{centos_architectures}}"
+  with_items:
+    - "{{centos6_architectures}}"
+
+- name: create CentOS 7 {{tftpbootdir}}/images/linux/centos/version/arch directories
+  file:
+    path: "{{tftpbootdir}}/images/centos/7/{{item}}"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+    recurse: yes
+  with_items:
+    - "{{centos7_architectures}}"
+
+- name: synchronize CentOS 7 content to {{tftpbootdir}}/images/centos
+  synchronize:
+    src: "{{installdir}}/Linux/centos/7/os/{{item}}/images/pxeboot/"
+    dest: "{{tftpbootdir}}/images/centos/7/{{item}}/"
+    archive: yes
+    delete: yes
+    links: yes
+    times: yes
+  delegate_to: "{{ inventory_hostname }}"
+  with_items:
+    - "{{centos7_architectures}}"
+
+- name: create CentOS 8+ {{tftpbootdir}}/images/linux/centos/version/arch directories
+  file:
+    path: "{{tftpbootdir}}/images/centos/8/{{item}}"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+    recurse: yes
+  with_items:
+    - "{{centos8_architectures}}"
 
 - name: synchronize CentOS 8+ pxeboot content to {{tftpbootdir}}/images/centos
   synchronize:
-    src: "{{installdir}}/Linux/centos/{{item[0]}}/BaseOS/{{item[1]}}/os/images/pxeboot/"
-    dest: "{{tftpbootdir}}/images/centos/{{item[0]}}/{{item[1]}}/"
+    src: "{{installdir}}/Linux/centos/8/BaseOS/{{item}}/os/images/pxeboot/"
+    dest: "{{tftpbootdir}}/images/centos/8/{{item}}/"
     archive: yes
     delete: yes
     links: yes
     times: yes
   delegate_to: "{{ inventory_hostname }}"
-  with_nested:
-    - 8
-    - "{{centos_architectures}}"
+  with_items:
+    - "{{centos8_architectures}}"
 
 ################################################################################
 # Fedora images Files copies                                                   #

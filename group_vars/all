@@ -26,9 +26,11 @@ installed_kernel_limit: 2
 ################################################################################
 # Installation Source Parameters                                               #
 ################################################################################
-config_files_dir: "/export/install/ConfigFiles"
 linux_install_server_url: "http://install.internal.tjon.net/Linux"
+linux_install_server_hostname: server0
 linux_install_server_path: /export/install/Linux
+config_files_url: "http://install.internal.tjon.net/ConfigFiles"
+config_files_dir: "/export/install/ConfigFiles"
 ks_config_dir: "{{linux_install_server_path}}/ks-configs"
 linux_rsync_server: mirrors.kernel.org
 ubuntu_rsync_server: us.archive.ubuntu.com
@@ -110,10 +112,39 @@ centos_repos_list:
 #
 # CentOS 8 Specifics
 #
+centos8_gpg_key_url: /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+centos8_repo_files_list:
+  - CentOS-AppStream.repo
+  - CentOS-Base.repo
+  - CentOS-centosplus.repo
+  - CentOS-CR.repo
+  - CentOS-Debuginfo.repo
+  - CentOS-Devel.repo
+  - CentOS-Extras.repo
+  - CentOS-fasttrack.repo
+  - CentOS-HA.repo
+  - CentOS-Media.repo
+  - CentOS-PowerTools.repo
+  - CentOS-Sources.repo
+  - CentOS-Vault.repo
+
 centos8_repos_list:
-  - AppStream
-  - Base
-  - extras
+  - "CentOS-8 - AppStream"
+  - "CentOS-8 - AppStream Sources"
+  - "CentOS-8 - Base"
+  - "CentOS-8 - BaseOS Sources"
+  - "CentOS-8 - Devel WARNING! FOR BUILDROOT USE ONLY!"
+  - "CentOS-8 - HA"
+  - "CentOS-8 - PowerTools"
+  - "CentOS-8 - Debuginfo"
+  - "CentOS-AppStream-8 - Media"
+  - "CentOS-BaseOS-8 - Media"
+  - "CentOS-8 - Plus"
+  - "CentOS-8 - Plus Sources"
+  - "CentOS-8 - cr"
+  - "CentOS-8 - Extras"
+  - "CentOS-8 - Extras Sources"
+  - "CentOS-8 - fasttrack"
 
 #
 # EPEL 6 and 7 Specifics
