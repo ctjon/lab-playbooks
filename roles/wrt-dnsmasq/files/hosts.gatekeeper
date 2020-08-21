@@ -14,9 +14,11 @@ ff02::2 ip6-allrouters
 172.16.1.7	satellite6.internal.tjon.net satellite6
 172.16.1.8	optiplex.internal.tjon.net optiplex
 172.16.1.9	c632build.internal.tjon.net c632build
+172.16.1.10	vmserver0.internal.tjon.net vmserver0
 172.16.1.11	synchost6.internal.tjon.net synchost6
 172.16.1.12	synchost7.internal.tjon.net synchost7
 172.16.1.14	synchost8.internal.tjon.net synchost8
+172.16.1.15	old-server0.internal.tjon.net old-server0
 172.16.1.30	test-rhel8.internal.tjon.net test-rhel8
 172.16.1.31	test-rhel7.internal.tjon.net test-rhel7
 172.16.1.32	test-rhel6.internal.tjon.net test-rhel6

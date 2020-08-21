@@ -3,7 +3,8 @@
 # Configure Test VMs
 #
 
-- hosts: test
+#- hosts: test
+- hosts: test-rhel8
   become: yes
 
   roles:

@@ -146,6 +146,13 @@ centos8_repos_list:
   - "CentOS-8 - Extras Sources"
   - "CentOS-8 - fasttrack"
 
+epel8_repo_files_list:
+  - epel-modular.repo
+  - epel-playground.repo
+  - epel.repo
+  - epel-testing-modular.repo
+  - epel-testing.repo
+
 #
 # EPEL 6 and 7 Specifics
 #

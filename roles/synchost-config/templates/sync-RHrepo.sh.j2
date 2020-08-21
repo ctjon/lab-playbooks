@@ -71,10 +71,7 @@ do
 		;;
 		8)
 			mkdir -p $TARGETDIR/$i 
-			reposync -d 5 -n --repoid=$i \
-			--downloadcomps --download-metadata \
-			--download-path=$TARGETDIR
-			createrepo -v $TARGETDIR/$i -g comps.xml
+			reposync -p $TARGETDIR --download-metadata --download-comps --repo=$i 
 		;;
 		*)
 			echo "Unknown Version - exiting"

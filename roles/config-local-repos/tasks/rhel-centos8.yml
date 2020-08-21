@@ -40,14 +40,6 @@
         state: present
         key: "{{ centos8_gpg_key_url }}"
 
-    - name: Remove CentOS 8 Internet Repos
-      file:
-        path: "/etc/yum.repos.d/{{item}}"
-        state: absent
-      with_items:
-        - "{{ centos8_repo_files_list }}"
-      notify: yum-clean-metadata
-
     - name: rhel-centos8.yml - install custom CentOS repo files
       template:
         src: tjon-centos8.repo.j2
@@ -56,27 +48,43 @@
         group: root
         mode: 0644
 
+    - name: Remove CentOS 8 Internet Repos
+      file:
+        path: "/etc/yum.repos.d/{{item}}"
+        state: absent
+      with_items:
+        - "{{ centos8_repo_files_list }}"
+      notify: yum-clean-metadata
+
   when: ansible_distribution == "CentOS"
 
-#- name: rhel-centos8.yml - install EPEL rpm_gpg_key
-#  rpm_key:
-#    state: present
-#    key: "{{ epel_gpg_key_url }}"
-#
-#- name: rhel-centos8.yml - install custom epel repo files
-#  template:
-#    src: tjon-epel.repo.j2
-#    dest: /etc/yum.repos.d/tjon-epel.repo
-#    owner: root
-#    group: root
-#    mode: 0644
-#
-#- name: rhel-centos8.yml - disable EPEL internet repositories
-#  yum_repository:
-#    name: "{{item}}"
-#    state: absent
-#  with_items:
-#    - "{{ epel_repos_list }}"
+- name: rhel-centos8.yml - install EPEL rpm_gpg_key
+  rpm_key:
+    state: present
+    key: "{{ epel_gpg_key_url }}"
+
+- name: rhel-centos8.yml - install custom epel repo files
+  template:
+    src: tjon-epel8.repo.j2
+    dest: /etc/yum.repos.d/tjon-epel.repo
+    owner: root
+    group: root
+    mode: 0644
+
+- name: rhel-centos8.yml - disable EPEL internet repositories
+  yum_repository:
+    name: "{{item}}"
+    state: absent
+  with_items:
+    - "{{ epel_repos_list }}"
+
+- name: Remove CentOS 8 Internet Repos
+  file:
+    path: "/etc/yum.repos.d/{{item}}"
+    state: absent
+  with_items:
+    - "{{ epel8_repo_files_list }}"
+  notify: yum-clean-metadata
 
 - name: configure system to keep only 2 most recent kernels
   replace:

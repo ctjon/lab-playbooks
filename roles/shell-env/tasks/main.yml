@@ -24,7 +24,7 @@
     group: root
     mode: 0600
 
-- name: install xauth for systems other RHEL8
+- name: install xauth for systems other than RHEL8
   package:
     name: xauth
     state: latest
