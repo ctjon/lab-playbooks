@@ -62,10 +62,10 @@ installdir: /export/install
 # HTTP Server Parameters                                                       #
 ################################################################################
 vhosts: 
-  - {name: server0, document_root: /var/www/html, alias: server0, fcontext: httpd_sys_content_t}
-  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t}
-  - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t}
-#  - {name: satcontent, document_root: /export/satcontent, alias: install, fcontext: public_content_rw_t}
+  - {name: server0, document_root: /var/www/html, alias: server0, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
+  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: /dev/datavg/archivelv}
+  - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/installlv}
+#  - {name: satcontent, document_root: /export/satcontent, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/sat_content_lv}
 
 ################################################################################
 # Firewall Configuration Parameters                                            #
@@ -243,9 +243,9 @@ ubuntu_repo_excludes_list:
 
 openbsd_repo_includes_list:
   - amd64
-  - i386
 
 openbsd_repo_excludes_list:
+  - i386
   - arm
   - armish
   - armv7
