@@ -203,7 +203,6 @@ linux_repo_includes_list:
   - x86_64
   - source
   - SRPMS
-  - i386
 
 linux_repo_excludes_list:
   - development
@@ -212,6 +211,7 @@ linux_repo_excludes_list:
   - debug
   - beta
   - testing
+  - i386
   - aarch64
   - ppc
   - ppc64
@@ -302,7 +302,6 @@ centos_versions:
   - 8
 
 centos6_architectures:
-  - i386
   - x86_64
 
 centos7_architectures:

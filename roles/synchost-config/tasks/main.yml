@@ -59,14 +59,14 @@
 - name: configure cronjob to run script
   cron:
     name: "Sync RH Repo"
-    minute: "0"
-    hour: "{{ansible_distribution_major_version|int - 4}}"
+    minute: "30"
+    hour: "{{ansible_distribution_major_version|int - 6}}"
     job: "{{ scripts_dir }}/{{ script_name }} > {{ logs_dir }}/{{ log_name }} 2>&1"
 
 - name: configure cronjob to reset permissions on home directory
   cron:
     name: "Reset Permisssions on home directory"
     minute: "0"
-    hour: "{{ansible_distribution_major_version|int - 3}}"
+    hour: "{{ansible_distribution_major_version|int - 4}}"
     job: "chown -R chris:chris /home/chris"
 ...

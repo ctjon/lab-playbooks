@@ -21,14 +21,6 @@
   with_items:
     - "{{sync_scripts_list}}"
 
-- name: create crontab entries for {{repo_owner}} to run sync-rhel-reposyncs.sh
-  cron:
-    name: "sync-rhel-reposyncs.sh"
-    user: "{{repo_owner}}"
-    minute: "30"
-    hour: "{{0 + start_hour_offset}}"
-    job: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/sync-rhel-reposyncs.sh > {{repo_owner_homedir}}/logs/sync-rhel-reposyncs.log 2>&1"
-
 - name: create crontab entries for {{repo_owner}} to run sync-fedora.sh
   cron:
     name: "sync-fedora.sh"
