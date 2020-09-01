@@ -201,6 +201,7 @@ sync_script_retries: true
 
 linux_repo_includes_list:
   - x86_64
+  - i386
   - source
   - SRPMS
 
@@ -211,7 +212,6 @@ linux_repo_excludes_list:
   - debug
   - beta
   - testing
-  - i386
   - aarch64
   - ppc
   - ppc64
