@@ -201,7 +201,6 @@ sync_script_retries: true
 
 linux_repo_includes_list:
   - x86_64
-  - i386
   - source
   - SRPMS
 
@@ -220,6 +219,7 @@ linux_repo_excludes_list:
   - armhfp
   - alpha
   - ia64
+  - i386
   - s390
   - s390x
   - "*.iso"
@@ -319,7 +319,6 @@ fedora_upgrade_versions:
 
 fedora_architectures:
   - x86_64
-  #- aarch64
 
 fedora_secondary_architectures:
   #- ppc
