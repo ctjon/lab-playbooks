@@ -73,12 +73,14 @@
 #      tags: ['backup']
 
     # use the insights register role from galaxy.ansible.com
-    - role: RedHatInsights.insights-client
-      tags: ['insights']
-      when:
-        - ansible_distribution == "RedHat"
-        - ansible_distribution_major_version > "5"
-
+#    - role: RedHatInsights.insights-client
+#        vars:
+#          insights_display_name: 'server0'
+#      when:
+#        - ansible_distribution == "RedHat"
+#        - ansible_distribution_major_version > "5"
+#      tags: ['insights']
+#
     - role: reboot-if-required
       tags: ['reboot-if-required']
 
