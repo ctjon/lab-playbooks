@@ -312,10 +312,15 @@ centos8_architectures:
 
 fedora_versions:
   - 32
+  - 33
 
 # fedora versions that include upgrade.img
 fedora_upgrade_versions:
   - 32
+  - 33
+
+fedora_prev_release_ones_digit: 1
+fedora_prev_release: 31
 
 fedora_architectures:
   - x86_64
@@ -334,7 +339,7 @@ ubuntu_server_architectures:
 openbsd_versions:
   - 6.8
 
-openbsd_prev_dot_release: 6
+openbsd_prev_dot_release: 7
 
 openbsd_architectures:
   - amd64
