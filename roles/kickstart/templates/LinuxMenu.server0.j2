@@ -44,11 +44,6 @@ label tower
   kernel images/rhel/8/x86_64/vmlinuz
   append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/tower-ks.cfg
 
-label towervm
-  menu label towervm
-  kernel images/rhel/8/x86_64/vmlinuz
-  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/towervm-ks.cfg
-
 label gatekeeper
   menu label gatekeeper
   kernel images/rhel/8/x86_64/vmlinuz
