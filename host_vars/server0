@@ -64,7 +64,7 @@ installdir: /export/install
 vhosts: 
   - {name: server0, document_root: /var/www/html, alias: server0, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
   - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/installlv}
-#  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: /dev/datavg/archivelv}
+  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: /dev/datavg/archivelv}
 #  - {name: satcontent, document_root: /export/satcontent, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/sat_content_lv}
 
 ################################################################################
@@ -114,7 +114,7 @@ samba_trusted_write_users:
 samba_shares:
   - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
 #  - {path: /export/iTunes, name: iTunesLibrary, public: 'yes', guest_ok: 'no', browseable: 'yes', writeable: 'yes', printable: 'no'}
-#  - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
+  - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
 #  - {path: /export/satcontent, name: Satellite6_Content, public: 'yes', guest_ok: 'no', browseable: 'yes', writeable: 'no', printable: 'no'}
 
 ################################################################################
