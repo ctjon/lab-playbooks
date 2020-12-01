@@ -63,9 +63,9 @@ installdir: /export/install
 ################################################################################
 vhosts: 
   - {name: server0, document_root: /var/www/html, alias: server0, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
-  - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/installlv}
-  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: /dev/datavg/archivelv}
-#  - {name: satcontent, document_root: /export/satcontent, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/sat_content_lv}
+  - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: /dev/rootvg/installlv}
+  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: /dev/rootvg/archivelv}
+#  - {name: satcontent, document_root: /export/satcontent, alias: install, fcontext: public_content_rw_t, lv_name: /dev/rootvg/sat_content_lv}
 
 ################################################################################
 # Firewall Configuration Parameters                                            #
@@ -271,6 +271,7 @@ openbsd_repo_excludes_list:
   - mvme88k
   - octeon
   - powerpc
+  - powerpc64
   - sgi
   - socppc
   - sparc
