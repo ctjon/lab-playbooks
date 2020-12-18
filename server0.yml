@@ -18,8 +18,8 @@
     - role: http-repo
       tags: ['http-repo']
 
-    - role: config-local-repos
-      tags: ['config-local-repos']
+#    - role: config-local-repos
+#      tags: ['config-local-repos']
 
     - role: apply-updates
       tags: ['apply-updates']

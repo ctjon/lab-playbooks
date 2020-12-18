@@ -90,28 +90,20 @@ rhel_architectures:
   - x86_64
 
 centos_versions:
-  - 6
   - 7
   - 8
 
-centos6_architectures:
-  - i386
-  - x86_64
-
-centos7_architectures:
-  - x86_64
-
-centos8_architectures:
+centos_architectures:
   - x86_64
 
 fedora_versions:
-  - 31
   - 32
+  - 33
 
 # fedora versions that include upgrade.img
 fedora_upgrade_versions:
-  - 31
   - 32
+  - 33
 
 fedora_architectures:
   - x86_64

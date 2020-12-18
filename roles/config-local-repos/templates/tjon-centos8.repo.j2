@@ -1,9 +1,9 @@
 # CentOS-AppStream.repo
 #
 [{{linux_install_server_hostname}}-AppStream]
-name=server0-CentOS-$releasever - AppStream
+name=server0-CentOS-$releasever-stream - AppStream
 #mirrorlist=http://#mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=AppStream&infra=$infra
-baseurl={{linux_install_server_url}}/centos/$releasever/AppStream/$basearch/os/
+baseurl={{linux_install_server_url}}/centos/$releasever-stream/AppStream/$basearch/os/
 gpgcheck=1
 enabled=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
@@ -11,9 +11,9 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 # CentOS-Base.repo
 #
 [{{linux_install_server_hostname}}-BaseOS]
-name=server0-CentOS-$releasever - Base
+name=server0-CentOS-$releasever-stream - Base
 #mirrorlist=http://#mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=BaseOS&infra=$infra
-baseurl={{linux_install_server_url}}/centos/$releasever/BaseOS/$basearch/os/
+baseurl={{linux_install_server_url}}/centos/$releasever-stream/BaseOS/$basearch/os/
 gpgcheck=1
 enabled=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
@@ -22,9 +22,9 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 #
 #additional packages that extend functionality of existing packages
 [{{linux_install_server_hostname}}-centosplus]
-name=server0-CentOS-$releasever - Plus
+name=server0-CentOS-$releasever-stream - Plus
 #mirrorlist=http://#mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=centosplus&infra=$infra
-baseurl={{linux_install_server_url}}/centos/$releasever/centosplus/$basearch/os/
+baseurl={{linux_install_server_url}}/centos/$releasever-stream/centosplus/$basearch/os/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
@@ -36,9 +36,9 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 #
 
 [{{linux_install_server_hostname}}-cr]
-name=server0-CentOS-$releasever - cr
+name=server0-CentOS-$releasever-stream - cr
 #mirrorlist=http://#mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=cr&infra=$infra
-baseurl={{linux_install_server_url}}/centos/$releasever/cr/$basearch/os/
+baseurl={{linux_install_server_url}}/centos/$releasever-stream/cr/$basearch/os/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
@@ -58,8 +58,8 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 #
 
 [base-debuginfo]
-name=CentOS-$releasever - Debuginfo
-baseurl=http://debuginfo.centos.org/$releasever/$basearch/
+name=CentOS-$releasever-stream - Debuginfo
+baseurl=http://debuginfo.centos.org/$releasever-stream/$basearch/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
@@ -67,9 +67,9 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 # CentOS-Devel.repo
 #
 [{{linux_install_server_hostname}}-Devel]
-name=CentOS-$releasever - Devel WARNING! FOR BUILDROOT USE ONLY!
+name=CentOS-$releasever-stream - Devel WARNING! FOR BUILDROOT USE ONLY!
 #mirrorlist=http://#mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=Devel&infra=$infra
-baseurl={{linux_install_server_url}}/centos/$releasever/Devel/$basearch/os/
+baseurl={{linux_install_server_url}}/centos/$releasever-stream/Devel/$basearch/os/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
@@ -77,9 +77,9 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 #
 #additional packages that may be useful
 [{{linux_install_server_hostname}}-extras]
-name=server0-CentOS-$releasever - Extras
+name=server0-CentOS-$releasever-stream - Extras
 #mirrorlist=http://#mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=extras&infra=$infra
-baseurl={{linux_install_server_url}}/centos/$releasever/extras/$basearch/os/
+baseurl={{linux_install_server_url}}/centos/$releasever-stream/extras/$basearch/os/
 gpgcheck=1
 enabled=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
@@ -87,9 +87,9 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 #CentOS-fasttrack.repo
 
 [{{linux_install_server_hostname}}-fasttrack]
-name=server0-CentOS-$releasever - fasttrack
+name=server0-CentOS-$releasever-stream - fasttrack
 #mirrorlist=http://#mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=fasttrack&infra=$infra
-baseurl={{linux_install_server_url}}/centos/$releasever/fasttrack/$basearch/os/
+baseurl={{linux_install_server_url}}/centos/$releasever-stream/fasttrack/$basearch/os/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
@@ -97,9 +97,9 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 # CentOS-HA.repo
 #
 [{{linux_install_server_hostname}}-HighAvailability]
-name=server0-CentOS-$releasever - HA
+name=server0-CentOS-$releasever-stream - HA
 #mirrorlist=http://#mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=HighAvailability&infra=$infra
-baseurl={{linux_install_server_url}}/centos/$releasever/HighAvailability/$basearch/os/
+baseurl={{linux_install_server_url}}/centos/$releasever-stream/HighAvailability/$basearch/os/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
@@ -107,9 +107,9 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 # CentOS-PowerTools.repo
 #
 [{{linux_install_server_hostname}}-PowerTools]
-name=server0-CentOS-$releasever - PowerTools
+name=server0-CentOS-$releasever-stream - PowerTools
 #mirrorlist=http://#mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=PowerTools&infra=$infra
-baseurl={{linux_install_server_url}}/centos/$releasever/PowerTools/$basearch/os/
+baseurl={{linux_install_server_url}}/centos/$releasever-stream/PowerTools/$basearch/os/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
@@ -127,32 +127,32 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 #
 
 [BaseOS-source]
-name=CentOS-$releasever - BaseOS Sources
-baseurl=http://vault.centos.org/$contentdir/$releasever/BaseOS/Source/
+name=CentOS-$releasever-stream - BaseOS Sources
+baseurl=http://vault.centos.org/$contentdir/$releasever-stream/BaseOS/Source/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 
 #AppStream
 [AppStream-source]
-name=CentOS-$releasever - AppStream Sources
-baseurl=http://vault.centos.org/$contentdir/$releasever/AppStream/Source/
+name=CentOS-$releasever-stream - AppStream Sources
+baseurl=http://vault.centos.org/$contentdir/$releasever-stream/AppStream/Source/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 
 #additional packages that may be useful
 [extras-source]
-name=CentOS-$releasever - Extras Sources
-baseurl=http://vault.centos.org/$contentdir/$releasever/extras/Source/
+name=CentOS-$releasever-stream - Extras Sources
+baseurl=http://vault.centos.org/$contentdir/$releasever-stream/extras/Source/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 
 #additional packages that extend functionality of existing packages
 [centosplus-source]
-name=CentOS-$releasever - Plus Sources
-baseurl=http://vault.centos.org/$contentdir/$releasever/centosplus/Source/
+name=CentOS-$releasever-stream - Plus Sources
+baseurl=http://vault.centos.org/$contentdir/$releasever-stream/centosplus/Source/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial

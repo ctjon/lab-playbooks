@@ -14,7 +14,7 @@
     block: |
       config boot 'linux'
       	option filename 'pxelinux.0'
-      	option serveraddress '172.16.1.3'
+      	option serveraddress '172.16.1.2'
       	option servername 'server0.internal.tjon.net'
   notify: restart dnsmasq
 

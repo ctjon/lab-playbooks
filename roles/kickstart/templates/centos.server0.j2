@@ -37,29 +37,6 @@ label CentOS-7-x86_64-rescue
   append initrd=images/centos/7/x86_64/initrd.img net.ifnames=0 biosdevname=0 rescue
 
 #
-# CentOS 6
-#
-label CentOS-6-x86_64-Latest
-  menu label Install CentOS-6-x86_64-Latest Server
-  kernel images/centos/6/x86_64/vmlinuz
-  append initrd=images/centos/6/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/centos/6/os/x86_64
-
-label CentOS-6-x86_64-rescue
-  menu label Rescue CentOS-6-x86_64 system
-  kernel images/centos/6/x86_64/vmlinuz
-  append initrd=images/centos/6/x86_64/initrd.img net.ifnames=0 biosdevname=0 rescue
-
-label CentOS-6-i386-Latest
-  menu label Install CentOS-6-i386-Latest Server
-  kernel images/centos/6/i386/vmlinuz
-  append initrd=images/centos/6/i386/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/centos/6/os/i386
-
-label CentOS-6-i386-rescue
-  menu label Rescue CentOS-6-i386 system
-  kernel images/centos/6/i386/vmlinuz
-  append initrd=images/centos/6/i386/initrd.img net.ifnames=0 biosdevname=0 rescue
-
-#
 # test-centos8 server
 #
 label test-centos8
@@ -74,28 +51,4 @@ label test-centos7
   menu label Install CentOS 7 Test Server
   kernel images/centos/7/x86_64/vmlinuz
   append initrd=images/centos/7/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/test-centos7-ks.cfg
-
-#
-# test-centos6 server
-#
-label test-centos6
-  menu label Install CentOS 6 Test Server
-  kernel images/centos/6/x86_64/vmlinuz
-  append initrd=images/centos/6/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/test-centos6-ks.cfg
-
-#
-# Dell Optiplex w/CentOS 8
-#
-label optiplex
-  menu label Install Dell Optiplex w/CentOS 8
-  kernel images/centos/8/x86_64/vmlinuz
-  append initrd=images/centos/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/optiplex-ks.cfg
-
-#
-# CentOS 6 32bit Build Host
-#
-label c632build
-  menu label Install CentOS 6 32bit Build Host
-  kernel images/centos/6/i386/vmlinuz
-  append initrd=images/centos/6/x86_64/initrd.img clocksource=hpet net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/c632build-ks.cfg
 

@@ -85,29 +85,6 @@
 ################################################################################
 # CentOS images Files copies                                                   #
 ################################################################################
-- name: create CentOS 6 {{tftpbootdir}}/images/linux/centos/version/arch directories
-  file:
-    path: "{{tftpbootdir}}/images/centos/6/{{item}}"
-    owner: root
-    group: root
-    mode: 0755
-    state: directory
-    recurse: yes
-  with_items:
-    - "{{centos6_architectures}}"
-
-- name: synchronize CentOS 6 content to {{tftpbootdir}}/images/centos
-  synchronize:
-    src: "{{installdir}}/Linux/centos/6/os/{{item}}/images/pxeboot/"
-    dest: "{{tftpbootdir}}/images/centos/6/{{item}}/"
-    archive: yes
-    delete: yes
-    links: yes
-    times: yes
-  delegate_to: "{{ inventory_hostname }}"
-  with_items:
-    - "{{centos6_architectures}}"
-
 - name: create CentOS 7 {{tftpbootdir}}/images/linux/centos/version/arch directories
   file:
     path: "{{tftpbootdir}}/images/centos/7/{{item}}"
@@ -117,7 +94,7 @@
     state: directory
     recurse: yes
   with_items:
-    - "{{centos7_architectures}}"
+    - "{{centos_architectures}}"
 
 - name: synchronize CentOS 7 content to {{tftpbootdir}}/images/centos
   synchronize:
@@ -129,7 +106,7 @@
     times: yes
   delegate_to: "{{ inventory_hostname }}"
   with_items:
-    - "{{centos7_architectures}}"
+    - "{{centos_architectures}}"
 
 - name: create CentOS 8+ {{tftpbootdir}}/images/linux/centos/version/arch directories
   file:
@@ -140,7 +117,7 @@
     state: directory
     recurse: yes
   with_items:
-    - "{{centos8_architectures}}"
+    - "{{centos_architectures}}"
 
 - name: synchronize CentOS 8+ pxeboot content to {{tftpbootdir}}/images/centos
   synchronize:
@@ -152,7 +129,7 @@
     times: yes
   delegate_to: "{{ inventory_hostname }}"
   with_items:
-    - "{{centos8_architectures}}"
+    - "{{centos_architectures}}"
 
 ################################################################################
 # Fedora images Files copies                                                   #

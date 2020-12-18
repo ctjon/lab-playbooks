@@ -8,14 +8,6 @@
     var: cpuinfo.stdout_lines
   failed_when: "'vmx' not in cpuinfo.stdout and 'svm' not in cpuinfo.stdout"
 
-- name: Adding user {{ libvirt_users }} to {{libvirt_groups}}
-  user:
-    name={{ item }}
-    groups={{libvirt_groups}}
-    append=yes
-  with_items:
-    - "{{ libvirt_users }}"
-
 - name: create /etc/polkit-1/localauthority/50-local.d/ directory
   file:
     path: /etc/polkit-1/localauthority/50-local.d/
@@ -65,16 +57,26 @@
     opts: defaults,x-systemd.device-timeout=0
     state: mounted
 
-- name: Install Packages
-  package:
-    name: python3-libvirt, python3-lxml, libvirt, virt-install, virt-viewer, virt-manager, virt-manager-common, guestfs-browser, libguestfs-tools, python-libguestfs, virt-top, edk2-ovmf, efibootmgr, syslinux, syslinux-extlinux
-    state: latest
+#- name: Install RHEL/CentOS Packages
+#  yum: 
+#    name: '@virt'
+#    state: latest
+
+- name: Install RHEL/CentOS Packages
+  command: yum -y install @virt
+  args:
+    warn: false # set warn=false to avoid warnings about yum command/module
+
+#- name: start and enable libvirtd service
+#  service:
+#    name: libvirtd
+#    state: restarted
+#    enabled: yes
 
 - name: start and enable libvirtd service
-  service:
-    name: libvirtd
-    state: started
-    enabled: yes
+  command: systemctl restart libvirtd
+  args:
+    warn: false # set warn=false to avoid warnings about yum command/module
 
 - name: validate kvm modules loaded properly
   shell: lsmod |grep kvm
@@ -93,12 +95,20 @@
   command: virsh net-undefine default
   ignore_errors: yes
 
-- name: add libvirt_users to libvirt group
-  user: name={{ item }}
-        groups=libvirt
-        append=yes
+- name: Adding user {{ libvirt_users }} to {{libvirt_groups}}
+  user:
+    name={{ item }}
+    groups={{libvirt_groups}}
+    append=yes
   with_items:
-    - "{{libvirt_users}}"
+    - "{{ libvirt_users }}"
+
+#- name: add libvirt_users to libvirt group
+#  user: name={{ item }}
+#        groups=libvirt
+#        append=yes
+#  with_items:
+#    - "{{libvirt_users}}"
 
 - name: setup virtual networks
   block:
@@ -135,7 +145,7 @@
         state: enabled
       with_items:
         - "{{ virt_nets}}"
-  when: ansible_hostname == "p51s" or ansible_hostname == "x1carbon"
+#  when: ansible_hostname == "p51s" or ansible_hostname == "x1carbon"
 
 - name: Install virtio-win.repo from /export/install/Linux/virtio-win
   get_url: 

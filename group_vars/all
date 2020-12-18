@@ -127,6 +127,19 @@ centos8_repo_files_list:
   - CentOS-PowerTools.repo
   - CentOS-Sources.repo
   - CentOS-Vault.repo
+  - CentOS-Linux-AppStream.repo
+  - CentOS-Linux-BaseOS.repo
+  - CentOS-Linux-ContinuousRelease.repo
+  - CentOS-Linux-Debuginfo.repo
+  - CentOS-Linux-Devel.repo
+  - CentOS-Linux-Extras.repo
+  - CentOS-Linux-FastTrack.repo
+  - CentOS-Linux-HighAvailability.repo
+  - CentOS-Linux-Media.repo
+  - CentOS-Linux-Plus.repo
+  - CentOS-Linux-PowerTools.repo
+  - CentOS-Linux-Sources.repo
+
 
 centos8_repos_list:
   - "CentOS-8 - AppStream"

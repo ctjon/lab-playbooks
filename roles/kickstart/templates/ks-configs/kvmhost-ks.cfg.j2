@@ -1,0 +1,87 @@
+#version=RHEL8
+
+# Use graphical install
+graphical
+
+# Define AppStream Repo
+repo --name="AppStream" --baseurl="{{linux_install_server_url}}/rhel/8/x86_64/AppStream" 
+
+# Use network installation
+url --url="{{linux_install_server_url}}/rhel/8/x86_64/BaseOS" 
+
+# Keyboard layouts
+keyboard --vckeymap=us --xlayouts='us'
+
+# System language
+lang en_US.UTF-8
+
+# Network information
+network  --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.3 --nameserver=172.16.1.1 --netmask={{primary_netmask}} --activate
+network  --hostname=kvmhost.internal.tjon.net
+
+# Root password
+rootpw --iscrypted $6$Mpqrkg2HFvlND9bA$MWkZ03ZuyJ5m97r03QPRMVgMtPCJBj7bHwpB/s07DHAeEjnd8LbVSRTkHPv3m7FFzYWXSFeY3sjFv3zA9A6cx0
+
+# Don't run the Setup Agent on first boot
+firstboot --disable
+
+# Do not configure the X Window System
+skipx
+
+# Accept the EULA
+eula --agreed
+
+# Reboot after install
+reboot
+
+# Ignore all other disks
+ignoredisk --only-use=nvme0n1
+
+# Partition clearing information
+clearpart --drives=nvme0n1 --all --initlabel
+
+# Disk partitioning information
+part biosboot --fstype="biosboot" --ondisk=nvme0n1 --size=1
+part /boot --fstype="ext4" --ondisk=nvme0n1 --size=512 --label=boot
+part pv.13401 --fstype="lvmpv" --ondisk=nvme0n1 --size=1 --grow
+volgroup rootvg --pesize=4096 pv.13401 
+logvol /opt --fstype="ext4" --size=32 --label="opt" --name=optlv --vgname=rootvg
+logvol / --fstype="ext4" --size=1024 --label="root" --name=rootlv --vgname=rootvg
+logvol /var/lib/libvirt/images --fstype="ext4" --size=1048576 --label="images" --name=imageslv --vgname=rootvg
+logvol /tmp --fstype="ext4" --size=10240 --label="tmp" --name=tmplv --vgname=rootvg
+logvol /var --fstype="ext4" --size=2048 --label="var" --name=varlv --vgname=rootvg
+logvol /home --fstype="ext4" --size=512 --label="home" --name=homelv --vgname=rootvg
+logvol /usr --fstype="ext4" --size=6144 --label="usr" --name=usrlv --vgname=rootvg
+logvol swap --fstype="swap" --size=65536 --name=swaplv --vgname=rootvg
+
+# System services
+services --enabled="chronyd"
+
+# System timezone
+timezone America/Phoenix --isUtc
+
+# Define User
+user --groups=wheel --name=chris --password=$6$X5wRW4PP3yP09xwp$0fRza7Q1C2/pnFttu7Pxgwo.M.na66sovRj6LpnkyXuz91yVwetghFZ9QxlLh1Xd.DzX3jZoqibuSJbBgcB/d1 --iscrypted --gecos="Chris Tjon"
+
+# System bootloader configuration
+bootloader --location=mbr --boot-drive=nvme0n1
+
+%packages
+@^virtualization-host-environment
+@headless-management
+@remote-system-management
+python3
+python3-policycoreutils
+python3-libselinux
+
+%end
+
+%addon com_redhat_kdump --disable --reserve-mb='128'
+
+%end
+
+%anaconda
+pwpolicy root --minlen=6 --minquality=1 --notstrict --nochanges --notempty
+pwpolicy user --minlen=6 --minquality=1 --notstrict --nochanges --emptyok
+pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
+%end

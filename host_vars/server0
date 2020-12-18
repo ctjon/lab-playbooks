@@ -26,7 +26,7 @@ time_servers:
 ################################################################################
 domain_name: internal.tjon.net
 primary_subnet: 172.16.1.0/24
-primary_ipaddr: 172.16.1.3
+primary_ipaddr: 172.16.1.2
 primary_prefix: 24
 primary_short_net: 172.16.1
 primary_netmask: 255.255.255.0
@@ -121,11 +121,12 @@ samba_shares:
 # KVM Virtualization Configuration Parameters                                  #
 ################################################################################
 virt_nets:
+  - virbr0
 
 virt_users:
   - chris
 
-vm_storage_vg: raid10vg
+vm_storage_vg: rootvg
 vm_storage_lv: vm_images_lv
 vm_storage_lv_size: 1024g
 vm_storage_path: /var/lib/libvirt/images
@@ -142,20 +143,19 @@ ssh_keys_required:
 # Kickstart Config Parameters                                                  #
 ################################################################################
 ks_configs_list:
+  - kvmhost-ks.cfg
   - fipstest-ks.cfg
   - x1carbon-fedora-initial-ks.cfg
   - x1carbon-fedora-preserve-ks.cfg
   - x1carbon-rhel8-initial-ks.cfg
   - x1carbon-rhel8-preserve-ks.cfg
-  - test-centos6-ks.cfg
   - test-centos7-ks.cfg
   - test-centos8-ks.cfg
   - test-fedora32-ks.cfg
+  - test-fedora33-ks.cfg
   - test-rhel6-ks.cfg
   - test-rhel7-ks.cfg
   - test-rhel8-ks.cfg
-  - optiplex-ks.cfg
-  - c632build-ks.cfg
   - gitlab-ks.cfg
   - satellite6-ks.cfg
   - satclient0-ks.cfg
@@ -298,17 +298,10 @@ rhel_architectures:
   - x86_64
 
 centos_versions:
-  - 6
   - 7
   - 8
 
-centos6_architectures:
-  - x86_64
-
-centos7_architectures:
-  - x86_64
-
-centos8_architectures:
+centos_architectures:
   - x86_64
 
 fedora_versions:
