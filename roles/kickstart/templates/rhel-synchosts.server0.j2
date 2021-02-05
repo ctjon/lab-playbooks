@@ -16,7 +16,7 @@ LABEL Linux Menu
 label synchost8
   menu label Install RHEL8 SyncHost
   kernel images/rhel/8/x86_64/vmlinuz
-  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/synchost8-ks.cfg
+  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/synchost8-ks.cfg inst.stage2={{linux_install_server_url}}/rhel/8/x86_64
 
 #
 # synchost7 server
