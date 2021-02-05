@@ -1,0 +1,88 @@
+#
+# host_vars file for kvmhost
+#
+
+use_ssh_agent: yes
+copy_ssh_keys: yes
+setup_ansible_config: yes
+setup_git_update: yes
+ssh_private_key_list:
+  - ctjon.pem
+  - ctjon-github_rsa
+
+ssh_public_key_list:
+  - ctjon-github_rsa
+
+TIMEZONE: "America/Phoenix"
+time_servers:
+  - time.internal.tjon.net
+#  - 0.rhel.pool.ntp.org
+#  - 1.rhel.pool.ntp.org
+#  - 2.rhel.pool.ntp.org
+#  - 3.rhel.pool.ntp.org
+
+################################################################################
+# Network Configuration Parameters                                             #
+################################################################################
+domain_name: internal.tjon.net
+primary_subnet: 172.16.1.0/24
+primary_ipaddr: 172.16.1.3
+primary_prefix: 24
+primary_short_net: 172.16.1
+primary_netmask: 255.255.255.0
+primary_gateway: 172.16.1.1
+search_domains: 
+ - internal.tjon.net
+ - tjon.net
+dns_servers: 
+ - 172.16.1.1
+primary_interface: eth0
+primary_bridge: br0
+
+################################################################################
+# Firewall Configuration Parameters                                            #
+################################################################################
+public_firewall_zone: public
+trusted_firewall_zone: public
+additional_fw_ports:
+  - 8443
+
+################################################################################
+# SSH Configuration Parameters                                                 #
+################################################################################
+#ssh_root_login_permited: "yes"
+#allowed_ssh_users: chris root
+ssh_root_login_permited: "no"
+allowed_ssh_users: chris
+
+################################################################################
+# DNSMASQ Configuration Parameters                                             #
+################################################################################
+dnsmasq_interfaces:
+  - "{{primary_interface}}"
+  - "{{primary_bridge}}"
+dhcp_enabled: false
+pxe_enabled: true
+dnsmasq_dhcp_interfaces:
+
+################################################################################
+# KVM Virtualization Configuration Parameters                                  #
+################################################################################
+virt_nets:
+  - virbr0
+
+virt_users:
+  - chris
+
+vm_storage_vg: rootvg
+vm_storage_lv: vm_images_lv
+vm_storage_lv_size: 1024g
+vm_storage_path: /var/lib/libvirt/images
+vm_storage_fs_type: ext4
+vm_bridge_interface: "{{primary_bridge}}"
+
+################################################################################
+# SSH Keys to Install on Managed Hosts                                         #
+################################################################################
+ssh_keys_required:
+  - chris-x1carbon-id_rsa.pub

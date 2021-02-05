@@ -1,43 +1,59 @@
 ---
-- name: install packages
+- name: install bridge-utils package
   package:
-    name: bridge-utils, NetworkManager-libnm, python3-networkmanager
+    name: bridge-utils
     state: latest
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "6" or ansible_distribution_major_version == "7"
 
-#
-# nmcli stuff is BROKEN due to https://github.com/ansible/ansible/issues/48055
-#
-
-- name: configure eth0 for Jumbo Frames
-  nmcli:
-    conn_name: eth0
-    ifname: eth0
-    mtu: 9000
-    type: ethernet
-    state: present
-
-- name: configure {{primary_bridge}}
-  nmcli:
-    conn_name: "{{primary_bridge}}"
-    ifname: "{{primary_bridge}}"
-    type: bridge
-    ip4: 172.16.1.3/24
-    gw4: 172.16.1.1
-    dns4: 
-      - 172.16.1.3
-      - 172.16.1.1
-      - 8.8.8.8
-    mtu: 9000
-    state: present
+- name: install /etc/sysconfig/network-scripts/ifcfg-br0 template on RHEL6/7
+  template:
+    src: ifcfg-br0.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-br0
+    owner: root
+    group: root
+    mode: 0644
   notify: restart network
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "6" or ansible_distribution_major_version == "7"
 
-- name: add eth0 to {{primary_bridge}}
-  nmcli: 
-    type: bridge
-    conn_name: br0_slave_0
-    ifname: eth0
-    master: "{{primary_bridge}}"
-    state: present
+- name: install /etc/sysconfig/network-scripts/ifcfg-br0 template on RHEL8
+  template:
+    src: ifcfg-br0.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-br0
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart NetworkManager
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "8"
+
+- name: install /etc/sysconfig/network-scripts/ifcfg-eth0 on RHEL6/7
+  template:
+    src: ifcfg-eth0.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-eth0
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart network
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "6" or ansible_distribution_major_version == "7"
+
+- name: install /etc/sysconfig/network-scripts/ifcfg-eth0 template on RHEL8
+  template:
+    src: ifcfg-eth0.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-eth0
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart NetworkManager
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "8"
 
 - firewalld:
     zone: "{{public_firewall_zone}}"
@@ -48,7 +64,7 @@
 - name: Set ip forwarding and reload if necessary
   sysctl:
     name: net.ipv4.ip_forward
-    value: 1
+    value: '1'
     sysctl_set: yes
     state: present
     reload: yes

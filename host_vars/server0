@@ -137,7 +137,7 @@ vm_bridge_interface: "{{primary_bridge}}"
 # SSH Keys to Install on Managed Hosts                                         #
 ################################################################################
 ssh_keys_required:
-  - chris-p51s-id_rsa.pub
+  - chris-x1carbon-id_rsa.pub
 
 ################################################################################
 # Kickstart Config Parameters                                                  #

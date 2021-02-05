@@ -1,61 +1,43 @@
 ---
-- name: install bridge-utils package
+- name: install packages
   package:
-    name: bridge-utils
+    name: bridge-utils, NetworkManager-libnm, python3-networkmanager
     state: latest
 
-#- name: add br0 bridge
-#  command: brctl addbr br0
-#  ignore_errors: yes
+#
+# nmcli stuff is BROKEN due to https://github.com/ansible/ansible/issues/48055
+#
 
-#- name: add eth0 interface
-#  command: brctl addif br0 eth0
-#  ignore_errors: yes
+- name: configure eth0 for Jumbo Frames
+  nmcli:
+    conn_name: eth0
+    ifname: eth0
+    mtu: 9000
+    type: ethernet
+    state: present
 
-- name: install /etc/sysconfig/network-scripts/ifcfg-br0 template
-  template:
-    src: ifcfg-br0.j2
-    dest: /etc/sysconfig/network-scripts/ifcfg-br0
-    owner: root
-    group: root
-    mode: 0644
+- name: configure {{primary_bridge}}
+  nmcli:
+    conn_name: "{{primary_bridge}}"
+    ifname: "{{primary_bridge}}"
+    type: bridge
+    ip4: 172.16.1.3/24
+    gw4: 172.16.1.1
+    dns4: 
+      - 172.16.1.3
+      - 172.16.1.1
+      - 8.8.8.8
+    mtu: 9000
+    state: present
   notify: restart network
 
-- name: install /etc/sysconfig/network-scripts/ifcfg-eth0
-  copy:
-    src: ifcfg-eth0
-    dest: /etc/sysconfig/network-scripts/ifcfg-eth0
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart network
-
-- name: install /etc/sysconfig/network-scripts/ifcfg-eth1
-  copy:
-    src: ifcfg-eth1
-    dest: /etc/sysconfig/network-scripts/ifcfg-eth1
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart network
-
-- name: install /etc/sysconfig/network-scripts/ifcfg-eth2
-  copy:
-    src: ifcfg-eth2
-    dest: /etc/sysconfig/network-scripts/ifcfg-eth2
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart network
-
-- name: install /etc/sysconfig/network-scripts/ifcfg-eth3
-  copy:
-    src: ifcfg-eth3
-    dest: /etc/sysconfig/network-scripts/ifcfg-eth3
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart network
+- name: add eth0 to {{primary_bridge}}
+  nmcli: 
+    type: bridge
+    conn_name: br0_slave_0
+    ifname: eth0
+    master: "{{primary_bridge}}"
+    state: present
 
 - firewalld:
     zone: "{{public_firewall_zone}}"
