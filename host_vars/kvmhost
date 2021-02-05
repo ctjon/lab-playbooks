@@ -69,7 +69,8 @@ dnsmasq_dhcp_interfaces:
 # KVM Virtualization Configuration Parameters                                  #
 ################################################################################
 virt_nets:
-  - virbr0
+  - vnet_nat1
+  - vnet_nat2
 
 virt_users:
   - chris

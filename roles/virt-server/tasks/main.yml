@@ -40,6 +40,7 @@
     lv: "{{ vm_storage_lv }}"
     size: "{{ vm_storage_lv_size }}"
     shrink: no
+    state: present
     resizefs: yes
 
 - name: Create a ext4 filesystem on {{ vm_storage_lv }}
@@ -57,15 +58,11 @@
     opts: defaults,x-systemd.device-timeout=0
     state: mounted
 
-#- name: Install RHEL/CentOS Packages
-#  yum: 
-#    name: '@virt'
-#    state: latest
-
 - name: Install RHEL/CentOS Packages
-  command: yum -y install @virt
-  args:
-    warn: false # set warn=false to avoid warnings about yum command/module
+  yum: 
+    name: qemu-kvm, virt-manager, virt-viewer, libvirt, libvirt-client, virt-what, libguestfs, virtio-win, python3-lxml
+    state: latest
+
 
 #- name: start and enable libvirtd service
 #  service:
@@ -146,53 +143,6 @@
       with_items:
         - "{{ virt_nets}}"
 #  when: ansible_hostname == "p51s" or ansible_hostname == "x1carbon"
-
-- name: Install virtio-win.repo from /export/install/Linux/virtio-win
-  get_url: 
-    url: "{{linux_install_server_url}}/virtio-win/virtio-win/virtio-win.repo"
-    dest: /etc/yum.repos.d/virtio-win.repo
-    mode: 644
-    owner: root
-    group: root
-
-- name: disable virtio-win internet repositories
-  command: dnf config-manager --set-disabled "{{ item }}" --save
-  with_items: 
-    - "virtio-win-stable"
-    - "virtio-win-latest"
-    - "virtio-win-source"
-  args:
-    warn: false # set warn=false to avoid warnings about dnf command/module
-
-- name: setup virtio-win-stable repo to install from {{linux_install_server_url}}/virtio-win
-  yum_repository:
-    name: virtio-win-stable-{{ansible_hostname}}
-    description: "virtio-win builds roughly matching what was shipped in latest RHEL on local on {{ansible_hostname}}"
-    file: /etc/yum.repos.d/tjon-virtio-win
-    baseurl: "{{ linux_install_server_url }}/virtio-win//virtio-win/repo/stable"
-    enabled: yes
-    gpgcheck: no
-    skip_if_unavailable: true
-
-- name: setup virtio-win-latest repo to install from {{linux_install_server_url}}/virtio-win
-  yum_repository:
-    name: virtio-win-latest-{{ansible_hostname}}
-    description: "Latest virtio-win builds local on {{ansible_hostname}}"
-    file: /etc/yum.repos.d/tjon-virtio-win
-    baseurl: "{{ linux_install_server_url }}/virtio-win//virtio-win/repo/latest"
-    enabled: no
-    gpgcheck: no
-    skip_if_unavailable: true
-
-- name: setup virtio-win-source repo to install from {{linux_install_server_url}}/virtio-win
-  yum_repository:
-    name: virtio-win-source-{{ansible_hostname}}
-    description: "virtio-win SRPMS local on {{ansible_hostname}}"
-    file: /etc/yum.repos.d/tjon-virtio-win
-    baseurl: "{{ linux_install_server_url }}/virtio-win//virtio-win/repo/srpms"
-    enabled: yes
-    gpgcheck: no
-    skip_if_unavailable: true
 
 - name: restore SELinux Context on /etc/yum.repos.d
   command: restorecon -RFv /etc/yum.repos.d
