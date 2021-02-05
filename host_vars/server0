@@ -100,8 +100,8 @@ samba_workgroup: TJON
 samba_netbios_name: SERVER0
 
 samba_trusted_interfaces:
-  - "{{primary_interface}}"
-#  - "{{primary_bridge}}"
+  - "{{primary_bridge}}"
+#  - "{{primary_interface}}"
 
 samba_trusted_subnets:
   - 172.16.1.0/24
@@ -121,7 +121,8 @@ samba_shares:
 # KVM Virtualization Configuration Parameters                                  #
 ################################################################################
 virt_nets:
-  - virbr0
+  - vnet_nat1
+  - vnet_nat2
 
 virt_users:
   - chris

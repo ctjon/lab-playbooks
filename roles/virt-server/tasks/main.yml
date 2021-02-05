@@ -60,20 +60,20 @@
 
 - name: Install RHEL/CentOS Packages
   yum: 
-    name: qemu-kvm, virt-manager, virt-viewer, libvirt, libvirt-client, virt-what, libguestfs, virtio-win, python3-lxml
+    name: qemu-kvm, virt-manager, virt-viewer, virt-install, libvirt, libvirt-client, virt-what, libguestfs, virtio-win, python3-lxml
     state: latest
 
 
-#- name: start and enable libvirtd service
-#  service:
-#    name: libvirtd
-#    state: restarted
-#    enabled: yes
-
 - name: start and enable libvirtd service
-  command: systemctl restart libvirtd
-  args:
-    warn: false # set warn=false to avoid warnings about yum command/module
+  service:
+    name: libvirtd
+    state: restarted
+    enabled: yes
+
+#- name: start and enable libvirtd service
+#  command: systemctl restart libvirtd
+#  args:
+#    warn: false # set warn=false to avoid warnings about yum command/module
 
 - name: validate kvm modules loaded properly
   shell: lsmod |grep kvm

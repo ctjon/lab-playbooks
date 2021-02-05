@@ -54,3 +54,14 @@
     - role: reboot-if-required
       tags: ['reboot-if-required']
 
+  tasks:
+    - name: install other packages
+      package:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - nmap
+        - git
+      tags:
+        - localpkgs
+
