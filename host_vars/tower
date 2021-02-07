@@ -10,6 +10,6 @@ ssh_private_key_list:
 ssh_public_key_list: 
   - ctjon-github_rsa
 
-my_tower_version: 3.7.3-1
+my_tower_version: 3.8.1-1
 tower_install_dir: "/opt/tower"
 

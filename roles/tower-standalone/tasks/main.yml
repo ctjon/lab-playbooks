@@ -15,6 +15,11 @@
     - "{{tower_install_dir}}/scripts"
     - "{{tower_install_dir}}/logs"
 
+- name: install yum-config-manager
+  package:
+    name: yum-utils
+    state: present
+
 - name: get tower installation installation archive
   get_url:
     url: https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-{{my_tower_version}}.tar.gz
