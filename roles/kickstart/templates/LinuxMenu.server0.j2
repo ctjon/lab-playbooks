@@ -42,7 +42,7 @@ LABEL x1carbon
 label tower
   menu label tower
   kernel images/rhel/8/x86_64/vmlinuz
-  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/tower-ks.cfg
+  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/tower-ks.cfg inst.stage2={{linux_install_server_url}}/rhel/8/x86_64
 
 label gatekeeper
   menu label gatekeeper
