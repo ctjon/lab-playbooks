@@ -34,7 +34,7 @@
 #    state: restarted
 #  when: "polkit_result.changed == true"
 
-- name: create vm storage in /var/lib/libvirt/images
+- name: create vm storage in {{vm_storage_path}}
   lvol:
     vg: "{{ vm_storage_vg }}"
     lv: "{{ vm_storage_lv }}"

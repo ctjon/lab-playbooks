@@ -1,2 +1,8 @@
 ---
-# handlers file for plex-server
+- name: restart plex service
+  service:
+    name: plexmediaserver
+    state: restarted
+    enabled: yes
+
+

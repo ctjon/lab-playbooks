@@ -1,26 +1,29 @@
 ---
 - name: setup plex repo
   yum_repository:
-    name: PlexRepo
+    name: plex
     description: "Plex Installation Repository"
-    file: /etc/yum.repos.d/PlexRepo
+    file: /etc/yum.repos.d/plex
     baseurl: https://downloads.plex.tv/repo/rpm/$basearch/
-    enabled: yes
-    metadata_expire: 1d
-    repo_gpgcheck: 0
+    enabled: '1'
+    metadata_expire: '1d'
+    repo_gpgcheck: '1'
     #type: rpm
-    gpgcheck: yes
+    gpgcheck: '1'
     gpgkey: https://downloads.plex.tv/plex-keys/PlexSign.key
     skip_if_unavailable: false
-    keepcache: false
+    keepcache: '1'
     failovermethod: priority
 
-- name: install Plex Media Server
-  package:
-    name: plexmediaserver
-    state: latest
+- name: create plex firewall service definition
+  ansible.builtin.copy:
+    src: plex-service.xml
+    dest: /etc/firewalld/services/plex.xml
+    owner: root
+    group: root
+    mode: '0600'
 
-- name: open firewall port for plex server
+- name: open firewall service for plex server
   firewalld:
     zone: "{{trusted_firewall_zone}}"
     service: plex
@@ -28,8 +31,78 @@
     state: enabled
     permanent: yes
 
+- name: create plex storage in {{plex_storage_path}}
+  lvol:
+    vg: "{{ plex_storage_vg }}"
+    lv: "{{ plex_storage_lv }}"
+    size: "{{ plex_storage_lv_size }}"
+    shrink: no
+    state: present
+    resizefs: yes
+
+- name: Create a ext4 filesystem on {{ plex_storage_lv }}
+  filesystem:
+    fstype: "{{ plex_storage_fs_type }}"
+    dev: "/dev/{{plex_storage_vg}}/{{plex_storage_lv}}"
+    force: no
+    resizefs: yes
+
+- name: Create {{plex_storage_path}} mount point
+  ansible.builtin.file:
+    path: /export/plex-media
+    state: directory
+    recurse: no
+    owner: root
+    group: root
+    mode: 0700
+
+- name: mount {{plex_storage_path}}
+  mount:
+    path: "{{ plex_storage_path }}"
+    src: "/dev/{{plex_storage_vg}}/{{plex_storage_lv}}"
+    fstype: "{{ plex_storage_fs_type }}"
+    opts: defaults
+    state: mounted
+
+- name: Set plex permissions for {{plex_storage_path}} mountpoint after mounted
+  ansible.builtin.file:
+    path: /export/plex-media
+    state: directory
+    recurse: no
+    owner: plex
+    group: plex
+    mode: 0755
+
+- name: install Plex Media Server
+  package:
+    name: plexmediaserver
+    state: latest
+
+- name: install plex Preference.xml
+  template:
+    src: Preferences.xml.j2
+    dest: "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Preferences.xml"
+    owner: plex
+    group: plex
+    mode: '0644'
+  notify: restart plex service
+
+- name: Create {{plex_storage_path}} subdirectories
+  ansible.builtin.file:
+    path: "/export/plex-media/{{item}}"
+    state: directory
+    recurse: yes
+    owner: plex
+    group: plex
+    mode: 0755
+  with_items:
+    - "Movies"
+    - "Music"
+    - "TV Shows"
+
 - name: enable and start plex service
   service:
     name: plexmediaserver
-    state: restarted
+    state: started
     enabled: yes
+

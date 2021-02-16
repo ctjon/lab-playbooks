@@ -60,6 +60,9 @@
     - role: setup-epel
       tags: ['setup-epel']
 
+    - role: plex-server
+      tags: ['plex-server']
+
 #    - role: apcupsd
 #      tags: ['apcupsd']
 
