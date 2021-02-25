@@ -1,4 +1,6 @@
 ---
+plex_owner: chris
+plex_group: plex
 plex_storage_vg: rootvg
 plex_storage_lv: plex_media_lv
 plex_storage_lv_size: 5000g

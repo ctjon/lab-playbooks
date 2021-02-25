@@ -77,9 +77,9 @@
     path: /export/plex-media
     state: directory
     recurse: no
-    owner: plex
-    group: plex
-    mode: 0755
+    owner: "{{plex_owner}}"
+    group: "{{plex_group}}"
+    mode: "2775"
 
 - name: install Plex Media Server
   package:
@@ -91,7 +91,7 @@
 #    src: Preferences.xml.j2
 #    dest: "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Preferences.xml"
 #    owner: plex
-#    group: plex
+#    group: "{{plex_group}}"
 #    mode: '0644'
 #  notify: restart plex service
 
@@ -109,22 +109,34 @@
     src: Preferences.xml.j2
     dest: "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Preferences.xml"
     owner: plex
-    group: plex
+    group: "{{plex_group}}"
     mode: '0644'
   notify: restart plex service
 
 - name: Create {{plex_storage_path}} subdirectories
   ansible.builtin.file:
-    path: "/export/plex-media/{{item}}"
+    path: "{{plex_storage_path}}/{{item}}"
     state: directory
     recurse: yes
-    owner: plex
-    group: plex
-    mode: 0755
+    owner: "{{plex_owner}}"
+    group: "{{plex_group}}"
+    mode: "2775"
   with_items:
     - "Movies"
     - "Music"
-    - "TV Shows"
+    - "TV-Shows"
+    - "OtherImages"
+    - "OtherVideos"
+    - "HomeVideos"
+    - "Photos"
+
+- name: create crontab entries to reset permissions on repos
+  cron:
+    name: "plex chown"
+    user: "root"
+    minute: "20"
+    hour: "{{5 + start_hour_offset}}"
+    job: "/usr/bin/chown -R {{plex_owner}}:{{plex_group}} {{plex_storage_path}}  > /{{ansible_user_id}}/logs/chown-plex.log 2>&1"
 
 - name: enable and start plex service
   service:

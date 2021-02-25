@@ -114,7 +114,7 @@ samba_trusted_write_users:
 samba_shares:
   - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
   - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
-  - {path: /export/plex-media, name: Plex Media, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
+  - {path: /export/plex-media, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'yes'}
 
 ################################################################################
 # KVM Virtualization Configuration Parameters                                  #
