@@ -113,9 +113,8 @@ samba_trusted_write_users:
 
 samba_shares:
   - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
-#  - {path: /export/iTunes, name: iTunesLibrary, public: 'yes', guest_ok: 'no', browseable: 'yes', writeable: 'yes', printable: 'no'}
   - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
-#  - {path: /export/satcontent, name: Satellite6_Content, public: 'yes', guest_ok: 'no', browseable: 'yes', writeable: 'no', printable: 'no'}
+  - {path: /export/plex-media, name: Plex Media, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
 
 ################################################################################
 # KVM Virtualization Configuration Parameters                                  #

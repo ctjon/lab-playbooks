@@ -14,6 +14,14 @@
     skip_if_unavailable: false
     keepcache: '1'
     failovermethod: priority
+  when:
+      - ansible_distribution != "Fedora"
+
+- name: enable and start firewalld service
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
 
 - name: create plex firewall service definition
   ansible.builtin.copy:
@@ -77,6 +85,24 @@
   package:
     name: plexmediaserver
     state: latest
+
+#- name: install plex Preference.xml
+#  template:
+#    src: Preferences.xml.j2
+#    dest: "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Preferences.xml"
+#    owner: plex
+#    group: plex
+#    mode: '0644'
+#  notify: restart plex service
+
+- name: install /etc/sysconfig/PlexMediaServer
+  ansible.builtin.copy:
+    src: PlexMediaServer.sysconfig
+    dest: /etc/sysconfig/PlexMediaServer
+    owner: root
+    group: root
+    mode: '0600'
+  notify: restart plex service
 
 - name: install plex Preference.xml
   template:
