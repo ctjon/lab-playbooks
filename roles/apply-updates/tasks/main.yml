@@ -1,5 +1,5 @@
 ---
 - name: Apply all updates for RHEL6/CentOS/Fedora 6+/28+
-  package:
+  ansible.builtin.package:
     name: "*"
     state: latest

@@ -1,13 +1,13 @@
 ---
 - name: Verify that you have set a value for user_name before running
-  assert:
+  ansible.builtin.assert:
     that:
       - user_name is defined
     fail_msg: "You must define your user_name in extra_vars"
     success_msg: "user_name set to {{user_name}}"
 
 - name: create a VPC with dedicated tenancy and a couple of tags
-  ec2_vpc_net:
+  amazon.aws.ec2_vpc_net:
     name: "{{ ec2_vpc_net_name }}"
     cidr_block: "{{ ec2_cidr }}"
     region: "{{ ec2_region }}"
@@ -20,17 +20,17 @@
   register: my_vpc
 
 - name: dump vpc info for my_vpc
-  debug: 
+  ansible.builtin.debug: 
     var: my_vpc
   when: debug_flag is defined
 
 - name: display open_ports_list
-  debug: 
+  ansible.builtin.debug: 
     var: open_ports_list
   when: debug_flag is defined
 
 - name: create security group "{{ ec2_security_group_name }}"
-  ec2_group:
+  amazon.aws.ec2_group:
     name: "{{ ec2_security_group_name }}"
     description: security group with rule descriptions
     vpc_id: "{{ my_vpc.vpc.id }}"
@@ -53,22 +53,22 @@
   register: my_security_group
 
 - name: dump security group info for {{ my_security_group }}
-  debug: 
+  ansible.builtin.debug: 
     var: my_security_group
   when: debug_flag is defined
 
 - name: dump security group info for {{ my_security_group.group_id }}
-  debug: 
+  ansible.builtin.debug: 
     var: my_security_group.group_id
   when: debug_flag is defined
 
 - name: dump security group info for {{ my_security_group.group_name }}
-  debug: 
+  ansible.builtin.debug: 
     var: my_security_group.group_name
   when: debug_flag is defined
 
 - name: Create {{ ec2_vpc_subnet_name }} subnet
-  ec2_vpc_subnet:
+  amazon.aws.ec2_vpc_subnet:
     state: present
     vpc_id: "{{ my_vpc.vpc.id }}"
     cidr: "{{ ec2_cidr }}"
@@ -81,12 +81,12 @@
   register: my_vpc_subnet
 
 - name: dump {{ ec2_vpc_subnet_name }} info
-  debug: 
+  ansible.builtin.debug: 
     var: my_vpc_subnet
   when: debug_flag is defined
 
 - name: create {{ ec2_igw_name }}"
-  ec2_vpc_igw:
+  amazon.aws.ec2_vpc_igw:
     vpc_id: "{{ my_vpc.vpc.id }}"
     state: present
     tags:
@@ -97,12 +97,12 @@
   register: my_igw
 
 - name: dump {{ ec2_igw_name }} info
-  debug: 
+  ansible.builtin.debug: 
     var: my_igw
   when: debug_flag is defined
 
 - name: Set up public subnet route table
-  ec2_vpc_route_table:
+  amazon.aws.ec2_vpc_route_table:
     vpc_id: "{{ my_vpc.vpc.id }}"
     region: "{{ ec2_region }}"
     tags:
@@ -118,7 +118,7 @@
   register: my_route_table
 
 - name: dump {{ my_route_table }} info
-  debug: 
+  ansible.builtin.debug: 
     var: my_route_table
   when: debug_flag is defined
 ...

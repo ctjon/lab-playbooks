@@ -2,7 +2,7 @@
 # handlers file for dns-server
 
 - name: restart named
-  service:
+  ansible.builtin.service:
     name: named
     state: restarted
 

@@ -1,17 +1,17 @@
 ---
 - name: install packages
-  package:
+  ansible.builtin.package:
     name: dnsmasq,tftp-server,tftp,httpd,firewalld
     state: latest
 
 - name: start and enable dnsmasq
-  service:
+  ansible.builtin.service:
     name: dnsmasq
     state: started
     enabled: true
 
 - name: install dnsmasq.conf file
-  template:
+  ansible.builtin.template:
     src: dnsmasq.conf.{{ansible_hostname}}.j2
     dest: /etc/dnsmasq.conf
     owner: root
@@ -20,7 +20,7 @@
   notify: restart dnsmasq
 
 - name: install dnsmasq.d/pxe.conf file
-  template:
+  ansible.builtin.template:
     src: pxe.conf.{{ansible_hostname}}.j2
     dest: /etc/dnsmasq.d/pxe.conf
     owner: root
@@ -30,7 +30,7 @@
   when: pxe_enabled == true
 
 - name: make sure firewalld is running
-  service:
+  ansible.builtin.service:
     name: firewalld
     enabled: yes
     state: started
@@ -38,7 +38,7 @@
 #- name: configure dnsmasq for DHCP
 #  block: 
 #    - name: install dnsmasq.d/dhcp.conf file
-#      template:
+#      ansible.builtin.template:
 #        src: dhcp.conf.{{ansible_hostname}}.j2
 #        dest: /etc/dnsmasq.d/dhcp.conf
 #        owner: root
@@ -48,7 +48,7 @@
 #  when: dhcp_enabled == true
 
 #- name: configure firewall for DHCP # Need this for PXE
-#  firewalld:
+#  ansible.builtin.firewalld:
 #    zone: "{{trusted_firewall_zone}}"
 #    service: dhcp
 #    immediate: yes
@@ -58,7 +58,7 @@
 #  when: dhcp_enabled == true
 
 - name: install /etc/hosts file
-  copy:
+  ansible.builtin.copy:
     src: "hosts.{{ansible_hostname}}"
     dest: /etc/hosts
     owner: root
@@ -69,13 +69,13 @@
 # This should be in the handler but handlers need to support blocks first
 # see https://github.com/ansible/ansible/issues/14270 for details
 - name: restore selinux context on /etc/dnsmasq.conf and etc/dnsmasq.d
-  command: restorecon -RFv {{item}}
+  ansible.builtin.command: restorecon -RFv {{item}}
   with_items:
     - /etc/dnsmasq.conf 
     - /etc/dnsmasq.d
 
 - name: configure firewall for DNS
-  firewalld:
+  ansible.builtin.firewalld:
     zone: "{{trusted_firewall_zone}}"
     service: dns
     immediate: yes
@@ -83,7 +83,7 @@
     permanent: yes
 
 - name: configure firewall for PXE
-  firewalld:
+  ansible.builtin.firewalld:
     zone: "{{trusted_firewall_zone}}"
     port: "{{item}}"
     immediate: yes

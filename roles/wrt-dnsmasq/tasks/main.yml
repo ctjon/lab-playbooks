@@ -1,6 +1,6 @@
 ---
 - name: install dnsmasq.conf file
-  template:
+  ansible.builtin.template:
     src: dnsmasq.conf.{{ansible_hostname}}.j2
     dest: /etc/dnsmasq.conf
     owner: root
@@ -9,7 +9,7 @@
   notify: restart dnsmasq
 
 - name: modify dhcp config
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: /etc/config/dhcp
     block: |
       config boot 'linux'
@@ -19,7 +19,7 @@
   notify: restart dnsmasq
 
 - name: install /etc/hosts file
-  copy:
+  ansible.builtin.copy:
     src: "hosts.{{ansible_hostname}}"
     dest: /etc/hosts
     owner: root

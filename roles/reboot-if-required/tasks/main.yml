@@ -2,15 +2,15 @@
 - name: RHEL/CentOS 6+ Reboot
   block:
     - name: RHEL/CentOS 6+ - check to see if we need a reboot
-      shell: "needs-restarting|grep '^[0-9]'|wc -l"
+      ansible.builtin.shell: "needs-restarting|grep '^[0-9]'|wc -l"
       register: result
 
 #    - name: RHEL/CentOS 6+ Reboot - display result
-#      debug:
+#      ansible.builtin.debug:
 #        var: result.stdout
 #
     - name: RHEL/CentOS 6+ - Reboot Servers
-      reboot:
+      ansible.builtin.reboot:
       become: true
       async: 0
       poll: 0
@@ -22,17 +22,17 @@
 - name: Fedora 29+ Reboot
   block:
     - name: Fedora 29+ - check to see if we need a reboot
-      shell: "dnf needs-restarting|wc -l"
+      ansible.builtin.shell: "dnf needs-restarting|wc -l"
       register: result
       args:
         warn: false
 
 #    - name: Fedora 29+ Reboot - display result
-#      debug:
+#      ansible.builtin.debug:
 #        var: result.stdout
 #
     - name: Fedora 29+ - Reboot Servers
-      reboot:
+      ansible.builtin.reboot:
       become: true
       async: 0
       poll: 0
@@ -42,7 +42,7 @@
     - ansible_distribution_major_version >= "29"
 
 - name: wait for Servers to reboot
-  wait_for:
+  ansible.builtin.wait_for:
     port: 22
     host: "{{ inventory_hostname }}"
     state: started

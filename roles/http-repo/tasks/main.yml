@@ -1,18 +1,18 @@
 ---
 - name: install httpd and firewalld
-  package:
+  ansible.builtin.package:
     name: httpd,firewalld
     state: latest
 
 - name: install cronie on Fedora
-  package:
+  ansible.builtin.package:
     name: cronie
     state: latest
   when:
       - ansible_distribution == "Fedora"
 
 - name: deploy vhosts.conf for installation server
-  template:
+  ansible.builtin.template:
     src: vhosts.conf.j2
     dest: /etc/httpd/conf.d/vhosts.conf
     owner: root
@@ -21,13 +21,13 @@
   notify: restart httpd
 
 - name: start and enable httpd
-  service:
+  ansible.builtin.service:
     name: httpd
     state: started
     enabled: yes
 
 - name: deploy welcome.conf for installation server
-  copy:
+  ansible.builtin.copy:
     src: welcome.conf
     dest: /etc/httpd/conf.d/welcome.conf
     owner: root
@@ -36,7 +36,7 @@
   notify: restart httpd
 
 - name: deploy /var/www/html/index.html for installation server
-  template:
+  ansible.builtin.template:
     src: index.html.j2
     dest: /var/www/html/index.html
     owner: root
@@ -44,13 +44,13 @@
     mode: 0644
 
 - name: make sure firewalld is running and enabled
-  service:
+  ansible.builtin.service:
     name: firewalld
     state: started
     enabled: yes
 
 - name: open firewall ports for http
-  firewalld:
+  ansible.builtin.firewalld:
     zone: "{{trusted_firewall_zone}}"
     service: http
     immediate: yes
@@ -58,7 +58,7 @@
     permanent: yes
 
 - name: set permissions on vhost directories
-  file:
+  ansible.builtin.file:
     path: "{{item.document_root}}"
     owner: chris
     group: chris
@@ -66,14 +66,14 @@
   with_items: "{{ vhosts }}"
     
 - name: set selinux context for vhosts
-  sefcontext:
+  ansible.builtin.sefcontext:
     target: "'{{item.document_root}}(/.*)?'"
     setype: "{{item.fcontext}}"
     state: present
   with_items: "{{ vhosts }}"
 
 - name: create logs directory
-  file:
+  ansible.builtin.file:
     path: "/{{ansible_user_id}}/logs"
     owner: root
     group: root
@@ -81,7 +81,7 @@
     state: directory
     
 - name: create crontab entries to set selinux context on repos
-  cron:
+  ansible.builtin.cron:
     name: "repos restorecon"
     user: "root"
     minute: "30"
@@ -89,12 +89,12 @@
     job: "/usr/sbin/restorecon -RFv /export > /{{ansible_user_id}}/logs/restorecon.log 2>&1"
 
 - name: Apply new SELinux file context to vhosts directories
-  command: restorecon -FR {{item.document_root}}
+  ansible.builtin.command: restorecon -FR {{item.document_root}}
   with_items: "{{ vhosts }}"
   tags: restorecon
 
 - name: set reserve_block_percentage to 1%
-  command: tune2fs -m {{reserve_block_percentage}} {{item.lv_name}}
+  ansible.builtin.command: tune2fs -m {{reserve_block_percentage}} {{item.lv_name}}
   with_items: "{{ vhosts }}"
   tags: tune2fs
 ...  

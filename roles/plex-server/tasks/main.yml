@@ -1,6 +1,6 @@
 ---
 - name: setup plex repo
-  yum_repository:
+  ansible.builtin.yum_repository:
     name: plex
     description: "Plex Installation Repository"
     file: /etc/yum.repos.d/plex
@@ -14,11 +14,9 @@
     skip_if_unavailable: false
     keepcache: '1'
     failovermethod: priority
-  when:
-      - ansible_distribution != "Fedora"
 
 - name: enable and start firewalld service
-  service:
+  ansible.builtin.service:
     name: firewalld
     state: started
     enabled: yes
@@ -32,7 +30,7 @@
     mode: '0600'
 
 - name: open firewall service for plex server
-  firewalld:
+  ansible.builtin.firewalld:
     zone: "{{trusted_firewall_zone}}"
     service: plex
     immediate: yes
@@ -40,7 +38,7 @@
     permanent: yes
 
 - name: create plex storage in {{plex_storage_path}}
-  lvol:
+  ansible.builtin.lvol:
     vg: "{{ plex_storage_vg }}"
     lv: "{{ plex_storage_lv }}"
     size: "{{ plex_storage_lv_size }}"
@@ -49,7 +47,7 @@
     resizefs: yes
 
 - name: Create a ext4 filesystem on {{ plex_storage_lv }}
-  filesystem:
+  ansible.builtin.filesystem:
     fstype: "{{ plex_storage_fs_type }}"
     dev: "/dev/{{plex_storage_vg}}/{{plex_storage_lv}}"
     force: no
@@ -65,12 +63,17 @@
     mode: 0700
 
 - name: mount {{plex_storage_path}}
-  mount:
+  ansible.builtin.mount:
     path: "{{ plex_storage_path }}"
     src: "/dev/{{plex_storage_vg}}/{{plex_storage_lv}}"
     fstype: "{{ plex_storage_fs_type }}"
     opts: defaults
     state: mounted
+
+- name: create {{ plex_group }}
+  ansible.builtin.group:
+    name: "{{ plex_group }}"
+    state: present
 
 - name: Set plex permissions for {{plex_storage_path}} mountpoint after mounted
   ansible.builtin.file:
@@ -82,12 +85,12 @@
     mode: "2775"
 
 - name: install Plex Media Server
-  package:
+  ansible.builtin.package:
     name: plexmediaserver
     state: latest
 
 #- name: install plex Preference.xml
-#  template:
+#  ansible.builtin.template:
 #    src: Preferences.xml.j2
 #    dest: "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Preferences.xml"
 #    owner: plex
@@ -105,7 +108,7 @@
   notify: restart plex service
 
 - name: install plex Preference.xml
-  template:
+  ansible.builtin.template:
     src: Preferences.xml.j2
     dest: "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Preferences.xml"
     owner: plex
@@ -131,7 +134,7 @@
     - "Photos"
 
 - name: create crontab entries to reset permissions on repos
-  cron:
+  ansible.builtin.cron:
     name: "plex chown"
     user: "root"
     minute: "20"
@@ -139,7 +142,7 @@
     job: "/usr/bin/chown -R {{plex_owner}}:{{plex_group}} {{plex_storage_path}}  > /{{ansible_user_id}}/logs/chown-plex.log 2>&1"
 
 - name: enable and start plex service
-  service:
+  ansible.builtin.service:
     name: plexmediaserver
     state: started
     enabled: yes

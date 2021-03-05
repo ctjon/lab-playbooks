@@ -5,30 +5,30 @@
     file: samba_users.yml
 
 - name: install samba packages
-  package:
+  ansible.builtin.package:
     name: samba
     state: latest
 
 - name: set samba SELinux samba_export_all_ro=1 and persistent across reboots
-  seboolean:
+  ansible.builtin.seboolean:
     name: samba_export_all_ro
     state: yes
     persistent: yes
 
 - name: set samba SELinux samba_export_all_rw=1 and persistent across reboots
-  seboolean:
+  ansible.builtin.seboolean:
     name: samba_export_all_rw
     state: yes
     persistent: yes
 
 - name: set samba SELinux samba_enable_home_dirs=1 and persistent across reboots
-  seboolean:
+  ansible.builtin.seboolean:
     name: samba_enable_home_dirs
     state: yes
     persistent: yes
 
 - name: setup smb.conf file
-  template:
+  ansible.builtin.template:
     src: templates/smb.conf.j2
     dest: /etc/samba/smb.conf
     owner: root
@@ -37,7 +37,7 @@
   notify: restart samba
 
 - name: setup samba users
-  shell: (echo '{{ item.passwd }}'; echo '{{ item.passwd }}')
+  ansible.builtin.shell: (echo '{{ item.passwd }}'; echo '{{ item.passwd }}')
     | smbpasswd -s -a {{ item.name }}
   register: smbpasswd
   changed_when: "'Added user' in smbpasswd.stdout"
@@ -46,7 +46,7 @@
     label: "{{ item.name }}"
 
 - name: start and enable smb and nmb services
-  service:
+  ansible.builtin.service:
     name: "{{ item }}"
     state: started
     enabled: yes
@@ -55,13 +55,13 @@
     - nmb
 
 - name: make sure firewalld is running and enabled
-  service:
+  ansible.builtin.service:
     name: firewalld
     state: started
     enabled: yes
 
 - name: open firewall ports for samba
-  firewalld:
+  ansible.builtin.firewalld:
     zone: "{{trusted_firewall_zone}}"
     service: samba
     immediate: yes

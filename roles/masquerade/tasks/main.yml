@@ -1,6 +1,6 @@
 ---
 - name: setup ifcfg-eth0
-  template:
+  ansible.builtin.template:
     src: "ifcfg-eth0.{{ansible_hostname}}.j2"
     dest: /etc/sysconfig/network-scripts/ifcfg-eth0
     owner: root
@@ -9,7 +9,7 @@
   notify: restart Network
 
 - name: setup ifcfg-eth1
-  template:
+  ansible.builtin.template:
     src: "ifcfg-eth1.{{ansible_hostname}}.j2"
     dest: /etc/sysconfig/network-scripts/ifcfg-eth1
     owner: root
@@ -18,21 +18,21 @@
   notify: restart Network
 
 - name: add {{trusted_firewall_interface}} to {{trusted_firewall_zone}}
-  firewalld:
+  ansible.builtin.firewalld:
     zone: "{{trusted_firewall_zone}}"
     interface: "{{trusted_firewall_interface}}"
     permanent: yes
     state: enabled
 
 - name: add {{public_firewall_interface}} to {{public_firewall_zone}}
-  firewalld:
+  ansible.builtin.firewalld:
     zone: "{{public_firewall_zone}}"
     interface: "{{public_firewall_interface}}"
     permanent: yes
     state: enabled
 
 - name: Set ip forwarding and reload if necessary
-  sysctl:
+  ansible.builtin.sysctl:
     name: net.ipv4.ip_forward
     value: "1"
     sysctl_set: yes
@@ -40,14 +40,14 @@
     reload: yes
 
 - name: setup masquerade 
-  firewalld:
+  ansible.builtin.firewalld:
     masquerade: "yes"
     state: enabled
     permanent: yes
     zone: "{{ public_firewall_zone }}"
 
 - name: block firewall ports for unwanted services on {{public_firewall_zone}} zone
-  firewalld:
+  ansible.builtin.firewalld:
     service: "{{item}}"
     state: disabled
     permanent: yes
@@ -58,7 +58,7 @@
   notify: restart firewalld
 
 - name: enable firewall for sshd on {{public_firewall_zone}} zone
-  firewalld:
+  ansible.builtin.firewalld:
     service: ssh
     state: enabled
     permanent: yes
@@ -67,7 +67,7 @@
   notify: restart firewalld
 
 - name: disable firewall for sshd on {{public_firewall_zone}} zone
-  firewalld:
+  ansible.builtin.firewalld:
     service: ssh
     state: disabled
     permanent: yes
@@ -76,7 +76,7 @@
   notify: restart firewalld
 
 - name: open firewall for sshd on {{trusted_firewall_zone}} zone
-  firewalld:
+  ansible.builtin.firewalld:
     service: ssh
     state: enabled
     permanent: yes

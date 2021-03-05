@@ -1,17 +1,17 @@
 ---
 - name: Set Timezone
-  timezone:
+  ansible.builtin.timezone:
     name: "{{TIMEZONE}}"
 
 - name: setup time clients for RHEL/Centos/Fedora Systems
   block:
     - name: install chrony
-      package:
+      ansible.builtin.package:
         name: chrony
         state: latest
 
     - name: setup chrony.conf file
-      template:
+      ansible.builtin.template:
         src: chrony.conf.j2
         dest: /etc/chrony.conf
         owner: root
@@ -20,7 +20,7 @@
       notify: restart chronyd
 
     - name: start and enable chronyd
-      service:
+      ansible.builtin.service:
         name: chronyd
         state: started
         enabled: yes
@@ -29,7 +29,7 @@
 - name: setup NTP Client for RHEL-5 Systems
   block:
     - name: setup RHEL-5 system timezone
-      template:
+      ansible.builtin.template:
         src: templates/clock.j2
         dest: /etc/sysconfig/clock
         owner: root
@@ -38,7 +38,7 @@
       tags: ntpd
 
     - name: setup RHEL-5 ntp time synchronization
-      template:
+      ansible.builtin.template:
         src: templates/ntp.conf.j2
         dest: /etc/ntp.conf
         owner: root
@@ -47,7 +47,7 @@
       tags: ntpd
 
     - name: restart and enable RHEL-5 ntpd
-      service:
+      ansible.builtin.service:
         name: ntpd
         state: restarted
         enabled: yes

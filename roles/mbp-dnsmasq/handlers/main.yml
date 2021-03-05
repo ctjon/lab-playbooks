@@ -2,9 +2,9 @@
 # handlers file for mbp-dnsmasq
 
 - name: restart dnsmasq
-  shell: "launchctl stop homebrew.mxcl.dnsmasq; launchctl start homebrew.mxcl.dnsmasq"
+  ansible.builtin.shell: "launchctl stop homebrew.mxcl.dnsmasq; launchctl start homebrew.mxcl.dnsmasq"
   become: yes
 
 - name: restart_vmware_networking
-  script: ~{{ansible_user}}/scripts/{{inventory_hostname}}/restart_vmware_network.sh
+  ansible.builtin.script: ~{{ansible_user}}/scripts/{{inventory_hostname}}/restart_vmware_network.sh
   become: yes

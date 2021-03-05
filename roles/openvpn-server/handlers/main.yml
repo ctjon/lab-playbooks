@@ -1,12 +1,12 @@
 ---
 - name: Restart Firewalld
-  service:
+  ansible.builtin.service:
     name: firewalld
     state: restarted
     enabled: yes
 
 - name: Restart OpenVPN 
-  service:
+  ansible.builtin.service:
     name: "{{item}}"
     enabled: yes
     state: restarted

@@ -1,12 +1,12 @@
 ---
 - name: Install tftp-server
-  package:
+  ansible.builtin.package:
     name: tftp-server,firewalld
     state: latest
   notify: restart tftp
 
 - name: configure firewall for TFTP services
-  firewalld:
+  ansible.builtin.firewalld:
     zone: "{{trusted_firewall_zone}}"
     service: tftp
     immediate: yes
@@ -14,7 +14,7 @@
     permanent: yes
 
 - name: start and enable tftp service
-  service:
+  ansible.builtin.service:
     name: tftp
     state: started
     enabled: yes

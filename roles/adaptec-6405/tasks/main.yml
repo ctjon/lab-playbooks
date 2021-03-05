@@ -1,6 +1,6 @@
 ---
 - name: Download MaxView Storage Management Packages
-  get_url:
+  ansible.builtin.get_url:
     url: http://archive.internal.tjon.net/Adaptec/msm_linux_x64_v2_05_22932.tgz
     dest: /tmp/msm_linux_x64_v2_05_22932.tgz
     owner: root
@@ -8,7 +8,7 @@
     mode: 0700
 
 - name: create /tmp/msm directory
-  file:
+  ansible.builtin.file:
     path: /tmp/msm
     state: directory
     owner: root
@@ -16,14 +16,14 @@
     mode: 0700
 
 - name: unpack MaxView Storage Management Packages
-  unarchive:
+  ansible.builtin.unarchive:
     src: /tmp/msm_linux_x64_v2_05_22932.tgz
     dest: /tmp/msm
     remote_src: yes
     creates: /tmp/msm/manager
 
 - name: install MaxView Storage Management Packages
-  package:
+  ansible.builtin.package:
     name: "{{item}}"
     state: latest
   with_items:
@@ -32,7 +32,7 @@
 #    - /tmp/msm/manager/StorMan-2.05-22932.x86_64.rpm # Damn Interactive Install
 
 - name: set selinux permissions
-  file:
+  ansible.builtin.file:
     path: "{{item}}"
     seuser: system_u
     serole: object_r
@@ -44,7 +44,7 @@
     - /etc/rc.d/init.d/stor_tomcat
 
 - name: disable and stop MaxView Storage Management services
-  service:
+  ansible.builtin.service:
     name: "{{item}}"
     state: stopped
     enabled: no
@@ -54,16 +54,16 @@
     - stor_tomcat
 
 #- name: Install StorMan via expect because Microsemi made the rpm interactive - BE PATIENT!
-#  script: files/install-StorMan.sh
+#  ansible.builtin.script: files/install-StorMan.sh
 #  register: result
 #  #remote_src: yes
 
 #- name: dump result
-#  debug:
+#  ansible.builtin.debug:
 #    var: result.stdout
 
 #- name: enable and start MaxView Storage Management services
-#  service:
+#  ansible.builtin.service:
 #    name: "{{item}}"
 #    state: started
 #    enabled: yes
@@ -73,7 +73,7 @@
 #    - stor_tomcat
 
 #- name: open firewall for MaxView Storage Management
-#  firewalld:
+#  ansible.builtin.firewalld:
 #    zone: "{{trusted_firewall_zone}}"
 #    port: "{{item}}"
 #    immediate: yes

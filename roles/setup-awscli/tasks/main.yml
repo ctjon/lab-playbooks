@@ -4,7 +4,7 @@
     file: aws_creds.yml
 
 - name: install packages on Fedora 28+
-  package:
+  ansible.builtin.package:
     name: awscli, python2-boto, python2-boto3, python2-botocore, python3-boto, python3-boto3, python3-botocore
     state: latest
   when:
@@ -12,7 +12,7 @@
     - ansible_distribution_major_version >= "28"
 
 - name: install packages on RHEL/CentOS 6+
-  package:
+  ansible.builtin.package:
     name: python2-boto, python2-boto3, python2-botocore
     state: latest
   when:
@@ -20,19 +20,19 @@
     - ansible_distribution_major_version >= "6"
 
 - name: install awscli on RHEL/CentOS 6+
-  command: pip install awscli
+  ansible.builtin.command: pip install awscli
   when:
     - ansible_distribution == "RHEL"
     - ansible_distribution_major_version >= "6"
 
 - name: create ~/.aws directory for aws creds
-  file:
+  ansible.builtin.file:
     path: "/home/{{ansible_user_id}}/.aws"
     state: directory
     mode: 0700
 
 - name: deploy aws creds
-  template:
+  ansible.builtin.template:
     src: aws_creds.j2
     dest: "/home/{{ansible_user_id}}/.aws/credentials"
     owner: "{{ansible_user_id}}"

@@ -1,15 +1,15 @@
 ---
 - name: validate cpu architecture supports virtualization
-  shell: egrep '^flags.*(vmx|svm)' /proc/cpuinfo
+  ansible.builtin.shell: egrep '^flags.*(vmx|svm)' /proc/cpuinfo
   register: cpuinfo
 
 - name: show cpuinfo
-  debug:
+  ansible.builtin.debug:
     var: cpuinfo.stdout_lines
   failed_when: "'vmx' not in cpuinfo.stdout and 'svm' not in cpuinfo.stdout"
 
 - name: create /etc/polkit-1/localauthority/50-local.d/ directory
-  file:
+  ansible.builtin.file:
     path: /etc/polkit-1/localauthority/50-local.d/
     state: directory
     owner: root
@@ -17,7 +17,7 @@
     mode: 0750
 
 #- name: install 50-net.tjon-libvirt-remote-access.pkla
-#  template:
+#  ansible.builtin.template:
 #    src: 50-net.tjon-libvirt-remote-access.pkla.j2
 #    dest: /etc/polkit-1/localauthority/50-local.d/50-net.tjon-libvirt-remote-access.pkla
 #    owner: root
@@ -26,16 +26,16 @@
 #  register: polkit_result
 
 #- name: reset selinux permissions on /etc/polkit-1/localauthority
-#  command: restorecon -RF /etc/polkit-1/localauthority
+#  ansible.builtin.command: restorecon -RF /etc/polkit-1/localauthority
 
 #- name: restart polkit service
-#  service:
+#  ansible.builtin.service:
 #    name: polkit
 #    state: restarted
 #  when: "polkit_result.changed == true"
 
 - name: create vm storage in {{vm_storage_path}}
-  lvol:
+  ansible.builtin.lvol:
     vg: "{{ vm_storage_vg }}"
     lv: "{{ vm_storage_lv }}"
     size: "{{ vm_storage_lv_size }}"
@@ -44,56 +44,62 @@
     resizefs: yes
 
 - name: Create a ext4 filesystem on {{ vm_storage_lv }}
-  filesystem:
+  ansible.builtin.filesystem:
     fstype: "{{ vm_storage_fs_type }}"
     dev: "/dev/{{vm_storage_vg}}/{{vm_storage_lv}}"
     force: no
     resizefs: yes
 
 - name: mount {{vm_storage_path}}
-  mount:
+  ansible.builtin.mount:
     path: "{{ vm_storage_path }}"
     src: "/dev/{{vm_storage_vg}}/{{vm_storage_lv}}"
     fstype: "{{ vm_storage_fs_type }}"
     opts: defaults,x-systemd.device-timeout=0
     state: mounted
 
+- name: Download virtio repo configuration
+  ansible.builtin.get_url:
+    url: https://fedorapeople.org/groups/virt/virtio-win/virtio-win.repo
+    dest: /etc/yum.repos.d/virtio-win.repo
+    mode: '0644'
+
 - name: Install RHEL/CentOS Packages
-  yum: 
+  ansible.builtin.yum: 
     name: qemu-kvm, virt-manager, virt-viewer, virt-install, libvirt, libvirt-client, virt-what, libguestfs, virtio-win, python3-lxml
     state: latest
 
 
 - name: start and enable libvirtd service
-  service:
+  ansible.builtin.service:
     name: libvirtd
     state: restarted
     enabled: yes
 
 #- name: start and enable libvirtd service
-#  command: systemctl restart libvirtd
+#  ansible.builtin.command: systemctl restart libvirtd
 #  args:
 #    warn: false # set warn=false to avoid warnings about yum command/module
 
 - name: validate kvm modules loaded properly
-  shell: lsmod |grep kvm
+  ansible.builtin.shell: lsmod |grep kvm
   register: lsmod_output
 
 - name: show lsmod_output
-  debug:
+  ansible.builtin.debug:
     var: lsmod_output.stdout_lines
   failed_when: "'kvm_intel' not in lsmod_output.stdout and 'kvm_amd' not in cpuinfo.stdout"
 
 - name: destroy default net
-  command: virsh net-destroy default
+  ansible.builtin.command: virsh net-destroy default
   ignore_errors: yes
 
 - name: undefine default net
-  command: virsh net-undefine default
+  ansible.builtin.command: virsh net-undefine default
   ignore_errors: yes
 
 - name: Adding user {{ libvirt_users }} to {{libvirt_groups}}
-  user:
+  ansible.builtin.user:
     name={{ item }}
     groups={{libvirt_groups}}
     append=yes
@@ -101,7 +107,7 @@
     - "{{ libvirt_users }}"
 
 #- name: add libvirt_users to libvirt group
-#  user: name={{ item }}
+#  ansible.builtin.user: name={{ item }}
 #        groups=libvirt
 #        append=yes
 #  with_items:
@@ -110,7 +116,7 @@
 - name: setup virtual networks
   block:
     - name: define nets
-      virt_net:
+      ansible.builtin.virt_net:
         command: define
         name: "{{item}}"
         xml: '{{ lookup("template", "{{item}}.j2") }}'
@@ -119,7 +125,7 @@
         - "{{virt_nets}}"
 
     - name: create nets
-      virt_net:
+      ansible.builtin.virt_net:
         command: create
         name: "{{item}}"
       ignore_errors: yes #set because module fails if network already exists
@@ -127,14 +133,14 @@
         - "{{virt_nets}}"
 
     - name: set nets for autostart
-      virt_net:
+      ansible.builtin.virt_net:
         name: "{{item}}"
         autostart: yes
       with_items:
         - "{{virt_nets}}"
 
     - name: add virt_nets to internal firewall zone
-      firewalld: 
+      ansible.builtin.firewalld: 
         zone: internal
         interface: "{{item}}"
         permanent: yes
@@ -145,10 +151,10 @@
 #  when: ansible_hostname == "p51s" or ansible_hostname == "x1carbon"
 
 - name: restore SELinux Context on /etc/yum.repos.d
-  command: restorecon -RFv /etc/yum.repos.d
+  ansible.builtin.command: restorecon -RFv /etc/yum.repos.d
 
 - name: install virtio-win rpms
-  package:
+  ansible.builtin.package:
     name: virtio-win
     state: latest
 

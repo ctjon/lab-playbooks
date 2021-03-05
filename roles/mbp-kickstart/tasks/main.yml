@@ -4,7 +4,7 @@
     file: luks-key.yml
 
 - name: synchronize files/syslinux content to {{tftpbootdir}}
-  synchronize:
+  ansible.builtin.synchronize:
     src: files/syslinux/
     dest: "{{ tftpbootdir }}"
     archive: yes
@@ -18,7 +18,7 @@
   become: yes
 
 - name: create {{tftpbootdir}}/{pxelinux.cfg,images} directories
-  file:
+  ansible.builtin.file:
     path: "{{tftpbootdir}}/{{item}}"
     owner: root
     group: wheel
@@ -29,7 +29,7 @@
     - pxelinux.cfg
 
 - name: deploy {{tftpbootdir}}/pxelinux.cfg/default
-  copy:
+  ansible.builtin.copy:
     src: default
     dest: "{{tftpbootdir}}/pxelinux.cfg/default"
     owner: root
@@ -37,7 +37,7 @@
     mode: 0644
 
 - name: create {{tftpbootdir}}/pxelinux.cfg/Linux directory
-  file:
+  ansible.builtin.file:
     path: "{{tftpbootdir}}/pxelinux.cfg/Linux"
     owner: root
     group: wheel
@@ -45,7 +45,7 @@
     state: directory
 
 - name: deploy {{tftpbootdir}}/pxelinux.cfg/Linux Files
-  template:
+  ansible.builtin.template:
     src: "{{item}}.j2"
     dest: "{{tftpbootdir}}/pxelinux.cfg/Linux/{{item}}"
     owner: root
@@ -58,7 +58,7 @@
 # RHEL images Files copies                                                     #
 ################################################################################
 - name: create RHEL {{tftpbootdir}}/images/linux/rhel/version/arch directories
-  file:
+  ansible.builtin.file:
     path: "{{tftpbootdir}}/images/rhel/{{item[0]}}/{{item[1]}}"
     owner: root
     group: wheel
@@ -70,7 +70,7 @@
     - "{{rhel_architectures}}"
 
 - name: synchronize RHEL pxeboot content to {{tftpbootdir}}/images/fedora
-  synchronize:
+  ansible.builtin.synchronize:
     src: "{{installdir}}/Linux/rhel/{{item[0]}}/{{item[1]}}/images/pxeboot/"
     dest: "{{tftpbootdir}}/images/rhel/{{item[0]}}/{{item[1]}}/"
     archive: yes
@@ -86,7 +86,7 @@
 # CentOS images Files copies                                                   #
 ################################################################################
 - name: create CentOS 7 {{tftpbootdir}}/images/linux/centos/version/arch directories
-  file:
+  ansible.builtin.file:
     path: "{{tftpbootdir}}/images/centos/7/{{item}}"
     owner: root
     group: root
@@ -97,7 +97,7 @@
     - "{{centos_architectures}}"
 
 - name: synchronize CentOS 7 content to {{tftpbootdir}}/images/centos
-  synchronize:
+  ansible.builtin.synchronize:
     src: "{{installdir}}/Linux/centos/7/os/{{item}}/images/pxeboot/"
     dest: "{{tftpbootdir}}/images/centos/7/{{item}}/"
     archive: yes
@@ -109,7 +109,7 @@
     - "{{centos_architectures}}"
 
 - name: create CentOS 8+ {{tftpbootdir}}/images/linux/centos/version/arch directories
-  file:
+  ansible.builtin.file:
     path: "{{tftpbootdir}}/images/centos/8/{{item}}"
     owner: root
     group: root
@@ -120,7 +120,7 @@
     - "{{centos_architectures}}"
 
 - name: synchronize CentOS 8+ pxeboot content to {{tftpbootdir}}/images/centos
-  synchronize:
+  ansible.builtin.synchronize:
     src: "{{installdir}}/Linux/centos/8/BaseOS/{{item}}/os/images/pxeboot/"
     dest: "{{tftpbootdir}}/images/centos/8/{{item}}/"
     archive: yes
@@ -135,7 +135,7 @@
 # Fedora images Files copies                                                   #
 ################################################################################
 - name: create Fedora {{tftpbootdir}}/images/linux/fedora/version/arch directories
-  file:
+  ansible.builtin.file:
     path: "{{tftpbootdir}}/images/fedora/{{item[0]}}/{{item[1]}}"
     owner: root
     group: wheel
@@ -147,7 +147,7 @@
     - "{{fedora_architectures}}"
 
 - name: synchronize Fedora pxeboot content to {{tftpbootdir}}/images/fedora
-  synchronize:
+  ansible.builtin.synchronize:
     src: "{{installdir}}/Linux/fedora/releases/{{item[0]}}/Everything/{{item[1]}}/os/images/pxeboot/"
     dest: "{{tftpbootdir}}/images/fedora/{{item[0]}}/{{item[1]}}/"
     archive: yes
@@ -163,7 +163,7 @@
 # Ubuntu images Files copies                                                   #
 ################################################################################
 - name: create {{tftpbootdir}}/images/ubuntu/server/version/architeture directory
-  file:
+  ansible.builtin.file:
     path: "{{tftpbootdir}}/images/ubuntu/server/{{item[0]}}/{{item[1]}}/"
     owner: root
     group: wheel
@@ -175,7 +175,7 @@
     - "{{ubuntu_server_architectures}}"
 
 #- name: synchronize Ubuntu Server netboot content to {{tftpbootdir}}/images/ubuntu
-#  synchronize:
+#  ansible.builtin.synchronize:
 #    src: "{{installdir}}/Linux/ubuntu/server/{{item[0]}}/{{item[1]}}/install/netboot/ubuntu-installer/{{item[1]}}/"
 #    dest: "{{tftpbootdir}}/images/ubuntu/server/{{item[0]}}/{{item[1]}}/"
 #    archive: yes
@@ -191,7 +191,7 @@
 # OpenBSD images Files copies                                                  #
 ################################################################################
 - name: create OpenBSD {{tftpbootdir}}/images/linux/rhel/architecture directories
-  file:
+  ansible.builtin.file:
     path: "{{tftpbootdir}}/images/openbsd/{{item}}"
     owner: root
     group: wheel
@@ -207,7 +207,7 @@
 - name: setup OpenBSD network boot on server0
   block:
     - name: create vmware {{tftpbootdir}}/images/linux/rhel/architecture directories
-      file:
+      ansible.builtin.file:
         path: "{{tftpbootdir}}/images/vmware/{{item}}"
         owner: root
         group: wheel
@@ -219,13 +219,13 @@
   when: ansible_hostname == "server0"
 
 - name: restore selinux context for {{tftpbootdir}}
-  command: "restorecon -RFv {{tftpbootdir}}"
+  ansible.builtin.command: "restorecon -RFv {{tftpbootdir}}"
 
 ################################################################################
 # Deploy kickstart configuration files                                         #
 ################################################################################
 - name: make sure {{ks_config_dir}} exists
-  file:
+  ansible.builtin.file:
     path: "{{ks_config_dir}}"
     state: directory
     owner: chris
@@ -233,7 +233,7 @@
     mode: 0755
 
 - name: deploy {{ks_config_dir}} Files
-  template:
+  ansible.builtin.template:
     src: "ks-configs/{{item}}.j2"
     dest: "{{ks_config_dir}}/{{item}}"
     owner: chris
@@ -243,7 +243,7 @@
     - "{{ks_configs_list}}"
 
 - name: deploy callback-service templates to {{config_files_url}} Files
-  template:
+  ansible.builtin.template:
     src: "{{item}}.j2"
     dest: "{{config_files_dir}}/{{item}}"
     owner: chris
@@ -254,6 +254,6 @@
     - rhel7-callback.service
 
 - name: restore selinux context for {{ks_config_dir}}
-  command: "restorecon -RFv {{ks_config_dir}}"
+  ansible.builtin.command: "restorecon -RFv {{ks_config_dir}}"
   tags: restorecon
 

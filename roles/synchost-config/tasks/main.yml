@@ -9,12 +9,12 @@
 # reboot
 
 - name: Install nfs-utils/yum-utils/createrepo 
-  package:
+  ansible.builtin.package:
     name: nfs-utils, yum-utils, createrepo
     state: latest
 
 - name: Create {{ nfs_mount }} mountpoint
-  file:
+  ansible.builtin.file:
     path: "{{ nfs_mount }}"
     owner: root
     group: root
@@ -22,7 +22,7 @@
     state: directory
 
 - name: Configure "{{ nfs_mount }}" fstab entry to auto mount NFS filesystem
-  mount: 
+  ansible.builtin.mount: 
     name: "{{ nfs_mount }}"
     src: "{{ nfs_server }}"
     fstype: nfs
@@ -32,7 +32,7 @@
     state: mounted
 
 - name: Create {{ scripts_dir }}
-  file:
+  ansible.builtin.file:
     path: "{{ scripts_dir }}"
     owner: "{{ scripts_owner }}"
     group: "{{ scripts_group }}"
@@ -40,7 +40,7 @@
     state: directory
   
 - name: Create {{ logs_dir }}
-  file:
+  ansible.builtin.file:
     path: "{{ logs_dir }}"
     owner: "{{ logs_owner }}"
     group: "{{ logs_group }}"
@@ -48,7 +48,7 @@
     state: directory
   
 - name: deploy {{script_name}}.j2 to {{scripts_dir}}/{{script_name}}
-  template:
+  ansible.builtin.template:
     src: "{{ script_name }}.j2"
     dest: "{{ scripts_dir }}/{{ script_name }}"
     owner: "{{ scripts_owner }}"
@@ -57,14 +57,14 @@
   tags: deploy_script
 
 - name: configure cronjob to run script
-  cron:
+  ansible.builtin.cron:
     name: "Sync RH Repo"
     minute: "30"
     hour: "{{ansible_distribution_major_version|int - 6}}"
     job: "{{ scripts_dir }}/{{ script_name }} > {{ logs_dir }}/{{ log_name }} 2>&1"
 
 - name: configure cronjob to reset permissions on home directory
-  cron:
+  ansible.builtin.cron:
     name: "Reset Permisssions on home directory"
     minute: "0"
     hour: "{{ansible_distribution_major_version|int - 4}}"

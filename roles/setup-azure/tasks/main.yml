@@ -4,12 +4,12 @@
     file: azure_creds.yml
 
 - name: Add Microsoft GPG key
-  rpm_key:
+  ansible.builtin.rpm_key:
     key: https://packages.microsoft.com/keys/microsoft.asc
     state: present
 
 - name: setup repo to install azure-cli
-  yum_repository:
+  ansible.builtin.yum_repository:
     name: azure-cli
     description: Azure CLI
     file: /etc/yum.repos.d/azure-cli
@@ -25,7 +25,7 @@
     failovermethod: priority
 
 - name: Fedora 28+ Install azure-cli and other packages
-  package:
+  ansible.builtin.package:
     name: azure-cli, python3-azure-sdk, python3-azure-storage, python3-msrestazure, python-azure-sdk-doc, fence-agents-azure-arm
     state: latest
   when:
@@ -33,7 +33,7 @@
     - ansible_distribution_major_version >= "28"
 
 - name: RHEL 6+ Install azure-cli and other packages
-  package:
+  ansible.builtin.package:
     name: azure-cli
     state: latest
   when:
@@ -41,7 +41,7 @@
     - ansible_distribution_major_version >= "6"
 
 - name: "create /home/{{ansible_user_id}}/.azure directory for azure creds"
-  file:
+  ansible.builtin.file:
     path: "/home/{{ansible_user_id}}/.azure"
     state: directory
     mode: 0700
@@ -49,7 +49,7 @@
 #    path: "/home/{{ansible_user_id}}/.azure"
 
 - name: deploy azure creds
-  template:
+  ansible.builtin.template:
     src: azure_creds.j2
     dest: "/home/{{ansible_user_id}}/.azure/credentials"
     owner: "{{ansible_user_id}}"

@@ -1,11 +1,11 @@
 ---
 - name: install rsync-daemon
-  package:
+  ansible.builtin.package:
     name: rsync-daemon,firewalld
     state: latest
 
 - name: setup rsync.conf file
-  template:
+  ansible.builtin.template:
     src: rsync.conf.j2
     dest: /etc/rsyncd.conf
     owner: root
@@ -14,19 +14,19 @@
   notify: restart rsync-daemon
 
 - name: start and enable rsync-daemon
-  service:
+  ansible.builtin.service:
     name: rsyncd
     state: started
     enabled: yes
 
 - name: make sure firewalld is running and enabled
-  service:
+  ansible.builtin.service:
     name: firewalld
     state: started
     enabled: yes
 
 - name: open firewall ports for rsyncd
-  firewalld:
+  ansible.builtin.firewalld:
     zone: "{{trusted_firewall_zone}}"
     service: rsyncd
     immediate: yes

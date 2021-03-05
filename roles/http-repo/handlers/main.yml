@@ -1,5 +1,5 @@
 - name: restart httpd
-  service:
+  ansible.builtin.service:
     name: httpd
     state: restarted
 

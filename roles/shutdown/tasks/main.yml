@@ -1,25 +1,25 @@
 ---
 - name: shutdown RHEL/CentOS 6 and older hosts
-  command: /sbin/shutdown -h now
+  ansible.builtin.command: /sbin/shutdown -h now
   become: yes
   when: 
     - ((ansible_distribution == "RedHat") or (ansible_distribution == "CentOS"))
     - ansible_distribution_major_version <= "6"
 
 - name: shutdown RHEL/CentOS 7 and newer
-  command: /usr/sbin/shutdown -h +1 #### for some reason "now" doesn't work?
+  ansible.builtin.command: /usr/sbin/shutdown -h +1 #### for some reason "now" doesn't work?
   become: yes
   when:
     - ((ansible_distribution == "RedHat") or (ansible_distribution == "CentOS"))
     - ansible_distribution_major_version >= "7"
 
 - name: shutdown Fedora 30 and newer
-  command: /usr/sbin/shutdown -h +1 #### for some reason "now" doesn't work?
+  ansible.builtin.command: /usr/sbin/shutdown -h +1 #### for some reason "now" doesn't work?
   become: yes
   when:
     - ansible_distribution == "Fedora"
     - ansible_distribution_major_version >= "30"
 
 - name: wait 1 minute for shutdown
-  pause:
+  ansible.builtin.pause:
     minutes: 1

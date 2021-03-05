@@ -1,6 +1,6 @@
 ---
 - name: Update homebrew first and upgrade formula dnsmasq to latest with brew
-  homebrew:
+  ansible.builtin.homebrew:
     name: dnsmasq
     state: latest
     update_homebrew: yes
@@ -8,7 +8,7 @@
   become_user: "{{ansible_user}}"  # brew does not like running as root
 
 - name: install dnsmasq.conf file
-  template:
+  ansible.builtin.template:
     src: dnsmasq.conf.{{ansible_hostname}}.j2
     dest: /usr/local/etc/dnsmasq.conf
     owner: root
@@ -17,7 +17,7 @@
   notify: restart dnsmasq
 
 - name: install /etc/hosts file
-  copy:
+  ansible.builtin.copy:
     src: "hosts.{{ansible_hostname}}"
     dest: /etc/hosts
     owner: root
@@ -26,29 +26,29 @@
   notify: restart dnsmasq
 
 - name: get plist_filename
-  shell: brew list dnsmasq | grep /homebrew.mxcl.dnsmasq.plist$
+  ansible.builtin.shell: brew list dnsmasq | grep /homebrew.mxcl.dnsmasq.plist$
   register: plist_filename
   become: yes
   become_user: "{{ansible_user}}"  # brew does not like running as root
   changed_when: plist_filename.rc != 0
 
 - name: dump plist_filename
-  debug: 
+  ansible.builtin.debug: 
     var: plist_filename.stdout
 
 - name: Copy the daemon configuration file into place
-  command: "cp {{plist_filename.stdout}} /Library/LaunchDaemons/"
+  ansible.builtin.command: "cp {{plist_filename.stdout}} /Library/LaunchDaemons/"
   args:
     creates: /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist
 
 - name: make sure dnsmasq is enabled
-  command: "launchctl load -w /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist"
+  ansible.builtin.command: "launchctl load -w /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist"
   become: yes
   register: launchctl_result
   changed_when: launchctl_result.rc != 0
 
 - name: Install vmnet2 configuration for our dhcp subnet
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: "/Library/Preferences/VMware Fusion/networking"
     insertafter: "answer VNET_8_VIRTUAL_ADAPTER yes"
     block: |
@@ -61,7 +61,7 @@
   notify: restart_vmware_networking
 
 - name: make /usr/local/var/lib/tftpboot directory
-  file:
+  ansible.builtin.file:
     path: /usr/local/var/lib/tftpboot
     state: directory
     owner: root
@@ -69,7 +69,7 @@
     mode: 0755
   
 - name: make /usr/local/etc/dnsmasq.d directory
-  file:
+  ansible.builtin.file:
     path: /usr/local/etc/dnsmasq.d
     state: directory
     owner: root
@@ -77,7 +77,7 @@
     mode: 0755
   
 - name: install dhcpd.conf file
-  template:
+  ansible.builtin.template:
     src: dhcpd.conf.{{ansible_hostname}}.j2
     dest: /usr/local/etc/dnsmasq.d/dhcpd.conf
     owner: root
@@ -86,7 +86,7 @@
   notify: restart dnsmasq
 
 - name: install pxe.conf file
-  template:
+  ansible.builtin.template:
     src: pxe.conf.{{ansible_hostname}}.j2
     dest: /usr/local/etc/dnsmasq.d/pxe.conf
     owner: root

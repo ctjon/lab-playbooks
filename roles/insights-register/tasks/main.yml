@@ -4,7 +4,7 @@
     file: group_vars/sm_creds.yml
 
 - name: Install Packages for Insights
-  package:
+  ansible.builtin.package:
     name: insights-client
     state: present
   when:
@@ -12,7 +12,7 @@
     - ansible_distribution_major_version >= "6"
 
 - name: register for insights
-  command: insights-client --register
+  ansible.builtin.command: insights-client --register
   when:
     - ansible_distribution == "RedHat"
     - ansible_distribution_major_version >= "6"

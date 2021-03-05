@@ -1,18 +1,18 @@
 ---
 - name: Disable all Repos
-  command: subscription-manager repos --disable "*"
+  ansible.builtin.command: subscription-manager repos --disable "*"
   tags: sat-inst
     - sat-inst
     - sat-config
 
 - name: Ensure subscription-manager not set to a specific version
-  command: subscription-manager release --unset
+  ansible.builtin.command: subscription-manager release --unset
   tags: sat-inst
     - sat-inst
     - sat-config
 
 - name: Enable Required Repos
-  command: subscription-manager repos \
+  ansible.builtin.command: subscription-manager repos \
              --enable rhel-{{rhel_release}}-server-rpms \
              --enable rhel-server-rhscl-{{rhel_release}}-rpms \
              --enable rhel-{{rhel_release}}-server-ansible-{{ansible_repo_version}}-rpms \
@@ -24,13 +24,13 @@
     - sat-config
 
 - name: Ensure Subscription Manager is not set to use a specific RHEL Release
-  command: subscription-manager release --unset
+  ansible.builtin.command: subscription-manager release --unset
   tags: sat-inst
     - sat-inst
     - sat-config
 
 - name: clean any yum meta data
-  command: yum -y clean all
+  ansible.builtin.command: yum -y clean all
   args:
     warn: no
   tags: sat-inst
@@ -38,7 +38,7 @@
     - sat-config
     
 - name: install sos
-  package:
+  ansible.builtin.package:
     name: sos
     state: latest
   tags: sat-inst
@@ -46,7 +46,7 @@
     - sat-config
 
 - name: Ensure that firewalld is installed
-  yum:
+  ansible.builtin.yum:
     name: firewalld
     state: latest
   tags: sat-inst
@@ -54,7 +54,7 @@
     - sat-config
 
 - name: Ensure that firewalld is started
-  service:
+  ansible.builtin.service:
     name: firewalld
     state: started
   tags: 
@@ -62,7 +62,7 @@
     - sat-config
 
 - name: assign eth0 to "public" zone
-  firewalld:
+  ansible.builtin.firewalld:
     zone: public
     interface: eth0
     state: enabled
@@ -71,7 +71,7 @@
     - sat-config
 
 - name: deploy firewalld rules
-  firewalld:
+  ansible.builtin.firewalld:
     zone: public
     immediate: yes
     port: "{{ item }}"
@@ -94,7 +94,7 @@
     - sat-config
 
 - name: Install satellite
-  yum:
+  ansible.builtin.yum:
     name: satellite
     state: latest
   tags: 
@@ -102,7 +102,7 @@
     - sat-config
 
 - name: Execute satellite-installer
-  command: satellite-installer --scenario satellite \
+  ansible.builtin.command: satellite-installer --scenario satellite \
     --foreman-initial-organization "{{ foreman_initial_organization }}" \
     --foreman-initial-location "{{ foreman_initial_location }}" \
     --foreman-admin-username "{{ foreman_admin_username }}" \
@@ -113,7 +113,7 @@
     - sat-inst
 
 #  - name: Execute satellite-installer
-#    command: satellite-installer --scenario satellite \
+#    ansible.builtin.command: satellite-installer --scenario satellite \
 #      --foreman-initial-organization "{{ foreman_initial_organization }}" \
 #      --foreman-initial-location "{{ foreman_initial_location }}" \
 #      --foreman-proxy-dns "{{ foreman_proxy_dns }}" \
@@ -129,7 +129,7 @@
 #    - sat-inst
 
 - name: create {{user_home_dir}}/.hammer directory
-  file:
+  ansible.builtin.file:
     path: "{{user_home_dir}}/.hammer"
     owner: "{{user}}"
     group: "{{user}}"
@@ -140,7 +140,7 @@
     - sat-config
 
 - name: install {{user_home_dir}}/.hammer/cli_config.yml
-  template:
+  ansible.builtin.template:
     src: cli_config.yml.j2
     dest: "{{user_home_dir}}/.hammer/cli_config.yml"
     owner: "{{user}}"

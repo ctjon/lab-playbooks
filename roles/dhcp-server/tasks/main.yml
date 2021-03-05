@@ -1,12 +1,12 @@
 ---
 - name: Install dhcp-server
-  package:
+  ansible.builtin.package:
     name: dhcp-server,firewalld
     state: latest
   notify: restart dhcpd
 
 - name: configure firewall for DHCP services
-  firewalld:
+  ansible.builtin.firewalld:
     zone: "{{trusted_firewall_zone}}"
     service: dhcp
     immediate: yes
@@ -14,7 +14,7 @@
     permanent: yes
 
 - name: install dhcpd.conf
-  template:
+  ansible.builtin.template:
     src: dhcpd.conf.{{ansible_hostname}}.j2
     dest: /etc/dhcp/dhcpd.conf
     owner: root
@@ -23,7 +23,7 @@
   notify: restart dhcpd
 
 - name: start and enable dhcpd service
-  service:
+  ansible.builtin.service:
     name: dhcpd
     state: started
     enabled: yes

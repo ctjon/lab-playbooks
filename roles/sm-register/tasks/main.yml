@@ -4,7 +4,7 @@
     file: group_vars/sm_creds.yml
 
 - name: Use subscription-manager to Register System RHEL 6/7/8
-  redhat_subscription:
+  ansible.builtin.redhat_subscription:
     state: present
     username: "{{ redhat_portal_username }}"
     password: "{{ redhat_portal_password }}"

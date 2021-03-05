@@ -2,7 +2,7 @@
 # handlers file for tftp-server
 
 - name: restart tftp
-  service:
+  ansible.builtin.service:
     name: tftp
     state: restarted
 

@@ -1,70 +1,61 @@
 ---
 - name: install bridge-utils package
-  package:
+  ansible.builtin.package:
     name: bridge-utils
     state: latest
-  when:
-    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
-    - ansible_distribution_major_version == "6" or ansible_distribution_major_version == "7"
 
-- name: install /etc/sysconfig/network-scripts/ifcfg-br0 template on RHEL6/7
-  template:
+- name: install /etc/sysconfig/network-scripts/ifcfg-br0 template
+  ansible.builtin.template:
     src: ifcfg-br0.j2
     dest: /etc/sysconfig/network-scripts/ifcfg-br0
     owner: root
     group: root
     mode: 0644
-  notify: restart network
-  when:
-    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
-    - ansible_distribution_major_version == "6" or ansible_distribution_major_version == "7"
 
-- name: install /etc/sysconfig/network-scripts/ifcfg-br0 template on RHEL8
-  template:
-    src: ifcfg-br0.j2
-    dest: /etc/sysconfig/network-scripts/ifcfg-br0
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart NetworkManager
-  when:
-    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
-    - ansible_distribution_major_version == "8"
-
-- name: install /etc/sysconfig/network-scripts/ifcfg-eth0 on RHEL6/7
-  template:
+- name: install /etc/sysconfig/network-scripts/ifcfg-eth0 template
+  ansible.builtin.template:
     src: ifcfg-eth0.j2
     dest: /etc/sysconfig/network-scripts/ifcfg-eth0
     owner: root
     group: root
     mode: 0644
-  notify: restart network
-  when:
-    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
-    - ansible_distribution_major_version == "6" or ansible_distribution_major_version == "7"
 
-- name: install /etc/sysconfig/network-scripts/ifcfg-eth0 template on RHEL8
-  template:
-    src: ifcfg-eth0.j2
-    dest: /etc/sysconfig/network-scripts/ifcfg-eth0
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart NetworkManager
-  when:
-    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
-    - ansible_distribution_major_version == "8"
-
-- firewalld:
+- name: reconfigure firewall for bridge
+  ansible.builtin.firewalld:
     zone: "{{public_firewall_zone}}"
     interface: "{{primary_bridge}}"
-    permanent: true
+    permanent: yes
     state: enabled
+    immediate: yes
 
-- name: Set ip forwarding and reload if necessary
-  sysctl:
+- name: Set ip forwarding sysctl and reload if necessary
+  ansible.builtin.sysctl:
     name: net.ipv4.ip_forward
     value: '1'
     sysctl_set: yes
     state: present
     reload: yes
+
+- name: restart network
+  ansible.builtin.service:
+    name: network
+    state: restarted
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "6" or ansible_distribution_major_version == "7"
+
+- name: restart NetworkManager
+  ansible.builtin.service:
+    name: NetworkManager
+    state: restarted
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version >= "8"
+
+- name: restart NetworkManager
+  ansible.builtin.service:
+    name: NetworkManager
+    state: restarted
+  when:
+    - ansible_distribution == "Fedora" 
+    - ansible_distribution_major_version >= "28"

@@ -1,6 +1,6 @@
 ---
 - name: rhel/centos 7+ setup sshd_config
-  template:
+  ansible.builtin.template:
     src: sshd_config.j2
     dest: /etc/ssh/sshd_config
     owner: root
@@ -16,7 +16,7 @@
   notify: restart sshd service
 
 - name: rhel/centos 5/6 setup sshd_config
-  template:
+  ansible.builtin.template:
     src: sshd_config-older.j2
     dest: /etc/ssh/sshd_config
     owner: root
@@ -32,7 +32,7 @@
   notify: restart sshd service
 
 - name: fedora 28+ setup sshd_config
-  template:
+  ansible.builtin.template:
     src: sshd_config.j2
     dest: /etc/ssh/sshd_config
     owner: root
@@ -48,7 +48,7 @@
   notify: restart sshd service
 
 - name: create .ssh directories
-  file:
+  ansible.builtin.file:
     path: "~{{item}}/.ssh"
     state: directory
     mode: 0700
@@ -62,7 +62,7 @@
     - "{{ssh_keygen_users}}"
 
 - name: generate RSA ssh keys
-  command: "ssh-keygen -q -f ~{{item}}/.ssh/id_rsa -t rsa -N ''"
+  ansible.builtin.command: "ssh-keygen -q -f ~{{item}}/.ssh/id_rsa -t rsa -N ''"
   args:
     creates: "~{{item}}/.ssh/id_rsa"
   with_items:
@@ -70,7 +70,7 @@
   tags: generate_keys
 
 - name: set permission on ssh private keys
-  file:
+  ansible.builtin.file:
     path: "~{{item}}/.ssh/id_rsa"
     state: file
     mode: 0600
@@ -84,7 +84,7 @@
     - "{{ssh_keygen_users}}"
 
 - name: set permission on ssh public keys
-  file:
+  ansible.builtin.file:
     path: "~{{item}}/.ssh/id_rsa.pub"
     state: file
     mode: 0644
@@ -97,26 +97,26 @@
   with_items:
     - "{{ssh_keygen_users}}"
 
-- name: configure chris' mbp key for "{{ansible_user}}" 
-  authorized_key:
+- name: configure local ssh key for "{{ansible_user}}" 
+  ansible.builtin.authorized_key:
     user: "{{ansible_user}}"
     state: present
     key: "{{ lookup('file', '~chris/.ssh/id_rsa.pub') }}"
 
 - name: configure chris' server0 key for "{{ansible_user}}" 
-  authorized_key:
+  ansible.builtin.authorized_key:
     user: "{{ansible_user}}"
     state: present
     key: "{{ lookup('file', '~chris/.ssh/chris-server0-id_rsa.pub') }}"
 
 - name: configure chris' x1carbon key for "{{ansible_user}}" 
-  authorized_key:
+  ansible.builtin.authorized_key:
     user: "{{ansible_user}}"
     state: present
     key: "{{ lookup('file', '~chris/.ssh/chris-x1carbon-id_rsa.pub') }}"
 
 - name: lockdown "{{ansible_user}}" authorized_keys
-  file:
+  ansible.builtin.file:
     path: "~{{ansible_user}}/.ssh/authorized_keys"
     state: file
     mode: 0600
@@ -128,7 +128,7 @@
     selevel: s0
 
 - name: remove root's authorized_keys 
-  file:
+  ansible.builtin.file:
     path: "~root/.ssh/authorized_keys"
     state: absent
 ...

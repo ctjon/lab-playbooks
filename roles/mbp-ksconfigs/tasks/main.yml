@@ -2,7 +2,7 @@
 # tasks file for mbp-ksconfigs
 
 - name: make sure {{ks_config_dir}} exists
-  file:
+  ansible.builtin.file:
     path: "{{ks_config_dir}}"
     state: directory
     owner: chris
@@ -10,7 +10,7 @@
     mode: 0755
 
 - name: deploy {{ks_config_dir}} Files
-  template:
+  ansible.builtin.template:
     src: "ks-configs/{{item}}.j2"
     dest: "{{ks_config_dir}}/{{item}}"
     owner: chris
@@ -20,7 +20,7 @@
     - "{{ks_configs_list}}"
 
 - name: make sure {{linux_config_files_dir}} exists
-  file:
+  ansible.builtin.file:
     path: "{{linux_config_files_dir}}"
     state: directory
     owner: chris
@@ -28,7 +28,7 @@
     mode: 0755
 
 - name: deploy callback-service templates to {{config_files_url}} Files
-  template:
+  ansible.builtin.template:
     src: "{{item}}.j2"
     dest: "{{linux_config_files_dir}}/{{item}}"
     owner: chris
@@ -39,7 +39,7 @@
     - rhel7-callback.service
 
 - name: make sure {{config_files_dir}} exists
-  file:
+  ansible.builtin.file:
     path: "{{config_files_dir}}"
     state: directory
     owner: chris
@@ -47,7 +47,7 @@
     mode: 0755
 
 - name: copy bash_profile {{config_files_url}}
-  copy:
+  ansible.builtin.copy:
     src: "{{item}}"
     dest: "{{config_files_dir}}"
     owner: chris
