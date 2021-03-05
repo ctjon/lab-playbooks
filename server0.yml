@@ -60,6 +60,9 @@
     - role: setup-epel
       tags: ['setup-epel']
 
+    - role: virt-server
+      tags: ['virt-server']
+
     - role: plex-server
       tags: ['plex-server']
 

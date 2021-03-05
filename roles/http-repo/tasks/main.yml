@@ -4,6 +4,13 @@
     name: httpd,firewalld
     state: latest
 
+- name: install cronie on Fedora
+  package:
+    name: cronie
+    state: latest
+  when:
+      - ansible_distribution == "Fedora"
+
 - name: deploy vhosts.conf for installation server
   template:
     src: vhosts.conf.j2
