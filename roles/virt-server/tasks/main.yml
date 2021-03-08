@@ -16,24 +16,6 @@
     group: polkitd
     mode: 0750
 
-#- name: install 50-net.tjon-libvirt-remote-access.pkla
-#  ansible.builtin.template:
-#    src: 50-net.tjon-libvirt-remote-access.pkla.j2
-#    dest: /etc/polkit-1/localauthority/50-local.d/50-net.tjon-libvirt-remote-access.pkla
-#    owner: root
-#    group: polkitd
-#    mode: 0640
-#  register: polkit_result
-
-#- name: reset selinux permissions on /etc/polkit-1/localauthority
-#  ansible.builtin.command: restorecon -RF /etc/polkit-1/localauthority
-
-#- name: restart polkit service
-#  ansible.builtin.service:
-#    name: polkit
-#    state: restarted
-#  when: "polkit_result.changed == true"
-
 - name: create vm storage in {{vm_storage_path}}
   ansible.builtin.lvol:
     vg: "{{ vm_storage_vg }}"
@@ -69,17 +51,11 @@
     name: qemu-kvm, virt-manager, virt-viewer, virt-install, libvirt, libvirt-client, virt-what, libguestfs, virtio-win, python3-lxml
     state: latest
 
-
 - name: start and enable libvirtd service
   ansible.builtin.service:
     name: libvirtd
     state: restarted
     enabled: yes
-
-#- name: start and enable libvirtd service
-#  ansible.builtin.command: systemctl restart libvirtd
-#  args:
-#    warn: false # set warn=false to avoid warnings about yum command/module
 
 - name: validate kvm modules loaded properly
   ansible.builtin.shell: lsmod |grep kvm
@@ -105,13 +81,6 @@
     append=yes
   with_items:
     - "{{ libvirt_users }}"
-
-#- name: add libvirt_users to libvirt group
-#  ansible.builtin.user: name={{ item }}
-#        groups=libvirt
-#        append=yes
-#  with_items:
-#    - "{{libvirt_users}}"
 
 - name: setup virtual networks
   block:
@@ -148,7 +117,6 @@
         state: enabled
       with_items:
         - "{{ virt_nets}}"
-#  when: ansible_hostname == "p51s" or ansible_hostname == "x1carbon"
 
 - name: restore SELinux Context on /etc/yum.repos.d
   ansible.builtin.command: restorecon -RFv /etc/yum.repos.d

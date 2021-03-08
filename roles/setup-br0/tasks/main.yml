@@ -3,6 +3,9 @@
   ansible.builtin.package:
     name: bridge-utils
     state: latest
+  when:
+    - ansible_distribution != "RedHat" or ansible_distribution != "CentOS"
+    - ansible_distribution_major_version != "8"
 
 - name: install /etc/sysconfig/network-scripts/ifcfg-br0 template
   ansible.builtin.template:

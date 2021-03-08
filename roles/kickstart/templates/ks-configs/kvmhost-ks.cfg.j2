@@ -47,7 +47,7 @@ part pv.13401 --fstype="lvmpv" --ondisk=nvme0n1 --size=1 --grow
 volgroup rootvg --pesize=4096 pv.13401 
 logvol /opt --fstype="ext4" --size=32 --label="opt" --name=optlv --vgname=rootvg
 logvol / --fstype="ext4" --size=1024 --label="root" --name=rootlv --vgname=rootvg
-logvol /var/lib/libvirt/images --fstype="ext4" --size=1048576 --label="images" --name=imageslv --vgname=rootvg
+logvol /var/lib/libvirt/images --fstype="ext4" --size=1048576 --label="images" --name={{vm_storage_lv}} --vgname=rootvg
 logvol /tmp --fstype="ext4" --size=10240 --label="tmp" --name=tmplv --vgname=rootvg
 logvol /var --fstype="ext4" --size=2048 --label="var" --name=varlv --vgname=rootvg
 logvol /home --fstype="ext4" --size=512 --label="home" --name=homelv --vgname=rootvg
