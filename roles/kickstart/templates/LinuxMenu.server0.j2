@@ -37,6 +37,14 @@ LABEL x1carbon
         APPEND pxelinux.cfg/Linux/x1carbon
 
 #
+# KVMHOST
+#
+label kvmhost
+  menu label Install rhel8 kvmhost
+  kernel images/rhel/8/x86_64/vmlinuz
+append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/kvmhost-ks.cfg inst.stage2={{linux_install_server_url}}/rhel/8/x86_64
+
+#
 # Ansible Tower Standalone Install
 #
 label tower
