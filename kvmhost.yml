@@ -36,8 +36,8 @@
 #    - role: fail2ban
 #      tags: ['fail2ban']
 
-#    - role: syslog
-#      tags: ['syslog']
+    - role: rsyslog-client
+      tags: ['rsyslog-client']
 
 #    - role: config-local-repos
 #      tags: ['config-local-repos']

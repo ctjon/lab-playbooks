@@ -308,16 +308,16 @@ centos_architectures:
   - x86_64
 
 fedora_versions:
-  - 32
   - 33
+  - 34
 
 # fedora versions that include upgrade.img
 fedora_upgrade_versions:
-  - 32
   - 33
+  - 34
 
-fedora_prev_release_ones_digit: 1
-fedora_prev_release: 31
+fedora_prev_release_ones_digit: 2
+fedora_prev_release: 32
 
 fedora_architectures:
   - x86_64

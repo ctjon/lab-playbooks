@@ -59,6 +59,7 @@
 - name: configure cronjob to run script
   ansible.builtin.cron:
     name: "Sync RH Repo"
+    weekday: "{{ansible_distribution_major_version|int - 6}}"
     minute: "30"
     hour: "{{ansible_distribution_major_version|int - 6}}"
     job: "{{ scripts_dir }}/{{ script_name }} > {{ logs_dir }}/{{ log_name }} 2>&1"

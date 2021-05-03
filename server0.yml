@@ -75,8 +75,8 @@
 #    - role: fail2ban
 #      tags: ['fail2ban']
 
-#    - role: syslog
-#      tags: ['syslog']
+    - role: rsyslog-server
+      tags: ['rsyslog-server']
 
 #    - role: backup
 #      tags: ['backup']

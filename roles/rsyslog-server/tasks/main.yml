@@ -1,0 +1,29 @@
+---
+- name: Install/Update rsyslog/firewalld
+  ansible.builtin.package: 
+    name: rsyslog, firewalld
+    state: latest
+  notify: restart rsyslog
+
+- name: Open Firewall Port for Syslogd
+  ansible.posix.firewalld:
+    port: "{{log_port}}/{{log_protocol}}"
+    permanent: yes
+    state: enabled
+    zone: "{{ trusted_firewall_zone }}"
+
+- name: Install /etc/rsyslog.conf
+  ansible.builtin.template:
+    src: rsyslog-server.conf.j2
+    dest: /etc/rsyslog.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart rsyslog
+
+- name: Start and Enable rsyslog
+  ansible.builtin.service:
+    name: rsyslog
+    state: started
+    enabled: yes
+

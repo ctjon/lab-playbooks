@@ -25,6 +25,7 @@
   ansible.builtin.cron:
     name: "sync-fedora.sh"
     user: "{{repo_owner}}"
+    weekday: "0,3"
     minute: "30"
     hour: "{{0 + start_hour_offset}}"
     job: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/sync-fedora.sh > {{repo_owner_homedir}}/logs/sync-fedora.log 2>&1"
@@ -33,6 +34,7 @@
   ansible.builtin.cron:
     name: "sync-centos.sh"
     user: "{{repo_owner}}"
+    weekday: "1,4"
     minute: "30"
     hour: "{{1 + start_hour_offset}}"
     job: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/sync-centos.sh > {{repo_owner_homedir}}/logs/sync-centos.log 2>&1"
@@ -41,6 +43,7 @@
   ansible.builtin.cron:
     name: "sync-epel.sh"
     user: "{{repo_owner}}"
+    weekday: "2,5"
     minute: "30"
     hour: "{{2 + start_hour_offset}}"
     job: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/sync-epel.sh > {{repo_owner_homedir}}/logs/sync-epel.log 2>&1"
@@ -49,6 +52,7 @@
   ansible.builtin.cron:
     name: "sync-openbsd.sh"
     user: "{{repo_owner}}"
+    weekday: "3,6"
     minute: "30"
     hour: "{{3 + start_hour_offset}}"
     job: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/sync-openbsd.sh > {{repo_owner_homedir}}/logs/sync-openbsd.log 2>&1"
@@ -57,6 +61,7 @@
   ansible.builtin.cron:
     name: "sync-sync-virtio-win.sh"
     user: "{{repo_owner}}"
+    weekday: "3,6"
     minute: "45"
     hour: "{{4 + start_hour_offset}}"
     job: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/sync-virtio-win.sh > {{repo_owner_homedir}}/logs/sync-virtio-win.log 2>&1"

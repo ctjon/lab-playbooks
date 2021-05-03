@@ -24,6 +24,13 @@ local_time_server: time.internal.tjon.net
 installed_kernel_limit: 2
 
 ################################################################################
+# Logging Parameters
+################################################################################
+log_server: 172.16.1.2
+log_port: 514
+log_protocol: tcp
+
+################################################################################
 # Installation Source Parameters                                               #
 ################################################################################
 linux_install_server_url: "http://install.internal.tjon.net/Linux"
