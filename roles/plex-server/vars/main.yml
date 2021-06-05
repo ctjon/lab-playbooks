@@ -1,10 +1,10 @@
 ---
 plex_owner: chris
 plex_group: plex
-plex_storage_vg: rootvg
-plex_storage_lv: plex_media_lv
+plex_storage_vg: datavg
+plex_storage_lv: plexlv
 plex_storage_lv_size: 5000g
 plex_storage_fs_type: ext4
-plex_storage_path: /export/plex-media
+plex_storage_path: /export/plex
 plex_local_net: 172.16.1.0
 plex_local_net_netmask: 255.255.255.0
