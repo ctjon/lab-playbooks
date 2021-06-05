@@ -1,0 +1,80 @@
+---
+#
+# Configure gatekeeper with openwrt
+#
+#
+# must install python3, set root password, and install ssh-key before use
+# user@localhost> ssh-copy-id <ssh-key>.pub root@openwrt
+# root@openwrt> opkg update
+# root@openwrt> opkg install python3
+#
+
+- name: configure gatekeeper with openwrt
+  hosts: gatekeeper
+  become: yes
+
+  tasks:
+    - name: install /etc/config/system template
+      ansible.builtin.template:
+        src: etc.config.system.j2
+        dest: /etc/config/network
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart system
+
+    - name: install /etc/config/network template
+      ansible.builtin.template:
+        src: etc.config.network.j2
+        dest: /etc/config/network
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart network
+
+    - name: install dnsmasq.conf file
+      ansible.builtin.template:
+        src: etc.dnsmasq.conf.j2
+        dest: /etc/dnsmasq.conf
+        owner: root
+        group: dnsmasq
+        mode: 0644
+      notify: restart dnsmasq
+
+#    - name: modify dhcp config
+#      ansible.builtin.blockinfile:
+#        path: /etc/config/dhcp
+#        block: |
+#          config boot 'linux'
+#    	      option filename 'pxelinux.0'
+#    	      option serveraddress '172.16.1.2'
+#    	      option servername 'server0.internal.tjon.net'
+#      notify: restart dnsmasq
+
+    - name: install /etc/hosts file
+      ansible.builtin.copy:
+        src: "etc.hosts"
+        dest: /etc/hosts
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart dnsmasq
+
+  handlers:
+    - name: restart system
+      ansible.builtin.service:
+        name: system
+        state: restarted
+
+    - name: restart network
+      ansible.builtin.service:
+        name: network
+        state: reloaded
+
+    - name: restart dnsmasq
+      ansible.builtin.service:
+        name: dnsmasq
+        state: restarted
+
+...
+

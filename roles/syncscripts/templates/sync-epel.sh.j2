@@ -32,6 +32,15 @@ do
 	--exclude='4ES' \
 	--exclude='4WS' \
 	--exclude='RPM-GPG-KEY-EPEL-4' \
+	--exclude='5' \
+	--exclude='5Client' \
+	--exclude='5Server' \
+	--exclude='RPM-GPG-KEY-EPEL-5' \
+	--exclude='6' \
+	--exclude='6Server' \
+	--exclude='RPM-GPG-KEY-EPEL-6' \
+	--exclude='RPM-GPG-KEY-EPEL-6Server' \
+	--exclude='playground' \
  	$SRCDIR $TGTDIR
 {% if sync_script_retries == true %}
 done
