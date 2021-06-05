@@ -2,7 +2,7 @@
 # System authorization information
 auth --enableshadow --passalgo=sha512
 # Use network installation
-url --url="{{linux_install_server_url}}/fedora/releases/32/Server/x86_64/os/"
+url --url="{{linux_install_server_url}}/fedora/releases/34/Server/x86_64/os/"
 # Use graphical install
 graphical
 # Run the Setup Agent on first boot
@@ -16,7 +16,7 @@ keyboard --vckeymap=us --xlayouts='us'
 lang en_US.UTF-8
 
 # Network information
-network  --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.38 --nameserver={{dns_servers|join(",")}} --netmask={{primary_netmask}} --hostname=test-fedora32.{{domain_name}} --activate
+network  --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.38 --nameserver={{dns_servers|join(",")}} --netmask={{primary_netmask}} --hostname=test-fedora34.{{domain_name}} --activate
 
 # Root password
 rootpw --iscrypted $6$EWvRuPP7F8pRTFrm$749vEu5HoijsEhVWzw691ZquSDP.FmK2Qc56HGpgE03pHMgxIMlal4YPM/BrmwfA10q0nKUDxkC7D21H1q7xH/
@@ -38,7 +38,7 @@ logvol /  --fstype="ext4" --size=1024 --label="root" --name=rootlv --vgname=root
 logvol /usr  --fstype="ext4" --size=4096 --label="usr" --name=usrlv --vgname=rootvg
 logvol /home  --fstype="ext4" --size=512 --label="home" --name=homelv --vgname=rootvg
 logvol swap  --fstype="swap" --size=2048 --name=swaplv --vgname=rootvg
-logvol /opt  --fstype="ext4" --size=32 --label="opt" --name=optlv --vgname=rootvg
+logvol /opt  --fstype="ext4" --size=34 --label="opt" --name=optlv --vgname=rootvg
 logvol /var  --fstype="ext4" --size=1024 --label="var" --name=varlv --vgname=rootvg
 logvol /var/cache  --fstype="ext4" --size=2048 --label="cache" --name=cachelv --vgname=rootvg
 logvol /tmp  --fstype="ext4" --size=1024 --label="tmp" --name=tmplv --vgname=rootvg

@@ -20,5 +20,5 @@ ff02::2 ip6-allrouters
 172.16.1.32	test-rhel6.internal.tjon.net test-rhel6
 172.16.1.34	test-centos8.internal.tjon.net test-centos8
 172.16.1.35	test-centos7.internal.tjon.net test-centos7
-172.16.1.38	test-fedora32.internal.tjon.net test-fedora32
+172.16.1.38	test-fedora34.internal.tjon.net test-fedora34
 172.16.1.39	test-fedora33.internal.tjon.net test-fedora33
