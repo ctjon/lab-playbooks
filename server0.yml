@@ -98,7 +98,7 @@
 
     - name: install other fedora packages 
       ansible.builtin.package:
-        name: openscap-containers, openscap-daemon, python3-boto, openwsman-winrs.x86_64
+        name: openscap-containers, openscap-daemon, python3-boto, openwsman-winrs.x86_64, vnstat
         state: latest
       when: 
         - ansible_distribution == "Fedora"
