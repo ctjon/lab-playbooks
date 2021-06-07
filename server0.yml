@@ -104,3 +104,9 @@
         - ansible_distribution == "Fedora"
       tags:
         - localpkgs
+
+    - name: start and enable vnstat
+      ansible.builtin.service:
+        name: vnstat
+        state: started
+        enabled: yes
