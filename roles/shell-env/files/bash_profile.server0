@@ -14,6 +14,8 @@ PATH=$PATH:$HOME/.local/bin:$HOME/bin
 export PATH
 export PS1="`whoami`@`hostname -s`:\$PWD> "
 
+export EDITOR=/usr/bin/vi
+
 export ANSIBLE_CONFIG=~chris/playbooks/ansible.cfg
 export ANSIBLE_NOCOWS=1
 
