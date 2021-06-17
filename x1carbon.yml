@@ -29,9 +29,6 @@
     - role: set-default-editor
       tags: ['set-default-editor']
 
-    - role: dnsmasq
-      tags: ['dnsmasq']
-
 #    - role: virt-server
 #      tags: ['virt-server']
 
@@ -65,7 +62,7 @@
     
     - name: install bluejeans
       package:
-        name: http://archive.internal.tjon.net/Linux/RPMS/bluejeans-1.37.22.x86_64.rpm
+        name: http://archive.internal.tjon.net/Linux/RPMS/BlueJeans_2.5.0.50.rpm
         state: present
 
     - name: install adobe flashplayer repo
@@ -81,11 +78,6 @@
     - name: install zoom
       package:
         name: http://archive.internal.tjon.net/Linux/RPMS/zoom_x86_64.rpm
-        state: present
-
-    - name: install skype
-      package:
-        name: http://archive.internal.tjon.net/Linux/RPMS/skypeforlinux-64.rpm
         state: present
 
     - name: install awscli
@@ -106,17 +98,23 @@
         baseurl: https://packagecloud.io/AtomEditor/atom/el/7/$basearch
         enabled: yes
         metadata_expire: 1d
-        repo_gpgcheck: 0
+        repo_gpgcheck: no
         #type: rpm
-        gpgcheck: yes
+        gpgcheck: no
         gpgkey: https://packagecloud.io/AtomEditor/atom/gpgkey
-        skip_if_unavailable: true
-        keepcache: false
+        skip_if_unavailable: "1"
+        keepcache: "0"
+
+    - name: import packagecloud.io gpgkey
+      rpm_key:
+        state: present
+        key: https://packagecloud.io/AtomEditor/atom/gpgkey
 
     - name: install atom
       package:
         name: atom
         state: latest
+        disable_gpg_check: yes
 
 #    - name: import rhel7-csb gpg key
 #      rpm_key:
@@ -139,15 +137,15 @@
 #        skip_if_unavailable: true
 #        keepcache: false
 
-    - name: install RedHat VPN
-      yum:
-        name: http://archive.internal.tjon.net/Linux/RedHat/redhat-internal-NetworkManager-openvpn-profiles-0.1-30.el7.csb.noarch.rpm, http://archive.internal.tjon.net/Linux/RedHat/redhat-internal-cert-install-0.1-7.el7.csb.noarch.rpm
-        state: latest
-#        enablerepo: rhel7-csb
+#    - name: install RedHat VPN
+#      yum:
+#        name: http://archive.internal.tjon.net/Linux/RedHat/RedHat-Internal/redhat-internal-NetworkManager-openvpn-profiles-0.1-30.el7.csb.noarch.rpm, http://archive.internal.tjon.net/Linux/RedHat/RedHat-Internal/redhat-internal-cert-install-0.1-7.el7.csb.noarch.rpm
+#        state: latest
+##        enablerepo: rhel7-csb
     
     - name: install slack
       package:
-        name: http://archive.internal.tjon.net/Linux/RPMS/slack-3.3.3-0.1.fc21.x86_64.rpm
+        name: http://archive.internal.tjon.net/Linux/RPMS/slack-4.4.3-0.1.fc21.x86_64.rpm
         state: present
     
     - name: check if /usr/lib/slack/libnode.so.old exists
@@ -155,32 +153,32 @@
         path: /usr/lib/slack/libnode.so.old
       register: libnode
 
-    - name: setup slack
-      block:
-    
-        - name: copy file fix broken slack libnode.so on fedora
-          copy: 
-            remote_src: true
-            src: /usr/lib/slack/libnode.so
-            dest: /usr/lib/slack/libnode.so.old
-            owner: root
-            group: root
-            mode: 0755
-
-        - name: copy file fix broken slack libnode.so on fedora
-          file: 
-            path: /usr/lib/slack/libnode.so
-            state: absent
-
-        - name: make link to fix broken slack libnode.so on fedora
-          file: 
-            src: /usr/share/atom/libnode.so
-            dest: /usr/lib/slack/libnode.so
-            owner: root
-            group: root
-            mode: 0755
-            state: link
-      when: libnode.stat.exists == false
+#    - name: setup slack
+#      block:
+#    
+#        - name: copy file fix broken slack libnode.so on fedora
+#          copy: 
+#            remote_src: true
+#            src: /usr/lib/slack/libnode.so
+#            dest: /usr/lib/slack/libnode.so.old
+#            owner: root
+#            group: root
+#            mode: 0755
+#
+#        - name: copy file fix broken slack libnode.so on fedora
+#          file: 
+#            path: /usr/lib/slack/libnode.so
+#            state: absent
+#
+#        - name: make link to fix broken slack libnode.so on fedora
+#          file: 
+#            src: /usr/share/atom/libnode.so
+#            dest: /usr/lib/slack/libnode.so
+#            owner: root
+#            group: root
+#            mode: 0755
+#            state: link
+#      when: libnode.stat.exists == false
     
     - name: configure chris' group memberships
       user:
@@ -199,7 +197,7 @@
 
     - name: install fedora video packages
       package:
-        name: gstreamer-plugins-base, gstreamer1-plugins-base, gstreamer-plugins-bad, gstreamer-plugins-ugly, gstreamer1-plugins-ugly, gstreamer-plugins-good-extras, gstreamer1-plugins-good-extras, gstreamer1-plugins-bad-freeworld, ffmpeg, gstreamer-ffmpeg, vlc, x264
+        name: gstreamer-plugins-base, gstreamer1-plugins-base, gstreamer-plugins-bad, gstreamer-plugins-ugly, gstreamer1-plugins-ugly, gstreamer1-plugins-bad-freeworld, ffmpeg, gstreamer-ffmpeg, vlc, x264
 
     - name: install packages specific to ansible
       package: 

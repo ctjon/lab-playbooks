@@ -6,7 +6,7 @@
 # must install python3, set root password, and install ssh-key before use
 # user@localhost> ssh-copy-id <ssh-key>.pub root@openwrt
 # root@openwrt> opkg update
-# root@openwrt> opkg install python3
+# root@openwrt> opkg install python3 openssh-sftp-server
 #
 
 - name: configure gatekeeper with openwrt
@@ -14,6 +14,11 @@
   become: yes
 
   tasks:
+    - name: configure luci for SSL
+      opkg:
+        name: luci-ssl
+        state: present
+
     - name: install /etc/config/system template
       ansible.builtin.template:
         src: etc.config.system.j2
@@ -23,14 +28,14 @@
         mode: 0644
       notify: restart system
 
-    - name: install /etc/config/network template
-      ansible.builtin.template:
-        src: etc.config.network.j2
-        dest: /etc/config/network
-        owner: root
-        group: root
-        mode: 0644
-      notify: restart network
+#    - name: install /etc/config/network template
+#      ansible.builtin.template:
+#        src: etc.config.network.j2
+#        dest: /etc/config/network
+#        owner: root
+#        group: root
+#        mode: 0644
+#      notify: restart network
 
     - name: install dnsmasq.conf file
       ansible.builtin.template:

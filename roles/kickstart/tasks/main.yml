@@ -242,9 +242,31 @@
 #    - "{{ubuntu_server_architectures}}"
 
 ################################################################################
+# OpenWRT images Files copies                                                  #
+################################################################################
+- name: create OpenBSD {{tftpbootdir}}/images/openwrt directory
+  ansible.builtin.file:
+    path: "{{tftpbootdir}}/images/openwrt"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+    recurse: yes
+
+- name: synchronize OpenWRT image content to {{tftpbootdir}}/images/openwrt
+  ansible.builtin.synchronize:
+    src: "{{archivedir}}/OpenWRT/images/"
+    dest: "{{tftpbootdir}}/images/openwrt"
+    archive: yes
+    delete: yes
+    links: yes
+    times: yes
+  delegate_to: "{{ inventory_hostname }}"
+
+################################################################################
 # OpenBSD images Files copies                                                  #
 ################################################################################
-- name: create OpenBSD {{tftpbootdir}}/images/linux/rhel/architecture directories
+- name: create OpenBSD {{tftpbootdir}}/images/linux/openbsd/architecture directories
   ansible.builtin.file:
     path: "{{tftpbootdir}}/images/openbsd/{{item}}"
     owner: root
@@ -258,7 +280,7 @@
 ################################################################################
 # vmware images Files copies                                                   #
 ################################################################################
-- name: setup OpenBSD network boot on server0
+- name: setup vmware network boot on server0
   block:
     - name: create vmware {{tftpbootdir}}/images/linux/rhel/architecture directories
       ansible.builtin.file:

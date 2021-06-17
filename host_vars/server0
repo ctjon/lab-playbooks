@@ -57,6 +57,7 @@ time_client_servers:
 ################################################################################
 tftpbootdir: /var/lib/tftpboot
 installdir: /export/install
+archivedir: /export/archive
 
 ################################################################################
 # HTTP Server Parameters                                                       #

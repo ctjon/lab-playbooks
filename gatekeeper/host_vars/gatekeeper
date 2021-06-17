@@ -15,6 +15,7 @@ primary_subnet: 172.16.1.0/24
 primary_ipaddr: 172.16.1.1
 primary_prefix: 24
 primary_short_net: 172.16.1
+primary_broadcast: 172.16.1.255
 primary_netmask: 255.255.255.0
 primary_gateway: 172.16.1.1
 mtu_size: 9000
