@@ -1,7 +1,7 @@
 ---
 plex_owner: chris
 plex_group: plex
-plex_storage_vg: datavg
+plex_storage_vg: plexvg
 plex_storage_lv: plexlv
 plex_storage_lv_size: 5000g
 plex_storage_fs_type: ext4

@@ -16,12 +16,12 @@
     baseurl: https://packages.microsoft.com/yumrepos/azure-cli
     enabled: yes
     metadata_expire: 7d
-    repo_gpgcheck: 0
+    repo_gpgcheck: "false"
     #type: rpm
     gpgcheck: yes
     gpgkey: https://packages.microsoft.com/keys/microsoft.asc
-    skip_if_unavailable: false
-    keepcache: false
+    skip_if_unavailable: "false"
+    keepcache: "0"
     failovermethod: priority
 
 - name: Fedora 28+ Install azure-cli and other packages

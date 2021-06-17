@@ -42,6 +42,9 @@
     - role: shell-env #including both ssh-keys on server and p51s ??
       tags: ['shell-env']
 
+    - role: set-default-editor
+      tags: ['set-default-editor']
+
     - role: syncscripts
       tags: ['syncscripts']
 
