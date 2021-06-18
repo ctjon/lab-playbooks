@@ -2,8 +2,9 @@
 #
 # Configure gatekeeper with openwrt
 #
+# To do before running this playbook:
 #
-# must install python3, set root password, and install ssh-key before use
+# set root password vi luci interface
 # user@localhost> ssh-copy-id <ssh-key>.pub root@openwrt
 # root@openwrt> opkg update
 # root@openwrt> opkg install python3 openssh-sftp-server
@@ -22,6 +23,7 @@
       opkg:
         name: luci-ssl
         state: present
+      notify: restart luci
 
     - name: install /etc/config/system template
       ansible.builtin.template:
@@ -101,5 +103,7 @@
         name: dnsmasq
         state: restarted
 
+    - name: restart luci
+      ansible.builtin.command: reboot -f
 ...
 
