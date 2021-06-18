@@ -73,11 +73,17 @@
 
     - name: install ddns packages for no-ip
       community.general.opkg:
-        name: ddns-scripts, ddns-scripts_no-ip_com, wget, ca-certificates, curl, ca-bundle
+        name: "{{ item }}"
         state: present
         update_cache: yes
       notify: restart ddns
-      ignore_errors: yes
+      with_items:
+        - ddns-scripts
+        - wget
+        - ca-certificates
+        - curl
+        - ca-bundle
+        - ddns-scripts_no-ip_com
 
     - name: install /etc/config/ddns template
       ansible.builtin.template:
@@ -125,6 +131,7 @@
       ansible.builtin.service:
         name: ddns
         state: restarted
+        enabled: yes
 
     - name: restart luci
       ansible.builtin.command: reboot -f
