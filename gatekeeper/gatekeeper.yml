@@ -14,6 +14,10 @@
   become: yes
 
   tasks:
+    - name: include sm_creds
+      include_vars:
+        file: vars/secrets.yml
+
     - name: configure luci for SSL
       opkg:
         name: luci-ssl
@@ -26,7 +30,6 @@
         owner: root
         group: root
         mode: 0644
-        backup: yes
       notify: restart system
 
     - name: install /etc/config/network template
@@ -36,7 +39,6 @@
         owner: root
         group: root
         mode: 0644
-        backup: yes
       notify: restart network
 
     - name: install dnsmasq.conf file
@@ -55,7 +57,6 @@
         owner: root
         group: root
         mode: 0644
-        backup: yes
       notify: restart dhcp
 
     - name: install /etc/config/wireless template
@@ -65,7 +66,6 @@
         owner: root
         group: root
         mode: 0644
-        backup: yes
       notify: restart wireless
 
     - name: install /etc/hosts file
@@ -89,11 +89,14 @@
         state: reloaded
 
     - name: restart wireless
-      ansible.builtin.service:
-        name: wireless
-        state: reloaded
+      ansible.builtin.command: wifi reload
 
     - name: restart dnsmasq
+      ansible.builtin.service:
+        name: dnsmasq
+        state: restarted
+
+    - name: restart dhcp # provided by dnsmasq
       ansible.builtin.service:
         name: dnsmasq
         state: restarted
