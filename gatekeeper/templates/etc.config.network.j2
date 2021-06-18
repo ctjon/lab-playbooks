@@ -1,3 +1,4 @@
+#{{ ansible_managed }}
 
 config interface 'loopback'
 	option ifname 'lo'
@@ -13,9 +14,9 @@ config interface 'lan'
 	option ifname 'eth0.1'
 	option proto 'static'
 	option ip6assign '60'
-	option ipaddr '"{{primary_ipaddr}}"'
-	option netmask '"{{primary_netmask}}"'
-	option broadcast '"{{primary_broadcast}}"'
+	option ipaddr '{{primary_ipaddr}}'
+	option netmask '{{primary_netmask}}'
+	option broadcast '{{primary_broadcast}}'
 	list dns '8.8.8.8'
 	list dns '8.8.4.4'
 

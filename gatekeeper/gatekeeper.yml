@@ -22,20 +22,22 @@
     - name: install /etc/config/system template
       ansible.builtin.template:
         src: etc.config.system.j2
+        dest: /etc/config/system
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+      notify: restart system
+
+    - name: install /etc/config/network template
+      ansible.builtin.template:
+        src: etc.config.network.j2
         dest: /etc/config/network
         owner: root
         group: root
         mode: 0644
-      notify: restart system
-
-#    - name: install /etc/config/network template
-#      ansible.builtin.template:
-#        src: etc.config.network.j2
-#        dest: /etc/config/network
-#        owner: root
-#        group: root
-#        mode: 0644
-#      notify: restart network
+        backup: yes
+      notify: restart network
 
     - name: install dnsmasq.conf file
       ansible.builtin.template:
@@ -46,15 +48,25 @@
         mode: 0644
       notify: restart dnsmasq
 
-#    - name: modify dhcp config
-#      ansible.builtin.blockinfile:
-#        path: /etc/config/dhcp
-#        block: |
-#          config boot 'linux'
-#    	      option filename 'pxelinux.0'
-#    	      option serveraddress '172.16.1.2'
-#    	      option servername 'server0.internal.tjon.net'
-#      notify: restart dnsmasq
+    - name: modify dhcp config
+      ansible.builtin.template:
+        src: etc.config.dhcp.j2
+        dest: /etc/config/dhcp
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+      notify: restart dhcp
+
+    - name: install /etc/config/wireless template
+      ansible.builtin.template:
+        src: etc.config.wireless.j2
+        dest: /etc/config/wireless
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+      notify: restart wireless
 
     - name: install /etc/hosts file
       ansible.builtin.copy:
@@ -74,6 +86,11 @@
     - name: restart network
       ansible.builtin.service:
         name: network
+        state: reloaded
+
+    - name: restart wireless
+      ansible.builtin.service:
+        name: wireless
         state: reloaded
 
     - name: restart dnsmasq

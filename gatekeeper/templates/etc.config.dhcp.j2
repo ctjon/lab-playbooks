@@ -1,0 +1,36 @@
+#{{ ansible_managed }}
+
+config dnsmasq
+	option domainneeded '1'
+	option localise_queries '1'
+	option rebind_protection '1'
+	option rebind_localhost '1'
+	option local '/lan/'
+	option expandhosts '1'
+	option authoritative '1'
+	option readethers '1'
+	option leasefile '/tmp/dhcp.leases'
+	option resolvfile '/tmp/resolv.conf.auto'
+	option localservice '1'
+	option domain '{{domain_name}}'
+
+config dhcp 'lan'
+	option interface 'lan'
+	option start '100'
+	option leasetime '12h'
+	option limit '200'
+
+config dhcp 'wan'
+	option interface 'wan'
+	option ignore '1'
+
+config odhcpd 'odhcpd'
+	option maindhcp '0'
+	option leasefile '/tmp/hosts/odhcpd'
+	option leasetrigger '/usr/sbin/odhcpd-update'
+	option loglevel '4'
+
+config boot 'linux'
+	option filename 'pxelinux.0'
+	option serveraddress '172.16.1.2'
+	option servername 'server0.{{domain_name}}'
