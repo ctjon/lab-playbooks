@@ -20,9 +20,10 @@
         file: vars/secrets.yml
 
     - name: configure luci for SSL
-      opkg:
+      community.general.opkg:
         name: luci-ssl
         state: present
+        update_cache: yes
       notify: restart luci
 
     - name: install /etc/config/system template
@@ -70,6 +71,23 @@
         mode: 0644
       notify: restart wireless
 
+    - name: install ddns packages for no-ip
+      community.general.opkg:
+        name: ddns-scripts, ddns-scripts_no-ip_com, wget, ca-certificates, curl, ca-bundle
+        state: present
+        update_cache: yes
+      notify: restart ddns
+      ignore_errors: yes
+
+    - name: install /etc/config/ddns template
+      ansible.builtin.template:
+        src: etc.config.ddns.j2
+        dest: /etc/config/ddns
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart ddns
+
     - name: install /etc/hosts file
       ansible.builtin.copy:
         src: "etc.hosts"
@@ -101,6 +119,11 @@
     - name: restart dhcp # provided by dnsmasq
       ansible.builtin.service:
         name: dnsmasq
+        state: restarted
+
+    - name: restart ddns
+      ansible.builtin.service:
+        name: ddns
         state: restarted
 
     - name: restart luci
