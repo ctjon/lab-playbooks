@@ -1,0 +1,31 @@
+---
+- name: Configure DNS Resolver for systemd-resolved 
+  block:
+    - name: create /etc/systemd/resolved.conf.d
+      ansible.builtin.file:
+        path: "/etc/systemd/resolved.conf.d"
+        state: directory
+        mode: 0755
+        owner: root
+        group: root
+        seuser: system_u
+        serole: object_r
+        setype: etc_t
+        selevel: s0
+
+    - name: fedora 34+ setup /etc/systemd/resolved.conf.d/gatekeeper.conf
+      ansible.builtin.template:
+        src: gatekeeper.resolved.conf.j2
+        dest: /etc/systemd/resolved.conf.d/gatekeeper.conf
+        owner: root
+        group: root
+        mode: 0644
+        seuser: system_u
+        serole: object_r
+        setype: etc_t
+        selevel: s0
+      notify: restart systemd-resolved
+  when:
+      - ansible_distribution == "Fedora"
+      - ansible_distribution_major_version >= "34"
+

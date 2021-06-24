@@ -66,14 +66,6 @@
     var: lsmod_output.stdout_lines
   failed_when: "'kvm_intel' not in lsmod_output.stdout and 'kvm_amd' not in cpuinfo.stdout"
 
-- name: destroy default net
-  ansible.builtin.command: virsh net-destroy default
-  ignore_errors: yes
-
-- name: undefine default net
-  ansible.builtin.command: virsh net-undefine default
-  ignore_errors: yes
-
 - name: Adding user {{ libvirt_users }} to {{libvirt_groups}}
   ansible.builtin.user:
     name={{ item }}

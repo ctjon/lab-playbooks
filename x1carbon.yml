@@ -29,8 +29,8 @@
     - role: set-default-editor
       tags: ['set-default-editor']
 
-#    - role: virt-server
-#      tags: ['virt-server']
+    - role: virt-server
+      tags: ['virt-server']
 
     - role: fail2ban
       tags: ['fail2ban']
@@ -197,16 +197,16 @@
 
     - name: install fedora video packages
       package:
-        name: gstreamer-plugins-base, gstreamer1-plugins-base, gstreamer-plugins-bad, gstreamer-plugins-ugly, gstreamer1-plugins-ugly, gstreamer1-plugins-bad-freeworld, ffmpeg, gstreamer-ffmpeg, vlc, x264
+        name: gstreamer-plugins-base, gstreamer1-plugins-base, gstreamer-plugins-ugly, gstreamer1-plugins-ugly, gstreamer1-plugins-bad-freeworld, ffmpeg, gstreamer-ffmpeg, vlc, x264
 
     - name: install packages specific to ansible
       package: 
-        name: python3-winrm, python3-pyvmomi, python3-requests-credssp.noarch, python3-requests.noarch, python3-google-auth
+        name: python3-winrm, python3-pyvmomi, python3-requests.noarch, python3-google-auth        #  python3-requests-credssp.noarch
         state: latest
 
     - name: install packages specific to workstation
       package: 
-        name: mediawriter, icedtea-web, elfutils-devel, grive2, kernel-devel, remmina, remmina-plugins-*, remmina-gnome-session, gns3-gui, gns3-server-doc, thunderbird, thunderbird-wayland, gscan2pdf, gimp, pdfmod, NetworkManager-openvpn-gnome, nmap, nmap-ncat, python3-nmap, umit, gcc, gdb, lftp, ftp, iptraf-ng, nmon, iperf, vnstat, sysstat, openscap, openscap-scanner, openscap-utils, openscap-python3, openscap-containers, wireshark-cli, wireshark, libvirt-wireshark, virt-manager, torbrowser-launcher, openwsman-winrs.x86_64
+        name: mediawriter, icedtea-web, elfutils-devel, grive2, kernel-devel, remmina, remmina-plugins-*, remmina-gnome-session, gns3-gui, gns3-server-doc, thunderbird, thunderbird-wayland, gscan2pdf, gimp, pdfmod, NetworkManager-openvpn-gnome, nmap, nmap-ncat, python3-nmap, gcc, gdb, lftp, ftp, iptraf-ng, nmon, iperf, vnstat, sysstat, openscap, openscap-scanner, openscap-utils, openscap-python3, openscap-containers, wireshark-cli, wireshark, libvirt-wireshark, virt-manager, torbrowser-launcher, openwsman-winrs.x86_64
         state: latest
 
     - name: install google-chrome repo
@@ -231,11 +231,11 @@
 
 #    - name: install Sun Java (for TOS) #BUG with Java & Coreutils
 #      package:
-#        name: /export/archive/Linux/Java/jdk-8u192-linux-x64.rpm
+#        name: /export/archive/Linux/Java/jre-8u251-linux-x64.rpm
 #        state: present
     
     - name: install Sun Java (for TOS)
-      command: rpm -ivh http://archive.internal.tjon.net/Linux/Java/jdk-8u192-linux-x64.rpm
+      command: rpm -ivh http://archive.internal.tjon.net/Linux/Java/jre-8u251-linux-x64.rpm
       become: true
       ignore_errors: true   # set this because yum cannot install this due to deps
       args: 
@@ -244,7 +244,7 @@
     - name: set Sun Java as default (for TOS)
       alternatives:
         name: java
-        path: /usr/java/jdk1.8.0_192-amd64/jre/bin/java
+        path: /usr/java/jre1.8.0_251-amd64/bin/java
 
     - name: install/update pywinrm python module for skylight
       command: pip install pywinrm --upgrade --user

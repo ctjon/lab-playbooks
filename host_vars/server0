@@ -36,6 +36,7 @@ search_domains:
  - tjon.net
 dns_servers: 
  - 172.16.1.1
+ - 8.8.8.8
 primary_interface: eth0
 primary_bridge: br0
 

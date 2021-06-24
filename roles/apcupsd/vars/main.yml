@@ -13,4 +13,7 @@ no_logon: disable
 kill_delay: 0
 netserver_on_off: ON
 events_file_maxK: 1000
-
+beep_state: "L"  # 0 = zero delay after pwr fail
+                 # T = power fail + 30 sec
+                 # L = low battery
+                 # N = never

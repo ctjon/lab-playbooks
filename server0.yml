@@ -24,6 +24,9 @@
     - role: http-repo
       tags: ['http-repo']
 
+    - role: systemd-resolved
+      tags: ['systemd-resolved']
+
 #    - role: config-local-repos
 #      tags: ['config-local-repos']
 
@@ -69,8 +72,8 @@
     - role: plex-server
       tags: ['plex-server']
 
-#    - role: apcupsd
-#      tags: ['apcupsd']
+    - role: apcupsd
+      tags: ['apcupsd']
 
 #    - role: openvpn-server
 #      tags: ['openvpn-server']
