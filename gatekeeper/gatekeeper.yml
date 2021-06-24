@@ -15,7 +15,7 @@
   become: yes
 
   tasks:
-    - name: include sm_creds
+    - name: include secrets.yml
       include_vars:
         file: vars/secrets.yml
 
@@ -71,7 +71,7 @@
         mode: 0644
       notify: restart wireless
 
-    - name: install ddns packages for no-ip
+    - name: install ddns packages for {{service_name}}
       community.general.opkg:
         name: "{{ item }}"
         state: present
@@ -84,6 +84,7 @@
         - curl
         - ca-bundle
         - ddns-scripts_no-ip_com
+        - luci-app-ddns
 
     - name: install /etc/config/ddns template
       ansible.builtin.template:
