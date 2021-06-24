@@ -1,0 +1,12 @@
+{{ ansible_managed }}
+[Resolve]
+DNS={{dns_servers|join(" ")}}
+#FallbackDNS=
+Domains={{search_domains|join(" ")}}
+#LLMNR=yes
+#MulticastDNS=yes
+#DNSSEC=allow-downgrade
+#DNSOverTLS=no
+#Cache=yes
+#DNSStubListener=udp
+

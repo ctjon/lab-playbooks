@@ -90,8 +90,9 @@
     - role: insights-register
       tags: ['insights']
 
-    - role: reboot-if-required
-      tags: ['reboot-if-required']
+## DON'T AUTO REBOOT IF RUNNING KVM VMs
+#    - role: reboot-if-required
+#      tags: ['reboot-if-required']
 
 
   tasks:

@@ -25,7 +25,5 @@
         setype: etc_t
         selevel: s0
       notify: restart systemd-resolved
-  when:
-      - ansible_distribution == "Fedora"
-      - ansible_distribution_major_version >= "34"
+  when: (((ansible_distribution == "Fedora") && (ansible_distribution_major_version >= "33")) || (((ansible_distribution == "RedHat") || (ansible_distribution == "CentOS")) && (ansible_distribution_major_version >= "8")))
 
