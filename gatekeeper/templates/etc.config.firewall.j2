@@ -127,7 +127,7 @@ config include
 config redirect
 	option	name		'DNAT WAN to LAN for SSH'
 	option	src		'wan'
-	option	src_dport	'{{ssh_incoming_tcp_port}}'
+	option	src_dport	'2222'
 	option	dest		'lan'
 	option	dest_ip		'{{ssh_server_ip}}'
 	option	dest_port	'{{ssh_target_tcp_port}}'
@@ -153,3 +153,14 @@ config redirect
 	option	dest_port	'{{openvpn_target_udp_port}}'
 	option	proto		'udp'
 	option	target		'DNAT'
+
+config redirect
+	option	name		'DNAT WAN to LAN for Plex over TCP'
+	option	src		'wan'
+	option	src_dport	'{{plex_incoming_tcp_port}}'
+	option	dest		'lan'
+	option	dest_ip		'{{plex_server_ip}}'
+	option	dest_port	'{{plex_target_tcp_port}}'
+	option	proto		'tcp'
+	option	target		'DNAT'
+
