@@ -16,8 +16,7 @@ keyboard --vckeymap=us --xlayouts='us'
 lang en_US.UTF-8
 
 # Network information
-network  --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.3 --nameserver=172.16.1.1 --netmask={{primary_netmask}} --activate
-network  --hostname=kvmhost.internal.tjon.net
+network  --hostname=kvmhost.{{domain_name}} --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.3 --nameserver={{dns_servers|join(",")}} --netmask={{primary_netmask}} --activate
 
 # Root password
 rootpw --iscrypted $6$Mpqrkg2HFvlND9bA$MWkZ03ZuyJ5m97r03QPRMVgMtPCJBj7bHwpB/s07DHAeEjnd8LbVSRTkHPv3m7FFzYWXSFeY3sjFv3zA9A6cx0

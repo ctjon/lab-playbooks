@@ -85,6 +85,7 @@
         - ca-bundle
         - ddns-scripts_no-ip_com
         - luci-app-ddns
+#      notify: restart luci
 
     - name: install /etc/config/ddns template
       ansible.builtin.template:
@@ -94,6 +95,15 @@
         group: root
         mode: 0644
       notify: restart ddns
+
+    - name: install /etc/config/firewall template
+      ansible.builtin.template:
+        src: etc.config.firewall.j2
+        dest: /etc/config/firewall
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart firewall
 
     - name: install /etc/hosts file
       ansible.builtin.copy:
@@ -109,11 +119,13 @@
       ansible.builtin.service:
         name: system
         state: restarted
+        enabled: yes
 
     - name: restart network
       ansible.builtin.service:
         name: network
         state: reloaded
+        enabled: yes
 
     - name: restart wireless
       ansible.builtin.command: wifi reload
@@ -122,15 +134,23 @@
       ansible.builtin.service:
         name: dnsmasq
         state: restarted
+        enabled: yes
 
     - name: restart dhcp # provided by dnsmasq
       ansible.builtin.service:
         name: dnsmasq
         state: restarted
+        enabled: yes
 
     - name: restart ddns
       ansible.builtin.service:
         name: ddns
+        state: restarted
+        enabled: yes
+
+    - name: restart firewall
+      ansible.builtin.service:
+        name: firewall
         state: restarted
         enabled: yes
 

@@ -24,8 +24,8 @@
     - role: http-repo
       tags: ['http-repo']
 
-    - role: systemd-resolved
-      tags: ['systemd-resolved']
+    - role: resolver
+      tags: ['resolver']
 
 #    - role: config-local-repos
 #      tags: ['config-local-repos']
@@ -78,8 +78,8 @@
 #    - role: openvpn-server
 #      tags: ['openvpn-server']
 
-#    - role: fail2ban
-#      tags: ['fail2ban']
+    - role: fail2ban
+      tags: ['fail2ban']
 
     - role: rsyslog-server
       tags: ['rsyslog-server']
