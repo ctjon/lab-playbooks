@@ -294,6 +294,50 @@
         - "{{vmware_versions}}"
   when: ansible_hostname == "server0"
 
+################################################################################
+# windows images Files copies                                                  #
+################################################################################
+- name: setup windows network boot on server0
+  block:
+    - name: create {{tftpbootdir}}/pxelinux.cfg/Linux directory
+      ansible.builtin.file:
+        path: "{{tftpbootdir}}/pxelinux.cfg/Windows"
+        owner: root
+        group: root
+        mode: 0755
+        state: directory
+
+    - name: deploy {{tftpbootdir}}/pxelinux.cfg/Windows Files
+      ansible.builtin.template:
+        src: "{{item}}.{{ansible_hostname}}.j2"
+        dest: "{{tftpbootdir}}/pxelinux.cfg/Windows/{{item}}"
+        owner: root
+        group: root
+        mode: 0644
+      with_items:
+        - "{{pxewindows_files}}"
+
+    - name: create windows {{tftpbootdir}}/images/windows/10/amd64 directory
+      ansible.builtin.file:
+        path: "{{tftpbootdir}}/images/windows/10/amd64"
+        owner: root
+        group: root
+        mode: 0755
+        recurse: yes
+
+    - name: copy WinPE_amd64.iso to {{tftpbootdir}}/images/windows/10/amd64
+      ansible.builtin.copy:
+        src: "{{archivedir}}/Windows/Microsoft/WinPE/WinPE_amd64.iso"
+        dest: "{{tftpbootdir}}/images/windows/10/amd64"
+        owner: root
+        group: root
+        remote_src: yes
+      delegate_to: "{{ inventory_hostname }}"
+  when: ansible_hostname == "server0"
+
+################################################################################
+# Restore selinux context for newly copied files                               #
+################################################################################
 - name: restore selinux context for {{tftpbootdir}}
   ansible.builtin.command: "restorecon -RFv {{tftpbootdir}}"
 

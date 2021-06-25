@@ -1,8 +1,8 @@
 # {{ ansible_managed }}
 
-label Windows 10 Trial
-  menu label Windows
-  kernel pxeboot.n12
-  initrd windows/winpe_amd64.iso
+label Windows 10
+  menu label Windows 10
+  kernel memdisk
+  initrd images/windows/10/amd64/WinPE_amd64.iso
   append iso raw
 

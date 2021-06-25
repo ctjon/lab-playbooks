@@ -186,6 +186,8 @@ pxelinux_files:
     - OpenBSD
     - vmware
     - ubuntu
+
+pxewindows_files:
     - windows
 
 ################################################################################
@@ -348,5 +350,11 @@ vmware_versions:
 
 vmware_architectures:
   - x86_64
+
+windows_versions:
+  - 10
+
+windows_architectures:
+  - amd64
 
 centos8_gpg_key_url: /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial

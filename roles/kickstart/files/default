@@ -31,7 +31,7 @@ LABEL OpenBSD
 LABEL Windows
         MENU LABEL Windows
         KERNEL menu.c32
-        APPEND pxelinux.cfg/Windows
+        APPEND pxelinux.cfg/Windows/windows
 
 LABEL FreeDOS
 	MENU LABEL FreeDOS
