@@ -186,6 +186,7 @@ pxelinux_files:
     - OpenBSD
     - vmware
     - ubuntu
+    - windows
 
 ################################################################################
 # REPO Configuration Parameters - FROM HERE TO EOF                             #
