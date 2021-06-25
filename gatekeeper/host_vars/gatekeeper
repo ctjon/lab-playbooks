@@ -33,11 +33,3 @@ primary_bridge: br0
 ################################################################################
 openvpn_udp_server_subnet: 172.16.5.0/24
 openvpn_tcp_server_subnet: 172.16.6.0/24
-
-################################################################################
-# SSH Configuration Parameters                                                 #
-################################################################################
-#ssh_root_login_permited: "yes"
-#allowed_ssh_users: chris root
-ssh_root_login_permited: "no"
-allowed_ssh_users: chris

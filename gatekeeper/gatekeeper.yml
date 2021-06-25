@@ -15,16 +15,23 @@
   become: yes
 
   tasks:
-    - name: include secrets.yml
-      include_vars:
+    - name: include vars/main.yml
+      ansible.builtin.include_vars:
+        file: vars/main.yml
+      tags: always
+
+    - name: include vars/secrets.yml
+      ansible.builtin.include_vars:
         file: vars/secrets.yml
+      tags: always
 
     - name: configure luci for SSL
       community.general.opkg:
-        name: luci-ssl
+        name: luci-ssl-openssl
         state: present
         update_cache: yes
       notify: restart luci
+      tags: luci_ssl packages
 
     - name: install /etc/config/system template
       ansible.builtin.template:
@@ -34,6 +41,7 @@
         group: root
         mode: 0644
       notify: restart system
+      tags: system
 
     - name: install /etc/config/network template
       ansible.builtin.template:
@@ -43,8 +51,9 @@
         group: root
         mode: 0644
       notify: restart network
+      tags: network
 
-    - name: install dnsmasq.conf file
+    - name: install dnsmasq.conf template
       ansible.builtin.template:
         src: etc.dnsmasq.conf.j2
         dest: /etc/dnsmasq.conf
@@ -52,58 +61,7 @@
         group: dnsmasq
         mode: 0644
       notify: restart dnsmasq
-
-    - name: modify dhcp config
-      ansible.builtin.template:
-        src: etc.config.dhcp.j2
-        dest: /etc/config/dhcp
-        owner: root
-        group: root
-        mode: 0644
-      notify: restart dhcp
-
-    - name: install /etc/config/wireless template
-      ansible.builtin.template:
-        src: etc.config.wireless.j2
-        dest: /etc/config/wireless
-        owner: root
-        group: root
-        mode: 0644
-      notify: restart wireless
-
-    - name: install ddns packages for {{service_name}}
-      community.general.opkg:
-        name: "{{ item }}"
-        state: present
-        update_cache: yes
-      notify: restart ddns
-      with_items:
-        - ddns-scripts
-        - wget
-        - ca-certificates
-        - curl
-        - ca-bundle
-        - ddns-scripts_no-ip_com
-        - luci-app-ddns
-#      notify: restart luci
-
-    - name: install /etc/config/ddns template
-      ansible.builtin.template:
-        src: etc.config.ddns.j2
-        dest: /etc/config/ddns
-        owner: root
-        group: root
-        mode: 0644
-      notify: restart ddns
-
-    - name: install /etc/config/firewall template
-      ansible.builtin.template:
-        src: etc.config.firewall.j2
-        dest: /etc/config/firewall
-        owner: root
-        group: root
-        mode: 0644
-      notify: restart firewall
+      tags: dnsmasq
 
     - name: install /etc/hosts file
       ansible.builtin.copy:
@@ -113,6 +71,137 @@
         group: root
         mode: 0644
       notify: restart dnsmasq
+      tags: dnsmasq
+
+    - name: modify dhcp config
+      ansible.builtin.template:
+        src: etc.config.dhcp.j2
+        dest: /etc/config/dhcp
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart dhcp
+      tags: dhcp
+
+    - name: install /etc/config/wireless template
+      ansible.builtin.template:
+        src: etc.config.wireless.j2
+        dest: /etc/config/wireless
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart wireless
+      tags: wireless
+
+    - name: install ddns packages for {{ddns_service_name}}
+      community.general.opkg:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - ddns-scripts
+        - wget
+        - ca-certificates
+        - curl
+        - ca-bundle
+        - ddns-scripts_no-ip_com
+        - luci-app-ddns
+      notify: restart luci
+      tags: ddns packages
+
+    - name: install /etc/config/ddns template
+      ansible.builtin.template:
+        src: etc.config.ddns.j2
+        dest: /etc/config/ddns
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart ddns
+      tags: ddns
+
+    - name: install squid packages
+      community.general.opkg:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - squid
+        - squid-mod-cachemgr
+        - luci-app-squid
+        - openssl-util
+        - luci-ssl-openssl
+      notify: restart luci
+      tags: squid packages
+
+    - name: configure squid mountpoint
+      ansible.builtin.blockinfile:
+        path: /etc/fstab
+        block: |
+          config mount
+              option enabled '1'
+              option device '/dev/sda1'
+              option fstype 'ext4'
+              option enabled_fsck '1'
+              option target '{{squid_mountpoint}}'
+      tags: squid
+
+    - name: mount squid mountpoint
+      ansible.posix.mount:
+        path: "{{squid_mountpoint}}"
+        src: /dev/sda1
+        fstype: ext4
+        opts: noatime
+        state: present
+      tags: squid
+
+    - name: install /etc/config/squid template
+      ansible.builtin.template:
+        src: etc.config.squid.j2
+        dest: /etc/config/squid
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart squid
+      tags: squid
+
+    - name: install /etc/squid/squid.conf template
+      ansible.builtin.template:
+        src: etc.squid.squid.conf.j2
+        dest: /etc/squid/squid.conf
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart squid
+      tags: squid
+
+    - name: fix chowns in /etc/init.d/squid - nobody:nogroup -> squid:squid
+      ansible.builtin.replace:
+        path: /etc/init.d/squid
+        regexp: 'nobody:nogroup'
+        replace: 'squid:squid'
+        backup: yes
+      tags: squid
+      notify: restart squid
+
+    - name: Create and assign correct permissions to "{{squid_mountpoint}}"
+      ansible.builtin.file:
+        path: "{{squid_mountpoint}}"
+        owner: squid
+        group: squid
+        state: directory
+        mode: '0755'
+      tags: squid
+      notify: restart squid
+
+    - name: install /etc/config/firewall template
+      ansible.builtin.template:
+        src: etc.config.firewall.j2
+        dest: /etc/config/firewall
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart firewall
+      tags: squid firewall
 
   handlers:
     - name: restart system
@@ -148,6 +237,12 @@
         state: restarted
         enabled: yes
 
+    - name: restart squid
+      ansible.builtin.service:
+        name: squid
+        state: restarted
+        enabled: yes
+
     - name: restart firewall
       ansible.builtin.service:
         name: firewall
@@ -155,6 +250,10 @@
         enabled: yes
 
     - name: restart luci
-      ansible.builtin.command: reboot -f
+      ansible.builtin.service:
+        name: uhttpd
+        state: restarted
+        enabled: yes
+      #ansible.builtin.command: reboot -f
 ...
 

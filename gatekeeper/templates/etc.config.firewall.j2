@@ -164,3 +164,15 @@ config redirect
 	option	proto		'tcp'
 	option	target		'DNAT'
 
+config redirect
+        option name 'Enable Transparent Squid'
+        option enabled '1'
+        option proto 'tcp'
+        option target 'DNAT'
+        option src 'lan'
+        option src_ip '!{{primary_ipaddr}}'
+       	option src_dip '!{{primary_ipaddr}}'
+        option src_dport '80'
+        option dest 'lan'
+        option dest_ip '{{primary_ipaddr}}'
+        option dest_port '3128'
