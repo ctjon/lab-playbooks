@@ -33,7 +33,6 @@ primary_netmask: 255.255.255.0
 primary_gateway: 172.16.1.1
 search_domains: 
  - internal.tjon.net
- - tjon.net
 dns_servers: 
  - 172.16.1.1
 primary_interface: eth0
@@ -45,6 +44,7 @@ primary_bridge: br0
 linux_install_server_url: "http://install.internal.tjon.net/Linux"
 linux_install_server_hostname: server0
 config_files_url: "http://install.internal.tjon.net/ConfigFiles"
+doc_files_url: "http://install.internal.tjon.net/Documentation"
 
 ################################################################################
 # Time Server Configuration Parameters                                         #
@@ -57,6 +57,7 @@ time_client_servers:
 ################################################################################
 tftpbootdir: /var/lib/tftpboot
 installdir: /export/install
+doc_files_dir: /export/install/Documentation
 archivedir: /export/archive
 
 ################################################################################
@@ -119,6 +120,20 @@ samba_shares:
   - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
   - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
   - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
+
+################################################################################
+# Netatalk Configuration Parameters                                            #
+################################################################################
+tm_users:
+  - chris
+  - kelly
+
+max_tm_bkup_sz: 500000  # in mb
+tm_storage_vg: datavg
+tm_storage_lv: tmlv
+tm_storage_lv_size: 1t
+tm_storage_fs_type: ext4
+tm_storage_path: /export/time_machine
 
 ################################################################################
 # KVM Virtualization Configuration Parameters                                  #

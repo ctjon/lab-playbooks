@@ -1,0 +1,6 @@
+{{ ansible_managed }}
+
+# For Windows 10 Enterprise 90 Day Trial Installation
+net use Z:\\server0.internal.tjon.net\Install\Windows\10\amd64\Trial 
+Z:
+setup.exe

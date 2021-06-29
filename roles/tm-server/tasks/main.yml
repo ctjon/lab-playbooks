@@ -1,0 +1,108 @@
+---
+- name: install netatalk packages
+  ansible.builtin.package:
+    name: netatalk, avahi
+    state: latest
+  notify: restart atalk
+
+- name: create {{tm_group}} group
+  ansible.builtin.group:
+    name: "{{ tm_group }}"
+    state: present
+
+- name: add tm_users to {{tm_group }}
+  ansible.builtin.user:
+    name: "{{ item }}"
+    shell: /bin/bash
+    groups: "{{ tm_group }}"
+    append: yes
+  with_items:
+    - "{{ tm_users }}"
+
+- name: create {{ tm_storage_lv }}
+  ansible.builtin.lvol:
+    vg: "{{ tm_storage_vg }}"
+    lv: "{{ tm_storage_lv }}"
+    size: "{{ tm_storage_lv_size }}"
+    shrink: no
+    state: present
+    resizefs: yes
+
+- name: Create a ext4 filesystem on {{ tm_storage_lv }}
+  ansible.builtin.filesystem:
+    fstype: "{{ tm_storage_fs_type }}"
+    dev: "/dev/{{tm_storage_vg}}/{{tm_storage_lv}}"
+    force: no
+    resizefs: yes
+
+- name: mount {{tm_storage_path}}
+  ansible.builtin.mount:
+    path: "{{ tm_storage_path }}"
+    src: "/dev/{{tm_storage_vg}}/{{tm_storage_lv}}"
+    fstype: "{{ tm_storage_fs_type }}"
+    opts: defaults
+    state: mounted
+
+- name: set reserve_block_percentage on {{tm_storage_path}} to 1%
+  ansible.builtin.command: tune2fs -m {{reserve_block_percentage}} /dev/{{tm_storage_vg}}/{{tm_storage_lv}}
+  tags: tune2fs
+
+
+- name: set permissions on {{ tm_storage_path }}
+  ansible.builtin.file:
+    path: "{{ tm_storage_path }}"
+    state: directory
+    owner: root
+    group: "{{ tm_group }}"
+    mode: '0770'
+
+- name: create time machine directories in {{ tm_storage_path }}
+  ansible.builtin.file:
+    path: "{{ tm_storage_path }}/{{item}}"
+    state: directory
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: '0700'
+  with_items:
+    - "{{ tm_users }}"
+
+- name: deploy aftp.conf
+  ansible.builtin.template:
+    src: afp.conf.j2
+    dest: /etc/netatalk/afp.conf
+    owner: bin
+    group: wheel
+    mode: '0644'
+  notify: restart atalk
+
+- name: create {{doc_files_dir}}
+  ansible.builtin.file:
+    path: "{{ doc_files_dir }}"
+    state: directory
+    owner: "{{ repo_owner }}"
+    group: "{{ repo_owner }}"
+    mode: '0755'
+
+- name: deploy unsupp_tm_cmd.txt to {{doc_files_url}}
+  ansible.builtin.copy:
+    src: unsupp_tm_cmd.txt
+    dest: "{{ doc_files_dir}}/unsupp_tm_cmd.txt"
+    owner: "{{ repo_owner }}"
+    group: "{{ repo_owner }}"
+    mode: '0644'
+
+- ansible.posix.firewalld:
+    zone: "{{ trusted_firewall_zone }}"
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+  with_items:
+    - "{{ tm_ports }}"
+
+- ansible.posix.firewalld:
+    zone: "{{ trusted_firewall_zone }}"
+    service: "{{ item }}"
+    permanent: yes
+    state: enabled
+  with_items:
+    - "{{ tm_services }}"

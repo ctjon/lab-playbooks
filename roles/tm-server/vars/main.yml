@@ -1,0 +1,15 @@
+---
+tm_group: "tm_users"
+tm_group_id: 999
+
+tm_ports:
+  - 548/tcp 
+  - 548/udp 
+  - 49152/tcp 
+  - 49152/tcp 
+  - 52883/tcp 
+  - 52883/udp 
+
+tm_services:
+  - mdns
+

@@ -72,6 +72,9 @@
     - role: plex-server
       tags: ['plex-server']
 
+    - role: tm-server
+      tags: ['tm-server']
+
     - role: apcupsd
       tags: ['apcupsd']
 
