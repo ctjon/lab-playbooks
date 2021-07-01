@@ -119,80 +119,6 @@
       notify: restart ddns
       tags: ddns
 
-    - name: install squid packages
-      community.general.opkg:
-        name: "{{ item }}"
-        state: present
-        update_cache: yes
-      with_items:
-        - squid
-        - squid-mod-cachemgr
-        - luci-app-squid
-        - openssl-util
-        - luci-ssl-openssl
-      notify: restart luci
-      tags: squid packages
-
-    - name: configure squid mountpoint
-      ansible.builtin.blockinfile:
-        path: /etc/fstab
-        block: |
-          config mount
-              option enabled '1'
-              option device '/dev/sda1'
-              option fstype 'ext4'
-              option enabled_fsck '1'
-              option target '{{squid_mountpoint}}'
-      tags: squid
-
-    - name: mount squid mountpoint
-      ansible.posix.mount:
-        path: "{{squid_mountpoint}}"
-        src: /dev/sda1
-        fstype: ext4
-        opts: noatime
-        state: present
-      tags: squid
-
-    - name: install /etc/config/squid template
-      ansible.builtin.template:
-        src: etc.config.squid.j2
-        dest: /etc/config/squid
-        owner: root
-        group: root
-        mode: 0644
-      notify: restart squid
-      tags: squid
-
-    - name: install /etc/squid/squid.conf template
-      ansible.builtin.template:
-        src: etc.squid.squid.conf.j2
-        dest: /etc/squid/squid.conf
-        owner: root
-        group: root
-        mode: 0644
-      notify: restart squid
-      tags: squid
-
-    - name: fix chowns in /etc/init.d/squid - nobody:nogroup -> squid:squid
-      ansible.builtin.replace:
-        path: /etc/init.d/squid
-        regexp: 'nobody:nogroup'
-        replace: 'squid:squid'
-        backup: yes
-      tags: squid
-      notify: restart squid
-
-    - name: Create and assign correct permissions to "{{squid_mountpoint}}"
-      ansible.builtin.file:
-        path: "{{squid_mountpoint}}"
-        owner: squid
-        group: squid
-        state: directory
-        mode: '0755'
-      tags: squid
-      notify: restart squid
-
     - name: install /etc/config/firewall template
       ansible.builtin.template:
         src: etc.config.firewall.j2
@@ -201,7 +127,7 @@
         group: root
         mode: 0644
       notify: restart firewall
-      tags: squid firewall
+      tags: firewall
 
   handlers:
     - name: restart system
@@ -234,12 +160,6 @@
     - name: restart ddns
       ansible.builtin.service:
         name: ddns
-        state: restarted
-        enabled: yes
-
-    - name: restart squid
-      ansible.builtin.service:
-        name: squid
         state: restarted
         enabled: yes
 
