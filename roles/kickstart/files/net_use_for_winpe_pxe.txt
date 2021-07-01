@@ -4,3 +4,8 @@
 net use Z:\\server0.internal.tjon.net\Install\Windows\10\amd64\Trial 
 Z:
 setup.exe
+
+# For Windows 10 Requiring Your License Key
+net use Z:\\server0.internal.tjon.net\Install\Windows\10\amd64\Licensed 
+Z:
+setup.exe
