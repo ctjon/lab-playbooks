@@ -1,0 +1,8 @@
+When backing up to a samba/SMB share you must manually mount the share locally
+ to restore.  This implies you have booted off of recovery media.
+
+# mkdir -p /Volumes/TimeMachine
+# mount -t smbfs //<user>@server0/TimeMachine /Volumes/TimeMachine
+  - this will prompt you for <user>'s password
+
+Then restore from the mounted SMB share as any other Time Machine restore

@@ -1,10 +1,16 @@
 ---
 - name: restart atalk
   ansible.builtin.service:
-    name: "{{ item }}"
+    name: netatalk
     state: restarted
     enabled: yes
-  with_items:
-    - netatalk
-    - avahi-daemon
+
+- name: restart avahi-daemon
+  ansible.builtin.service:
+    name: avahi-daemon
+    state: restarted
+    enabled: yes
+
+- name: reconfig authselect
+  ansible.builtin.command: /usr/bin/authselect apply-changes
 

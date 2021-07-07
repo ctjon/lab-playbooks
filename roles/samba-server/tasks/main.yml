@@ -6,7 +6,7 @@
 
 - name: install samba packages
   ansible.builtin.package:
-    name: samba
+    name: samba, samba-winbind
     state: latest
 
 - name: set samba SELinux samba_export_all_ro=1 and persistent across reboots

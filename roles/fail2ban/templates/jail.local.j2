@@ -8,7 +8,7 @@ enabled = {{ssh_enabled}}
 
 [openvpn]
 enabled  = true
-port     = {{openvpn_server_udp_port}}
+port     = {{openvpn_udp_port}}
 protocol = udp
 filter   = openvpn
 logpath  = /var/log/openvpn.log
@@ -16,7 +16,7 @@ maxretry = 5
 
 [openvpn]
 enabled  = true
-port     = {{openvpn_server_tcp_port}}
+port     = {{openvpn_tcp_port}}
 protocol = tcp
 filter   = openvpn
 logpath  = /var/log/openvpn.log

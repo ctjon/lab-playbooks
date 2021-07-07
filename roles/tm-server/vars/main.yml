@@ -5,11 +5,10 @@ tm_group_id: 999
 tm_ports:
   - 548/tcp 
   - 548/udp 
+  - 5353/tcp
+  - 5353/udp
   - 49152/tcp 
-  - 49152/tcp 
+  - 49152/udp 
   - 52883/tcp 
   - 52883/udp 
-
-tm_services:
-  - mdns
 

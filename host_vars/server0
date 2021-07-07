@@ -120,11 +120,16 @@ samba_shares:
   - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
   - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
   - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
+#  - {path: /export/time_machine, name: TimeMachine, public: 'no', guest_ok: 'no', browseable: 'yes', writeable: 'yes', printable: 'no', create mask '0600', directory mask '0700', spotlight 'yes', vfs objects 'catia fruit streams_xattr' fruit:aapl 'yes', fruit:time machine 'yes'}
 
 ################################################################################
 # Netatalk Configuration Parameters                                            #
 ################################################################################
 tm_users:
+  - chris
+  - kelly
+
+atalk_users: 
   - chris
   - kelly
 

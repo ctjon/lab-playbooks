@@ -1,7 +1,10 @@
 ---
+# 
+# In testing, this doesn't quite get the job done.  Still debugging as of 7/7/21
+#
 - name: install netatalk packages
   ansible.builtin.package:
-    name: netatalk, avahi
+    name: netatalk, avahi, nss-mdns
     state: latest
   notify: restart atalk
 
@@ -66,7 +69,7 @@
   with_items:
     - "{{ tm_users }}"
 
-- name: deploy aftp.conf
+- name: deploy afp.conf
   ansible.builtin.template:
     src: afp.conf.j2
     dest: /etc/netatalk/afp.conf
@@ -74,6 +77,42 @@
     group: wheel
     mode: '0644'
   notify: restart atalk
+
+- name: deploy afpd.conf
+  ansible.builtin.template:
+    src: afpd.conf.j2
+    dest: /etc/netatalk/afpd.conf
+    owner: bin
+    group: wheel
+    mode: '0644'
+  notify: restart atalk
+
+- name: deploy AppleVolumes.default
+  ansible.builtin.template:
+    src: AppleVolumes.default.j2
+    dest: /etc/netatalk/AppleVolumes.default
+    owner: bin
+    group: wheel
+    mode: '0644'
+  notify: restart atalk
+
+- name: deploy avahi-daemon.conf
+  ansible.builtin.template:
+    src: avahi-daemon.conf.j2
+    dest: /etc/avahi/avahi-daemon.conf
+    owner: bin
+    group: wheel
+    mode: '0644'
+  notify: restart avahi-daemon
+
+- name: deploy afp.service
+  ansible.builtin.template:
+    src: afp.service.j2
+    dest: /etc/avahi/services/afp.service
+    owner: bin
+    group: wheel
+    mode: '0644'
+  notify: restart avahi-daemon
 
 - name: create {{doc_files_dir}}
   ansible.builtin.file:
@@ -99,10 +138,12 @@
   with_items:
     - "{{ tm_ports }}"
 
-- ansible.posix.firewalld:
-    zone: "{{ trusted_firewall_zone }}"
-    service: "{{ item }}"
-    permanent: yes
-    state: enabled
-  with_items:
-    - "{{ tm_services }}"
+- name: configure /etc/resolv.conf for MDNS
+  ansible.builtin.lineinfile:
+    path: /etc/authselect/user-nsswitch.conf
+    regexp: 'hosts:'
+    line: 'hosts:      files myhostname resolve [!UNAVAIL=return] mdns4_minimal dns mdns mdns4'
+    owner: root
+    group: root
+    mode: '0644'
+  notify: reconfig authselect
