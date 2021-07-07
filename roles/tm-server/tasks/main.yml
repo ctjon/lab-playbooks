@@ -1,7 +1,4 @@
 ---
-# 
-# In testing, this doesn't quite get the job done.  Still debugging as of 7/7/21
-#
 - name: install netatalk packages
   ansible.builtin.package:
     name: netatalk, avahi, nss-mdns
@@ -58,16 +55,6 @@
     owner: root
     group: "{{ tm_group }}"
     mode: '0770'
-
-- name: create time machine directories in {{ tm_storage_path }}
-  ansible.builtin.file:
-    path: "{{ tm_storage_path }}/{{item}}"
-    state: directory
-    owner: "{{ item }}"
-    group: "{{ item }}"
-    mode: '0700'
-  with_items:
-    - "{{ tm_users }}"
 
 - name: deploy afp.conf
   ansible.builtin.template:
