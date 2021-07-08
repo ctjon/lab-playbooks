@@ -68,12 +68,4 @@
     state: enabled
     permanent: yes
 
-- name: deploy mount_tm_2restore_smb.txt to {{doc_files_url}}
-  ansible.builtin.copy:
-    src: mount_tm_2restore_smb.txt
-    dest: "{{ doc_files_dir}}/mount_tm_2restore_smb.txt"
-    owner: "{{ repo_owner }}"
-    group: "{{ repo_owner }}"
-    mode: '0644'
-
 

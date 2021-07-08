@@ -1,7 +1,7 @@
 # {{ ansible_managed }}
 [Global]
 ; Global Server Settings
-hostname = {{ansible_hostname}}
+hostname = {{ansible_hostname}}_afp
 afp interfaces = {{primary_bridge}}
 log file = /var/log/afpd.log
 mimic model = Xserve

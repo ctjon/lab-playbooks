@@ -126,14 +126,6 @@
     group: "{{ repo_owner }}"
     mode: '0644'
 
-- name: deploy mount_tm_2restore_afp.txt to {{doc_files_url}}
-  ansible.builtin.copy:
-    src: unsupp_tm_cmd.txt
-    dest: "{{ doc_files_dir}}/mount_tm_2restore_afp.txt"
-    owner: "{{ repo_owner }}"
-    group: "{{ repo_owner }}"
-    mode: '0644'
-
 - ansible.posix.firewalld:
     zone: "{{ trusted_firewall_zone }}"
     port: "{{ item }}"
