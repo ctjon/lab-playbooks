@@ -16,17 +16,5 @@ valid_users = {{ atalk_users|join(" ") }}
 time machine = yes
 path=/export/time_machine
 valid_users = {{tm_users|join(" ") }}
-
-#{% for tmuser in tm_users %}
-#[{{tmuser}}-TM]
-## is this machine a time machine?
-#time machine = yes
-## directory for time machine data on server
-#path = {{ tm_storage_path }}/{{tmuser}}
-## the max size of the data folder (in Mb)
-#vol size limit = {{ max_tm_bkup_sz }}
-## users with access to time machine
-#valid users = {{ tmuser }}
-#
-#{% endfor %}
+vol size limit = {{ max_tm_bkup_sz }}
 

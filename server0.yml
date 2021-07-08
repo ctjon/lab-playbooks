@@ -81,8 +81,8 @@
 #    - role: openvpn-server
 #      tags: ['openvpn-server']
 
-    - role: fail2ban
-      tags: ['fail2ban']
+#    - role: fail2ban
+#      tags: ['fail2ban']
 
     - role: rsyslog-server
       tags: ['rsyslog-server']
@@ -94,6 +94,7 @@
       tags: ['insights']
 
 ## DON'T AUTO REBOOT IF RUNNING KVM VMs
+## At least not until the role is modified to accomodate it
 #    - role: reboot-if-required
 #      tags: ['reboot-if-required']
 
