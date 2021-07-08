@@ -7,24 +7,18 @@ log file = /var/log/afpd.log
 mimic model = Xserve
 zeroconf = yes
 
-[Homes]
+[Homes_afp]
 basedir regex = /home
 
-[Archive]
+[Archive_afp]
 time machine = no
-path=/export/archive
+path={{archivedir}}
 valid_users = {{ atalk_users|join(" ") }}
 
-#[TM-Backup]
-#time machine = yes
-#path=/export/time_machine
-#valid_users = {{tm_users|join(" ") }}
-#vol size limit = 5000000
-
 {% for item in tm_users %}
-[{{item.tm_username}}-TM]
+[{{item.tm_username}}-TM_afp]
 time machine = yes
-path = /export/time_machine/{{item.tm_username}}
+path = {{tm_storage_path}}/{{item.tm_username}}
 valid_users = {{item.tm_username}}
 vol size limit = {{ item.tm_vol_size_mb }}
 

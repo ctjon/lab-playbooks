@@ -16,7 +16,7 @@
    <port>9</port>
    <txt-record>sys=waMa=0,adVF=0x100,adVU=caf82045-3147-48cf-ab29-1df6af04c38c</txt-record>
 {% for tm_user in tm_users %}
-   <txt-record>dk0=adVN={{tm_user.tm_username}}-TM,adVF=0x81</txt-record>
+   <txt-record>dk0=adVN={{tm_user.tm_username}}-TM_afp,adVF=0x81</txt-record>
 {% endfor %}
   </service>
 </service-group>

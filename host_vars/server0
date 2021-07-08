@@ -120,18 +120,21 @@ samba_shares:
   - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
   - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
   - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
-#  - {path: /export/time_machine, name: TimeMachine, public: 'no', guest_ok: 'no', browseable: 'yes', writeable: 'yes', printable: 'no', create mask '0600', directory mask '0700', spotlight 'yes', vfs objects 'catia fruit streams_xattr' fruit:aapl 'yes', fruit:time machine 'yes'}
+
 
 ################################################################################
 # Netatalk Configuration Parameters                                            #
 ################################################################################
-tm_users:
-  - {tm_username: 'chris', tm_vol_size_mb: '501000'}
-  - {tm_username: 'kelly', tm_vol_size_mb: '500000'}
-
 atalk_users:
   - chris
   - kelly
+
+################################################################################
+# Time Machine Specific Configuration Paramters (AFP & SMB)                    #
+################################################################################
+tm_users:
+  - {tm_username: 'chris', tm_vol_size_mb: '501000'}
+  - {tm_username: 'kelly', tm_vol_size_mb: '500000'}
 
 tm_storage_vg: datavg
 tm_storage_lv: tmlv
