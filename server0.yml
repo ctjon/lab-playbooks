@@ -72,8 +72,8 @@
     - role: plex-server
       tags: ['plex-server']
 
-    - role: tm-server
-      tags: ['tm-server']
+    - role: appletalk-server
+      tags: ['appletalk-server']
 
     - role: apcupsd
       tags: ['apcupsd']
