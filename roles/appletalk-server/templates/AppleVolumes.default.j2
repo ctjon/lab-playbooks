@@ -1,2 +1,4 @@
 # {{ ansible_managed }}
-{{ tm_storage_path }} TimeMachine allow:{{tm_users|join(" ") }} options:usedots,upriv,tm dperm:0770 fperm:0660 cnidscheme:dbd volsizelimit:500000
+{% for item in tm_users %} 
+{{ tm_storage_path }}/{{item.tm_username}} {{item.tm_username}}-TM allow: {{item.tm_username}} options:usedots,upriv,tm dperm:0770 fperm:0660 cnidscheme:dbd volsizelimit:500000
+{% endfor %} 

@@ -15,9 +15,17 @@ time machine = no
 path=/export/archive
 valid_users = {{ atalk_users|join(" ") }}
 
-[TM-Backup]
-time machine = yes
-path=/export/time_machine
-valid_users = {{tm_users|join(" ") }}
-vol size limit = {{ max_tm_bkup_sz }}
+#[TM-Backup]
+#time machine = yes
+#path=/export/time_machine
+#valid_users = {{tm_users|join(" ") }}
+#vol size limit = 5000000
 
+{% for item in tm_users %}
+[{{item.tm_username}}-TM]
+time machine = yes
+path = /export/time_machine/{{item.tm_username}}
+valid_users = {{item.tm_username}}
+vol size limit = {{ item.tm_vol_size_mb }}
+
+{% endfor %}

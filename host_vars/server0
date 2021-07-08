@@ -126,14 +126,13 @@ samba_shares:
 # Netatalk Configuration Parameters                                            #
 ################################################################################
 tm_users:
+  - {tm_username: 'chris', tm_vol_size_mb: '501000'}
+  - {tm_username: 'kelly', tm_vol_size_mb: '500000'}
+
+atalk_users:
   - chris
   - kelly
 
-atalk_users: 
-  - chris
-  - kelly
-
-max_tm_bkup_sz: 500000  # in mb
 tm_storage_vg: datavg
 tm_storage_lv: tmlv
 tm_storage_lv_size: 1t

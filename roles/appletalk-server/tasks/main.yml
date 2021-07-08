@@ -10,10 +10,9 @@
     name: "{{ tm_group }}"
     state: present
 
-- name: add tm_users to {{tm_group }}
+- name: add Time Machine users to {{tm_group }}
   ansible.builtin.user:
-    name: "{{ item }}"
-    shell: /bin/bash
+    name: "{{ item.tm_username }}"
     groups: "{{ tm_group }}"
     append: yes
   with_items:
@@ -55,6 +54,16 @@
     owner: root
     group: "{{ tm_group }}"
     mode: '0770'
+
+- name: create {{tm_storage_path}}/user directories
+  ansible.builtin.file:
+    path: '"{{tm_storage_path}}"/"{{item.tm_username }}"'
+    state: directory
+    owner: "{{ item.tm_username }}"
+    group: "{{ item.tm_username }}"
+    mode: '0700'
+  with_items:
+    - "{{ tm_users }}"
 
 - name: deploy afp.conf
   ansible.builtin.template:
