@@ -1,22 +1,22 @@
 # {{ ansible_managed }}
 [Global]
 ; Global Server Settings
-hostname = {{ansible_hostname}}_afp
+hostname = {{ansible_hostname}}
 afp interfaces = {{primary_bridge}}
 log file = /var/log/afpd.log
 mimic model = Xserve
 zeroconf = yes
 
-[Homes_afp]
+[Homes]
 basedir regex = /home
 
-[Archive_afp]
+[Archive]
 time machine = no
 path={{archivedir}}
 valid_users = {{ atalk_users|join(" ") }}
 
 {% for item in tm_users %}
-[{{item.tm_username}}-TM_afp]
+[{{item.tm_username}}-TM]
 time machine = yes
 path = {{tm_storage_path}}/{{item.tm_username}}
 valid_users = {{item.tm_username}}
