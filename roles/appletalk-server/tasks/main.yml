@@ -57,7 +57,7 @@
 
 - name: create {{tm_storage_path}}/user directories
   ansible.builtin.file:
-    path: '"{{tm_storage_path}}"/"{{item.tm_username }}"'
+    path: '{{tm_storage_path}}/{{item.tm_username }}'
     state: directory
     owner: "{{ item.tm_username }}"
     group: "{{ item.tm_username }}"
