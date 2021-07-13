@@ -1,5 +1,5 @@
 #
-# host_vars file for server0
+# host_vars file for server0-old
 #
 
 use_ssh_agent: yes
@@ -26,7 +26,7 @@ time_servers:
 ################################################################################
 domain_name: internal.tjon.net
 primary_subnet: 172.16.1.0/24
-primary_ipaddr: 172.16.1.2
+primary_ipaddr: 172.16.1.254
 primary_prefix: 24
 primary_short_net: 172.16.1
 primary_netmask: 255.255.255.0
@@ -64,7 +64,7 @@ archivedir: /export/archive
 # HTTP Server Parameters                                                       #
 ################################################################################
 vhosts: 
-  - {name: server0, document_root: /var/www/html, alias: server0, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
+  - {name: server0-old, document_root: /var/www/html, alias: server0-old, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
   - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/installlv}
   - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: /dev/rootvg/archivelv}
   - {name: plex, document_root: /export/plex, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/plexlv}
@@ -102,7 +102,7 @@ dnsmasq_dhcp_interfaces:
 # Samba Configuration Parameters                                               #
 ################################################################################
 samba_workgroup: TJON
-samba_netbios_name: SERVER0
+samba_netbios_name: SERVER0-OLD
 
 samba_trusted_interfaces:
   - "{{primary_bridge}}"
@@ -117,9 +117,9 @@ samba_trusted_write_users:
   - chris
 
 samba_shares:
-  - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
+#  - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
   - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
-  - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
+#  - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
 
 
 ################################################################################

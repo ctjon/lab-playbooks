@@ -11,8 +11,8 @@ ff02::2 ip6-allrouters
 172.16.1.4	tower.internal.tjon.net tower
 172.16.1.6	itunesserver.internal.tjon.net itunesserver
 172.16.1.7	satellite6.internal.tjon.net satellite6
-172.16.1.8	ex6120-1.internal.tjon.net ex6120-1
-172.16.1.9	ex6120-2.internal.tjon.net ex6120-2
+172.16.1.8	re7000-1.internal.tjon.net re7000-1
+172.16.1.9	re7000-2.internal.tjon.net re7000-2
 172.16.1.11	synchost6.internal.tjon.net synchost6
 172.16.1.12	synchost7.internal.tjon.net synchost7
 172.16.1.14	synchost8.internal.tjon.net synchost8
@@ -23,3 +23,4 @@ ff02::2 ip6-allrouters
 172.16.1.35	test-centos7.internal.tjon.net test-centos7
 172.16.1.38	test-fedora34.internal.tjon.net test-fedora34
 172.16.1.39	test-fedora33.internal.tjon.net test-fedora33
+172.16.1.254	server0-old.internal.tjon.net server0-old
