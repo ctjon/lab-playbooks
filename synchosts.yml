@@ -43,6 +43,11 @@
       tags: ['reboot-if-required']
 
   tasks:
+    - name: install open-vm-tools
+      package:
+        name: open-vm-toos
+        state: latest
+
     - name: Clean up all but the most recent kernel
       command: package-cleanup --oldkernels --count="{{installed_kernel_limit}}" -y
       when:

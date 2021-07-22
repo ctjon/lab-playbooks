@@ -103,11 +103,11 @@
     state: present
     key: "{{ lookup('file', '~chris/.ssh/id_rsa.pub') }}"
 
-- name: configure chris' server0 key for "{{ansible_user}}" 
-  ansible.builtin.authorized_key:
-    user: "{{ansible_user}}"
-    state: present
-    key: "{{ lookup('file', '~chris/.ssh/chris-server0-id_rsa.pub') }}"
+#- name: configure chris' server0 key for "{{ansible_user}}" 
+#  ansible.builtin.authorized_key:
+#    user: "{{ansible_user}}"
+#    state: present
+#    key: "{{ lookup('file', '~chris/.ssh/chris-server0-id_rsa.pub') }}"
 
 - name: lockdown "{{ansible_user}}" authorized_keys
   ansible.builtin.file:

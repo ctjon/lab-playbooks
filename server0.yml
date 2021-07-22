@@ -18,8 +18,8 @@
     - role: selinux
       tags: ['selinux']
 
-    - role: setup-br0
-      tags: ['setup-br0']
+#    - role: setup-br0
+#      tags: ['setup-br0']
 
     - role: http-repo
       tags: ['http-repo']
@@ -33,8 +33,8 @@
     - role: apply-updates
       tags: ['apply-updates']
 
-    - role: time-server
-      tags: ['time-server']
+#    - role: time-server
+#      tags: ['time-server']
 
     - role: tftp-server
       tags: ['tftp-server']
@@ -66,23 +66,23 @@
     - role: setup-epel
       tags: ['setup-epel']
 
-    - role: virt-server
-      tags: ['virt-server']
+#    - role: virt-server
+#      tags: ['virt-server']
 
-    - role: plex-server
-      tags: ['plex-server']
+#    - role: plex-server
+#      tags: ['plex-server']
 
-    - role: appletalk-server
-      tags: ['appletalk-server']
+#    - role: appletalk-server
+#      tags: ['appletalk-server']
 
-    - role: apcupsd
-      tags: ['apcupsd']
+#    - role: apcupsd
+#      tags: ['apcupsd']
 
 #    - role: openvpn-server
 #      tags: ['openvpn-server']
 
-#    - role: fail2ban
-#      tags: ['fail2ban']
+    - role: fail2ban
+      tags: ['fail2ban']
 
     - role: rsyslog-server
       tags: ['rsyslog-server']

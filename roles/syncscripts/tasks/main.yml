@@ -66,13 +66,21 @@
     hour: "{{4 + start_hour_offset}}"
     job: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/sync-virtio-win.sh > {{repo_owner_homedir}}/logs/sync-virtio-win.log 2>&1"
 
+#- name: create crontab entries to reset permissions on repos
+#  ansible.builtin.cron:
+#    name: "repos chmod"
+#    user: "root"
+#    minute: "20"
+#    hour: "{{5 + start_hour_offset}}"
+#    job: "/usr/bin/chown -R {{repo_owner}}:{{repo_owner}} /export/{archive,install} > /{{ansible_user_id}}/logs/chown-export.log 2>&1"
+
 - name: create crontab entries to reset permissions on repos
   ansible.builtin.cron:
     name: "repos chmod"
     user: "root"
     minute: "20"
     hour: "{{5 + start_hour_offset}}"
-    job: "/usr/bin/chown -R {{repo_owner}}:{{repo_owner}} /export/{archive,install} > /{{ansible_user_id}}/logs/chown-export.log 2>&1"
+    job: "/usr/bin/chown -R {{repo_owner}}:{{repo_owner}} /export/install > /{{ansible_user_id}}/logs/chown-export.log 2>&1"
 
 #- name: run the sync-scripts
 #  ansible.builtin.command: "{{repo_owner_homedir}}/scripts/{{ansible_hostname}}/{{item}}"

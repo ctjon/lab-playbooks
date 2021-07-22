@@ -33,14 +33,14 @@
 
 - name: deploy fail2ban on Everything Else
   block:
-#    - name: deploy fail2ban.conf template
-#      ansible.builtin.template:
-#        src: fail2ban.conf.j2
-#        dest: /etc/fail2ban/fail2ban.conf
-#        owner: root
-#        group: root
-#        mode: 0644
-#      notify: restart fail2ban
+    - name: deploy fail2ban.conf template
+      ansible.builtin.template:
+        src: fail2ban.conf.j2
+        dest: /etc/fail2ban/fail2ban.conf
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart fail2ban
 
     - name: deploy jail.local template
       ansible.builtin.template:
