@@ -1,0 +1,33 @@
+---
+- name: install open-vm-tools
+  ansible.builtin.package:
+    name: open-vm-tools
+    state: latest
+  notify: restart mnt-hgfs.mount
+
+- name: install /etc/systemd/system/mnt-hgfs.mount file
+  ansible.builtin.copy:
+    src: mnt-hgfs.mount
+    dest: /etc/systemd/system/mnt-hgfs.mount
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart mnt-hgfs.mount
+
+- name: setup /etc/modules-load.d/open-vm-tools.conf file
+  ansible.builtin.lineinfile:
+    path: /etc/modules-load.d/open-vm-tools.conf
+    line: fuse
+    create: yes
+  notify: restart mnt-hgfs.mount
+
+- name: load the fuse module
+  community.general.modprobe:
+    name: fuse
+    state: present
+
+- name: start and enable mnt-hgfs.mount service
+  ansible.builtin.service:
+    name: mnt-hgfs.mount
+    enabled: yes
+    state: started
