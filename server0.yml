@@ -21,14 +21,17 @@
     - role: setup-open-vm-tools
       tags: ['setup-open-vm-tools']
 
-#    - role: setup-br0
-#      tags: ['setup-br0']
+    - role: setup-br0
+      tags: ['setup-br0']
 
     - role: http-repo
       tags: ['http-repo']
 
     - role: resolver
       tags: ['resolver']
+
+    - role: dnsmasq
+      tags: ['dnsmasq']
 
 #    - role: config-local-repos
 #      tags: ['config-local-repos']

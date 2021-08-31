@@ -7,7 +7,7 @@ ff02::2 ip6-allrouters
 
 172.16.1.1	gatekeeper.internal.tjon.net gatekeeper time.internal.tjon.net time
 172.16.1.2	server0.internal.tjon.net server0 install.internal.tjon.net install archive.internal.tjon.net archive plex.internal.tjon.net plex loghost.internal.tjon.net loghost server0.local
-172.16.1.3	kvmhost.internal.tjon.net kvmhost
+172.16.1.3	atv-dvr.internal.tjon.net atv-dvr
 172.16.1.4	tower.internal.tjon.net tower
 172.16.1.6	itunesserver.internal.tjon.net itunesserver
 172.16.1.7	satellite6.internal.tjon.net satellite6
@@ -15,7 +15,7 @@ ff02::2 ip6-allrouters
 172.16.1.9	re7000-2.internal.tjon.net re7000-2
 172.16.1.11	synchost6.internal.tjon.net synchost6
 172.16.1.12	synchost7.internal.tjon.net synchost7
-172.16.1.14	synchost8.internal.tjon.net synchost8
+172.16.1.13	synchost8.internal.tjon.net synchost8
 172.16.1.30	test-rhel8.internal.tjon.net test-rhel8
 172.16.1.31	test-rhel7.internal.tjon.net test-rhel7
 172.16.1.32	test-rhel6.internal.tjon.net test-rhel6

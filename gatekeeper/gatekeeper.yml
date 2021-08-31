@@ -129,7 +129,21 @@
       notify: restart firewall
       tags: firewall
 
+    - name: install vnstat
+      community.general.opkg:
+        name: vnstat
+        state: present
+        update_cache: yes
+      notify: restart vnstat
+      tags: vnstat packages
+
   handlers:
+    - name: restart vnstat
+      ansible.builtin.service:
+        name: vnstat
+        state: restarted
+        enabled: yes
+
     - name: restart system
       ansible.builtin.service:
         name: system

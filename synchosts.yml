@@ -12,6 +12,12 @@
     - role: sm-register
       tags: ['sm-register']
 
+    - role: setup-open-vm-tools
+      when:
+        - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+        - ansible_distribution_major_version >= "7"
+      tags: ['setup-open-vm-tools']
+
     - role: selinux
       tags: ['selinux']
 
@@ -43,10 +49,6 @@
       tags: ['reboot-if-required']
 
   tasks:
-    - name: install open-vm-tools
-      package:
-        name: open-vm-toos
-        state: latest
 
     - name: Clean up all but the most recent kernel
       command: package-cleanup --oldkernels --count="{{installed_kernel_limit}}" -y
