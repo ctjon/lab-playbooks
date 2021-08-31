@@ -1,0 +1,36 @@
+- name: add disk to vg
+  hosts: localhost
+  gather_facts: yes
+  become: yes
+
+#  vars_prompt: 
+#    - name: "volume_group"
+#      prompt: "Enter Volume Group name" 
+#      private: no
+#
+#    - name: "physical_disk"
+#      prompt: "Enter full path of phys disk"
+#      private: no
+
+  tasks:
+  - name: dump the lvm structure
+    debug:
+      msg: "{{ ansible_lvm }}"
+
+  - name: dump the vg structure
+    debug:
+      msg: "{{ ansible_lvm.lvs[vg] }}"
+#      msg: "{{ ansible_lvm[lvs].vg }}"
+#      msg: "{{ ansible_lvm.vgs }}"
+#    when: "{{ ansible_lvm.lvs.[].vg == p51s_vg }}"
+
+
+#  tasks:
+#  - name: dump the lvm structure
+#    debug:
+#      msg: "{{ ansible_lvm.vgs.lvms }}"
+
+#  - name: expand the vg
+#    lvg:
+#      vg: volume_group
+#      pvs: physical_disk

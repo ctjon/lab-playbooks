@@ -1,2 +1,4 @@
-# lab-playbooks
-Playbooks I use to configure things in my lab
+# playbooks
+Chris' Personal Playbooks
+
+THESE CAN VERY LIKELY BE BROKEN OR UNTESTED - DO NOT USE UNLESS YOU ARE AWARE

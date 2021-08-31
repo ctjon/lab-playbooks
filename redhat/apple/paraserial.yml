@@ -1,0 +1,32 @@
+---
+- name: Test Serial/Parallel
+  hosts: all
+  become: yes
+  vars:
+    foo: bar
+
+  tasks:
+
+  - name: install apache
+    yum:
+      name: httpd
+      state: latest
+
+  - block:
+    - name: restart apache
+      service:
+        name: httpd
+        state: restarted
+      serial: 1
+
+
+  - name: check Uptime in serial
+    shell: "ps -ef|grep httpd"
+    register: status
+
+  - name: show status
+    debug:
+      var: status.start
+
+
+
