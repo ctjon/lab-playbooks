@@ -13,6 +13,14 @@
     name: nfs-utils, yum-utils, createrepo
     state: latest
 
+- name: Deploy /etc/hosts
+  ansible.builtin.copy:
+    src: files/hosts
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: '0644'
+
 - name: Create {{ nfs_mount }} mountpoint
   ansible.builtin.file:
     path: "{{ nfs_mount }}"
