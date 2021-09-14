@@ -66,7 +66,7 @@ archivedir: /mnt/hgfs/Archive
 vhosts: 
   - {name: server0, document_root: /var/www/html, alias: server0, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
   - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/installlv}
-#  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: /dev/datavg/archivelv}
+  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: /dev/datavg/archivelv}
 #  - {name: plex, document_root: /export/plex, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/plexlv}
 #  - {name: satcontent, document_root: /export/satcontent, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/sat_content_lv}
 
@@ -92,8 +92,8 @@ allowed_ssh_users: chris
 # DNSMASQ Configuration Parameters                                             #
 ################################################################################
 dnsmasq_interfaces:
-  - "{{primary_interface}}"
-#  - "{{primary_bridge}}"
+  - "{{primary_bridge}}"
+#  - "{{primary_interface}}"
 dhcp_enabled: false
 pxe_enabled: true
 dnsmasq_dhcp_interfaces:
@@ -105,8 +105,8 @@ samba_workgroup: TJON
 samba_netbios_name: SERVER0
 
 samba_trusted_interfaces:
-#  - "{{primary_bridge}}"
-  - "{{primary_interface}}"
+  - "{{primary_bridge}}"
+#  - "{{primary_interface}}"
 
 samba_trusted_subnets:
   - 172.16.1.0/24

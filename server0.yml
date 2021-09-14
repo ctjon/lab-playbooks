@@ -72,17 +72,17 @@
     - role: setup-epel
       tags: ['setup-epel']
 
-#    - role: virt-server
-#      tags: ['virt-server']
+    - role: virt-server
+      tags: ['virt-server']
 
-#    - role: plex-server
-#      tags: ['plex-server']
+    - role: plex-server
+      tags: ['plex-server']
 
-#    - role: appletalk-server
-#      tags: ['appletalk-server']
+    - role: appletalk-server
+      tags: ['appletalk-server']
 
-#    - role: apcupsd
-#      tags: ['apcupsd']
+    - role: apcupsd
+      tags: ['apcupsd']
 
 #    - role: openvpn-server
 #      tags: ['openvpn-server']

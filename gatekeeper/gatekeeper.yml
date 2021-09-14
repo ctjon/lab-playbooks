@@ -25,14 +25,6 @@
         file: vars/secrets.yml
       tags: always
 
-    - name: configure luci for SSL
-      community.general.opkg:
-        name: luci-ssl-openssl
-        state: present
-        update_cache: yes
-      notify: restart luci
-      tags: luci_ssl packages
-
     - name: install /etc/config/system template
       ansible.builtin.template:
         src: etc.config.system.j2
@@ -40,6 +32,7 @@
         owner: root
         group: root
         mode: 0644
+        backup: yes
       notify: restart system
       tags: system
 
@@ -50,6 +43,7 @@
         owner: root
         group: root
         mode: 0644
+        backup: yes
       notify: restart network
       tags: network
 
@@ -60,6 +54,7 @@
         owner: root
         group: dnsmasq
         mode: 0644
+        backup: yes
       notify: restart dnsmasq
       tags: dnsmasq
 
@@ -70,6 +65,7 @@
         owner: root
         group: root
         mode: 0644
+        backup: yes
       notify: restart dnsmasq
       tags: dnsmasq
 
@@ -80,6 +76,7 @@
         owner: root
         group: root
         mode: 0644
+        backup: yes
       notify: restart dhcp
       tags: dhcp
 
@@ -90,6 +87,7 @@
         owner: root
         group: root
         mode: 0644
+        backup: yes
       notify: restart wireless
       tags: wireless
 
@@ -100,11 +98,10 @@
         update_cache: yes
       with_items:
         - ddns-scripts
-        - wget
+        - ddns-scripts-services
         - ca-certificates
         - curl
         - ca-bundle
-        - ddns-scripts_no-ip_com
         - luci-app-ddns
       notify: restart luci
       tags: ddns packages
@@ -116,6 +113,7 @@
         owner: root
         group: root
         mode: 0644
+        backup: yes
       notify: restart ddns
       tags: ddns
 
@@ -126,6 +124,7 @@
         owner: root
         group: root
         mode: 0644
+        backup: yes
       notify: restart firewall
       tags: firewall
 
