@@ -3,29 +3,37 @@
   ansible.builtin.package:
     name: dnsmasq,tftp-server,tftp,httpd,firewalld
     state: latest
+  notify: restart dnsmasq
 
-- name: start and enable dnsmasq
-  ansible.builtin.service:
-    name: dnsmasq
-    state: started
-    enabled: true
+#- name: start and enable dnsmasq
+#  ansible.builtin.service:
+#    name: dnsmasq
+#    state: started
+#    enabled: true
 
 - name: install dnsmasq.conf file
   ansible.builtin.template:
     src: dnsmasq.conf.{{ansible_hostname}}.j2
     dest: /etc/dnsmasq.conf
-    owner: root
+    owner: dnsmasq
     group: dnsmasq
-    mode: 0644
+    mode: 0660
   notify: restart dnsmasq
 
+- name: create /etc/dnsmasq.d directory
+  ansible.builtin.file: 
+    path: /etc/dnsmasq.d
+    owner: dnsmasq
+    group: dnsmasq
+    mode: 0770
+    state: directory
 - name: install dnsmasq.d/pxe.conf file
   ansible.builtin.template:
     src: pxe.conf.{{ansible_hostname}}.j2
     dest: /etc/dnsmasq.d/pxe.conf
-    owner: root
-    group: root
-    mode: 0644
+    owner: dnsmasq
+    group: dnsmasq
+    mode: 0660
   notify: restart dnsmasq
   when: pxe_enabled == true
 
@@ -35,35 +43,35 @@
     enabled: yes
     state: started
 
-#- name: configure dnsmasq for DHCP
-#  block: 
-#    - name: install dnsmasq.d/dhcp.conf file
-#      ansible.builtin.template:
-#        src: dhcp.conf.{{ansible_hostname}}.j2
-#        dest: /etc/dnsmasq.d/dhcp.conf
-#        owner: root
-#        group: root
-#        mode: 0644
-#      notify: restart dnsmasq
-#  when: dhcp_enabled == true
+- name: configure dnsmasq for DHCP
+  block: 
+    - name: install dnsmasq.d/dhcp.conf file
+      ansible.builtin.template:
+        src: dhcp.conf.{{ansible_hostname}}.j2
+        dest: /etc/dnsmasq.d/dhcp.conf
+        owner: dnsmasq
+        group: dnsmasq
+        mode: 0660
+      notify: restart dnsmasq
+  when: dhcp_enabled == true
 
-#- name: configure firewall for DHCP # Need this for PXE
-#  ansible.builtin.firewalld:
-#    zone: "{{trusted_firewall_zone}}"
-#    service: dhcp
-#    immediate: yes
-#    state: enabled
-#    permanent: yes
-#  notify: restart dnsmasq
-#  when: dhcp_enabled == true
+- name: configure firewall for DHCP # Need this for PXE
+  ansible.builtin.firewalld:
+    zone: "{{trusted_firewall_zone}}"
+    service: dhcp
+    immediate: yes
+    state: enabled
+    permanent: yes
+  notify: restart dnsmasq
+  when: dhcp_enabled == true
 
 - name: install /etc/hosts file
   ansible.builtin.copy:
     src: "hosts.{{ansible_hostname}}"
     dest: /etc/hosts
-    owner: root
-    group: root
-    mode: 0644
+    owner: dnsmasq
+    group: dnsmasq
+    mode: 0660
   notify: restart dnsmasq
 
 # This should be in the handler but handlers need to support blocks first

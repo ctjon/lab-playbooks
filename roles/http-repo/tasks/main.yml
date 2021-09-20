@@ -93,8 +93,9 @@
   with_items: "{{ vhosts }}"
   tags: restorecon
 
-- name: set reserve_block_percentage to 1%
-  ansible.builtin.command: tune2fs -m {{reserve_block_percentage}} {{item.lv_name}}
-  with_items: "{{ vhosts }}"
-  tags: tune2fs
+# not doing this anymore after switch to xfs
+#- name: set reserve_block_percentage to 1%
+#  ansible.builtin.command: tune2fs -m {{reserve_block_percentage}} {{item.lv_name}}
+#  with_items: "{{ vhosts }}"
+#  tags: tune2fs
 ...  

@@ -42,9 +42,10 @@
     opts: defaults
     state: mounted
 
-- name: set reserve_block_percentage on {{tm_storage_path}} to 1%
-  ansible.builtin.command: tune2fs -m {{reserve_block_percentage}} /dev/{{tm_storage_vg}}/{{tm_storage_lv}}
-  tags: tune2fs
+# No longer needed with move to XFS
+#- name: set reserve_block_percentage on {{tm_storage_path}} to 1%
+#  ansible.builtin.command: tune2fs -m {{reserve_block_percentage}} /dev/{{tm_storage_vg}}/{{tm_storage_lv}}
+#  tags: tune2fs
 
 
 - name: set permissions on {{ tm_storage_path }}
