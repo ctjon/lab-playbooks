@@ -18,8 +18,8 @@
     - role: selinux
       tags: ['selinux']
 
-    - role: setup-open-vm-tools
-      tags: ['setup-open-vm-tools']
+#    - role: setup-open-vm-tools
+#      tags: ['setup-open-vm-tools']
 
     - role: setup-br0
       tags: ['setup-br0']
