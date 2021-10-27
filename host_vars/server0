@@ -13,6 +13,8 @@ ssh_private_key_list:
 ssh_public_key_list:
   - ctjon-github_rsa
 
+enable_public_sshd: true
+
 TIMEZONE: "America/Phoenix"
 time_servers:
   - time.internal.tjon.net
@@ -22,9 +24,9 @@ time_servers:
 #  - 3.rhel.pool.ntp.org
 
 ################################################################################
-# Network Configuration Parameters                                             #
+# Primary Network Interface Configuration Parameters                           #
 ################################################################################
-domain_name: internal.tjon.net
+primary_domain_name: internal.tjon.net
 primary_subnet: 172.16.1.0/24
 primary_ipaddr: 172.16.1.2
 primary_prefix: 24
@@ -33,10 +35,27 @@ primary_netmask: 255.255.255.0
 primary_gateway: 172.16.1.1
 search_domains: 
  - internal.tjon.net
-dns_servers: 
+primary_dns_servers: 
  - 172.16.1.1
 primary_interface: eth0
 primary_bridge: br0
+public_firewall_interface: br0
+
+################################################################################
+# Secondary Network Interface Configuration Parameters                         #
+################################################################################
+secondary_domain_name: internal.tjon.net
+secondary_subnet: 192.168.168.0/24
+secondary_ipaddr: 192.168.168.2
+secondary_prefix: 24
+secondary_short_net: 192.168.168
+secondary_netmask: 255.255.255.0
+secondary_gateway: 192.168.168.2
+secondary_dns_servers: 
+ - 192.168.168.2
+secondary_interface: eth1
+secondary_bridge: br1
+trusted_firewall_interface: eth1
 
 ################################################################################
 # Installation Source Parameters                                               #
@@ -50,7 +69,8 @@ doc_files_url: "http://install.internal.tjon.net/Documentation"
 # Time Server Configuration Parameters                                         #
 ################################################################################
 time_client_servers:
-  - "time.{{domain_name}}"
+  - "time.{{primary_domain_name}}"
+  - "time.{{secondary_domain_name}}"
 
 ################################################################################
 # TFTP Boot Server Parameters                                                  #
@@ -58,7 +78,7 @@ time_client_servers:
 tftpbootdir: /var/lib/tftpboot
 installdir: /export/install
 doc_files_dir: /export/install/Documentation
-archivedir: /export/archive
+archivedir: /mnt/hgfs/Archive
 
 ################################################################################
 # HTTP Server Parameters                                                       #
@@ -66,7 +86,7 @@ archivedir: /export/archive
 vhosts: 
   - {name: server0, document_root: /var/www/html, alias: server0, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
   - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/installlv}
-  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: /dev/datavg/archivelv}
+#  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: /dev/datavg/archivelv}
 #  - {name: plex, document_root: /export/plex, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/plexlv}
 #  - {name: satcontent, document_root: /export/satcontent, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/sat_content_lv}
 
@@ -112,13 +132,15 @@ samba_trusted_subnets:
   - 172.16.1.0/24
   - 172.16.5.0/24
   - 172.16.6.0/24
+  - 192.168.168.0/24
 
 samba_trusted_write_users:
   - chris
 
 samba_shares:
   - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
-  - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
+#  - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
+#  - {path: /export/time_machine, name: TimeMachine, public: 'no', guest_ok: 'no', browseable: 'yes', writeable: 'yes', printable: 'no', vfs objects: 'fruit streams_xattr', fruit:time machine: 'yes'}
 #  - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
 
 

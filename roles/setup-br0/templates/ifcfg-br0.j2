@@ -8,7 +8,7 @@ ONBOOT=yes
 IPADDR={{primary_ipaddr}}
 PREFIX={{primary_prefix}}
 GATEWAY={{primary_gateway}}
-{% for dns_server in dns_servers %}
+{% for dns_server in primary_dns_servers %}
 DNS{{loop.index}}={{dns_server}}
 {% endfor %}
 ZONE={{ public_firewall_zone }}

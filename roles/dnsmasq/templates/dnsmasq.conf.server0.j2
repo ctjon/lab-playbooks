@@ -75,7 +75,7 @@ server={{primary_gateway}}
 # Add local-only domains here, queries in these domains are answered
 # from /etc/hosts or DHCP only.
 #local=/localnet/
-local=/{{domain_name}}/
+local=/{{primary_domain_name}}/
 
 # Add domains which you want to force to an IP address here.
 # The example below send any host in double-click.net to a local
@@ -153,7 +153,7 @@ expand-hosts
 #    domain of all systems configured by DHCP
 # 3) Provides the domain part for "expand-hosts"
 #domain=thekelleys.org.uk
-domain={{domain_name}}
+domain={{primary_domain_name}}
 
 # Set a different domain for a particular subnet
 #domain=wireless.thekelleys.org.uk,192.168.2.0/24

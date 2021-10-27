@@ -1,17 +1,17 @@
 ---
-- name: setup ifcfg-eth0
+- name: setup ifcfg-{{public_firewall_interface}}
   ansible.builtin.template:
-    src: "ifcfg-eth0.{{ansible_hostname}}.j2"
-    dest: /etc/sysconfig/network-scripts/ifcfg-eth0
+    src: "ifcfg-public.j2"
+    dest: /etc/sysconfig/network-scripts/ifcfg-{{public_firewall_interface}}
     owner: root
     group: root
     mode: 0644
   notify: restart Network
 
-- name: setup ifcfg-eth1
+- name: setup ifcfg-{{trusted_firewall_interface}}
   ansible.builtin.template:
-    src: "ifcfg-eth1.{{ansible_hostname}}.j2"
-    dest: /etc/sysconfig/network-scripts/ifcfg-eth1
+    src: "ifcfg-trusted.j2"
+    dest: "/etc/sysconfig/network-scripts/ifcfg-{{trusted_firewall_interface}}"
     owner: root
     group: root
     mode: 0644

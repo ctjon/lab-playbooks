@@ -244,7 +244,7 @@
 ################################################################################
 # OpenWRT images Files copies                                                  #
 ################################################################################
-- name: create OpenBSD {{tftpbootdir}}/images/openwrt directory
+- name: create OpenWRT {{tftpbootdir}}/images/openwrt directory
   ansible.builtin.file:
     path: "{{tftpbootdir}}/images/openwrt"
     owner: root

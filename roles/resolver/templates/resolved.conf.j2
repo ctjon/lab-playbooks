@@ -1,6 +1,6 @@
 # {{ ansible_managed }}
 [Resolve]
-DNS={{dns_servers|join(" ")}}
+DNS={{primary_dns_servers|join(" ")}}
 #FallbackDNS=
 Domains={{search_domains|join(" ")}}
 #LLMNR=yes

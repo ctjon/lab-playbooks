@@ -16,7 +16,7 @@ keyboard --vckeymap=us --xlayouts='us'
 lang en_US.UTF-8
 
 # Network information
-network  --hostname=tower-nodeA.{{domain_name}} --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.23 --nameserver={{dns_servers|join(",")}} --netmask={{primary_netmask}} --activate
+network  --hostname=tower-nodeA.{{primary_domain_name}} --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.23 --nameserver={{primary_dns_servers|join(",")}} --netmask={{primary_netmask}} --activate
 
 # Root password
 rootpw --iscrypted $6$VeaHKP/A6kFUMSfd$u0GYy.CPbfEKPC.sgnC/7KToFeDvAWUai9clpJCgDKosLNzVIDSGMMzPuhT617DjL4nUTDbyhs/hMvMCvcWCJ1

@@ -31,7 +31,7 @@ do
 	--exclude='3.*' \
 	--exclude='4.*' \
 	--exclude='5.*' \
-	--exclude='6.[0-{{openbsd_prev_dot_release}}]*' \
+	--exclude='6.*' \
 	--exclude='patches/2.*' \
 	--exclude='patches/3.*' \
 	--exclude='patches/4.*' \
@@ -41,3 +41,7 @@ do
 {% if sync_script_retries == true %}
 done
 {% endif %}
+
+
+# save for when not 7.0 release
+#	--exclude='7.[0-{{openbsd_prev_dot_release}}]*' \

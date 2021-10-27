@@ -1,4 +1,4 @@
-# /etc/sysconfig/network-scripts/ifcfg-eth0
+# /etc/sysconfig/network-scripts/ifcfg-{{trusted_firewall_interface}}
 # {{ansible_managed}}
 TYPE="Ethernet"
 DEVICE="{{trusted_firewall_interface}}"
@@ -11,9 +11,9 @@ MTU="{{mtu_size}}"
 IPV6INIT="{{ipv6_enabled}}"
 NM_CONTROLLED="yes"
 ZONE="internal"
-{% if dns_server|bool == true %}
+{# {% if dns_server|bool == true %} #}
 PEERDNS="no"
-{% for item in dns_servers %}
+{% for item in primary_dns_servers %}
 DNS{{loop.index}}={{item}}
 {% endfor %}
-{% endif %}
+{# {% endif %} #}
