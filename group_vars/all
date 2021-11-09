@@ -15,7 +15,7 @@ ssh_private_key_list:
 
 # config network parameters
 mtu_size: 9000  
-ipv6_enabled: no 
+ipv6_enabled: 'no'
 
 TIMEZONE: "America/Phoenix"
 time_server_servers:

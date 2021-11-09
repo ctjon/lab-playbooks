@@ -1,7 +1,7 @@
-# /etc/sysconfig/network-scripts/ifcfg-{{trusted_firewall_interface}}
+# /etc/sysconfig/network-scripts/ifcfg-{{public_firewall_interface}}
 # {{ansible_managed}}
 TYPE="Ethernet"
-DEVICE="{{trusted_firewall_interface}}"
+DEVICE="{{public_firewall_interface}}"
 ONBOOT="yes"
 BOOTPROTO="static"
 IPADDR="{{primary_ipaddr}}"

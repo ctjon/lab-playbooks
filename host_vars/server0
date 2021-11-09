@@ -95,7 +95,7 @@ vhosts:
 ################################################################################
 #public_firewall_zone: public
 #trusted_firewall_zone: public
-public_firewall_zone: FedoraServer
+public_firewall_zone: external
 trusted_firewall_zone: FedoraServer
 additional_fw_ports:
   - 8443
@@ -112,11 +112,15 @@ allowed_ssh_users: chris
 # DNSMASQ Configuration Parameters                                             #
 ################################################################################
 dnsmasq_interfaces:
-  - "{{primary_bridge}}"
+  - "{{secondary_interface}}"
+#  - "{{primary_bridge}}"
 #  - "{{primary_interface}}"
+#  - "{{secondary_bridge}}"
+ 
 dhcp_enabled: false
 pxe_enabled: true
 dnsmasq_dhcp_interfaces:
+  - "{{secondary_interface}}"
 
 ################################################################################
 # Samba Configuration Parameters                                               #
@@ -139,15 +143,9 @@ samba_trusted_write_users:
 
 samba_shares:
   - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
-<<<<<<< HEAD
-#  - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
+  - {path: /mnt/hgfs/Archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
 #  - {path: /export/time_machine, name: TimeMachine, public: 'no', guest_ok: 'no', browseable: 'yes', writeable: 'yes', printable: 'no', vfs objects: 'fruit streams_xattr', fruit:time machine: 'yes'}
 #  - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
-=======
-  - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
-  - {path: /export/time_machine, name: TimeMachine, public: 'no', guest_ok: 'no', browseable: 'yes', writeable: 'yes', printable: 'no', vfs objects: 'fruit streams_xattr', fruit:time machine: 'yes'}
-  - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
->>>>>>> b419e40b82046824f36efdcaea95728ba0609eea
 
 
 ################################################################################
