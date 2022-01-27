@@ -13,7 +13,7 @@
     AllowOverride None
     Require all granted
     Order allow,deny
-    Allow from {{primary_network_and_netmask|ansible.netcommon.ipaddr('subnet')}}
+    Allow from {{primary_subnet}}
     Allow from 127
 </Directory>
 

@@ -16,30 +16,6 @@
     group: polkitd
     mode: 0750
 
-- name: create vm storage in {{vm_storage_path}}
-  ansible.builtin.lvol:
-    vg: "{{ vm_storage_vg }}"
-    lv: "{{ vm_storage_lv }}"
-    size: "{{ vm_storage_lv_size }}"
-    shrink: no
-    state: present
-    resizefs: yes
-
-- name: Create a {{vm_storage_fs_type}}  filesystem on {{ vm_storage_lv }}
-  ansible.builtin.filesystem:
-    fstype: "{{ vm_storage_fs_type }}"
-    dev: "/dev/{{vm_storage_vg}}/{{vm_storage_lv}}"
-    force: no
-    resizefs: yes
-
-- name: mount {{vm_storage_path}}
-  ansible.builtin.mount:
-    path: "{{ vm_storage_path }}"
-    src: "/dev/{{vm_storage_vg}}/{{vm_storage_lv}}"
-    fstype: "{{ vm_storage_fs_type }}"
-    opts: defaults
-    state: mounted
-
 - name: Download virtio repo configuration
   ansible.builtin.get_url:
     url: https://fedorapeople.org/groups/virt/virtio-win/virtio-win.repo
@@ -74,41 +50,11 @@
   with_items:
     - "{{ libvirt_users }}"
 
-- name: setup virtual networks
-  block:
-    - name: define nets
-      ansible.builtin.virt_net:
-        command: define
-        name: "{{item}}"
-        xml: '{{ lookup("template", "{{item}}.j2") }}'
-      ignore_errors: yes # set because module fails if network already exists
-      with_items:
-        - "{{virt_nets}}"
-
-    - name: create nets
-      ansible.builtin.virt_net:
-        command: create
-        name: "{{item}}"
-      ignore_errors: yes #set because module fails if network already exists
-      with_items:
-        - "{{virt_nets}}"
-
-    - name: set nets for autostart
-      ansible.builtin.virt_net:
-        name: "{{item}}"
-        autostart: yes
-      with_items:
-        - "{{virt_nets}}"
-
-    - name: add virt_nets to internal firewall zone
-      ansible.builtin.firewalld: 
-        zone: internal
-        interface: "{{item}}"
-        permanent: yes
-        immediate: yes
-        state: enabled
-      with_items:
-        - "{{ virt_nets}}"
+- name: modify DHCP scope of "default" network
+  community.libvirt.virt_net:
+    name: default
+    command: modify
+    xml: "<range start='192.168.122.20' end='192.168.122.254'/>"
 
 - name: restore SELinux Context on /etc/yum.repos.d
   ansible.builtin.command: restorecon -RFv /etc/yum.repos.d

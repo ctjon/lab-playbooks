@@ -1,0 +1,35 @@
+virt_packages_list_rhel7:
+  - python3-libvirt
+  - python3-lxml
+  - libvirt
+  - virt-install
+  - virt-viewer
+  - virt-manager
+  - virt-manager-common
+  - guestfs-browser
+  - libguestfs-tools
+  - python-libguestfs
+  - virt-top
+  - edk2-ovmf
+  - efibootmgr
+  - syslinux
+  - syslinux-extlinux
+
+virt_packages_list_rhel8:
+  - python3-libvirt
+  - python3-lxml
+  - libvirt
+  - virt-install
+  - virt-viewer
+  - virt-manager
+  - virt-manager-common
+  - libguestfs-rescue
+  - libguestfs-winsupport
+  - libguestfs-tools
+  - python3-libguestfs
+  - virt-top
+  - edk2-ovmf
+  - efibootmgr
+  - syslinux
+  - syslinux-extlinux
+

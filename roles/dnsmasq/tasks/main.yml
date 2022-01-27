@@ -71,7 +71,7 @@
     dest: /etc/hosts
     owner: dnsmasq
     group: dnsmasq
-    mode: 0660
+    mode: 0664
   notify: restart dnsmasq
 
 # This should be in the handler but handlers need to support blocks first

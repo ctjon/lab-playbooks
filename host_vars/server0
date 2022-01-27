@@ -36,9 +36,10 @@ primary_gateway: 172.16.1.1
 search_domains: 
  - internal.tjon.net
 primary_dns_servers: 
+ - 172.16.1.2
  - 172.16.1.1
-primary_interface: eth0
 primary_bridge: br0
+primary_interface: eth0
 public_firewall_interface: br0
 
 ################################################################################
@@ -55,7 +56,7 @@ secondary_dns_servers:
  - 192.168.168.2
 secondary_interface: eth1
 secondary_bridge: br1
-trusted_firewall_interface: eth1
+trusted_firewall_interface: eth0
 
 ################################################################################
 # Installation Source Parameters                                               #
@@ -78,24 +79,24 @@ time_client_servers:
 tftpbootdir: /var/lib/tftpboot
 installdir: /export/install
 doc_files_dir: /export/install/Documentation
-archivedir: /mnt/hgfs/Archive
+archivedir: /export/archive
 
 ################################################################################
 # HTTP Server Parameters                                                       #
 ################################################################################
 vhosts: 
   - {name: server0, document_root: /var/www/html, alias: server0, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
-  - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/installlv}
-#  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: /dev/datavg/archivelv}
-#  - {name: plex, document_root: /export/plex, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/plexlv}
-#  - {name: satcontent, document_root: /export/satcontent, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/sat_content_lv}
+  - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: /dev/datavg/installv}
+  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: /dev/datavg/archivelv}
+  - {name: plex, document_root: /export/plex, alias: plex, fcontext: public_content_rw_t, lv_name: /dev/datavg/plexlv}
+  - {name: satcontent, document_root: /export/satcontent, alias: satcontent, fcontext: public_content_rw_t, lv_name: /dev/datavg/sat_content_lv}
 
 ################################################################################
 # Firewall Configuration Parameters                                            #
 ################################################################################
 #public_firewall_zone: public
 #trusted_firewall_zone: public
-public_firewall_zone: external
+public_firewall_zone: FedoraServer
 trusted_firewall_zone: FedoraServer
 additional_fw_ports:
   - 8443
@@ -106,16 +107,14 @@ additional_fw_ports:
 #ssh_root_login_permited: "yes"
 #allowed_ssh_users: chris root
 ssh_root_login_permited: "no"
-allowed_ssh_users: chris
+allowed_ssh_users: chris ctjon
 
 ################################################################################
 # DNSMASQ Configuration Parameters                                             #
 ################################################################################
 dnsmasq_interfaces:
-  - "{{secondary_interface}}"
-#  - "{{primary_bridge}}"
-#  - "{{primary_interface}}"
-#  - "{{secondary_bridge}}"
+  - "{{primary_bridge}}"
+#  - "{{secondary_interface}}"
  
 dhcp_enabled: false
 pxe_enabled: true
@@ -125,12 +124,11 @@ dnsmasq_dhcp_interfaces:
 ################################################################################
 # Samba Configuration Parameters                                               #
 ################################################################################
-samba_workgroup: TJON
+samba_workgroup: PARANOID
 samba_netbios_name: SERVER0
 
 samba_trusted_interfaces:
   - "{{primary_bridge}}"
-#  - "{{primary_interface}}"
 
 samba_trusted_subnets:
   - 172.16.1.0/24
@@ -143,9 +141,9 @@ samba_trusted_write_users:
 
 samba_shares:
   - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
-  - {path: /mnt/hgfs/Archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
+  - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
 #  - {path: /export/time_machine, name: TimeMachine, public: 'no', guest_ok: 'no', browseable: 'yes', writeable: 'yes', printable: 'no', vfs objects: 'fruit streams_xattr', fruit:time machine: 'yes'}
-#  - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
+  - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
 
 
 ################################################################################
@@ -182,7 +180,7 @@ vm_storage_vg: rootvg
 vm_storage_lv: imageslv
 vm_storage_lv_size: 1g
 vm_storage_path: /var/lib/libvirt/images
-vm_storage_fs_type: ext4
+vm_storage_fs_type: xfs
 vm_bridge_interface: "{{primary_bridge}}"
 
 ################################################################################
@@ -203,7 +201,7 @@ ks_configs_list:
   - x1carbon-rhel8-preserve-ks.cfg
   - test-centos7-ks.cfg
   - test-centos8-ks.cfg
-  - test-fedora33-ks.cfg
+  - test-fedora35-ks.cfg
   - test-fedora34-ks.cfg
   - test-rhel6-ks.cfg
   - test-rhel7-ks.cfg
@@ -360,16 +358,16 @@ centos_architectures:
   - x86_64
 
 fedora_versions:
-  - 33
   - 34
+  - 35
 
 # fedora versions that include upgrade.img
 fedora_upgrade_versions:
-  - 33
   - 34
+  - 35
 
-fedora_prev_release_ones_digit: 2
-fedora_prev_release: 32
+fedora_prev_release_ones_digit: 3
+fedora_prev_release: 33
 
 fedora_architectures:
   - x86_64

@@ -107,13 +107,9 @@ group=dnsmasq
 # specified interfaces (and the loopback) give the name of the
 # interface (eg eth0) here.
 # Repeat the line for more than one interface.
-{#{% if dhcp_enabled == true %}#}
 {% for item in dnsmasq_interfaces %}
 interface={{item}}
-{% endfor %}#}
-{#{% else %}#}
-{#interface=#}
-{#{% endif %}#}
+{% endfor %}
 
 # Or you can specify which interface _not_ to listen on
 #except-interface=

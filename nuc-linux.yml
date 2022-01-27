@@ -72,8 +72,8 @@
     - role: setup-epel
       tags: ['setup-epel']
 
-#    - role: virt-server
-#      tags: ['virt-server']
+    - role: virt-workstation
+      tags: ['virt-workstation']
 
 #    - role: plex-server
 #      tags: ['plex-server']
