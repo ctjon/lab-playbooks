@@ -36,7 +36,6 @@ primary_gateway: 172.16.1.1
 search_domains: 
  - internal.tjon.net
 primary_dns_servers: 
- - 172.16.1.2
  - 172.16.1.1
 primary_bridge: br0
 primary_interface: eth0
@@ -144,6 +143,7 @@ samba_shares:
   - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
 #  - {path: /export/time_machine, name: TimeMachine, public: 'no', guest_ok: 'no', browseable: 'yes', writeable: 'yes', printable: 'no', vfs objects: 'fruit streams_xattr', fruit:time machine: 'yes'}
   - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
+  - {path: /export/backup, name: Backup, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
 
 
 ################################################################################
@@ -221,7 +221,6 @@ ks_configs_list:
 
 pxelinux_files:
     - LinuxMenu
-    - centos
     - fedora
     - rhel-satclients
     - rhel
@@ -232,6 +231,7 @@ pxelinux_files:
     - OpenBSD
     - vmware
     - ubuntu
+#    - centos
 
 pxewindows_files:
     - windows
@@ -334,14 +334,15 @@ openbsd_repo_excludes_list:
   - '*.torrent'
 
 linux_distros:
-  - centos
   - fedora
   - rhel
+#  - centos
 
 rhel_versions:
   - 6
   - 7
   - 8
+#  - 9
 
 # rhel versions that include upgrade.img
 rhel_upgrade_versions:
@@ -353,6 +354,7 @@ rhel_architectures:
 centos_versions:
   - 7
   - 8
+#  - 9
 
 centos_architectures:
   - x86_64

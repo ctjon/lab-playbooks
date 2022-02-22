@@ -91,8 +91,9 @@
       notify: restart wireless
       tags: wireless
 
+      #community.general.opkg:
     - name: install ddns packages for {{ddns_service_name}}
-      community.general.opkg:
+      opkg:
         name: "{{ item }}"
         state: present
         update_cache: yes
@@ -128,8 +129,9 @@
       notify: restart firewall
       tags: firewall
 
+      #community.general.opkg:
     - name: install vnstat
-      community.general.opkg:
+      opkg:
         name: vnstat
         state: present
         update_cache: yes

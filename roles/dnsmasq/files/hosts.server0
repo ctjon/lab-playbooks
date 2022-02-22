@@ -10,6 +10,7 @@
 172.16.1.6	itunesserver.internal.tjon.net itunesserver
 172.16.1.11	synchost6.internal.tjon.net synchost6
 172.16.1.12	synchost7.internal.tjon.net synchost7
+172.16.1.13	synchost9.internal.tjon.net synchost9
 172.16.1.14	synchost8.internal.tjon.net synchost8
 172.16.1.30	test-rhel8.internal.tjon.net test-rhel8
 172.16.1.31	test-rhel7.internal.tjon.net test-rhel7

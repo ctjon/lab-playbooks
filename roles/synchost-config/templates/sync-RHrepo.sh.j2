@@ -9,30 +9,29 @@
 VERSION="{{ansible_distribution_major_version}}"
 ARCH=`uname -i`
 
-#MNTDIR=/mnt/hgfs/Install
-#TARGETDIR=/mnt/hgfs/Install/Linux/rhel-reposyncs/$VERSION/$ARCH
-#HOST_IP=192.168.10.1
-
+HOST=server0
+HOST_USER=chris
+HOST_DIR=/export/install
 MNTDIR=/mnt/install
 TARGETDIR=/mnt/install/Linux/rhel-reposyncs/$VERSION/$ARCH
-HOST_IP=server0
 
 TMPFILE=/tmp/repolist
 HOST_LOG_DIR=/home/chris/logs
-HOST_LOG_USER=chris
 GUEST_LOG_DIR=/home/chris/logs
 
-#/usr/bin/vmhgfs-fuse /mnt/hgfs -o allow_other
+sshfs $HOST_USER@$HOST:$HOST_DIR $MNTDIR
+df -h $MNTDIR
 
-if [ ! -d $MNTDIR ]
-then
-	mount $MNTDIR
-	if [ $? != 0 ]
-	then
-		echo "reposync.sh failed to mount $MNTDIR - exiting"
-		exit -1
-	fi
-fi
+#if [ ! -d $MNTDIR ]
+#then
+#	#mount $MNTDIR
+#        sshfs $HOST_USER@HOST:$HOST_DIR $MNTDIR
+#	if [ $? != 0 ]
+#	then
+#		echo "reposync.sh failed to mount $MNTDIR - exiting"
+#		exit -1
+#	fi
+#fi
 
 echo "********************************************************************************"
 echo "* Starting RepoSync for RHEL$VERSION"
@@ -83,8 +82,8 @@ done
 echo "* reposync for $VERSION completed at `/bin/date`"
 	echo "********************************************************************************"
 
-#umount $MNTDIR
+umount $MNTDIR
 
-#/bin/rm $TMPFILE
+/bin/rm $TMPFILE
 
-/usr/bin/scp $GUEST_LOG_DIR/sync-RHrepo$VERSION.log $HOST_LOG_USER@$HOST_IP:$HOST_LOG_DIR
+/usr/bin/scp $GUEST_LOG_DIR/sync-RHrepo$VERSION.log $HOST_USER@$HOST:$HOST_LOG_DIR

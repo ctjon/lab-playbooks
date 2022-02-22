@@ -162,28 +162,28 @@
   with_items:
     - "{{centos_architectures}}"
 
-- name: create CentOS 8+ {{tftpbootdir}}/images/linux/centos/version/arch directories
-  ansible.builtin.file:
-    path: "{{tftpbootdir}}/images/centos/8/{{item}}"
-    owner: root
-    group: root
-    mode: 0755
-    state: directory
-    recurse: yes
-  with_items:
-    - "{{centos_architectures}}"
+#- name: create CentOS 8+ {{tftpbootdir}}/images/linux/centos/version/arch directories
+#  ansible.builtin.file:
+#    path: "{{tftpbootdir}}/images/centos/8/{{item}}"
+#    owner: root
+#    group: root
+#    mode: 0755
+#    state: directory
+#    recurse: yes
+#  with_items:
+#    - "{{centos_architectures}}"
 
-- name: synchronize CentOS 8+ pxeboot content to {{tftpbootdir}}/images/centos
-  ansible.builtin.synchronize:
-    src: "{{installdir}}/Linux/centos/8/BaseOS/{{item}}/os/images/pxeboot/"
-    dest: "{{tftpbootdir}}/images/centos/8/{{item}}/"
-    archive: yes
-    delete: yes
-    links: yes
-    times: yes
-  delegate_to: "{{ inventory_hostname }}"
-  with_items:
-    - "{{centos_architectures}}"
+#- name: synchronize CentOS 8+ pxeboot content to {{tftpbootdir}}/images/centos
+#  ansible.builtin.synchronize:
+#    src: "{{installdir}}/Linux/centos/8/BaseOS/{{item}}/os/images/pxeboot/"
+#    dest: "{{tftpbootdir}}/images/centos/8/{{item}}/"
+#    archive: yes
+#    delete: yes
+#    links: yes
+#    times: yes
+#  delegate_to: "{{ inventory_hostname }}"
+#  with_items:
+#    - "{{centos_architectures}}"
 
 ################################################################################
 # Fedora images Files copies                                                   #

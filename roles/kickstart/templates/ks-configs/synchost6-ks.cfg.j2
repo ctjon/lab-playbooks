@@ -3,7 +3,7 @@ install
 url --url={{linux_install_server_url}}/rhel/6/x86_64
 lang en_US.UTF-8
 keyboard us
-network --onboot yes --device eth0 --bootproto static --ip {{secondary_short_net}}.11 --netmask {{secondary_netmask}} --gateway {{secondary_gateway}} --nameserver {{secondary_dns_servers|join(",")}} --hostname synchost6.{{secondary_domain_name}} --domain {{secondary_domain_name}}
+network --onboot yes --device eth0 --bootproto static --ip {{primary_short_net}}.11 --netmask {{primary_netmask}} --gateway {{primary_gateway}} --nameserver {{primary_dns_servers|join(",")}} --hostname synchost6.{{primary_domain_name}} --domain {{primary_domain_name}}
 rootpw  --iscrypted $6$nVsdpkRk7J4y2SkE$5y9qq3w2ydPTN6o3gDFk2DRzrl8HNfMfVfVJ8ZgIcyHe6UAGl8aB5i/RXrmSqrmh942KsWMg0nearqEzom8Kn0
 firewall --service=ssh
 authconfig --enableshadow --passalgo=sha512

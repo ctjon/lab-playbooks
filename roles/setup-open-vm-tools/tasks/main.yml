@@ -21,8 +21,9 @@
     create: yes
   notify: restart mnt-hgfs.mount
 
+  #community.general.modprobe:
 - name: load the fuse module
-  community.general.modprobe:
+  modprobe:
     name: fuse
     state: present
 
