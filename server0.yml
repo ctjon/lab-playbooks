@@ -54,6 +54,9 @@
     - role: syncscripts
       tags: ['syncscripts']
 
+    - role: scripts
+      tags: ['scripts']
+
     - role: kickstart
       tags: ['kickstart']
 

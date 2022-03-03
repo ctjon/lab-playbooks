@@ -9,7 +9,7 @@
     username: "{{ redhat_portal_username }}"
     password: "{{ redhat_portal_password }}"
     pool_ids: "{{ my_pool_ids }}"
-    force_register: no
+    force_register: yes
   when:
     - ansible_distribution == "RedHat"
     - ansible_distribution_major_version >= "6"

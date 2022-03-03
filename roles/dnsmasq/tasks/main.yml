@@ -67,7 +67,7 @@
 
 - name: install /etc/hosts file
   ansible.builtin.copy:
-    src: "hosts.{{ansible_hostname}}"
+    src: etc.hosts
     dest: /etc/hosts
     owner: dnsmasq
     group: dnsmasq

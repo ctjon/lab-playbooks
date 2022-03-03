@@ -1,5 +1,5 @@
 #version=RHEL8
-ignoredisk --only-use=sda
+ignoredisk --only-use=vda
 # Partition clearing information
 clearpart --none --initlabel
 # Use graphical install
@@ -32,12 +32,12 @@ reboot
 user --groups=wheel --name=chris --password=$6$oWM3S2AK4zS.jyDy$716RhjySp6ncIMig2UggFWY5z98sfkmLQLqyWwlw1N4jogYBdjqSRlRjoJd.nr59z7iI68rzP4Y3WLj6Ssr5M. --iscrypted --gecos="Chris Tjon"
 
 # System bootloader configuration
-bootloader --location=mbr --boot-drive=sda
+bootloader --location=mbr --boot-drive=vda
 # Partition clearing information
 clearpart --all --initlabel
 # Disk partitioning information
-part /boot --fstype="ext4" --ondisk=sda --size=256
-part pv.409 --fstype="lvmpv" --ondisk=sda --grow
+part /boot --fstype="ext4" --ondisk=vda --size=256
+part pv.409 --fstype="lvmpv" --ondisk=vda --grow
 volgroup rootvg --pesize=4096 pv.409 
 logvol /  --fstype="ext4" --size=1024 --label="root" --name=rootlv --vgname=rootvg
 logvol /usr  --fstype="ext4" --size=4096 --label="usr" --name=usrlv --vgname=rootvg

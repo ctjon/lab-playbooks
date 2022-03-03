@@ -206,6 +206,7 @@ ks_configs_list:
   - test-rhel6-ks.cfg
   - test-rhel7-ks.cfg
   - test-rhel8-ks.cfg
+  - test-rhel9-ks.cfg
   - gitlab-ks.cfg
   - satellite6-ks.cfg
   - satclient0-ks.cfg
@@ -216,6 +217,7 @@ ks_configs_list:
   - synchost6-ks.cfg
   - synchost7-ks.cfg
   - synchost8-ks.cfg
+  - synchost9-ks.cfg
   - tower-ks.cfg
   - tower-nodeA-ks.cfg
 
@@ -243,6 +245,9 @@ repo_owner: chris
 repo_owner_homedir: /home/chris
 start_hour_offset: 0
 
+scripts_dir: /home/chris/scripts
+scripts_logs_dir: /home/chris/logs
+
 sync_scripts_list:
   - sync-fedora.sh
   - sync-centos.sh
@@ -251,6 +256,47 @@ sync_scripts_list:
   - sync-virtio-win.sh
 
 sync_script_retries: true
+
+scripts_list:
+  - backup-archive.sh
+  - backup-install.sh
+  - backup-vms.sh
+  - migrate-archive.sh
+  - migrate-install.sh
+  - mount_backup.sh
+  - restore-archive.sh
+  - restore-install.sh
+  - restore-vms.sh
+  - unmount_backup.sh
+  - kvms/import-iTunesServer.sh
+  - kvms/import-synchost6.sh
+  - kvms/import-synchost7.sh
+  - kvms/import-synchost8.sh
+  - kvms/import-synchost9.sh
+  - kvms/define-synchost6.sh
+  - kvms/define-synchost7.sh
+  - kvms/define-synchost8.sh
+  - kvms/define-synchost9.sh
+  - kvms/define-rhel6-test.sh
+  - kvms/define-rhel7-test.sh
+  - kvms/define-rhel8-test.sh
+  - kvms/define-rhel9-test.sh
+  - kvms/define-centos6-test.sh
+  - kvms/define-centos7-test.sh
+  - kvms/define-centos8-test.sh
+  - kvms/define-fedora34-test.sh
+  - kvms/define-fedora35-test.sh
+  - kvms/delete-testvms.sh
+  - kvms/define-satellite6.sh
+  - kvms/define-satclients.sh
+  - kvms/delete-satclients.sh
+#  - kvms/define-win10.sh
+#  - kvms/import-Win10x64.sh
+#  - kvms/define_wintest.sh
+#  - kvms/define-adserver.sh
+#  - kvms/delete-adserver.sh
+#  - kvms/import-tower.sh
+
 
 linux_repo_includes_list:
   - x86_64
@@ -342,7 +388,7 @@ rhel_versions:
   - 6
   - 7
   - 8
-#  - 9
+  - 9
 
 # rhel versions that include upgrade.img
 rhel_upgrade_versions:
@@ -354,7 +400,7 @@ rhel_architectures:
 centos_versions:
   - 7
   - 8
-#  - 9
+  - 9
 
 centos_architectures:
   - x86_64
