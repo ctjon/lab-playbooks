@@ -64,6 +64,7 @@
         - git
         - ntfs-3g
         - ntfsprogs
+        - nmon
       tags:
         - localpkgs
 

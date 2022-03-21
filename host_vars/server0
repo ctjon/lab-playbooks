@@ -138,12 +138,21 @@ samba_trusted_subnets:
 samba_trusted_write_users:
   - chris
 
+tm_trusted_write_users:
+  - chris
+  - kelly
+
+backup_trusted_write_users:
+  - chris
+  - kelly
+  - james
+
 samba_shares:
-  - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
-  - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
-#  - {path: /export/time_machine, name: TimeMachine, public: 'no', guest_ok: 'no', browseable: 'yes', writeable: 'yes', printable: 'no', vfs objects: 'fruit streams_xattr', fruit:time machine: 'yes'}
-  - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
-  - {path: /export/backup, name: Backup, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no'}
+  - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
+  - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
+#  - {path: /export/time_machine, name: TimeMachine, public: 'no', guest_ok: 'no', browseable: 'yes', writeable: 'yes', printable: 'no', vfs objects: 'fruit streams_xattr', fruit:time machine: 'yes', trusted_write_users: '{{tm_trusted_write_users}}'}
+  - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
+  - {path: /export/backup, name: Backup, public: 'no', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{backup_trusted_write_users}}'}
 
 
 ################################################################################
@@ -302,20 +311,20 @@ linux_repo_includes_list:
   - x86_64
   - source
   - SRPMS
+  - aarch64
+  - armhfp
+  - debug
 
 linux_repo_excludes_list:
   - development
   - updates/testing
   - releases/test
-  - debug
   - beta
   - testing
-  - aarch64
   - ppc
   - ppc64
   - ppc64le
   - arm
-  - armhfp
   - alpha
   - ia64
   - i386
@@ -342,6 +351,9 @@ ubuntu_repo_excludes_list:
 
 openbsd_repo_includes_list:
   - amd64
+  - sparc64
+  - aarch64
+  - macppc
 
 openbsd_repo_excludes_list:
   - i386
@@ -349,7 +361,6 @@ openbsd_repo_excludes_list:
   - armish
   - armv7
   - arm64
-  - aarch64
   - alpha
   - snapshots
   - songs
@@ -361,7 +372,6 @@ openbsd_repo_excludes_list:
   - landisk
   - loongson
   - luna88k
-  - macppc
   - mips64
   - mips64el
   - m68k
@@ -374,7 +384,6 @@ openbsd_repo_excludes_list:
   - sgi
   - socppc
   - sparc
-  - sparc64
   - vax
   - zaurus
   - '*.torrent'
@@ -419,6 +428,8 @@ fedora_prev_release: 33
 
 fedora_architectures:
   - x86_64
+  - aarch64
+  - armhfp
 
 fedora_secondary_architectures:
   #- ppc
