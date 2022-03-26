@@ -19,7 +19,7 @@ do
         sleep 10
 	date
 {% endif %}
-	rsync -aHvz --keep-dirlinks --delete-during --delete-excluded --progress \
+	rsync -aHKvz --keep-dirlinks --delete-during --delete-excluded --progress \
 {% for item in linux_repo_includes_list %}
         --include '{{item}}' \
 {% endfor %}
