@@ -202,6 +202,7 @@ ssh_keys_required:
 # Kickstart Config Parameters                                                  #
 ################################################################################
 ks_configs_list:
+  - eagle-preserve-ks.cfg
   - kvmhost-ks.cfg
   - fipstest-ks.cfg
   - x1carbon-fedora-initial-ks.cfg
@@ -313,7 +314,6 @@ linux_repo_includes_list:
   - SRPMS
   - aarch64
   - armhfp
-  - debug
 
 linux_repo_excludes_list:
   - development
@@ -321,6 +321,7 @@ linux_repo_excludes_list:
   - releases/test
   - beta
   - testing
+  - debug
   - ppc
   - ppc64
   - ppc64le
