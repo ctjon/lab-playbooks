@@ -331,11 +331,11 @@ linux_repo_excludes_list:
   - i386
   - s390
   - s390x
-  - "*.iso"
-  - "*.qcow2"
   - "*.torrent"
   - "*.box"
-  - "*.raw.xz"
+#  - "*.iso"
+#  - "*.qcow2"
+#  - "*.raw.xz"
 
 ubuntu_repo_includes_list:
   - "xenial*"  # 16.04.6 LTS Xenial Xerus
@@ -387,6 +387,7 @@ openbsd_repo_excludes_list:
   - sparc
   - vax
   - zaurus
+  - 'debug-*'
   - '*.torrent'
 
 linux_distros:
