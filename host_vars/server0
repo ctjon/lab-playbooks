@@ -352,9 +352,12 @@ ubuntu_repo_excludes_list:
 
 openbsd_repo_includes_list:
   - amd64
-  - sparc64
+  - arm64
+  - armv7
   - aarch64
   - macppc
+  - powerpc64
+  - sparc64
 
 openbsd_repo_excludes_list:
   - i386
@@ -381,7 +384,6 @@ openbsd_repo_excludes_list:
   - mvme88k
   - octeon
   - powerpc
-  - powerpc64
   - sgi
   - socppc
   - sparc
@@ -393,7 +395,7 @@ openbsd_repo_excludes_list:
 linux_distros:
   - fedora
   - rhel
-#  - centos
+  - centos
 
 rhel_versions:
   - 6
