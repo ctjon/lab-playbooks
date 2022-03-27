@@ -19,7 +19,7 @@ while [ "$?" -ne "0" ]
 do
         sleep 10
 {% endif %}
-	rsync -aHKvz --keep-dirlinks --delete-during --delete-excluded --progress \
+	rsync -aHKvz --keep-dirlinks --delete --delete-during --delete-excluded --progress \
 {% for item in openbsd_repo_includes_list %}
         --include={{item}} \
 {% endfor %}

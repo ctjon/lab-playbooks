@@ -14,7 +14,7 @@ do
 	sleep 10
 {% endif %}
 	date
-	rsync -aHKvz --keep-dirlinks --delete-during --delete-excluded --progress \
+	rsync -aHKvz --keep-dirlinks --delete --delete-during --delete-excluded --progress \
         --exclude=.htaccess \
  	$SRCDIR $TGTDIR
 {% if sync_script_retries == true %}

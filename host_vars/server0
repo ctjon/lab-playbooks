@@ -384,6 +384,7 @@ openbsd_repo_excludes_list:
   - mvme88k
   - octeon
   - powerpc
+  - riscv64
   - sgi
   - socppc
   - sparc
