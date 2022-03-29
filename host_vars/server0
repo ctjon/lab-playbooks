@@ -413,11 +413,17 @@ rhel_architectures:
 
 centos_versions:
   - 7
-  - 8
-  - 9
 
 centos_architectures:
   - x86_64
+
+centos_stream_versions:
+  - 8-stream
+#  - 9-stream
+
+centos_stream_architectures:
+  - x86_64
+#  - aarch64 <<<< breaks shit, need to create a hash table instead
 
 fedora_versions:
   - 34

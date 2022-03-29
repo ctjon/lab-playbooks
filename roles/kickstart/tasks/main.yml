@@ -3,9 +3,9 @@
   include_vars:
     file: luks-key.yml
 
-- name: install tftp-server, tftp, and firewalld
+- name: install necessary packages
   ansible.builtin.package:
-    name: tftp-server, tftp, syslinux, firewalld
+    name: tftp-server, tftp, syslinux, syslinux-tftpboot, firewalld
     state: latest
 
 - name: start and enable tftp service
@@ -40,19 +40,19 @@
     - 68/udp    # bootpc UDP
     - 4011/udp  # pxe
 
-- name: synchronize /usr/share/syslinux content to {{tftpbootdir}}
-  ansible.builtin.synchronize:
-    src: "/usr/share/syslinux/"
-    dest: "{{tftpbootdir}}"
-    archive: yes
-    delete: yes
-    links: yes
-    recursive: yes
-    times: yes
-    rsync_opts: 
-      - "--exclude=pxelinux.cfg"
-      - "--exclude=images"
-  delegate_to: "{{ inventory_hostname }}"
+#- name: synchronize /usr/share/syslinux content to {{tftpbootdir}}
+#  ansible.builtin.synchronize:
+#    src: "/usr/share/syslinux/"
+#    dest: "{{tftpbootdir}}"
+#    archive: yes
+#    delete: yes
+#    links: yes
+#    recursive: yes
+#    times: yes
+#    rsync_opts: 
+#      - "--exclude=pxelinux.cfg"
+#      - "--exclude=images"
+#  delegate_to: "{{ inventory_hostname }}"
 
 - name: create {{tftpbootdir}}/{pxelinux.cfg,images} directories
   ansible.builtin.file:
@@ -123,7 +123,7 @@
     - "{{rhel_versions}}"
     - "{{rhel_architectures}}"
 
-- name: synchronize RHEL pxeboot content to {{tftpbootdir}}/images/fedora
+- name: synchronize RHEL pxeboot content to {{tftpbootdir}}/images/rhel
   ansible.builtin.synchronize:
     src: "{{installdir}}/Linux/rhel/{{item[0]}}/{{item[1]}}/images/pxeboot/"
     dest: "{{tftpbootdir}}/images/rhel/{{item[0]}}/{{item[1]}}/"
@@ -139,51 +139,99 @@
 ################################################################################
 # CentOS images Files copies                                                   #
 ################################################################################
-- name: create CentOS 7 {{tftpbootdir}}/images/linux/centos/version/arch directories
+- name: create CentOS {{tftpbootdir}}/images/linux/centos/version/arch directories
   ansible.builtin.file:
-    path: "{{tftpbootdir}}/images/centos/7/{{item}}"
+    path: "{{tftpbootdir}}/images/centos/{{item[0]}}/{{item[1]}}"
     owner: root
     group: root
     mode: 0755
     state: directory
     recurse: yes
-  with_items:
+  with_nested:
+    - "{{centos_versions}}"
     - "{{centos_architectures}}"
 
-- name: synchronize CentOS 7 content to {{tftpbootdir}}/images/centos
+- name: create CentOS Stream {{tftpbootdir}}/images/linux/centos/version/arch directories
+  ansible.builtin.file:
+    path: "{{tftpbootdir}}/images/centos/{{item[0]}}/{{item[1]}}"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+    recurse: yes
+  with_nested:
+    - "{{centos_stream_versions}}"
+    - "{{centos_architectures}}"
+
+- name: synchronize CentOS initrd and vmlinuz to {{tftpbootdir}}/images/centos
   ansible.builtin.synchronize:
-    src: "{{installdir}}/Linux/centos/7/os/{{item}}/images/pxeboot/"
-    dest: "{{tftpbootdir}}/images/centos/7/{{item}}/"
+    src: "{{installdir}}/Linux/centos/{{item[0]}}/os/{{item[1]}}/images/pxeboot/"
+    dest: "{{tftpbootdir}}/images/centos/{{item[0]}}/{{item[1]}}/"
     archive: yes
     delete: yes
     links: yes
     times: yes
   delegate_to: "{{ inventory_hostname }}"
-  with_items:
+  with_nested:
+    - "{{centos_versions}}"
     - "{{centos_architectures}}"
 
-#- name: create CentOS 8+ {{tftpbootdir}}/images/linux/centos/version/arch directories
-#  ansible.builtin.file:
-#    path: "{{tftpbootdir}}/images/centos/8/{{item}}"
-#    owner: root
-#    group: root
-#    mode: 0755
-#    state: directory
-#    recurse: yes
-#  with_items:
-#    - "{{centos_architectures}}"
+- name: copy CentOS 7- BOOTX64.EFI to {{tftpbootdir}}/images/centos
+  ansible.builtin.copy:
+    src: "{{installdir}}/Linux/centos/{{item[0]}}/os/{{item[1]}}/EFI/BOOT/BOOTX64.EFI"
+    dest: "{{tftpbootdir}}/images/centos/{{item[0]}}/{{item[1]}}/"
+    owner: root
+    group: root
+    remote_src: yes
+  with_nested:
+    - "{{centos_versions}}"
+    - "{{centos_architectures}}"
 
-#- name: synchronize CentOS 8+ pxeboot content to {{tftpbootdir}}/images/centos
-#  ansible.builtin.synchronize:
-#    src: "{{installdir}}/Linux/centos/8/BaseOS/{{item}}/os/images/pxeboot/"
-#    dest: "{{tftpbootdir}}/images/centos/8/{{item}}/"
-#    archive: yes
-#    delete: yes
-#    links: yes
-#    times: yes
-#  delegate_to: "{{ inventory_hostname }}"
-#  with_items:
-#    - "{{centos_architectures}}"
+- name: copy CentOS 7- grubx64.efi to {{tftpbootdir}}/images/centos
+  ansible.builtin.copy:
+    src: "{{installdir}}/Linux/centos/{{item[0]}}/os/{{item[1]}}/EFI/BOOT/grubx64.efi"
+    dest: "{{tftpbootdir}}/images/centos/{{item[0]}}/{{item[1]}}/"
+    owner: root
+    group: root
+    remote_src: yes
+  with_nested:
+    - "{{centos_versions}}"
+    - "{{centos_architectures}}"
+
+- name: synchronize CentOS content to {{tftpbootdir}}/images/centos
+  ansible.builtin.synchronize:
+    src: "{{installdir}}/Linux/centos/{{item[0]}}/BaseOS/{{item[1]}}/os/images/pxeboot/"
+    dest: "{{tftpbootdir}}/images/centos/{{item[0]}}/{{item[1]}}/"
+    archive: yes
+    delete: yes
+    links: yes
+    times: yes
+  delegate_to: "{{ inventory_hostname }}"
+  with_nested:
+    - "{{centos_stream_versions}}"
+    - "{{centos_stream_architectures}}"
+
+- name: copy CentOS 8-stream+ BOOTX64.EFI to {{tftpbootdir}}/images/centos
+  ansible.builtin.copy:
+    src: "{{installdir}}/Linux/centos/{{item[0]}}/BaseOS/{{item[1]}}/os/EFI/BOOT/BOOTX64.EFI"
+    dest: "{{tftpbootdir}}/images/centos/{{item[0]}}/{{item[1]}}/"
+    owner: root
+    group: root
+    remote_src: yes
+  with_nested:
+    - "{{centos_stream_versions}}"
+    - "{{centos_stream_architectures}}"
+
+- name: copy CentOS 8-stream+ grubx64.efi to {{tftpbootdir}}/images/centos
+  ansible.builtin.copy:
+    src: "{{installdir}}/Linux/centos/{{item[0]}}/BaseOS/{{item[1]}}/os/EFI/BOOT/grubx64.efi"
+    dest: "{{tftpbootdir}}/images/centos/{{item[0]}}/{{item[1]}}/"
+    owner: root
+    group: root
+    remote_src: yes
+  with_nested:
+    - "{{centos_stream_versions}}"
+    - "{{centos_stream_architectures}}"
 
 ################################################################################
 # Fedora images Files copies                                                   #
@@ -212,6 +260,30 @@
   with_nested:
     - "{{fedora_versions}}"
     - "{{fedora_architectures}}"
+
+- name: synchronize Fedora BOOTX64.EFI to {{tftpbootdir}}/images/fedora
+  ansible.builtin.synchronize:
+    src: "{{installdir}}/Linux/fedora/releases/{{item}}/Everything/x86_64/os/EFI/BOOT/BOOTX64.EFI"
+    dest: "{{tftpbootdir}}/images/fedora/{{item}}/x86_64/"
+    archive: yes
+    delete: yes
+    links: yes
+    times: yes
+  delegate_to: "{{ inventory_hostname }}"
+  with_items:
+    - "{{fedora_versions}}"
+
+- name: synchronize Fedora grubx64.efi to {{tftpbootdir}}/images/fedora
+  ansible.builtin.synchronize:
+    src: "{{installdir}}/Linux/fedora/releases/{{item}}/Everything/x86_64/os/EFI/BOOT/grubx64.efi"
+    dest: "{{tftpbootdir}}/images/fedora/{{item}}/x86_64/"
+    archive: yes
+    delete: yes
+    links: yes
+    times: yes
+  delegate_to: "{{ inventory_hostname }}"
+  with_items:
+    - "{{fedora_versions}}"
 
 ################################################################################
 # Ubuntu images Files copies                                                   #
