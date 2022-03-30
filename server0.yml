@@ -54,8 +54,9 @@
     - role: syncscripts
       tags: ['syncscripts']
 
-    - role: scripts
-      tags: ['scripts']
+# BROKEN - needs fixing
+#    - role: scripts
+#      tags: ['scripts']
 
     - role: kickstart
       tags: ['kickstart']

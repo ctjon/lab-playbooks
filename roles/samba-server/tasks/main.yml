@@ -44,6 +44,7 @@
   with_items: "{{ samba_users }}"
   loop_control:
     label: "{{ item.name }}"
+  no_log: true
 
 - name: start and enable smb and nmb services
   ansible.builtin.service:

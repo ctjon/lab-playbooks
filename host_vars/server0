@@ -140,12 +140,12 @@ samba_trusted_write_users:
 
 tm_trusted_write_users:
   - chris
-  - kelly
+#  - kelly
 
 backup_trusted_write_users:
   - chris
-  - kelly
-  - james
+#  - kelly
+#  - james
 
 samba_shares:
   - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
@@ -319,6 +319,7 @@ linux_repo_excludes_list:
   - development
   - updates/testing
   - releases/test
+  - debug
   - beta
   - testing
   - debug
