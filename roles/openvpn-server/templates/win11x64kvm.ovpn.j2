@@ -5,8 +5,8 @@ remote {{ public_ip }}
 persist-key
 persist-tun
 ca ca.crt
-cert easyrsa/pki/issued/win10.crt
-key easyrsa/pki/private/win10.key
+cert easyrsa/pki/issued/win11x64kvm.crt
+key easyrsa/pki/private/win11x64kvm.key
 {% if two_fa is defined %}
 auth-user-pass
 {% endif %}

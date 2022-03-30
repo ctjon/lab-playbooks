@@ -1,19 +1,19 @@
 #plugin /usr/lib64/openvpn/plugins/openvpn-plugin-auth-pam.so openvpn 
 
 local {{ primary_ipaddr }}
-port {{openvpn_port}}
+port {{openvpn_tcp_port}}
 proto tcp
 dev tun
 ca /etc/openvpn/easyrsa/pki/ca.crt
 cert /etc/openvpn/easyrsa/pki/issued/main.crt
 key /etc/openvpn/easyrsa/pki/private/main.key
 dh /etc/openvpn/easyrsa/pki/dh.pem
-server 172.16.6.0 255.255.255.0
+server {{openvpn_tcp_subnet}} {{openvpn_tcp_netmask}}
 ifconfig-pool-persist ipp.txt
 client-config-dir /etc/openvpn/ccd
-push "route 172.16.1.0 255.255.255.0"
+push "route {{primary_shortnet}}.0 {{primary_netmask}}"
 push "redirect-gateway def1 bypass-dhcp"
-push "dhcp-option DNS 172.16.1.1"
+push "dhcp-option DNS {{primary_dns_servers|join(" ")}}"
 client-to-client
 keepalive 10 900
 tls-auth /etc/openvpn/easyrsa/pki/private/ta.key 0
