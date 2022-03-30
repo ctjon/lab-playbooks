@@ -224,19 +224,19 @@
     zone: "{{openvpn_fw_zone}}"
   notify: restart firewalld
 
-- name: Open OpenVPN Port {{ openvpn_udp_port }}/udp
+- name: Open OpenVPN Port {{ openvpn_internal_udp_port }}/udp
   ansible.builtin.firewalld:
     immediate: yes
-    port: "{{ openvpn_udp_port }}/udp"
+    port: "{{ openvpn_internal_udp_port }}/udp"
     state: enabled
     permanent: yes
     zone: "{{openvpn_fw_zone}}"
   notify: restart firewalld
 
-- name: Open OpenVPN Port "{{ openvpn_tcp_port }}/tcp"
+- name: Open OpenVPN Port "{{ openvpn_internal_tcp_port }}/tcp"
   ansible.builtin.firewalld:
     immediate: yes
-    port: "{{ openvpn_tcp_port }}/tcp"
+    port: "{{ openvpn_internal_tcp_port }}/tcp"
     state: enabled
     permanent: yes
     zone: "{{openvpn_fw_zone}}"
