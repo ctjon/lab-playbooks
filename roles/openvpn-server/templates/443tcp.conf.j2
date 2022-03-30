@@ -1,7 +1,7 @@
 #plugin /usr/lib64/openvpn/plugins/openvpn-plugin-auth-pam.so openvpn 
 
 local {{ primary_ipaddr }}
-port {{openvpn_tcp_port}}
+port {{openvpn_internal_tcp_port}}
 proto tcp
 dev tun
 ca /etc/openvpn/easyrsa/pki/ca.crt
@@ -26,8 +26,8 @@ user nobody
 group nobody
 persist-key
 persist-tun
-status /var/log/openvpn/openvpn-{{openvpn_tcp_port}}tcp-status.log
-log /var/log/openvpn/openvpn-{{openvpn_tcp_port}}tcp.log
+status /var/log/openvpn/openvpn-{{openvpn_internal_tcp_port}}tcp-status.log
+log /var/log/openvpn/openvpn-{{openvpn_internal_tcp_port}}tcp.log
 verb 3
 reneg-sec 10800
 explicit-exit-notify 0

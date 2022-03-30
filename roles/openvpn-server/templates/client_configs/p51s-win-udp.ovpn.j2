@@ -1,12 +1,12 @@
 client
 dev tun
 proto udp
-remote {{ public_ip }}
+remote {{ public_ip }} {{openvpn_external_udp_port}}
 persist-key
 persist-tun
 ca ca.crt
-cert easyrsa/pki/issued/p51s-linux.crt
-key easyrsa/pki/private/p51s-linux.key
+cert easyrsa/pki/issued/p51s-win.crt
+key easyrsa/pki/private/p51s-win.key
 {% if two_fa is defined %}
 auth-user-pass
 {% endif %}

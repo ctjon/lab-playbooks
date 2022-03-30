@@ -1,7 +1,7 @@
 client
 dev tun
 proto udp
-remote {{ public_ip }} {{openvpn_port}}
+remote {{ public_ip }} {{openvpn_external_udp_port}}
 nobind
 user nobody
 group nobody

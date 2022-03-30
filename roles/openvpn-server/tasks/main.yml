@@ -180,7 +180,7 @@
 
 - name: Create Client Config
   ansible.builtin.template:
-    src: "{{item}}.ovpn.j2"
+    src: "client_configs/{{item}}.ovpn.j2"
     dest: "{{openvpn_dir}}/clients/{{item}}.ovpn"
     owner: "{{openvpn_user}}"
     group: "{{openvpn_group}}"
@@ -255,7 +255,7 @@
 
 - name: add masquerading to {{openvpn_fw_zone}}
   ansible.builtin.firewalld:
-    masquerade: yes
+    masquerade: 'yes'
     state: enabled
     permanent: yes
     zone: "{{openvpn_fw_zone}}"
