@@ -11,7 +11,7 @@ dh /etc/openvpn/easyrsa/pki/dh.pem
 server {{openvpn_udp_subnet}} {{openvpn_udp_netmask}}
 ifconfig-pool-persist ipp.txt
 client-config-dir /etc/openvpn/ccd
-push "route {{primary_shortnet}}.0 {{primary_netmask}}"
+push "route {{primary_short_net}}.0 {{primary_netmask}}"
 push "redirect-gateway def1 bypass-dhcp"
 push "dhcp-option DNS {{primary_dns_servers|join(" ")}}"
 client-to-client
@@ -26,8 +26,8 @@ user nobody
 group nobody
 persist-key
 persist-tun
-status /var/log/openvpn/openvpn-{{openvpn_port}}udp-status.log
-log /var/log/openvpn/openvpn-{{openvpn_port}}udp.log
+status /var/log/openvpn/openvpn-{{openvpn_udp_port}}udp-status.log
+log /var/log/openvpn/openvpn-{{openvpn_udp_port}}udp.log
 verb 3
 reneg-sec 10800
 explicit-exit-notify 1
