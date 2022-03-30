@@ -85,8 +85,8 @@
     - role: apcupsd
       tags: ['apcupsd']
 
-#    - role: openvpn-server
-#      tags: ['openvpn-server']
+    - role: openvpn-server
+      tags: ['openvpn-server']
 
     - role: fail2ban
       tags: ['fail2ban']

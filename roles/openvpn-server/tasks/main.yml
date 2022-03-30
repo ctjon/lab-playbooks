@@ -1,9 +1,13 @@
 # Playbook to install and configure openvpn server as well as client config
 #
 ---
+- name: include secrets.yml
+  include_vars:
+    file: secrets.yml
+
 - name: install required packages
   ansible.builtin.package:
-    name: openvpn, NetworkManager-openvpn, openssl, git, expect, automake, libtool, pam-devel, firewalld, easy-rsa
+    name: openvpn, openssl, git, expect, automake, libtool, pam-devel, firewalld, easy-rsa
     state: latest
 
 - name: install google-authenticator
@@ -21,7 +25,7 @@
 - name: Set ip forwarding and reload if necessary
   ansible.builtin.sysctl:
     name: net.ipv4.ip_forward
-    value: 1
+    value: '1'
     sysctl_set: yes
     state: present
     reload: yes
@@ -122,7 +126,7 @@
   when: ta_stat.stat.exists == False
   notify: Restart OpenVPN 
 
-- name: "Create OpenVPN TCP Server Config"
+- name: Create OpenVPN TCP Server Config
   ansible.builtin.template: 
     src: 443tcp.conf.j2
     dest: "{{openvpn_server_dir}}/443tcp.conf"
@@ -130,7 +134,7 @@
     group: "{{openvpn_group}}"
     mode: 600
   when: use_tcp_also == true
-  ansible.builtin.notify: Restart OpenVPN 
+  notify: Restart OpenVPN 
 
 - name: "Create OpenVPN UDP Server Config"
   ansible.builtin.template: 
@@ -234,10 +238,10 @@
     immediate: yes
     port: "{{ openvpn_tcp_port }}/tcp"
     state: enabled
-#    permanent: yes
-#    zone: "{{openvpn_fw_zone}}"
-#  when: use_tcp_also == true
-#  notify: restart firewalld
+    permanent: yes
+    zone: "{{openvpn_fw_zone}}"
+  when: use_tcp_also == true
+  notify: restart firewalld
 
 - name: add tun devices to {{openvpn_fw_zone}}
   ansible.builtin.firewalld:

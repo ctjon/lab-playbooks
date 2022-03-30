@@ -1,6 +1,6 @@
 #plugin /usr/lib64/openvpn/plugins/openvpn-plugin-auth-pam.so openvpn 
 
-local {{ public_ip }}
+local {{ primary_ipaddr }}
 port {{openvpn_port}}
 proto tcp
 dev tun
