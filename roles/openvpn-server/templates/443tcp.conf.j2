@@ -1,8 +1,8 @@
 #plugin /usr/lib64/openvpn/plugins/openvpn-plugin-auth-pam.so openvpn 
 
-local {{ primary_ipaddr }}
+local {{ ovpn_server_ip }}
 port {{openvpn_internal_tcp_port}}
-proto tcp
+proto tcp4
 dev tun
 ca /etc/openvpn/easyrsa/pki/ca.crt
 cert /etc/openvpn/easyrsa/pki/issued/main.crt
