@@ -20,10 +20,10 @@ do
         sleep 10
 {% endif %}
 	rsync -aHKvz --keep-dirlinks --delete --delete-during --delete-excluded --progress \
-{% for item in openbsd_repo_includes_list %}
+{% for item in openbsd_arch_includes %}
         --include={{item}} \
 {% endfor %}
-{% for item in openbsd_repo_excludes_list %}
+{% for item in openbsd_arch_excludes %}
         --exclude={{item}} \
 {% endfor %}
 	--exclude='2.*' \
@@ -31,17 +31,17 @@ do
 	--exclude='4.*' \
 	--exclude='5.*' \
 	--exclude='6.*' \
+	--exclude='7.[0-{{openbsd_prev_dot_release}}]*' \
+	--exclude='snapshots' \
 	--exclude='patches/2.*' \
 	--exclude='patches/3.*' \
 	--exclude='patches/4.*' \
 	--exclude='patches/5.*' \
-	--exclude='patches/6.[0-{{openbsd_prev_dot_release}}]*' \
+	--exclude='patches/7.[0-{{openbsd_prev_dot_release}}]*' \
  	$SRCDIR $TGTDIR
 {% if sync_script_retries == true %}
 done
 {% endif %}
 
 
-# save for when not 7.0 release
-#	--exclude='7.[0-{{openbsd_prev_dot_release}}]*' \
 date

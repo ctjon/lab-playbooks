@@ -454,13 +454,49 @@ ubuntu_server_versions:
 ubuntu_server_architectures:
   - amd64
 
-openbsd_versions:
-  - 6.9
+#openbsd_versions:
+#  - 7.1
 
-openbsd_prev_dot_release: 8
+openbsd_prev_dot_release: 0
 
-openbsd_architectures:
+openbsd_arch_includes:
   - amd64
+  - arm64 
+  - armv7 
+  - aarch64 
+  - macppc 
+  - powerpc64 
+  - sparc64 
+  - sh
+
+openbsd_arch_excludes:
+  - i386 
+  - arm 
+  - armish 
+  - armv7 
+  - arm64 
+  - alpha 
+  - aviion 
+  - beagle 
+  - hp300 
+  - hppa 
+  - landisk 
+  - loongson 
+  - luna88k 
+  - mips64 
+  - mips64el 
+  - m68k 
+  - m88k 
+  - mvme68k 
+  - mvme88k 
+  - octeon
+  - powerpc
+  - riscv64
+  - sgi
+  - socppc
+  - sparc
+  - vax
+  - zaurus
 
 vmware_versions:
   - 6.7.0
