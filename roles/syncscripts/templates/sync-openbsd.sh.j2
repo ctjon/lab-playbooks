@@ -10,7 +10,6 @@ export TGTDIR={{openbsd_install_server_path}}
 echo "********************************************************************************"
 echo "* UPDATING OpenBSD BINARIES                                                    *"
 echo "********************************************************************************"
-
 {% if sync_script_retries == true %}
 # set return code to be false to force first iteration of while loop ironically this give error cause it is an error:-)
 $? = 1
@@ -43,6 +42,5 @@ do
 {% if sync_script_retries == true %}
 done
 {% endif %}
-
 
 date
