@@ -28,7 +28,7 @@
     weekday: "0,3"
     minute: "30"
     hour: "{{0 + start_hour_offset}}"
-    job: "/usr/bin/flock --verbose ---nonblock /var/tmp/sync-fedora.lock {{scripts_dir}}/sync-fedora.sh > {{scripts_logs_dir}}/sync-fedora.log 2>&1"
+    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-fedora.lock {{scripts_dir}}/sync-fedora.sh > {{scripts_logs_dir}}/sync-fedora.log 2>&1"
 
 - name: create crontab entries for {{repo_owner}} to run sync-centos.sh
   ansible.builtin.cron:
