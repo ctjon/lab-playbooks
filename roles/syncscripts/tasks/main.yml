@@ -48,6 +48,15 @@
     hour: "{{2 + start_hour_offset}}"
     job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-epel.lock {{scripts_dir}}/sync-epel.sh > {{scripts_logs_dir}}/sync-epel.log 2>&1"
 
+- name: create crontab entries for {{repo_owner}} to run sync-rpmfusion.sh
+  ansible.builtin.cron:
+    name: "sync-rpmfusion.sh"
+    user: "{{repo_owner}}"
+    weekday: "2,5"
+    minute: "30"
+    hour: "{{3 + start_hour_offset}}"
+    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-rpmfusion.lock {{scripts_dir}}/sync-rpmfusion.sh > {{scripts_logs_dir}}/sync-rpmfusion.log 2>&1"
+
 - name: create crontab entries for {{repo_owner}} to run sync-openbsd.sh
   ansible.builtin.cron:
     name: "sync-openbsd.sh"
