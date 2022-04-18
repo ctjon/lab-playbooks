@@ -260,6 +260,7 @@ scripts_logs_dir: /home/chris/logs
 
 sync_scripts_list:
   - sync-fedora.sh
+  - sync-rpmfusion.sh
   - sync-centos.sh
   - sync-epel.sh
   - sync-openbsd.sh
