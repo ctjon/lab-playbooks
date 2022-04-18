@@ -21,6 +21,8 @@ do
 {% endif %}
 	date
 	rsync -aHKvz --keep-dirlinks --delete --delete-during --delete-excluded --progress \
+        --exclude='debug' \
+        --exclude='i386' \
  	$SRCDIR $TGTDIR
 {% if sync_script_retries == true %}
 done
