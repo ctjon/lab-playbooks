@@ -21,6 +21,9 @@ do
 {% endif %}
 	date
 	rsync -aHKvz --keep-dirlinks --delete --delete-during --delete-excluded --progress \
+        --exclude='31' \
+        --exclude='32' \
+        --exclude='33' \
         --exclude='debug' \
         --exclude='i386' \
         --exclude='testing' \
