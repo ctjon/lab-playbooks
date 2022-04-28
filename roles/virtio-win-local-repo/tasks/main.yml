@@ -1,0 +1,35 @@
+---
+- name: Make a distro repo file backup directory /etc/yum.repos.d/save
+  ansible.builtin.file:
+    path: /etc/yum.repos.d/save
+    state: directory
+    mode: '0755'
+
+- name: Check to see if repo files require backup
+  ansible.builtin.stat:
+    path: /etc/yum.repos.d/virtio-win.repo
+  register: result
+
+- name: Backup original repo files to /etc/yum.repos.d/save directory
+  ansible.builtin.copy:
+    src: /etc/yum.repos.d/virtio-win.repo
+    dest: /etc/yum.repos.d/save/virtio-win.repo
+    owner: root
+    group: root
+    mode: '0644'
+    remote_src: true
+  when: result.stat.exists
+        
+- name: Remove original repo files from /etc/yum.repos.d
+  ansible.builtin.file:
+    path: /etc/yum.repos.d/virtio-win.repo
+    state: absent
+
+- name: Install virtio-win repo files in /etc/yum.repos.d for local server
+  get_url:
+    url: "{{linux_install_server_url}}/ConfigFiles/etc/yum.repos.d/virtio-win-{{linux_install_server_hostname}}.repo"
+    dest: "/etc/yum.repos.d/virtio-win-{{linux_install_server_hostname}}.repo"
+    owner: root
+    group: root
+    mode: '0644'
+...

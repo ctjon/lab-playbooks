@@ -51,6 +51,9 @@
     - role: syncscripts
       tags: ['syncscripts']
 
+    - role: virtio-win-local-repo
+      tags: ['virtio-win-local-repo']
+
 # BROKEN - needs fixing
 #    - role: scripts
 #      tags: ['scripts']
@@ -107,14 +110,6 @@
 
 
   tasks:
-    - name: Install virtio-win repo files in /etc/yum.repos.d for local server
-      get_url:
-        url: "{{inux_install_server_url}}/ConfigFiles/Linux/etc/yum.repos.d/virtio-win-{{linux_install_server_hostname}}.repo"
-        dest: "/etc/yum.repos.d/virtio-win-{{linux_install_server_hostname}}.repo"
-        owner: root
-        group: root
-        mode: '0644'
-
     - name: configure system to keep only 2 most recent kernels
       ansible.builtin.replace:
         path: /etc/dnf/dnf.conf
