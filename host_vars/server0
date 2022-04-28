@@ -455,8 +455,8 @@ ubuntu_server_versions:
 ubuntu_server_architectures:
   - amd64
 
-#openbsd_versions:
-#  - 7.1
+openbsd_versions:
+  - 7.1
 
 openbsd_prev_dot_release: 0
 

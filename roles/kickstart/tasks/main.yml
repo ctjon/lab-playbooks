@@ -338,7 +338,7 @@
 ################################################################################
 # OpenBSD images Files copies                                                  #
 ################################################################################
-- name: create OpenBSD {{tftpbootdir}}/images/linux/openbsd/architecture directories
+- name: create OpenBSD {{tftpbootdir}}/images/openbsd/architecture directories
   ansible.builtin.file:
     path: "{{tftpbootdir}}/images/openbsd/{{item}}"
     owner: root
