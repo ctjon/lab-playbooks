@@ -1,52 +1,42 @@
 ---
-- name: disable fedora internet repositories
-  command: dnf config-manager --set-disabled "{{ item }}" --save
-  with_items: "{{fedora_repos_list}}"
-  args:
-    warn: false # set warn=false to avoid warnings about dnf command/module
+#- name: disable fedora internet repositories
+#  ansible.builtin.command: dnf config-manager --set-disabled "{{ repoName }}" --save
+#  args:
+#    warn: false # set warn=false to avoid warnings about dnf command/module
+#  ignore_errors: yes
 
-#
-# Special case to setup base repo because it is in the os subdirectory, unlike
-# updates and extras which are in directories with the same name:-(
-#
-- name: setup Fedora repos to install from {{linux_install_server_url}}
-  yum_repository:
-    name: fedora-{{linux_install_server_hostname}}
-    description: "Fedora-{{linux_install_server_hostname}} $releasever - $basearch"
-    file: /etc/yum.repos.d/tjon-fedora
-    baseurl: "{{ linux_install_server_url }}/fedora/releases/$releasever/Everything/$basearch/os/"
-    enabled: yes
-    metadata_expire: 1d
-    repo_gpgcheck: 0
-    #type: rpm
-    gpgcheck: yes
-    gpgkey: "{{fedora_gpg_key_file}}"
-    skip_if_unavailable: false
-    keepcache: "0"
-    failovermethod: priority
+- name: Make a distro repo file backup directory /etc/yum.repos.d/save
+  ansible.builtin.file:
+    path: /etc/yum.repos.d/save
+    state: directory
+    mode: '0755'
 
-- name: setup Fedora repos to install from {{linux_install_server_url}}/fedora
-  yum_repository:
-    name: updates-{{linux_install_server_hostname}}
-    description: "Fedora-Updates-{{linux_install_server_hostname}} $releasever - $basearch"
-    file: /etc/yum.repos.d/tjon-fedora
-    baseurl: "{{ linux_install_server_url }}/fedora/updates/$releasever/Everything/$basearch/"
-    enabled: yes
-    metadata_expire: 1d
-    repo_gpgcheck: 0
-    #type: rpm
-    gpgcheck: yes
-    gpgkey: "{{fedora_gpg_key_file}}"
-    skip_if_unavailable: false
-    keepcache: "0"
-    failovermethod: priority
+- name: Backup original distro repo files
+  block:
+    - name: Check to see if repo files require backup
+      ansible.builtin.stat:
+        path: "{repoName}}.repo"
+      register: result
 
-- name: configure system to keep only 2 most recent kernels
-  replace:
-    path: /etc/dnf/dnf.conf
-    regexp: '^installonly_limit=.+\n'
-    replace: 'installonly_limit="{{installed_kernel_limit}}"\n'
-    owner: root
-    group: root
-    mode: 0644
+    - name: Backup original repo files to /etc/yum.repos.d/save directory
+      ansible.builtin.copy:
+        src: "/etc/yum.repos.d/{{repoName}}.repo"
+        dest: "/etc/yum.repos.d/save/{{repoName}}.repo"
+        owner: root
+        group: root
+        mode: '0644'
+      when: result.stat.exists
+        
+    - name: Remove original repo files from /etc/yum.repos.d
+      ansible.builtin.file:
+        path: "/etc/yum.repos.d/{{repoName}}.repo"
+        state: absent
+      when: result.stat.exists
+
+    - name: Install new repo files in /etc/yum.repos.d for local server
+      get_url: 
+        url: "{{linux_install_server_url}}/ConfigFiles/etc/yum.repos.d/{{repoName}}-{{linux_install_server_hostname}}.repo"
+        dest: "/etc/yum.repos.d/{{repoName}}-{{linux_install_server_hostname}}.repo"
+        mode: '0644'
+  become: true
 ...

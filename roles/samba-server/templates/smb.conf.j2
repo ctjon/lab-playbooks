@@ -351,21 +351,21 @@
 {% endfor %}
 
 {% for item in tm_users %}
-#[{{item.tm_username}}]
-#	valid users = {{item.tm_username}}
-#	comment = {{item.tm_username}}'s Time Machine SMB Share
-#	path = {{tm_storage_path}}/{{item.tm_username}}
-#	public = no
-#	guest ok = no
-#	browseable = yes
-#	writable =  yes
-#	printable = no
-#        create mask = 0600
-#        directory mask = 0700
-#        spotlight = yes
-#        vfs objects = catia fruit streams_xattr
-#        fruit:appl = yes
-#        fruit:time machine = yes
-#        fruit:time machine max size = {{item.tm_vol_size_mb}}
-#
+[{{item.tm_username}}]
+	valid users = {{item.tm_username}}
+	comment = {{item.tm_username}}'s Time Machine SMB Share
+	path = {{tm_storage_path}}/{{item.tm_username}}
+	public = no
+	guest ok = no
+	browseable = yes
+	writable =  yes
+	printable = no
+        create mask = 0600
+        directory mask = 0700
+        spotlight = yes
+        vfs objects = catia fruit streams_xattr
+        fruit:appl = yes
+        fruit:time machine = yes
+        fruit:time machine max size = {{item.tm_vol_size_mb}}
+
 {% endfor %}

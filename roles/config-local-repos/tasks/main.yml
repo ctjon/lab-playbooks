@@ -17,8 +17,9 @@
     - ansible_distribution_major_version == "8"
 
 - name: Perform Fedora 28+ Specific Confgurations
-  import_tasks: fedora.yml
+  include: fedora.yml repoName="{{item}}"
   when:
     - ansible_distribution == "Fedora"
     - ansible_distribution_major_version >= "28"  # 28,29...
+  with_items:  "{{fedora_repos_list}}"
 

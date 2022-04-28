@@ -199,4 +199,9 @@ fedora_repo_base_path: "{{ linux_install_server_url }}/fedora"
 fedora_gpg_key_file: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}"
 fedora_repos_list:
   - fedora
-  - updates
+  - fedora-modular
+  - fedora-updates
+  - fedora-updates-modular
+
+virtio-win_repos_list:
+  - virtio-win

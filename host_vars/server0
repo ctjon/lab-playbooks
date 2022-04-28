@@ -87,7 +87,7 @@ vhosts:
   - {name: server0, document_root: /var/www/html, alias: server0, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
   - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: /dev/sda2}
   - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: /dev/rootvg/archivelv}
-#  - {name: plex, document_root: /export/plex, alias: plex, fcontext: public_content_rw_t, lv_name: /dev/datavg/plexlv}
+  - {name: plex, document_root: /export/plex, alias: plex, fcontext: public_content_rw_t, lv_name: /dev/datavg/plexlv}
 #  - {name: satcontent, document_root: /export/satcontent, alias: satcontent, fcontext: public_content_rw_t, lv_name: /dev/datavg/sat_content_lv}
 
 ################################################################################
@@ -150,7 +150,7 @@ backup_trusted_write_users:
 samba_shares:
   - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
   - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
-#  - {path: /export/time_machine, name: TimeMachine, public: 'no', guest_ok: 'no', browseable: 'yes', writeable: 'yes', printable: 'no', vfs objects: 'fruit streams_xattr', fruit:time machine: 'yes', trusted_write_users: '{{tm_trusted_write_users}}'}
+  - {path: /export/time_machine, name: TimeMachine, public: 'no', guest_ok: 'no', browseable: 'yes', writeable: 'yes', printable: 'no', vfs objects: 'fruit streams_xattr', fruit:time machine: 'yes', trusted_write_users: '{{tm_trusted_write_users}}'}
   - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
   - {path: /export/backup, name: Backup, public: 'no', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{backup_trusted_write_users}}'}
 
@@ -166,12 +166,12 @@ atalk_users:
 # Time Machine Specific Configuration Paramters (AFP & SMB)                    #
 ################################################################################
 tm_users:
-  - {tm_username: 'chris', tm_vol_size_mb: '1024000'}
-  - {tm_username: 'kelly', tm_vol_size_mb: '512000'}
+  - {tm_username: 'chris', tm_vol_size_mb: '2048000'}
+  - {tm_username: 'kelly', tm_vol_size_mb: '1024000'}
 
-tm_storage_vg: datavg
+tm_storage_vg: backupvg
 tm_storage_lv: tmlv
-tm_storage_lv_size: 1t
+tm_storage_lv_size: 4t
 tm_storage_fs_type: xfs
 tm_storage_path: /export/time_machine
 
