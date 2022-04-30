@@ -66,12 +66,17 @@
 
 [global]
 
-# Special configuration for Apple's Time Machine
-fruit:model = Xserve
-fruit:advertise_fullsync = true
-fruit:aapl = yes
-hide files = /.DS_Store/Network Trash Folder/TheFindByContentFolder/TheVolumeSettingsFolder/Temporary Items/.TemporaryItems/.VolumeIcon.icns/Icon?/.FBCIndex/.FBCLockFolder/
+# For netatalk compatibility
+    ea support = Yes
+    vfs objects = acl_xattr catia fruit streams_xattr
+    fruit:locking = netatalk
+    fruit:encoding = native
+    streams_xattr:prefix = user.
+    streams_xattr:store_stream_type = no
 
+    hide files = /.DS_Store/Network Trash Folder/TheFindByContentFolder/TheVolumeSettingsFolder/Temporary Items/.TemporaryItems/.VolumeIcon.icns/Icon?/.FBCIndex/.FBCLockFolder/
+
+    read only = No
 
 # ----------------------- Network-Related Options -------------------------
 #
@@ -347,22 +352,16 @@ hide files = /.DS_Store/Network Trash Folder/TheFindByContentFolder/TheVolumeSet
 
 {% for item in tm_users %}
 [{{item.tm_username}}]
-	path = {{tm_storage_path}}/{{item.tm_username}}
+        vfs objects = acl_xattr catia fruit streams_xattr
+        fruit: nfs_access = no
+
 	valid users = {{item.tm_username}}
 	comment = {{item.tm_username}}'s Time Machine SMB Share
-	writable =  yes
-        durable handles = yes
-        kernel oplocks = no
-        kernel share modes = no
-        posix locking = no
-        vfs objects = catia fruit streams_xattr
-        ea support = yes
-        browseable = yes
-        read only = no
-        inherit acls = yes
+	path = {{tm_storage_path}}/{{item.tm_username}}
 	public = no
 	guest ok = no
 	browseable = yes
+	writable =  yes
 	printable = no
         create mask = 0600
         directory mask = 0700

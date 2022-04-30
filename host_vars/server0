@@ -313,10 +313,10 @@ linux_repo_includes_list:
   - x86_64
   - source
   - SRPMS
-  - aarch64
-  - armhfp
 
 linux_repo_excludes_list:
+  - aarch64
+  - armhfp
   - development
   - updates/testing
   - releases/test
@@ -354,14 +354,14 @@ ubuntu_repo_excludes_list:
 
 openbsd_repo_includes_list:
   - amd64
+
+openbsd_repo_excludes_list:
   - arm64
   - armv7
   - aarch64
   - macppc
   - powerpc64
   - sparc64
-
-openbsd_repo_excludes_list:
   - i386
   - arm
   - armish
@@ -433,7 +433,7 @@ fedora_versions:
 
 # fedora versions that include upgrade.img
 fedora_upgrade_versions:
-  - 34
+#  - 34
   - 35
 
 fedora_prev_release_ones_digit: 3
@@ -441,8 +441,8 @@ fedora_prev_release: 33
 
 fedora_architectures:
   - x86_64
-  - aarch64
-  - armhfp
+#  - aarch64
+#  - armhfp
 
 fedora_secondary_architectures:
   #- ppc
@@ -462,6 +462,8 @@ openbsd_prev_dot_release: 0
 
 openbsd_arch_includes:
   - amd64
+
+openbsd_arch_excludes:
   - arm64 
   - armv7 
   - aarch64 
@@ -469,8 +471,6 @@ openbsd_arch_includes:
   - powerpc64 
   - sparc64 
   - sh
-
-openbsd_arch_excludes:
   - i386 
   - arm 
   - armish 
