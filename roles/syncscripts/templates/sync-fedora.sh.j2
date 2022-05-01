@@ -27,6 +27,7 @@ do
 {% for item in linux_repo_excludes_list %}
 	--exclude='{{item}}' \
 {% endfor %}
+	--exclude='*.iso' \
 	--exclude='core/' \
 	--exclude='releases/7/' \
 	--exclude='releases/8/' \
@@ -85,7 +86,3 @@ done
 #{% if sync_script_retries == true %}
 #done
 #{% endif %}
-<<<<<<< HEAD
-=======
-date
->>>>>>> 6364531 (Latest Commits)
