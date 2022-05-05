@@ -14,8 +14,11 @@ keyboard --vckeymap=us --xlayouts='us'
 # System language
 lang en_US.UTF-8
 
-# Run the Setup Agent on first boot
-firstboot --enable
+# Root password
+rootpw --iscrypted $6$9vrA/lrxWT8.nHLB$zacDVevdnsOAfMNaysD.1sJz83LKfXOUiE3WZ9SszluLyEBlX7cDbuKzgjv0sQw.xhsXjwH0xIpuX4uIXLkph/
+
+user --groups=wheel --name=chris --password=$6$oWM3S2AK4zS.jyDy$716RhjySp6ncIMig2UggFWY5z98sfkmLQLqyWwlw1N4jogYBdjqSRlRjoJd.nr59z7iI68rzP4Y3WLj6Ssr5M. --iscrypted --gecos="Chris Tjon"
+
 
 # Generated using Blivet version 3.4.2
 ignoredisk --only-use=nvme0n1
