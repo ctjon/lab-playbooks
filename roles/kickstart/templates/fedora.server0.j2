@@ -53,6 +53,14 @@ label Fedora-35-x86_64-rescue
   append initrd=images/fedora/35/x86_64/initrd.img net.ifnames=0 biosdevname=0 rescue
 
 #
+# fetcher
+#
+label fetcher
+  menu label Install Fetcher
+  kernel images/fedora/35/x86_64/vmlinuz
+  append initrd=images/fedora/35/x86_64/initrd.img inst.stage2={{linux_install_server_url}}/fedora/releases/35/Server/x86_64/os net.ifnames=0 biosdevname=0 noipv6 bootdev=eth0 ip=dhcp inst.ks={{linux_install_server_url}}/ks-configs/fetcher-ks.cfg 
+
+#
 # test-fedora35 server
 #
 label test-fedora35

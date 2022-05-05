@@ -21,6 +21,9 @@
     - role: setup-br0
       tags: ['setup-br0']
 
+    - role: limit-kernels
+      tags: ['limit-kernels']
+
     - role: config-local-repos
       tags: ['config-local-repos']
 

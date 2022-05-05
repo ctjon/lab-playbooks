@@ -81,7 +81,8 @@ time_client_servers:
 tftpbootdir: /var/lib/tftpboot
 installdir: /export/install
 doc_files_dir: /export/install/Documentation
-archivedir: /export/archive
+archive_dir: /export/archive
+archive_url: http://archive.internal.tjon.net
 
 ################################################################################
 # HTTP Server Parameters                                                       #
@@ -221,6 +222,7 @@ ks_configs_list:
   - test-rhel8-ks.cfg
   - test-rhel9-ks.cfg
   - gitlab-ks.cfg
+  - fetcher-ks.cfg
   - satellite6-ks.cfg
   - satclient0-ks.cfg
   - satclient1-ks.cfg
@@ -316,6 +318,9 @@ linux_repo_includes_list:
   - x86_64
   - source
   - SRPMS
+  - "*.iso"
+  - "*.qcow2"
+  - "*.raw.xz"
 
 linux_repo_excludes_list:
   - aarch64
@@ -338,9 +343,6 @@ linux_repo_excludes_list:
   - s390x
   - "*.torrent"
   - "*.box"
-#  - "*.iso"
-#  - "*.qcow2"
-#  - "*.raw.xz"
 
 ubuntu_repo_includes_list:
   - "xenial*"  # 16.04.6 LTS Xenial Xerus
@@ -357,14 +359,15 @@ ubuntu_repo_excludes_list:
 
 openbsd_repo_includes_list:
   - amd64
-
-openbsd_repo_excludes_list:
   - arm64
   - armv7
   - aarch64
   - macppc
   - powerpc64
   - sparc64
+  - sh
+
+openbsd_repo_excludes_list:
   - i386
   - arm
   - armish
@@ -373,7 +376,6 @@ openbsd_repo_excludes_list:
   - alpha
   - snapshots
   - songs
-  - sh
   - aviion
   - beagle
   - hp300
@@ -439,8 +441,8 @@ fedora_upgrade_versions:
   - 35
 #  - 34
 
-fedora_prev_release_ones_digit: 4
-fedora_prev_release: 34
+fedora_prev_release_ones_digit: 3
+fedora_prev_release: 33
 
 fedora_architectures:
   - x86_64
@@ -448,9 +450,9 @@ fedora_architectures:
 #  - armhfp
 
 fedora_secondary_architectures:
-  #- ppc
-  #- ppc64
-  #- ppc64le
+  - ppc
+  - ppc64
+  - ppc64le
 
 ubuntu_server_versions:
   - 16.04.6
@@ -465,8 +467,6 @@ openbsd_prev_dot_release: 0
 
 openbsd_arch_includes:
   - amd64
-
-openbsd_arch_excludes:
   - arm64 
   - armv7 
   - aarch64 
@@ -474,6 +474,8 @@ openbsd_arch_excludes:
   - powerpc64 
   - sparc64 
   - sh
+
+openbsd_arch_excludes:
   - i386 
   - arm 
   - armish 

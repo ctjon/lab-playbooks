@@ -327,7 +327,7 @@
 
 - name: synchronize OpenWRT image content to {{tftpbootdir}}/images/openwrt
   ansible.builtin.synchronize:
-    src: "{{archivedir}}/OpenWRT/images/"
+    src: "{{archive_dir}}/OpenWRT/images/"
     dest: "{{tftpbootdir}}/images/openwrt"
     archive: yes
     delete: yes
@@ -397,7 +397,7 @@
 
 - name: copy WinPE_amd64.iso to {{tftpbootdir}}/images/windows/10/amd64
   ansible.builtin.copy:
-    src: "{{archivedir}}/Windows/Microsoft/WinPE/WinPE_amd64.iso"
+    src: "{{archive_dir}}/Windows/Microsoft/WinPE/WinPE_amd64.iso"
     dest: "{{tftpbootdir}}/images/windows/10/amd64"
     owner: root
     group: root

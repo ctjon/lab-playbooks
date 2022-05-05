@@ -27,7 +27,6 @@ do
 {% for item in linux_repo_excludes_list %}
 	--exclude='{{item}}' \
 {% endfor %}
-	--exclude='*.iso' \
 	--exclude='core/' \
 	--exclude='releases/7/' \
 	--exclude='releases/8/' \

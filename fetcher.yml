@@ -1,0 +1,147 @@
+---
+#
+# Configure eagle workstation
+#
+
+# CentOS 8 Prerequisites: 
+#	python3
+#	policycoreutils-python3
+#	rsync
+
+- hosts: fetcher
+  become: yes
+
+  roles:
+    - role: config-local-repos
+      tags: ['config-local-repos']
+
+    - role: selinux
+      tags: ['selinux']
+
+    - role: ssh-config
+      tags: ['ssh-config']
+
+    - role: limit-kernels
+      tags: ['limit-kernels']
+
+    - role: shell-env
+      tags: ['shell-env']
+
+    - role: set-default-editor
+      tags: ['set-default-editor']
+
+    - role: apply-updates
+      tags: ['apply-updates']
+
+    - role: time-client
+      tags: ['time-client']
+
+    - role: fail2ban
+      tags: ['fail2ban']
+
+    - role: perf-monitoring
+      tags: ['perf-monitoring']
+
+  tasks:
+    - name: include secrets.yml
+      include_vars:
+        file: group_vars/secrets.yml
+      tags:
+        - fetcher_config
+
+    - name: install other fedora packages 
+      ansible.builtin.package:
+        name: screen, snapd, openvpn, git
+        state: latest
+      notify: restart_openvpn_client
+      tags:
+        - fetcher_config
+
+    - name: checkout the update-resolv-conf repo
+      ansible.builtin.git:
+        repo: 'https://github.com/alfredopalhares/openvpn-update-resolv-conf.git'
+        dest: "/home/{{ansible_user}}/openvpn-update-resolv-conf/"
+        update: yes
+      tags:
+        - fetcher_config
+
+    - name: Install /etc/openvpn/update-resolv-conf
+      ansible.builtin.copy:
+        src: "/home/{{ansible_user}}/openvpn-update-resolv-conf/update-resolv-conf.sh"
+        dest: /etc/openvpn/update-resolv-conf
+        owner: root
+        group: openvpn
+        mode: 0750
+        remote_src: true
+      notify: restart_openvpn_client
+      tags:
+        - fetcher_config
+
+    - name: Create the /etc/openvpn/client/credentials file
+      ansible.builtin.template:
+        src: openvpn-credentials.j2
+        dest: /etc/openvpn/client/credentials
+        owner: root
+        group: openvpn
+        mode: '0440'
+      notify: restart_openvpn_client
+      tags:
+        - fetcher_config
+
+    - name: Install openvpn client config file
+      get_url:
+        url: "{{install_server_url}}/ConfigFiles/{{openvpn_client_config_file}}"
+        dest: "/etc/openvpn/client/{{openvpn_client_config_file}}"
+        owner: root
+        group: openvpn
+        mode: '0640'
+      notify: restart_openvpn_client
+      tags:
+        - fetcher_config
+
+    - name: symlink default openvpn config
+      file:
+        src: "/etc/openvpn/client/{{openvpn_client_config_file}}"
+        dest: /etc/openvpn/client/default.conf
+        owner: root
+        group: openvpn
+        mode: '0440'
+        state: link
+      notify: restart_openvpn_client
+      tags:
+        - fetcher_config
+
+    - name: Enable and restart openvpn client service
+      ansible.builtin.service:
+        name: openvpn-client@default
+        enabled: yes
+      notify: restart_openvpn_client
+      tags:
+        - fetcher_config
+
+    - name: symlink /var/lib/snapd/snap /snap
+      file:
+        src: /var/lib/snapd/snap
+        dest: /snap
+        owner: root
+        group: root
+        state: link
+      tags:
+        - fetcher_config
+
+    - name: Install Snap for Plex Feeds
+      community.general.snap:
+        name: 
+          - sonarr
+          - radar
+      tags:
+        - fetcher_config
+
+
+
+  handlers:
+    - name: restart_openvpn_client
+      ansible.builtin.service:
+        name: openvpn-client@default
+        state: restarted
+

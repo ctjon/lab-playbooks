@@ -37,6 +37,7 @@ log_protocol: tcp
 ################################################################################
 # Installation Source Parameters                                               #
 ################################################################################
+install_server_url: "http://install.internal.tjon.net"
 linux_install_server_url: "http://install.internal.tjon.net/Linux"
 linux_install_server_hostname: server0
 linux_install_server_path: /export/install/Linux
