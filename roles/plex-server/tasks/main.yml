@@ -46,7 +46,7 @@
     state: present
     resizefs: yes
 
-- name: Create a ext4 filesystem on {{ plex_storage_lv }}
+- name: Create a filesystem on {{ plex_storage_lv }}
   ansible.builtin.filesystem:
     fstype: "{{ plex_storage_fs_type }}"
     dev: "/dev/{{plex_storage_vg}}/{{plex_storage_lv}}"
@@ -55,7 +55,7 @@
 
 - name: Create {{plex_storage_path}} mount point
   ansible.builtin.file:
-    path: /export/plex-media
+    path: "{{plex_storage_path}}"
     state: directory
     recurse: no
     owner: root
@@ -77,7 +77,7 @@
 
 - name: Set plex permissions for {{plex_storage_path}} mountpoint after mounted
   ansible.builtin.file:
-    path: /export/plex-media
+    path: "{{plex_storage_path}}"
     state: directory
     recurse: no
     owner: "{{plex_owner}}"
