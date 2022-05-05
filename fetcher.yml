@@ -42,6 +42,9 @@
     - role: perf-monitoring
       tags: ['perf-monitoring']
 
+#    - role: reboot-if-required
+#      tags: ['reboot-if-required']
+
   tasks:
     - name: include secrets.yml
       include_vars:
