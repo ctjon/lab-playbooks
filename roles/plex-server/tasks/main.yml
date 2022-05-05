@@ -86,7 +86,7 @@
 
 - name: install Plex Media Server
   ansible.builtin.package:
-    name: plexmediaserver
+    name: plexmediaserver, firefox, xorg-x11-font*
     state: latest
 
 #- name: install plex Preference.xml
