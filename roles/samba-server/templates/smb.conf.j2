@@ -66,12 +66,21 @@
 
 [global]
 
-# Special configuration for Apple's Time Machine
-fruit:model = Xserve
-fruit:advertise_fullsync = true
-fruit:aapl = yes
-hide files = /.DS_Store/Network Trash Folder/TheFindByContentFolder/TheVolumeSettingsFolder/Temporary Items/.TemporaryItems/.VolumeIcon.icns/Icon?/.FBCIndex/.FBCLockFolder/
+# For netatalk compatibility
+    ea support = yes
+    vfs objects = fruit streams_xattr
+    fruit.metadata = stream
+    fruit.model = MacSamba
+    fruit:veto_appledouble = no
+    fruit:posix_rename = yes
+    fruit:zero_file_id = yes
+    fruit:wipe_intentionally_left_blank_rfork = yes 
+    fruit:delete_empty_adfiles = yes 
+    spotlight = yes
 
+    hide files = /.DS_Store/Network Trash Folder/TheFindByContentFolder/TheVolumeSettingsFolder/Temporary Items/.TemporaryItems/.VolumeIcon.icns/Icon?/.FBCIndex/.FBCLockFolder/
+
+    read only = No
 
 # ----------------------- Network-Related Options -------------------------
 #
@@ -292,10 +301,13 @@ hide files = /.DS_Store/Network Trash Folder/TheFindByContentFolder/TheVolumeSet
 
 #============================ Share Definitions ==============================
 
+
 [homes]
 	comment = Home Directories
 	browseable = no
-	writable = yes
+	read only = no
+	create mask = 0644
+	directory mask = 0755
 	valid users = %S
 ;	valid users = MYDOMAIN\%S
 
@@ -346,29 +358,22 @@ hide files = /.DS_Store/Network Trash Folder/TheFindByContentFolder/TheVolumeSet
 {% endfor %}
 
 {% for item in tm_users %}
-[{{item.tm_username}}]
-	path = {{tm_storage_path}}/{{item.tm_username}}
+[{{item.tm_username}}-TM]
+        vfs objects = acl_xattr catia fruit streams_xattr
+        fruit: nfs_access = no
 	valid users = {{item.tm_username}}
 	comment = {{item.tm_username}}'s Time Machine SMB Share
-	writable =  yes
-        durable handles = yes
-        kernel oplocks = no
-        kernel share modes = no
-        posix locking = no
-        vfs objects = catia fruit streams_xattr
-        ea support = yes
-        browseable = yes
-        read only = no
-        inherit acls = yes
+	path = {{tm_storage_path}}/{{item.tm_username}}
 	public = no
 	guest ok = no
 	browseable = yes
+	writable =  yes
 	printable = no
         create mask = 0600
         directory mask = 0700
-        spotlight = yes
+        spotlight = no
         fruit:appl = yes
         fruit:time machine = yes
-        fruit:time machine max size = {{item.tm_vol_size_mb}}
+        fruit:time machine max size = {{item.tm_vol_size_bytes}}
 
 {% endfor %}

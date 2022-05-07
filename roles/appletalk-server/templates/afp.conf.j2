@@ -21,6 +21,6 @@ valid_users = {{ atalk_users|join(" ") }}
 time machine = yes
 path = {{tm_storage_path}}/{{item.tm_username}}
 valid_users = {{item.tm_username}}
-vol size limit = {{ item.tm_vol_size_mb }}
+vol size limit = {{ item.tm_vol_size_bytes }}
 
 {% endfor %}

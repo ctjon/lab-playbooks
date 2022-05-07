@@ -1,4 +1,4 @@
 # {{ ansible_managed }}
 {% for item in tm_users %} 
-{{ tm_storage_path }}/{{item.tm_username}} {{item.tm_username}}-TM allow: {{item.tm_username}} options:usedots,upriv,tm dperm:0770 fperm:0660 cnidscheme:dbd volsizelimit:{{item.tm_vol_size_mb}}
+{{ tm_storage_path }}/{{item.tm_username}} {{item.tm_username}}-TM allow: {{item.tm_username}} options:usedots,upriv,tm dperm:0770 fperm:0660 cnidscheme:dbd volsizelimit:{{item.tm_vol_size_bytes}}
 {% endfor %} 
