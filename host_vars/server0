@@ -432,16 +432,16 @@ centos_stream_architectures:
 #  - aarch64 <<<< breaks shit, need to create a hash table instead
 
 fedora_versions:
+  - 36
   - 35
-  - 34
 
 # fedora versions that include upgrade.img
 fedora_upgrade_versions:
+  - 36
   - 35
-  - 34
 
-fedora_prev_release_ones_digit: 3
-fedora_prev_release: 33
+fedora_prev_release_ones_digit: 4
+fedora_prev_release: 34
 
 fedora_architectures:
   - x86_64

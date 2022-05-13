@@ -95,10 +95,10 @@ dnf -y install http://archive.internal.tjon.net/Linux/RPMS/Epson/epson-inkjet-pr
 
 # setup flatpak and install useful apps (to me)
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-flatpak install flathub org.signal.Signal
-flatpak install flathub com.tdameritrade.ThinkOrSwim
-flatpak install flathub com.bluejeans.BlueJeans
-flatpak install flathub org.telegram.desktop
+flatpak install -y flathub org.signal.Signal
+flatpak install -y flathub com.tdameritrade.ThinkOrSwim
+flatpak install -y flathub com.bluejeans.BlueJeans
+flatpak install -y flathub org.telegram.desktop
 
 %end
 
