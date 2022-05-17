@@ -6,15 +6,15 @@ LABEL Main Menu
         APPEND pxelinux.cfg/default
 
 #
-# OpenBSD-5.9
+# OpenBSD-7.1
 #
-label OpenBSD-5.9-amd64
-  menu label Install OpenBSD-5.9-amd64
+label OpenBSD-7.1-amd64
+  menu label Install OpenBSD-7.1-amd64
   kernel pxechain.com
-  append ::images/openbsd/5.9/amd64/pxeboot
+  append ::images/openbsd/7.1/amd64/pxeboot
 
-label OpenBSD-5.9-i386
-  menu label Install OpenBSD-5.9-i386
-  kernel pxechain.com
-  append ::images/openbsd/5.9/i386/pxeboot
+label OpenBSD-7.1-macppc
+  menu label Install OpenBSD-7.1-macppc
+  kernel bsd
+  append ::images/openbsd/7.1/macppc/ofwboot
 

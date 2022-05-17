@@ -215,7 +215,7 @@ ks_configs_list:
   - test-centos7-ks.cfg
   - test-centos8-ks.cfg
   - test-fedora35-ks.cfg
-  - test-fedora34-ks.cfg
+  - test-fedora36-ks.cfg
   - test-rhel6-ks.cfg
   - test-rhel7-ks.cfg
   - test-rhel8-ks.cfg
@@ -299,7 +299,7 @@ scripts_list:
   - kvms/define-centos6-test.sh
   - kvms/define-centos7-test.sh
   - kvms/define-centos8-test.sh
-  - kvms/define-fedora34-test.sh
+  - kvms/define-fedora36-test.sh
   - kvms/define-fedora35-test.sh
   - kvms/delete-testvms.sh
   - kvms/define-satellite6.sh
@@ -362,6 +362,7 @@ openbsd_repo_includes_list:
   - armv7
   - aarch64
   - macppc
+  - powerpc
   - powerpc64
   - sparc64
   - sh
@@ -389,7 +390,6 @@ openbsd_repo_excludes_list:
   - mvme68k
   - mvme88k
   - octeon
-  - powerpc
   - riscv64
   - sgi
   - socppc
@@ -447,11 +447,11 @@ fedora_architectures:
   - x86_64
   - aarch64
   - armhfp
+  - ppc64le
 
 fedora_secondary_architectures:
   - ppc
   - ppc64
-  - ppc64le
 
 ubuntu_server_versions:
   - 16.04.6
@@ -470,6 +470,7 @@ openbsd_arch_includes:
   - armv7 
   - aarch64 
   - macppc 
+  - powerpc
   - powerpc64 
   - sparc64 
   - sh
@@ -495,7 +496,6 @@ openbsd_arch_excludes:
   - mvme68k 
   - mvme88k 
   - octeon
-  - powerpc
   - riscv64
   - sgi
   - socppc
