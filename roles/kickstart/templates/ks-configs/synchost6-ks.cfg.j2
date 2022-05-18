@@ -26,7 +26,7 @@ logvol / --fstype=ext4 --name=rootlv --vgname=rootvg --size=1024
 logvol /usr --fstype=ext4 --name=usrlv --vgname=rootvg --size=4096
 logvol /home --fstype=ext4 --name=homelv --vgname=rootvg --size=512
 logvol swap --name=swaplv --vgname=rootvg --size=2048
-logvol /opt --fstype=ext4 --name=optlv --vgname=rootvg --size=32
+logvol /opt --fstype=ext4 --name=optlv --vgname=rootvg --size=256
 logvol /var --fstype=ext4 --name=varlv --vgname=rootvg --size=5120
 logvol /tmp --fstype=ext4 --name=tmplv --vgname=rootvg --size=1024
 
@@ -38,7 +38,7 @@ openssh-clients
 libselinux-python
 yum-utils
 insights-client
-python27-python
+scl-utils
 %end
 
 %post
@@ -55,6 +55,9 @@ curl {{config_files_url}}/sudoers -o /etc/sudoers
 chown -R root:root /etc/sudoers
 chmod 440 /etc/sudoers
 restorecon -RFv /etc/sudoers
+
+#subscription-manager repos --enable rhel-server-rhscl-6-rpms
+#yum -y install python27-python
 
 %end
 
