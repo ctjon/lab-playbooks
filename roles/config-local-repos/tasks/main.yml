@@ -17,7 +17,7 @@
     - ansible_distribution_major_version == "8"
 
 - name: Perform Fedora 28+ Specific Confgurations
-  include: fedora.yml repoName="{{item}}"
+  include: fedora.yml repoName="{{item}}"     ## DEPRECATION WARNING TO FIX HERE
   when:
     - ansible_distribution == "Fedora"
     - ansible_distribution_major_version >= "28"  # 28,29...

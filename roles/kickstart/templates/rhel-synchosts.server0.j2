@@ -16,7 +16,7 @@ LABEL Linux Menu
 label synchost9
   menu label Install RHEL9 SyncHost
   kernel images/rhel/9/x86_64/vmlinuz
-  append initrd=images/rhel/9/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/synchost9-ks.cfg inst.stage2={{linux_install_server_url}}/rhel/9/x86_64
+  append initrd=images/rhel/9/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 inst.ks={{linux_install_server_url}}/ks-configs/synchost9-ks.cfg inst.stage2={{linux_install_server_url}}/rhel/9/x86_64
 
 #
 # synchost8 server
