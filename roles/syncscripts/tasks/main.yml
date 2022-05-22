@@ -21,6 +21,14 @@
   with_items:
     - "{{sync_scripts_list}}"
 
+- name: install cronie
+  ansible.builtin.package:
+    name: cronie
+    state: latest
+  when:
+    - ansible_distribution == "Fedora"
+    - ansible_distribution_major_version > "35"
+
 - name: create crontab entries for {{repo_owner}} to run sync-fedora.sh
   ansible.builtin.cron:
     name: "sync-fedora.sh"

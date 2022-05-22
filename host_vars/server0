@@ -37,9 +37,10 @@ search_domains:
  - internal.tjon.net
 primary_dns_servers: 
  - 172.16.1.1
-primary_bridge: br0
+#primary_bridge: br0
 primary_interface: eth0
-public_firewall_interface: br0
+public_firewall_interface: eth0
+#public_firewall_interface: br0
 use_dhcp: 'false'
 bridge_wireless: 'false'
 wireless_interface: 
@@ -116,7 +117,7 @@ allowed_ssh_users: chris ctjon
 # DNSMASQ Configuration Parameters                                             #
 ################################################################################
 dnsmasq_interfaces:
-  - "{{primary_bridge}}"
+  - "{{primary_interface}}"
 #  - "{{secondary_interface}}"
  
 dhcp_enabled: false
@@ -131,7 +132,7 @@ samba_workgroup: PARANOID
 samba_netbios_name: SERVER0
 
 samba_trusted_interfaces:
-  - "{{primary_bridge}}"
+  - "{{primary_interface}}"
 
 samba_trusted_subnets:
   - 172.16.1.0/24
@@ -193,7 +194,7 @@ vm_storage_lv: imageslv
 vm_storage_lv_size: 1g
 vm_storage_path: /var/lib/libvirt/images
 vm_storage_fs_type: xfs
-vm_bridge_interface: "{{primary_bridge}}"
+vm_bridge_interface: "{{primary_interface}}"
 
 ################################################################################
 # SSH Keys to Install on Managed Hosts                                         #

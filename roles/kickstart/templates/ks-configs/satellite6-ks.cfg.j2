@@ -1,8 +1,9 @@
-#version=DEVEL
+#version=RHEL7
 # System authorization information
-auth --enableshadow --passalgo=sha512
+authconfig --enableshadow --passalgo=sha512
 # Use network installation
-url --url="{{linux_install_server_url}}/rhel/7/x86_64"
+url --url="{{linux_install_server_url}}/rhel/7/x86_64/"
+
 # Use graphical install
 graphical
 # Run the Setup Agent on first boot
@@ -19,13 +20,13 @@ lang en_US.UTF-8
 reboot
 
 # Network information
-network  --hostname=satellite6.{{primary_domain_name}} --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.7 --nameserver={{primary_dns_servers|join(",")}} --netmask={{primary_netmask}} --activate
+network  --hostname=satellite6.{{primary_domain_name}} --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.7 --nameserver={{primary_dns_servers|join(",")}} --netmask={{primary_netmask}} --noipv6 --activate
 
 # Root password
 rootpw --iscrypted $6$KY6TFtdCk7.SV2G5$fb02sjorNVYVi6SAiFLswjDMBzWx7zzKgKmnw9fHR8rR6lsQIL7GP1wVvJn3WoVPCj6hWohW.0aBgAaDBsGux/
 
 # System services
-services --enabled="chronyd rsyslog"
+services --enabled="chronyd rsyslog" ### BROKEN
 
 # System timezone
 timezone America/Phoenix --isUtc --ntpservers=gatekeeper.internal.tjon.net
@@ -40,7 +41,7 @@ part /boot --fstype="ext4" --ondisk=vda --size=512
 part pv.182 --fstype="lvmpv" --ondisk=vda --grow
 volgroup sat6vg --pesize=4096 pv.182
 logvol /usr  --fstype="ext4" --size=4096 --name=usrlv --vgname=sat6vg
-logvol /var/lib/pulp  --fstype="ext4" --size=300000 --name=var_lib_pulplv --vgname=sat6vg
+logvol /var/lib/pulp  --fstype="ext4" --size=307200 --name=var_lib_pulplv --vgname=sat6vg
 logvol /var/lib/tftpboot  --fstype="ext4" --size=1024 --name=var_lib_tftpbootlv --vgname=sat6vg
 logvol /var/cache/pulp  --fstype="ext4" --size=20480 --name=var_cache_pulplv --vgname=sat6vg
 logvol /var/log  --fstype="ext4" --size=2048 --name=loglv --vgname=sat6vg
@@ -57,8 +58,11 @@ logvol /var  --fstype="ext4" --size=1024 --name=varlv --vgname=sat6vg
 %packages
 @^minimal
 @core
+python3
 chrony
 rsyslog
+net-tools
+bind-utils
 insights-client
 
 %end
@@ -74,12 +78,6 @@ pwpolicy luks --minlen=6 --minquality=50 --notstrict --nochanges --notempty
 %end
 
 %post
-/usr/bin/curl {{config_files_url}}/etc/chrony.conf -o /etc/chrony.conf
-/usr/bin/curl {{config_files_url}}/etc/rsyslog.conf -o /etc/rsyslog.conf
-#/usr/bin/curl {{config_files_url}}/etc/yum.repos.d/tjon-rhel7.repo -o /etc/yum.repos.d/tjon-rhel7.repo
-#/usr/bin/yum -y remove NetworkManager
-#/usr/bin/yum -y update
-
 # install ssh key for chris
 curl {{config_files_url}}/chris-server0-id_rsa.pub -o /home/chris/.ssh/authorized_keys  --create-dirs
 curl  {{config_files_url}}/chris-x1carbon-id_rsa.pub >> /home/chris/.ssh/authorized_keys

@@ -12,26 +12,26 @@
   become: yes
 
   roles:
-    - role: sm-register
-      tags: ['sm-register']
-
-    - role: selinux
-      tags: ['selinux']
-
-    - role: setup-br0
-      tags: ['setup-br0']
-
-    - role: limit-kernels
-      tags: ['limit-kernels']
+#    - role: sm-register
+#      tags: ['sm-register']
 
     - role: config-local-repos
       tags: ['config-local-repos']
 
+    - role: selinux
+      tags: ['selinux']
+
+#    - role: setup-br0
+#      tags: ['setup-br0']
+
+    - role: limit-kernels
+      tags: ['limit-kernels']
+
 #    - role: masquerade
 #      tags: ['masquerade']
 
-    - role: dnsmasq
-      tags: ['dnsmasq']
+#    - role: dnsmasq
+#      tags: ['dnsmasq']
 
     - role: apply-updates
       tags: ['apply-updates']
@@ -85,14 +85,14 @@
     - role: virt-server
       tags: ['virt-server']
 
-    - role: appletalk-server
-      tags: ['appletalk-server']
+#    - role: appletalk-server
+#      tags: ['appletalk-server']
 
     - role: apcupsd
       tags: ['apcupsd']
 
-    - role: openvpn-server
-      tags: ['openvpn-server']
+#    - role: openvpn-server
+#      tags: ['openvpn-server']
 
     - role: fail2ban
       tags: ['fail2ban']
@@ -103,8 +103,8 @@
 #    - role: backup
 #      tags: ['backup']
 
-    - role: insights-register
-      tags: ['insights']
+#    - role: insights-register
+#      tags: ['insights']
 
 ## DON'T AUTO REBOOT IF RUNNING KVM VMs
 ## At least not until the role is modified to accomodate it

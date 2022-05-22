@@ -37,6 +37,14 @@ LABEL x1carbon
         APPEND pxelinux.cfg/Linux/x1carbon
 
 #
+# Satellite 6
+#
+label satellite6
+  menu label satellite6
+  kernel images/rhel/7/x86_64/vmlinuz
+  append initrd=images/rhel/7/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 inst.ks={{linux_install_server_url}}/ks-configs/satellite6-ks.cfg
+
+#
 # KVMHOST
 #
 label kvmhost
@@ -106,13 +114,4 @@ label vpnserver
   menu label Install VPN Server
   kernel images/rhel/8/x86_64/vmlinuz
   append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/vpnserver-ks.cfg
-
-#
-# Satellite 6
-#
-label satellite6
-  menu label Install Satellite 6 Host System
-  kernel images/rhel/7/x86_64/vmlinuz
-  append initrd=images/rhel/7/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/satellite6-ks.cfg
-
 
