@@ -85,8 +85,8 @@
     - role: virt-server
       tags: ['virt-server']
 
-#    - role: appletalk-server
-#      tags: ['appletalk-server']
+    - role: appletalk-server
+      tags: ['appletalk-server']
 
     - role: apcupsd
       tags: ['apcupsd']
