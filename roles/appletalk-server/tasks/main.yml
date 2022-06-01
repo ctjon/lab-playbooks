@@ -66,6 +66,14 @@
   with_items:
     - "{{ tm_users }}"
 
+- name: create {{tm_storage_path}}/chris/mp51-mojave directory (special case)
+  ansible.builtin.file:
+    path: '{{tm_storage_path}}/chris/mp51-mojave'
+    state: directory
+    owner: "chris"
+    group: "chris"
+    mode: '0700'
+
 - name: deploy afp.conf
   ansible.builtin.template:
     src: afp.conf.j2

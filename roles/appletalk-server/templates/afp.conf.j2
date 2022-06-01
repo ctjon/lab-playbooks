@@ -24,3 +24,10 @@ valid_users = {{item.tm_username}}
 vol size limit = {{ item.tm_vol_size_bytes }}
 
 {% endfor %}
+
+[mp51-mojave-TM] 
+time machine = yes
+path = {{ tm_storage_path }}/chris/mp51-mojave
+valid_users = chris
+vol size limit = 250000000000
+

@@ -40,6 +40,8 @@ do
 	--exclude='updates/1[0-9]/' \
 	--exclude='updates/2[0-9]/' \
 	--exclude='updates/3[0-{{fedora_prev_release_ones_digit}}]*/' \
+	--exclude='releases/testing/3[0-{{fedora_prev_release_ones_digit}}]*/' \
+	--exclude='updates/testing/3[0-{{fedora_prev_release_ones_digit}}]*/' \
  	$SRCDIR $TGTDIR
 {% if sync_script_retries == true %}
 done
