@@ -1,49 +1,11 @@
 ---
-- name: install bridge-utils package
-  ansible.builtin.package:
-    name: bridge-utils
-    state: latest
-  when:
-    - ansible_distribution != "RedHat" or ansible_distribution != "CentOS"
-    - ansible_distribution_major_version != "8"
-
-- name: install /etc/sysconfig/network-scripts/ifcfg-{{primary_bridge}} Static IP template
-  ansible.builtin.template:
-    src: "ifcfg-{{primary_bridge}}.static.j2"
-    dest: "/etc/sysconfig/network-scripts/ifcfg-{{primary_bridge}}"
-    owner: root
-    group: root
-    mode: 0644
-  when:
-    use_dhcp == 'false'
-
-- name: install /etc/sysconfig/network-scripts/ifcfg-{{primary_bridge}} DHCP template
-  ansible.builtin.template:
-    src: "ifcfg-{{primary_bridge}}.dhcp.j2"
-    dest: "/etc/sysconfig/network-scripts/ifcfg-{{primary_bridge}}"
-    owner: root
-    group: root
-    mode: 0644
-  when:
-    use_dhcp == 'true'
-
-- name: install /etc/sysconfig/network-scripts/ifcfg-{{primary_interface}} template
-  ansible.builtin.template:
-    src: "ifcfg-{{primary_interface}}.j2"
-    dest: "/etc/sysconfig/network-scripts/ifcfg-{{primary_interface}}"
-    owner: root
-    group: root
-    mode: 0644
-
-- name: install /etc/sysconfig/network-scripts/ifcfg-wlan template
-  ansible.builtin.template:
-    src: "ifcfg-{{wireless_interface}}.j2"
-    dest: "/etc/sysconfig/network-scripts/ifcfg-{{wireless_interface}}"
-    owner: root
-    group: root
-    mode: 0644
-  when:
-    bridge_wireless == 'true'
+- name: setup br0 with nmcli
+  community.general.nmcli:
+    conn_name: "{{ primary_bridge }}"
+    type: bridge
+    ip4: "{{ primary_ipaddr }}"
+    gw4: "{{ primary_gateway }}"
+    state: present
 
 - name: reconfigure firewall for bridge
   ansible.builtin.firewalld:
