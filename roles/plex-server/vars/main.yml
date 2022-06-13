@@ -1,7 +1,7 @@
 ---
 plex_owner: chris
 plex_group: plex
-plex_storage_vg: raid5vg
+plex_storage_vg: raid10vg
 plex_storage_lv: plexlv
 #plex_storage_lv_size: 5T
 plex_storage_lv_size: 500g
