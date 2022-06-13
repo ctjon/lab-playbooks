@@ -6,6 +6,7 @@
     ip4: "{{ primary_ipaddr }}"
     gw4: "{{ primary_gateway }}"
     state: present
+  notify: restart NetworkManager
 
 - name: reconfigure firewall for bridge
   ansible.builtin.firewalld:
@@ -22,27 +23,4 @@
     sysctl_set: yes
     state: present
     reload: yes
-
-- name: restart network
-  ansible.builtin.service:
-    name: network
-    state: restarted
-  when:
-    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
-    - ansible_distribution_major_version == "6" or ansible_distribution_major_version == "7"
-
-- name: restart NetworkManager
-  ansible.builtin.service:
-    name: NetworkManager
-    state: restarted
-  when:
-    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
-    - ansible_distribution_major_version >= "8"
-
-- name: restart NetworkManager
-  ansible.builtin.service:
-    name: NetworkManager
-    state: restarted
-  when:
-    - ansible_distribution == "Fedora" 
-    - ansible_distribution_major_version >= "28"
+  notify: restart NetworkManager
