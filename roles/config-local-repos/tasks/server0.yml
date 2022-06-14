@@ -34,9 +34,12 @@
         state: absent
 
     - name: Install new repo files in /etc/yum.repos.d for local server
-      get_url: 
-        url: "{{linux_install_server_url}}/ConfigFiles/etc/yum.repos.d/{{linux_install_server_hostname}}-local/{{repoName}}-{{linux_install_server_hostname}}.repo"
-        dest: "/etc/yum.repos.d/{{repoName}}-{{linux_install_server_hostname}}.repo"
+      ansible.builtin.copy:
+        src: "{{installdir}}/Linux/ConfigFiles/etc/yum.repos.d/{{linux_install_server_hostname}}-local/{{repoName}}-local.repo"
+        dest: "/etc/yum.repos.d/{{repoName}}-local.repo"
+        owner: root
+        group: root
+        remote_src: true
         mode: '0644'
 
   become: true
