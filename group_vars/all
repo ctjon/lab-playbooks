@@ -51,6 +51,8 @@ openbsd_install_server_path: /export/install/OpenBSD
 openbsd_rsync_server_path: mirrors.ocf.berkeley.edu/openbsd
 #openbsd_rsync_server_path: ftp5.usa.openbsd.org/ftp
 virtio_win_rsync_path: rsync://repos.fedorapeople.org/groups/virt/
+openwrt_rsync_server_path: downloads.openwrt.org/downloads
+openwrt_install_server_path: /export/install/OpenWRT
 libvirt_users: 
   - chris
 libvirt_groups: 

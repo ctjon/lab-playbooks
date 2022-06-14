@@ -83,6 +83,15 @@
     hour: "{{4 + start_hour_offset}}"
     job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-virtio-win.lock {{scripts_dir}}/sync-virtio-win.sh > {{scripts_logs_dir}}/sync-virtio-win.log 2>&1"
 
+- name: create crontab entries for {{repo_owner}} to run sync-openwrt.sh
+  ansible.builtin.cron:
+    name: "sync-openwrt.sh"
+    user: "{{repo_owner}}"
+    weekday: "1,4"
+    minute: "30"
+    hour: "{{2 + start_hour_offset}}"
+    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-openwrt.lock {{scripts_dir}}/sync-openwrt.sh > {{scripts_logs_dir}}/sync-openwrt.log 2>&1"
+
 - name: create crontab entries to reset permissions on repos
   ansible.builtin.cron:
     name: "repos chmod"

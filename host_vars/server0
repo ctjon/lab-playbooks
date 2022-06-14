@@ -269,6 +269,7 @@ sync_scripts_list:
   - sync-centos.sh
   - sync-epel.sh
   - sync-openbsd.sh
+  - sync-openwrt.sh
   - sync-virtio-win.sh
 
 sync_script_retries: true
@@ -517,3 +518,45 @@ windows_architectures:
   - amd64
 
 centos8_gpg_key_url: /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+
+openwrt_arch_includes:
+  - mvebu/cortexa9
+
+openwrt_arch_excludes:
+  - apm821xx
+  - arc770 
+  - archs38
+  - armvirt 
+  - at91 
+  - ath25
+  - ath79 
+  - bcm27xx 
+  - bcm47xx 
+  - bcm4908 
+  - bcm53xx 
+  - bcm63xx 
+  - gemini 
+  - imx6 
+  - ipq40xx
+  - ipq806x
+  - kirkwood
+  - lantiq
+  - layerscape
+  - malta
+  - mediatek
+  - mpc85xx
+  - mvebu/cortexa53
+  - mvebu/cortexa72
+  - mxs
+  - octeon
+  - octeontx
+  - omap
+  - oxnas
+  - pistachio
+  - ramips
+  - realtek
+  - rockchip
+  - sunxi
+  - tegra
+  - x86
+  - zynq

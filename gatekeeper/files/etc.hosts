@@ -25,3 +25,8 @@
 172.16.1.38	test-fedora36.internal.tjon.net test-fedora34
 
 50.18.226.197   ec2-50-18-226-197.us-west-1.compute.amazonaws.com tower-aws
+
+# Used for internet connection debugging
+172.26.1.33	firsthop
+142.250.68.36	google-ping
+74.6.143.26	yahoo-ping

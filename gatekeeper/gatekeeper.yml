@@ -104,8 +104,9 @@
         - curl
         - ca-bundle
         - luci-app-ddns
+        - diffutils
       notify: restart luci
-      tags: ddns packages
+      tags: ddns-packages
 
     - name: install /etc/config/ddns template
       ansible.builtin.template:
@@ -136,7 +137,7 @@
         state: present
         update_cache: yes
       notify: restart vnstat
-      tags: vnstat packages
+      tags: vnstat-packages
 
   handlers:
     - name: restart vnstat

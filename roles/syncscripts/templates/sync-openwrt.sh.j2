@@ -1,0 +1,45 @@
+#!/bin/sh
+#
+# Sync OpenWRT Repo Locally
+# {{ ansible_managed }}
+#
+
+export SRCDIR=rsync://{{openwrt_rsync_server_path}}
+export TGTDIR={{openwrt_install_server_path}}
+
+echo "********************************************************************************"
+echo "* UPDATING OpenWRT BINARIES                                                    *"
+echo "********************************************************************************"
+{% if sync_script_retries == true %}
+# set return code to be false to force first iteration of while loop ironically this give error cause it is an error:-)
+$? = 1
+
+while [ "$?" -ne "0" ]
+do
+        sleep 10
+{% endif %}
+	rsync -aHKvz --keep-dirlinks --delete --delete-during --delete-excluded --progress \
+{% for item in openwrt_arch_includes %}
+        --include='targets/{{item}}' \
+{% endfor %}
+{% for item in openwrt_arch_excludes %}
+        --exclude='targets/{{item}}' \
+{% endfor %}
+	--exclude='releases/19.*' \
+	--exclude='releases/18.*' \
+	--exclude='releases/17.*' \
+	--exclude='*-SNAPSHOT*' \
+	--exclude='snapshots/' \
+	--exclude='*-rc?' \
+	--exclude='releases/packages-19.*' \
+	--exclude='releases/packages-18.*' \
+	--exclude='releases/packages-17.*' \
+	--exclude='releases/faillogs-19.*' \
+	--exclude='releases/faillogs-18.*' \
+	--exclude='releases/faillogs-17.*' \
+ 	$SRCDIR $TGTDIR
+{% if sync_script_retries == true %}
+done
+{% endif %}
+
+date

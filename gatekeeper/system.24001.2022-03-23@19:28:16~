@@ -1,4 +1,3 @@
-#{{ ansible_managed }}
 
 config system
 	option ttylogin '0'
@@ -8,7 +7,7 @@ config system
 	option cronloglevel '5'
 	option zonename 'America/Phoenix'
 	option timezone 'MST7'
-        option hostname '{{primary_hostname}}'
+	option hostname 'gatekeeper'
 	option log_proto 'tcp'
 	option log_file '/tmp/system.log'
 	option log_port '514'
@@ -20,7 +19,7 @@ config timeserver 'ntp'
 	list server '1.openwrt.pool.ntp.org'
 	list server '2.openwrt.pool.ntp.org'
 	list server '3.openwrt.pool.ntp.org'
-        option enabled '1'
+	option enabled '1'
 	option enable_server '1'
 
 config led 'led_wan'

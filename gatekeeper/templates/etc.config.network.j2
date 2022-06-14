@@ -8,6 +8,7 @@ config interface 'loopback'
 
 config globals 'globals'
 	option ula_prefix 'fd40:e593:9a1b::/48'
+        option ipv6 0
 
 config device
 	option name 'br-lan'
@@ -24,6 +25,7 @@ config interface 'lan'
         option netmask '{{primary_netmask}}'
         option broadcast '{{primary_broadcast}}'
 	option ip6assign '60'
+        option ipv6 0
 
 config device
 	option name 'wan'
@@ -33,9 +35,9 @@ config interface 'wan'
 	option device 'wan'
 	option proto 'dhcp'
 
-config interface 'wan6'
-	option device 'wan'
-	option proto 'dhcpv6'
+#config interface 'wan6'
+#	option device 'wan'
+#	option proto 'dhcpv6'
 
 config interface 'tun0'
         option ifname 'tun0'
