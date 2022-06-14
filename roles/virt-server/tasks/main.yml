@@ -1,3 +1,6 @@
+#
+# run the virtio-win-local-repo role prior to this one!
+# 
 ---
 - name: validate cpu architecture supports virtualization
   ansible.builtin.shell: egrep '^flags.*(vmx|svm)' /proc/cpuinfo
@@ -39,12 +42,6 @@
     fstype: "{{ vm_storage_fs_type }}"
     opts: defaults
     state: mounted
-
-#- name: Download virtio repo configuration
-#  ansible.builtin.get_url:
-#    url: https://fedorapeople.org/groups/virt/virtio-win/virtio-win.repo
-#    dest: /etc/yum.repos.d/virtio-win.repo
-#    mode: '0644'
 
 - name: Install RHEL/CentOS Packages
   ansible.builtin.yum: 
