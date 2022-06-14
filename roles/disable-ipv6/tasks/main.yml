@@ -1,0 +1,8 @@
+---
+- name: Disable IPV6
+  ansible.builtin.sysctl:
+    name: net.ipv6.conf.all.disable_ipv6
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes

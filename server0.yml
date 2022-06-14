@@ -18,6 +18,9 @@
     - role: config-local-repos
       tags: ['config-local-repos']
 
+    - role: disable-ipv6
+      tags: ['disable-ipv6']
+
     - role: selinux
       tags: ['selinux']
 
