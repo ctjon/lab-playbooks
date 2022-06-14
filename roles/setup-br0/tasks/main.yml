@@ -8,6 +8,8 @@
     type: bridge
     ip4: "{{ primary_ipaddr }}"
     gw4: "{{ primary_gateway }}"
+    dns4: "{{ primary_dns_servers }}"
+    dns4_search: "{{ primary_domain_name }}"
     method6: disabled
     state: present
   notify: restart NetworkManager
