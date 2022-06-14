@@ -1,4 +1,9 @@
 ---
+- name: install bridge-utils
+  package:
+    name: bridge-utils
+    state: latest
+
 #
 # "nmcli con add type bridge ifname br0"
 #
