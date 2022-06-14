@@ -6,7 +6,7 @@ logdir: /var/log/apcupsd
 on_battery_delay: 6
 battery_level: 5
 remaining_minutes: 5
-timeout: 0           # 0 disables
+apcups_timeout: 0           # 0 disables
 annoy: 300
 annoy_delay: 60
 no_logon: disable

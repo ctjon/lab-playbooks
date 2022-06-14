@@ -8,20 +8,19 @@
     type: bridge
     ip4: "{{ primary_ipaddr }}"
     gw4: "{{ primary_gateway }}"
-    method6: disabled
     state: present
   notify: restart NetworkManager
 
 #
 # "nmcli con add type ethernet ifname eth0 master br0"
 #
-- name: setup eth0 as br0 bridge-slave
+
+- name: nmcli add bridge-slave
   community.general.nmcli:
     type: bridge-slave
-    conn_name: "bridge-slave-{{primary_interface}}"
-    hairpin: false
-    ifname: "{{ primary_interface }}"
-    master: "{{ primary_bridge }}"
+    conn_name: '{{ item.conn_name }}'
+    ifname: '{{ primary_interface }}'
+    master: '{{ primary_bridge }}'
     state: present
   notify: restart NetworkManager
 

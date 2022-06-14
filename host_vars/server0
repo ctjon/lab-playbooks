@@ -38,7 +38,7 @@ search_domains:
 primary_dns_servers: 
  - 172.16.1.1
 primary_bridge: br0
-#primary_interface: eth0
+primary_interface: eth0
 #public_firewall_interface: eth0
 public_firewall_interface: br0
 use_dhcp: 'false'
