@@ -21,9 +21,13 @@ do
 	rsync -aHKvz --keep-dirlinks --delete --delete-during --delete-excluded --progress \
 {% for item in openwrt_arch_includes %}
         --include='targets/{{item}}' \
+        --include='releases/packages-*/{{item}}' \
+        --include='releases/faillogs-*/{{item}}' \
 {% endfor %}
 {% for item in openwrt_arch_excludes %}
         --exclude='targets/{{item}}' \
+        --exclude='releases/packages-*/{{item}}' \
+        --exclude='releases/faillogs-*/{{item}}' \
 {% endfor %}
 	--exclude='releases/19.*' \
 	--exclude='releases/18.*' \
