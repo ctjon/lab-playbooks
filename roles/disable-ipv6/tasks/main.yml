@@ -6,3 +6,11 @@
     sysctl_set: yes
     state: present
     reload: yes
+
+- name: Disable IPV6 on wlan0 explicitly (I don't know why I have to but I do)
+  ansible.builtin.sysctl:
+    name: net.ipv6.conf.wlan0.disable_ipv6 
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes

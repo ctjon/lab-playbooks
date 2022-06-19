@@ -110,8 +110,8 @@
 ;	netbios name = MYSERVER
 	netbios name = {{samba_netbios_name}}
 
-	interfaces = lo {{ samba_trusted_interfaces | join(" ") }}
-	hosts allow = 127. {{ samba_trusted_subnets | join(" ") }}
+	interfaces = lo {{ trusted_interfaces | join(" ") }}
+	hosts allow = 127. {{ trusted_subnets | join(" ") }}
 
 ;	interfaces = lo eth0 192.168.12.2/24 192.168.13.2/24
 ;	hosts allow = 127. 192.168.12. 192.168.13.

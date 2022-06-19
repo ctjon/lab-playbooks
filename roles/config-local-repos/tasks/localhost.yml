@@ -33,9 +33,9 @@
         path: "/etc/yum.repos.d/{{repoName}}.repo"
         state: absent
 
-    - name: Install new repo files in /etc/yum.repos.d for local server
+    - name: Install new repo files in /etc/yum.repos.d for local filesystem
       ansible.builtin.copy:
-        src: "{{installdir}}/Linux/ConfigFiles/etc/yum.repos.d/{{linux_install_server_hostname}}-local/{{repoName}}-local.repo"
+        src: "{{installdir}}/Linux/ConfigFiles/etc/yum.repos.d/localhost/{{repoName}}-local.repo"
         dest: "/etc/yum.repos.d/{{repoName}}-local.repo"
         owner: root
         group: root

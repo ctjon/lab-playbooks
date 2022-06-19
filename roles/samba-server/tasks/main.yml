@@ -29,7 +29,7 @@
 
 - name: setup smb.conf file
   ansible.builtin.template:
-    src: templates/smb.conf.j2
+    src: templates/smb.conf.{{ansible_hostname}}.j2
     dest: /etc/samba/smb.conf
     owner: root
     group: root

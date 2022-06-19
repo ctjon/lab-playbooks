@@ -12,11 +12,20 @@
   become: yes
 
   roles:
+    - role: dump-facts
+      tags: ['dump-facts']
+
     - role: sm-register
       tags: ['sm-register']
 
-    - role: setup-br0
-      tags: ['setup-br0']
+    - role: config-local-repos
+      tags: ['config-local-repos']
+
+    - role: disable-ipv6
+      tags: ['disable-ipv6']
+
+    - role: setup-br0-dhcp
+      tags: ['setup-br0-dhcp']
 
     - role: selinux
       tags: ['selinux']
@@ -30,29 +39,26 @@
     - role: set-default-editor
       tags: ['set-default-editor']
 
-#    - role: config-local-repos
-#      tags: ['config-local-repos']
-
 #    - role: masquerade
 #      tags: ['masquerade']
 
 #    - role: dnsmasq
 #      tags: ['dnsmasq']
 
-#    - role: apply-updates
-#      tags: ['apply-updates']
+    - role: apply-updates
+      tags: ['apply-updates']
 
-#    - role: time-server
-#      tags: ['time-server']
+    - role: time-server
+      tags: ['time-server']
 
-#    - role: tftp-server
-#      tags: ['tftp-server']
+    - role: tftp-server
+      tags: ['tftp-server']
 
-#    - role: syncscripts
-#      tags: ['syncscripts']
+    - role: syncscripts
+      tags: ['syncscripts']
 
-#    - role: virtio-win-local-repo
-#      tags: ['virtio-win-local-repo']
+    - role: virtio-win-local-repo
+      tags: ['virtio-win-local-repo']
 
 # BROKEN - needs fixing
 #    - role: scripts
@@ -67,8 +73,8 @@
 #    - role: http-repo
 #      tags: ['http-repo']
 
-#    - role: samba-server
-#      tags: ['samba-server']
+    - role: samba-server
+      tags: ['samba-server']
 
 #    - role: nfs-server
 #      tags: ['nfs-server']
@@ -76,11 +82,11 @@
 #    - role: rsync-server
 #      tags: ['rsync-server']
 
-#    - role: setup-epel
-#      tags: ['setup-epel']
+    - role: setup-epel
+      tags: ['setup-epel']
 
-#    - role: virt-server
-#      tags: ['virt-server']
+    - role: virt-server
+      tags: ['virt-server']
 
 #    - role: appletalk-server
 #      tags: ['appletalk-server']
@@ -91,8 +97,8 @@
 #    - role: openvpn-server
 #      tags: ['openvpn-server']
 
-#    - role: fail2ban
-#      tags: ['fail2ban']
+    - role: fail2ban
+      tags: ['fail2ban']
 
 #    - role: rsyslog-server
 #      tags: ['rsyslog-server']

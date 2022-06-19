@@ -27,12 +27,6 @@ time_servers:
 # Primary Network Interface Configuration Parameters                           #
 ################################################################################
 #primary_domain_name: internal.tjon.net
-#primary_subnet: 172.16.1.0/24
-#primary_ipaddr: 172.16.1.2
-#primary_prefix: 24
-#primary_short_net: 172.16.1
-#primary_netmask: 255.255.255.0
-#primary_gateway: 172.16.1.1
 search_domains: 
 # - internal.tjon.net
 #primary_dns_servers: 
@@ -40,9 +34,23 @@ search_domains:
 use_dhcp: 'true'
 primary_bridge: br0
 primary_interface: eth0
-bridge_wireless: 'true'
 wireless_interface: wlan0
 public_firewall_interface: br0
+
+trusted_subnets: 
+ - 172.16.1.0/24
+ - 172.16.5.0/24
+ - 172.16.6.0/24
+ - 192.168.11.0/24
+ - 192.168.12.0/24
+ - 192.168.122.0/24
+
+trusted_interfaces:
+  - "{{primary_bridge}}"
+  - virbr0
+  - vnet_nat1
+  - vnet_nat2
+  - wlan0
 
 ################################################################################
 # Secondary Network Interface Configuration Parameters                         #

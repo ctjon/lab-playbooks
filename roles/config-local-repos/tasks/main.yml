@@ -21,13 +21,13 @@
   when:
     - ansible_distribution == "Fedora"
     - ansible_distribution_major_version >= "28"  # 28,29...
-    - ansible_hostname != "server0"
+    - ((ansible_hostname != "server0") and (ansible_hostname != "eagle"))
   with_items:  "{{fedora_repos_list}}"
 
 - name: Perform Server0 Specific Confgurations
-  include: server0.yml repoName="{{item}}"    ## DEPRECATION WARNING TO FIX HERE
+  include: localhost.yml repoName="{{item}}"    ## DEPRECATION WARNING TO FIX HERE
   when:
     - ansible_distribution == "Fedora"
     - ansible_distribution_major_version >= "28"  # 28,29...
-    - ansible_hostname == "server0"
+    - ((ansible_hostname == "server0") or (ansible_hostname == "eagle" ))
   with_items:  "{{fedora_repos_list}}"
