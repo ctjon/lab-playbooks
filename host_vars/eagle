@@ -138,13 +138,10 @@ samba_workgroup: PARANOID
 samba_netbios_name: SERVER0
 
 samba_trusted_interfaces:
-  - "{{primary_bridge}}"
+  - "{{trusted_interfaces}}"
 
 samba_trusted_subnets:
-  - 172.16.1.0/24
-  - 172.16.5.0/24
-  - 172.16.6.0/24
-  - 192.168.168.0/24
+  - "{{trusted_subnets}}"
 
 samba_trusted_write_users:
   - chris
