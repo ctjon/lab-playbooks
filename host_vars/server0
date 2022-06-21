@@ -43,7 +43,7 @@ primary_interface: eth0
 public_firewall_interface: br0
 use_dhcp: 'false'
 bridge_wireless: 'false'
-wireless_interface: 
+#wireless_interface: 
 
 ################################################################################
 # Secondary Network Interface Configuration Parameters                         #
@@ -131,10 +131,10 @@ dnsmasq_dhcp_interfaces:
 samba_workgroup: PARANOID
 samba_netbios_name: SERVER0
 
-samba_trusted_interfaces:
+trusted_interfaces:
   - "{{primary_bridge}}"
 
-samba_trusted_subnets:
+trusted_subnets:
   - 172.16.1.0/24
   - 172.16.5.0/24
   - 172.16.6.0/24
@@ -191,7 +191,7 @@ virt_users:
 
 vm_storage_vg: rootvg
 vm_storage_lv: imageslv
-vm_storage_lv_size: 1g
+vm_storage_lv_size: 768g
 vm_storage_path: /var/lib/libvirt/images
 vm_storage_fs_type: xfs
 vm_bridge_interface: "{{primary_bridge}}"

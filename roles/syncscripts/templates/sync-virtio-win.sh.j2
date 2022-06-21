@@ -16,7 +16,6 @@ do
 	date
 	rsync -aHKvz --keep-dirlinks --delete --delete-during --delete-excluded --progress \
         --exclude=.htaccess \
-	--exclude=archive-virtio \
 	--exclude=virt-preview \
 	--exclude=deprecated-isos \
  	$SRCDIR $TGTDIR

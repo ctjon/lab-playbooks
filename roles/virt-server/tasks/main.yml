@@ -25,6 +25,7 @@
     lv: "{{ vm_storage_lv }}"
     size: "{{ vm_storage_lv_size }}"
     shrink: no
+    force: no
     state: present
     resizefs: yes
 
@@ -33,7 +34,6 @@
     fstype: "{{ vm_storage_fs_type }}"
     dev: "/dev/{{vm_storage_vg}}/{{vm_storage_lv}}"
     force: no
-    resizefs: yes
 
 - name: mount {{vm_storage_path}}
   ansible.builtin.mount:

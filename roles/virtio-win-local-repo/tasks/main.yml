@@ -37,7 +37,7 @@
 
 - name: Install virtio-win repo files in /etc/yum.repos.d for local server
   ansible.builtin.copy:
-    src: "{{installdir}}/Linux/ConfigFiles/etc/yum.repos.d/server0-local/virtio-win-local.repo"
+    src: "{{installdir}}/Linux/ConfigFiles/etc/yum.repos.d/localhost/virtio-win-local.repo"
     dest: "/etc/yum.repos.d/virtio-win-local.repo"
     owner: root
     group: root
