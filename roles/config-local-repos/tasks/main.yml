@@ -16,18 +16,22 @@
     - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
     - ansible_distribution_major_version == "8"
 
-- name: Perform Fedora 28+ Specific Confgurations
+- name: Perform server0 repo Specific Confgurations
   include: fedora.yml repoName="{{item}}"     ## DEPRECATION WARNING TO FIX HERE
   when:
     - ansible_distribution == "Fedora"
     - ansible_distribution_major_version >= "28"  # 28,29...
-    - ((ansible_hostname != "server0") and (ansible_hostname != "eagle"))
-  with_items:  "{{fedora_repos_list}}"
+    - ansible_hostname != "server0"
+  with_items:
+    - "{{fedora_repos_list}}" 
+    - "{{rpmfusion_repos_list}}" 
 
-- name: Perform Server0 Specific Confgurations
+- name: Perform localhost Specific Confgurations
   include: localhost.yml repoName="{{item}}"    ## DEPRECATION WARNING TO FIX HERE
   when:
     - ansible_distribution == "Fedora"
     - ansible_distribution_major_version >= "28"  # 28,29...
-    - ((ansible_hostname == "server0") or (ansible_hostname == "eagle" ))
-  with_items:  "{{fedora_repos_list}}"
+    - ansible_hostname == "server0"
+  with_items:  
+    - "{{fedora_repos_list}}" 
+    - "{{rpmfusion_repos_list}}" 

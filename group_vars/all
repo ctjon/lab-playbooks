@@ -209,3 +209,12 @@ fedora_repos_list:
 
 virtio-win_repos_list:
   - virtio-win
+
+rpmfusion_repos_list:
+  - rpmfusion-free
+  - rpmfusion-free-updates
+  - rpmfusion-nonfree-nvidia-driver
+  - rpmfusion-nonfree
+  - rpmfusion-nonfree-steam
+  - rpmfusion-nonfree-updates
+

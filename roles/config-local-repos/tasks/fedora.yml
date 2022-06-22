@@ -35,7 +35,7 @@
 
     - name: Install new repo files in /etc/yum.repos.d for local network server
       get_url: 
-        url: "{{linux_install_server_url}}/ConfigFiles/etc/yum.repos.d/{{linux_install_server_hostname}}-local/{{repoName}}-{{linux_install_server_hostname}}.repo"
+        url: "{{linux_install_server_url}}/ConfigFiles/etc/yum.repos.d/{{linux_install_server_hostname}}/{{repoName}}-{{linux_install_server_hostname}}.repo"
         dest: "/etc/yum.repos.d/{{repoName}}-{{linux_install_server_hostname}}.repo"
         mode: '0644'
 
