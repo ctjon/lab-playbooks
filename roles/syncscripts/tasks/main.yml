@@ -7,9 +7,8 @@
     mode: 0755
     state: directory
   with_items:
-    - scripts
-    - scripts/{{ansible_hostname}}
-    - logs
+    - "{{scripts_dir}}"
+    - "{{scripts_logs_dir}}"
 
 - name: deploy sync scripts
   ansible.builtin.template:
