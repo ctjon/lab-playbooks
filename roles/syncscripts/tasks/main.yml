@@ -1,19 +1,19 @@
 ---
 - name: create scripts and logs directories in {{repo_owner_homedir}}
   ansible.builtin.file:
-    path: "{{repo_owner_homedir}}/{{item}}"
+    path: "{{item}}"
     owner: "{{repo_owner}}"
     group: "{{repo_owner}}"
     mode: 0755
     state: directory
   with_items:
-    - "{{scripts_dir}}"
-    - "{{scripts_logs_dir}}"
+    - "{{syncscripts_dir}}"
+    - "{{syncscripts_logs_dir}}"
 
 - name: deploy sync scripts
   ansible.builtin.template:
     src: "{{item}}.j2"
-    dest: "{{scripts_dir}}/{{item}}"
+    dest: "{{syncscripts_dir}}/{{item}}"
     owner: "{{repo_owner}}"
     group: "{{repo_owner}}"
     mode: 0755
@@ -35,7 +35,7 @@
     weekday: "0,3"
     minute: "30"
     hour: "{{0 + start_hour_offset}}"
-    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-fedora.lock {{scripts_dir}}/sync-fedora.sh > {{scripts_logs_dir}}/sync-fedora.log 2>&1"
+    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-fedora.lock {{syncscripts_dir}}/sync-fedora.sh > {{syncscripts_logs_dir}}/sync-fedora.log 2>&1"
 
 - name: create crontab entries for {{repo_owner}} to run sync-centos.sh
   ansible.builtin.cron:
@@ -44,7 +44,7 @@
     weekday: "1,4"
     minute: "30"
     hour: "{{1 + start_hour_offset}}"
-    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-centos.lock {{scripts_dir}}/sync-centos.sh > {{scripts_logs_dir}}/sync-centos.log 2>&1"
+    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-centos.lock {{syncscripts_dir}}/sync-centos.sh > {{syncscripts_logs_dir}}/sync-centos.log 2>&1"
 
 - name: create crontab entries for {{repo_owner}} to run sync-epel.sh
   ansible.builtin.cron:
@@ -53,7 +53,7 @@
     weekday: "2,5"
     minute: "30"
     hour: "{{2 + start_hour_offset}}"
-    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-epel.lock {{scripts_dir}}/sync-epel.sh > {{scripts_logs_dir}}/sync-epel.log 2>&1"
+    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-epel.lock {{syncscripts_dir}}/sync-epel.sh > {{syncscripts_logs_dir}}/sync-epel.log 2>&1"
 
 - name: create crontab entries for {{repo_owner}} to run sync-rpmfusion.sh
   ansible.builtin.cron:
@@ -62,7 +62,7 @@
     weekday: "2,5"
     minute: "30"
     hour: "{{3 + start_hour_offset}}"
-    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-rpmfusion.lock {{scripts_dir}}/sync-rpmfusion.sh > {{scripts_logs_dir}}/sync-rpmfusion.log 2>&1"
+    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-rpmfusion.lock {{syncscripts_dir}}/sync-rpmfusion.sh > {{syncscripts_logs_dir}}/sync-rpmfusion.log 2>&1"
 
 - name: create crontab entries for {{repo_owner}} to run sync-openbsd.sh
   ansible.builtin.cron:
@@ -71,7 +71,7 @@
     weekday: "3,6"
     minute: "30"
     hour: "{{3 + start_hour_offset}}"
-    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-openbsd.lock {{scripts_dir}}/sync-openbsd.sh > {{scripts_logs_dir}}/sync-openbsd.log 2>&1"
+    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-openbsd.lock {{syncscripts_dir}}/sync-openbsd.sh > {{syncscripts_logs_dir}}/sync-openbsd.log 2>&1"
 
 - name: create crontab entries for {{repo_owner}} to run sync-virtio-win.sh
   ansible.builtin.cron:
@@ -80,7 +80,7 @@
     weekday: "3,6"
     minute: "45"
     hour: "{{4 + start_hour_offset}}"
-    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-virtio-win.lock {{scripts_dir}}/sync-virtio-win.sh > {{scripts_logs_dir}}/sync-virtio-win.log 2>&1"
+    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-virtio-win.lock {{syncscripts_dir}}/sync-virtio-win.sh > {{syncscripts_logs_dir}}/sync-virtio-win.log 2>&1"
 
 - name: create crontab entries for {{repo_owner}} to run sync-openwrt.sh
   ansible.builtin.cron:
@@ -89,7 +89,7 @@
     weekday: "1,4"
     minute: "30"
     hour: "{{2 + start_hour_offset}}"
-    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-openwrt.lock {{scripts_dir}}/sync-openwrt.sh > {{scripts_logs_dir}}/sync-openwrt.log 2>&1"
+    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-openwrt.lock {{syncscripts_dir}}/sync-openwrt.sh > {{syncscripts_logs_dir}}/sync-openwrt.log 2>&1"
 
 - name: create crontab entries to reset permissions on repos
   ansible.builtin.cron:

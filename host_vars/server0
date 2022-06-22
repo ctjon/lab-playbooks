@@ -260,8 +260,8 @@ repo_owner: chris
 repo_owner_homedir: /home/chris
 start_hour_offset: 0
 
-scripts_dir: /home/chris/syncscripts
-scripts_logs_dir: /home/chris/synclogs
+syncscripts_dir: "{{repo_owner_homedir}}/syncscripts/scripts"
+syncscripts_logs_dir: "{{repo_owner_homedir}}/syncscripts/logs"
 
 sync_scripts_list:
   - sync-fedora.sh
