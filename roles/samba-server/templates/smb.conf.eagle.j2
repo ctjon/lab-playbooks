@@ -110,8 +110,8 @@
 ;	netbios name = MYSERVER
 	netbios name = {{samba_netbios_name}}
 
-	interfaces = lo {{ trusted_interfaces | join(" ") }}
-	hosts allow = 127. {{ trusted_subnets | join(" ") }}
+	interfaces = lo virbr0
+	hosts allow = 127. 192.168.168.0/24
 
 ;	interfaces = lo eth0 192.168.12.2/24 192.168.13.2/24
 ;	hosts allow = 127. 192.168.12. 192.168.13.
@@ -344,15 +344,3 @@
 ;	printable = no
 ;	write list = +staff
 
-{% for item in samba_shares %}
-[{{item.name}}]
-	comment = {{item.name}}
-	path = {{item.path}}
-	public = {{item.public}}
-	guest ok = {{item.guest_ok}}
-	browseable = {{item.browseable}}
-	writable = {{item.writeable}}
-	printable = {{item.printable}}
-	write list = {{item.trusted_write_users}}
-
-{% endfor %}
