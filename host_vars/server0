@@ -175,7 +175,7 @@ tm_users:
 
 tm_storage_vg: backupvg
 tm_storage_lv: tmlv
-tm_storage_lv_size: 4t
+tm_storage_lv_size: 2t
 tm_storage_fs_type: xfs
 tm_storage_path: /export/time_machine
 
