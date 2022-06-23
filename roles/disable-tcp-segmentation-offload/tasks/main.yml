@@ -1,0 +1,16 @@
+---
+- name: get facts
+  ansible.builtin.setup:
+
+- name: list interfaces
+  ansible.builtin.debug:
+    var: "ansible_facts[ansible_{{item}}].device"
+  with_items:
+    - "{{ ansible_interfaces }}"
+
+# - ansible.builtin.command:
+#     cmd: ethtool -K eth0 tso off
+#   when:  "{{item}}.module" == "e1000e"
+#   with_items:
+#     - "{{ ansible_interfaces }}"
+

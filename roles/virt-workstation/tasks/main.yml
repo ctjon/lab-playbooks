@@ -16,7 +16,7 @@
     group: polkitd
     mode: 0750
 
-- name: Download virtio repo configuration
+- name: Download virtio-win repo configuration
   ansible.builtin.get_url:
     url: https://fedorapeople.org/groups/virt/virtio-win/virtio-win.repo
     dest: /etc/yum.repos.d/virtio-win.repo

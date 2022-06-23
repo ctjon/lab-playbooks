@@ -207,7 +207,7 @@ fedora_repos_list:
   - fedora-updates
   - fedora-updates-modular
 
-virtio-win_repos_list:
+virtio_win_repos_list:
   - virtio-win
 
 rpmfusion_repos_list:

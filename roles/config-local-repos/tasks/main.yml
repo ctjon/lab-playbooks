@@ -1,23 +1,25 @@
 - name: Perform RHEL-6/CentOS-6 Specific Confgurations
-  import_tasks: rhel-centos6.yml
+  ansible.builtin.include_tasks: rhel-centos6.yml
   when:
     - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
     - ansible_distribution_major_version == "6"
 
 - name: Perform RHEL-7/CentOS-7 Specific Confgurations
-  import_tasks: rhel-centos7.yml
+  ansible.builtin.include_tasks: rhel-centos7.yml
   when:
     - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
     - ansible_distribution_major_version == "7"
 
 - name: Perform RHEL-8/CentOS-8 Specific Confgurations
-  import_tasks: rhel-centos8.yml
+  ansible.builtin.include_tasks: rhel-centos8.yml
   when:
     - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
     - ansible_distribution_major_version == "8"
 
 - name: Perform server0 repo Specific Confgurations
-  include: fedora.yml repoName="{{item}}"     ## DEPRECATION WARNING TO FIX HERE
+  ansible.builtin.include_tasks: fedora.yml
+  vars: 
+    - repoName: "{{item}}"
   when:
     - ansible_distribution == "Fedora"
     - ansible_distribution_major_version >= "28"  # 28,29...
@@ -27,7 +29,9 @@
     - "{{rpmfusion_repos_list}}" 
 
 - name: Perform localhost Specific Confgurations
-  include: localhost.yml repoName="{{item}}"    ## DEPRECATION WARNING TO FIX HERE
+  ansible.builtin.include_tasks: localhost.yml
+  vars: 
+    - repoName: "{{item}}"
   when:
     - ansible_distribution == "Fedora"
     - ansible_distribution_major_version >= "28"  # 28,29...
