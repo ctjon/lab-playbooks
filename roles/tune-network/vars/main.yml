@@ -1,0 +1,19 @@
+---
+tcp_stack_features_to_tune:
+  - {name: "tso", value: "off"}     # tcp_segmentation_offload
+  - {name: "gso", value: "off"}     # generic_segmentation_offload
+  - {name: "gro", value: "off"}     # generic_receive_offload
+
+network_interfaces_to_tune:
+  - br0
+  - eth0
+  - virbr0
+  - vnet_nat1
+  - vnet_nat2
+    
+nmcli_connections:
+  - br0
+  - bridge-slave-eth0
+  - virbr0
+  - vnet_nat1
+  - vnet_nat2

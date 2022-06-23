@@ -15,8 +15,8 @@
 #    - role: sm-register
 #      tags: ['sm-register']
 
-    - role: disable-tcp-segmentation-offload
-      tags: ['disable-tcp-segmentation-offload']
+    - role: tune-network
+      tags: ['tune-network']
 
     - role: config-local-repos
       tags: ['config-local-repos']

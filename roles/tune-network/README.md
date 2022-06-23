@@ -1,9 +1,11 @@
 Role Name
 =========
 
+tune_network
+
 Disable TCP Segementation Offload for e1000 network adapter
 
-essentially does same as: "ethtool -K eth0 tso off"
+essentially does same as: "ethtool -K eth0 tso off gro off gso off"
 
 
 Purpose
@@ -49,8 +51,8 @@ ethtool command must be installed
 Example Playbook
 ----------------
 
-    - role: disable-tcp-segmentation-offload
-      tags: ['disable-tcp-segmentation-offload']
+    - role: tune-network
+      tags: ['tune-network']
 
 
 License

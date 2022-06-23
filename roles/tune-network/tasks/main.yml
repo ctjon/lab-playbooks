@@ -1,0 +1,16 @@
+---
+- ansible.builtin.command:
+    cmd: "ethtool -K {{item.0}} {{item.1.name}} {{item.1.value}}"
+  with_nested:
+    - "{{ network_interfaces_to_tune }}"
+    - "{{ tcp_stack_features_to_tune }}"
+
+- name: set jumbo frames
+  nmcli:
+    conn_name: "{{item}}"
+    mtu: 9000
+    method4: manual
+    type: ethernet
+    state: present
+  with_items:
+    - "{{ nmcli_connections }}"
