@@ -15,9 +15,6 @@
 #    - role: sm-register
 #      tags: ['sm-register']
 
-    - role: tune-network
-      tags: ['tune-network']
-
     - role: config-local-repos
       tags: ['config-local-repos']
 
@@ -29,6 +26,9 @@
 
     - role: setup-br0
       tags: ['setup-br0']
+
+    - role: tune-network
+      tags: ['tune-network']
 
     - role: limit-kernels
       tags: ['limit-kernels']
@@ -70,9 +70,6 @@
     - role: kickstart
       tags: ['kickstart']
 
-    - role: plex-server
-      tags: ['plex-server']
-
     - role: http-repo
       tags: ['http-repo']
 
@@ -108,6 +105,9 @@
 
 #    - role: backup
 #      tags: ['backup']
+
+    - role: plex-server
+      tags: ['plex-server']
 
 #    - role: insights-register
 #      tags: ['insights']
