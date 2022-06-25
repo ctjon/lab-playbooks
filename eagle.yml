@@ -12,20 +12,11 @@
   become: yes
 
   roles:
-    - role: dump-facts
-      tags: ['dump-facts']
-
-    - role: sm-register
-      tags: ['sm-register']
-
     - role: config-local-repos
       tags: ['config-local-repos']
 
     - role: disable-ipv6
       tags: ['disable-ipv6']
-
-    - role: setup-br0-dhcp
-      tags: ['setup-br0-dhcp']
 
     - role: selinux
       tags: ['selinux']
@@ -39,75 +30,17 @@
     - role: set-default-editor
       tags: ['set-default-editor']
 
-#    - role: masquerade
-#      tags: ['masquerade']
-
-#    - role: dnsmasq
-#      tags: ['dnsmasq']
-
     - role: apply-updates
       tags: ['apply-updates']
-
-    - role: time-server
-      tags: ['time-server']
-
-    - role: tftp-server
-      tags: ['tftp-server']
-
-    - role: syncscripts
-      tags: ['syncscripts']
 
     - role: virtio-win-local-repo
       tags: ['virtio-win-local-repo']
 
-# BROKEN - needs fixing
-#    - role: scripts
-#      tags: ['scripts']
-
-#    - role: kickstart
-#      tags: ['kickstart']
-
-#    - role: plex-server
-#      tags: ['plex-server']
-
-#    - role: http-repo
-#      tags: ['http-repo']
-
-    - role: samba-server
-      tags: ['samba-server']
-
-#    - role: nfs-server
-#      tags: ['nfs-server']
-
-#    - role: rsync-server
-#      tags: ['rsync-server']
-
     - role: setup-epel
       tags: ['setup-epel']
 
-    - role: virt-server
-      tags: ['virt-server']
-
-#    - role: appletalk-server
-#      tags: ['appletalk-server']
-
-#    - role: apcupsd
-#      tags: ['apcupsd']
-
-#    - role: openvpn-server
-#      tags: ['openvpn-server']
-
     - role: fail2ban
       tags: ['fail2ban']
-
-#    - role: rsyslog-server
-#      tags: ['rsyslog-server']
-
-#    - role: backup
-#      tags: ['backup']
-
-    - role: insights-register
-      tags: ['insights']
 
 ## DON'T AUTO REBOOT IF RUNNING KVM VMs
 ## At least not until the role is modified to accomodate it

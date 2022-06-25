@@ -42,5 +42,14 @@
         remote_src: true
         mode: '0644'
 
+    - name: install rpmfusion repos
+      ansible.builtin.dnf:
+        name: "{{item}}"
+        state: latest
+        disable_gpg_check: yes
+      with_items:
+        - "{{linux_install_server_url}}/rpm-fusion/free/fedora/rpmfusion-free-release-{{ansible_distribution_major_version}}.noarch.rpm"
+        - "{{linux_install_server_url}}/rpm-fusion/nonfree/fedora/rpmfusion-nonfree-release-{{ansible_distribution_major_version}}.noarch.rpm"
+
   become: true
 ...
