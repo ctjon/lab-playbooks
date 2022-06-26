@@ -3,21 +3,21 @@
 
 [virtio-win-stable-local]
 name=virtio-win-local builds roughly matching what was shipped in latest RHEL
-baseurl=file:///export/install/Linux/virtio-win/virtio-win/repo/stable
+baseurl=file://{{installdir}}/Linux/virtio-win/virtio-win/repo/stable
 enabled=1
 skip_if_unavailable=1
 gpgcheck=0
 
 [virtio-win-latest-local]
 name=Latest virtio-win-local builds
-baseurl=file:///export/install/Linux/virtio-win/virtio-win/repo/latest
+baseurl=file://{{installdir}}/Linux/virtio-win/virtio-win/repo/latest
 enabled=0
 skip_if_unavailable=1
 gpgcheck=0
 
 [virtio-win-source-local]
 name=virtio-win-local source RPMs
-baseurl=file:///export/install/Linux/virtio-win/virtio-win/repo/srpms
+baseurl=file://{{installdir}}/Linux/virtio-win/virtio-win/repo/srpms
 enabled=0
 skip_if_unavailable=1
 gpgcheck=0

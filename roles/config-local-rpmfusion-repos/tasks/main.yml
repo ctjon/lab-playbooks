@@ -1,2 +1,75 @@
 ---
-# tasks file for config-local-rpmfusion-repos
+- name: main.yml - Make a distro repo file backup directory /etc/yum.repos.d/save
+  ansible.builtin.file:
+    path: /etc/yum.repos.d/save
+    state: directory
+    mode: '0755'
+
+- name: main.yml - Perform RHEL-6/CentOS-6 RPM Fusion Confgurations
+  ansible.builtin.include_tasks: rhel-centos6.yml
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "6"
+
+- name: main.yml - Perform RHEL-7/CentOS-7 RPM Fusion Confgurations
+  ansible.builtin.include_tasks: rhel-centos7.yml
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "7"
+
+- name: main.yml - Perform RHEL-8/CentOS-8 RPM Fusion Confgurations
+  ansible.builtin.include_tasks: rhel-centos8.yml
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "8"
+
+- name: main.yml - Configure to get RPM Fusion updates and packages from "{{linux_install_server_hostname}}"
+  block:
+    - name: install rpmfusion repos
+      ansible.builtin.dnf:
+        name: "{{item}}"
+        state: latest
+        disable_gpg_check: yes
+      with_items:
+        - "{{linux_install_server_url}}/rpm-fusion/free/fedora/rpmfusion-free-release-{{ansible_distribution_major_version}}.noarch.rpm"
+        - "{{linux_install_server_url}}/rpm-fusion/nonfree/fedora/rpmfusion-nonfree-release-{{ansible_distribution_major_version}}.noarch.rpm"
+
+    - name: main.yml - Setup Repo Files to point to "{{linux_install_server_hostname}}"
+      ansible.builtin.include_tasks: fedora.yml
+      vars:
+        - repoName: "{{item}}"
+      with_items:
+        - "{{rpmfusion_repos_list}}"
+
+  when:
+    - ansible_distribution == "Fedora"
+    - ansible_distribution_major_version >= "28"  # 28,29...
+    - ansible_hostname != "server0"
+#    - ansible_hostname != linux_install_server_hostname
+  # END BLOCK
+
+- name: main.yml - Configure to get RPM Fusion updates and packages from localhost
+  block:
+    - name: main.yml - install rpmfusion packages
+      ansible.builtin.dnf:
+        name: "{{item}}"
+        state: latest
+        disable_gpg_check: yes
+      with_items:
+        - "{{installdir}}/Linux/rpm-fusion/free/fedora/rpmfusion-free-release-{{ansible_distribution_major_version}}.noarch.rpm"
+        - "{{installdir}}/Linux/rpm-fusion/nonfree/fedora/rpmfusion-nonfree-release-{{ansible_distribution_major_version}}.noarch.rpm"
+
+    - name: main.yml - Setup Repo Files to point to localhost
+      ansible.builtin.include_tasks: localhost.yml
+      vars:
+        - repoName: "{{item}}"
+      with_items:
+        - "{{rpmfusion_repos_list}}"
+
+  when:
+    - ansible_distribution == "Fedora"
+    - ansible_distribution_major_version >= "28"  # 28,29...
+    - ansible_hostname == "server0"
+#    - ansible_hostname == linux_install_server_hostname
+  # END BLOCK
+...

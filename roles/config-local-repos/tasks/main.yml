@@ -1,39 +1,49 @@
-- name: Perform RHEL-6/CentOS-6 Specific Confgurations
+---
+- name: main.yml - Make a distro repo file backup directory /etc/yum.repos.d/save
+  ansible.builtin.file:
+    path: /etc/yum.repos.d/save
+    state: directory
+    mode: '0755'
+
+- name: main.yml - Perform RHEL-6/CentOS-6 Confgurations
   ansible.builtin.include_tasks: rhel-centos6.yml
   when:
     - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
     - ansible_distribution_major_version == "6"
 
-- name: Perform RHEL-7/CentOS-7 Specific Confgurations
+- name: main.yml - Perform RHEL-7/CentOS-7 Confgurations
   ansible.builtin.include_tasks: rhel-centos7.yml
   when:
     - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
     - ansible_distribution_major_version == "7"
 
-- name: Perform RHEL-8/CentOS-8 Specific Confgurations
+- name: main.yml - Perform RHEL-8/CentOS-8 Confgurations
   ansible.builtin.include_tasks: rhel-centos8.yml
   when:
     - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
     - ansible_distribution_major_version == "8"
 
-- name: Perform server0 repo Specific Confgurations
+- name: main.yml - Configure to get Fedora updates and packages from "{{linux_install_server_hostname}}"
   ansible.builtin.include_tasks: fedora.yml
-  vars: 
+  vars:
     - repoName: "{{item}}"
+  with_items:
+    - "{{fedora_repos_list}}"
   when:
     - ansible_distribution == "Fedora"
     - ansible_distribution_major_version >= "28"  # 28,29...
     - ansible_hostname != "server0"
-  with_items:
-    - "{{fedora_repos_list}}" 
+#    - ansible_hostname != linux_install_server_hostname
 
-- name: Perform localhost Specific Confgurations so server0 installs from itself
+- name: main.yml - Configure to get Fedora updates and packages from localhost
   ansible.builtin.include_tasks: localhost.yml
-  vars: 
+  vars:
     - repoName: "{{item}}"
+  with_items:
+    - "{{fedora_repos_list}}"
   when:
     - ansible_distribution == "Fedora"
     - ansible_distribution_major_version >= "28"  # 28,29...
     - ansible_hostname == "server0"
-  with_items:  
-    - "{{fedora_repos_list}}" 
+#    - ansible_hostname == linux_install_server_hostname
+...

@@ -25,28 +25,23 @@
     path: /etc/yum.repos.d/virtio-win.repo
     state: absent
 
-- name: Install virtio-win repo files in /etc/yum.repos.d for server0 clients
-  get_url:
-    url: "{{linux_install_server_url}}/ConfigFiles/etc/yum.repos.d/server0/{{item}}-{{linux_install_server_hostname}}.repo"
-    dest: "/etc/yum.repos.d/{{item}}-{{linux_install_server_hostname}}.repo"
+- name: Install virtio-win-server0.repo in /etc/yum.repos.d
+  ansible.builtin.template:
+    src: "virtio-win-{{linux_install_server_hostname}}.repo.j2"
+    dest: "/etc/yum.repos.d/virtio-win-{{linux_install_server_hostname}}.repo"
     owner: root
     group: root
     mode: '0644'
   when:
     - ansible_hostname != "server0"
-  with_items:
-    - "{{virtio_win_repos_list}}"
 
-- name: Install virtio-win repo files in /etc/yum.repos.d for local server0 getting updates from itself
-  ansible.builtin.copy:
-    src: "{{installdir}}/Linux/ConfigFiles/etc/yum.repos.d/localhost/{{item}}-local.repo"
-    dest: "/etc/yum.repos.d/{{item}}-local.repo"
+- name: Install virtio-win-local.repo in /etc/yum.repos.d
+  ansible.builtin.template:
+    src: virtio-win-local.repo.j2
+    dest: /etc/yum.repos.d/virtio-win-local.repo
     owner: root
     group: root
     mode: '0644'
-    remote_src: true
   when:
     - ansible_hostname == "server0"
-  with_items:
-    - "{{virtio_win_repos_list}}"
 ...

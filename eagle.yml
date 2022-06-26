@@ -36,8 +36,8 @@
     - role: apply-updates
       tags: ['apply-updates']
 
-    - role: config-local-virtio-win-repo
-      tags: ['config-local-virtio-win-repo']
+    - role: config-local-virtio-win-repos
+      tags: ['config-local-virtio-win-repos']
 
     - role: setup-epel
       tags: ['setup-epel']

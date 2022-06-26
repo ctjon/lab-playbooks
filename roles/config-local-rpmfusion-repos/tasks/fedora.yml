@@ -1,10 +1,10 @@
 ---
-- name: fedora.yml - Check to see if {{repoName}}.repo file requires backup
+- name: fedora.yml - Check to see if {{repoName}}.repo requires backup
   ansible.builtin.stat:
     path: "/etc/yum.repos.d/{{repoName}}.repo"
   register: result
 
-- name: fedora.yml - Backup original {{repoName}}.repo to /etc/yum.repos.d/save directory
+- name: fedora.yml - Backup original {{repoName}}.repo  to /etc/yum.repos.d/save directory
   ansible.builtin.copy:
     src: "/etc/yum.repos.d/{{repoName}}.repo"
     dest: "/etc/yum.repos.d/save/{{repoName}}.repo"
@@ -19,9 +19,9 @@
     path: "/etc/yum.repos.d/{{repoName}}.repo"
     state: absent
 
-- name: fedora.yml - Configure {{repoName}}.repo to install/update from {{linux_install_server_hostname}}
+- name: fedora.yml - Configure {{reponame}}.repo Files to install/update from {{linux_install_server_hostname}}
   template: 
-    src: "fedora/{{linux_install_server_hostname}}/{{repoName}}-{{linux_install_server_hostname}}.repo.j2"
+    src: "{{linux_install_server_hostname}}/{{repoName}}-{{linux_install_server_hostname}}.repo.j2"
     dest: "/etc/yum.repos.d/{{repoName}}-{{linux_install_server_hostname}}.repo"
     owner: root
     group: root
