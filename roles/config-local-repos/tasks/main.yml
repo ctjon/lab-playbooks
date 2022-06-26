@@ -26,9 +26,8 @@
     - ansible_hostname != "server0"
   with_items:
     - "{{fedora_repos_list}}" 
-    - "{{rpmfusion_repos_list}}" 
 
-- name: Perform localhost Specific Confgurations
+- name: Perform localhost Specific Confgurations so server0 installs from itself
   ansible.builtin.include_tasks: localhost.yml
   vars: 
     - repoName: "{{item}}"
@@ -38,4 +37,3 @@
     - ansible_hostname == "server0"
   with_items:  
     - "{{fedora_repos_list}}" 
-    - "{{rpmfusion_repos_list}}" 
