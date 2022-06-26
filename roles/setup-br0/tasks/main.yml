@@ -1,7 +1,7 @@
 ---
 - name: install bridge-utils
   package:
-    name: bridge-utils
+    name: bridge-utils, firewalld
     state: latest
 
 #
@@ -16,6 +16,8 @@
     dns4: "{{ primary_dns_servers }}"
     dns4_search: "{{ primary_domain_name }}"
     method6: disabled
+    mtu: 1500
+    stp: yes
     state: present
   notify: restart NetworkManager
 
@@ -29,8 +31,15 @@
     hairpin: false
     ifname: "{{ primary_interface }}"
     master: "{{ primary_bridge }}"
+    mtu: 1500
     state: present
   notify: restart NetworkManager
+
+- name: make sure firewalld is running and enabled
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: yes
 
 - name: reconfigure firewall for bridge
   ansible.builtin.firewalld:

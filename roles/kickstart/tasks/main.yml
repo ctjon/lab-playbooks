@@ -40,19 +40,19 @@
     - 68/udp    # bootpc UDP
     - 4011/udp  # pxe
 
-#- name: synchronize /usr/share/syslinux content to {{tftpbootdir}}
-#  ansible.builtin.synchronize:
-#    src: "/usr/share/syslinux/"
-#    dest: "{{tftpbootdir}}"
-#    archive: yes
-#    delete: yes
-#    links: yes
-#    recursive: yes
-#    times: yes
-#    rsync_opts: 
-#      - "--exclude=pxelinux.cfg"
-#      - "--exclude=images"
-#  delegate_to: "{{ inventory_hostname }}"
+- name: synchronize /usr/share/syslinux content to {{tftpbootdir}}
+  ansible.builtin.synchronize:
+    src: "/usr/share/syslinux/"
+    dest: "{{tftpbootdir}}"
+    archive: yes
+    delete: yes
+    links: yes
+    recursive: yes
+    times: yes
+    rsync_opts: 
+      - "--exclude=pxelinux.cfg"
+      - "--exclude=images"
+  delegate_to: "{{ inventory_hostname }}"
 
 - name: create {{tftpbootdir}}/{pxelinux.cfg,images} directories
   ansible.builtin.file:
