@@ -26,8 +26,8 @@
 
     - name: rhel-centos8.yml - install custom rhel repo files
       template:
-        src: tjon-rhel8.repo.j2
-        dest: /etc/yum.repos.d/tjon-rhel.repo
+        src: rhel/server0-rhel8.repo.j2
+        dest: /etc/yum.repos.d/server0-rhel.repo
         owner: root
         group: root
         mode: 0644
@@ -42,8 +42,8 @@
 
     - name: rhel-centos8.yml - install custom CentOS repo files
       template:
-        src: tjon-centos8.repo.j2
-        dest: /etc/yum.repos.d/tjon-centos.repo
+        src: centos/server0-centos8.repo.j2
+        dest: /etc/yum.repos.d/server0-centos.repo
         owner: root
         group: root
         mode: 0644
@@ -65,8 +65,8 @@
 
 - name: rhel-centos8.yml - install custom epel repo files
   template:
-    src: tjon-epel8.repo.j2
-    dest: /etc/yum.repos.d/tjon-epel.repo
+    src: epel/server0-epel8.repo.j2
+    dest: /etc/yum.repos.d/server0-epel.repo
     owner: root
     group: root
     mode: 0644
