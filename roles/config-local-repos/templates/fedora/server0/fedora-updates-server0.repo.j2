@@ -1,5 +1,5 @@
-[updates-server0]
-name=Fedora $releasever - $basearch - Updates - server0
+[updates-{{linux_install_server_hostname}}]
+name=Fedora $releasever - $basearch - Updates - {{linux_install_server_hostname}}
 baseurl={{linux_install_server_url}}/fedora/updates/$releasever/Everything/$basearch/
 #metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-f$releasever&arch=$basearch
 enabled=1
@@ -11,8 +11,8 @@ metadata_expire=6h
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=False
 
-[updates-debuginfo-server0]
-name=Fedora $releasever - $basearch - Updates - Debug - server0
+[updates-debuginfo]
+name=Fedora $releasever - $basearch - Updates - Debug
 #baseurl={{linux_install_server_url}}/fedora/updates/$releasever/Everything/$basearch/debug/
 metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-debug-f$releasever&arch=$basearch
 enabled=0
@@ -23,8 +23,8 @@ metadata_expire=6h
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=False
 
-[updates-source-server0]
-name=Fedora $releasever - Updates Source - server0
+[updates-source-{{linux_install_server_hostname}}]
+name=Fedora $releasever - Updates Source - {{linux_install_server_hostname}}
 baseurl={{linux_install_server_url}}/fedora/updates/$releasever/Everything/source/tree
 #metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-source-f$releasever&arch=$basearch
 enabled=0

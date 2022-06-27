@@ -1,4 +1,4 @@
-[rpmfusion-free-updates-server0]
+[rpmfusion-free-updates-{{linux_install_server_hostname}}]
 name=RPM Fusion for Fedora $releasever - Free - Updates
 baseurl=http://install.internal.tjon.net/Linux/rpm-fusion/free/fedora/updates/$releasever/$basearch/
 #metalink=https://mirrors.rpmfusion.org/metalink?repo=free-fedora-updates-released-$releasever&arch=$basearch
@@ -19,7 +19,7 @@ gpgcheck=1
 repo_gpgcheck=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-fedora-$releasever
 
-[rpmfusion-free-updates-source-server0]
+[rpmfusion-free-updates-source-{{linux_install_server_hostname}}]
 name=RPM Fusion for Fedora $releasever - Free - Updates Source
 baseurl=http://install.internal.tjon.net/Linux/rpm-fusion/free/fedora/updates/$releasever/SRPMS/
 #metalink=https://mirrors.rpmfusion.org/metalink?repo=free-fedora-updates-released-source-$releasever&arch=$basearch

@@ -1,5 +1,5 @@
-[fedora-server0]
-name=Fedora $releasever - $basearch - server0
+[fedora-{{linux_install_server_hostname}}]
+name=Fedora $releasever - $basearch - {{linux_install_server_hostname}}
 baseurl={{linux_install_server_url}}/fedora/releases/$releasever/Everything/$basearch/os/
 #metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-$releasever&arch=$basearch
 enabled=1
@@ -11,8 +11,8 @@ gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=False
 
-[fedora-debuginfo-server0]
-name=Fedora $releasever - $basearch - Debug - server0
+[fedora-debuginfo]
+name=Fedora $releasever - $basearch - Debug
 #baseurl={{linux_install_server_url}}/fedora/releases/$releasever/Everything/$basearch/debug/tree/
 metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-debug-$releasever&arch=$basearch
 enabled=0
@@ -23,8 +23,8 @@ gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=False
 
-[fedora-source-server0]
-name=Fedora $releasever - Source - server0
+[fedora-source-{{linux_install_server_hostname}}]
+name=Fedora $releasever - Source - {{linux_install_server_hostname}}
 baseurl={{linux_install_server_url}}/fedora/releases/$releasever/Everything/source/tree/
 #metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-source-$releasever&arch=$basearch
 enabled=0

@@ -1,5 +1,5 @@
-[fedora-modular-server0]
-name=Fedora Modular $releasever - $basearch - server0
+[fedora-modular-{{linux_install_server_hostname}}]
+name=Fedora Modular $releasever - $basearch - {{linux_install_server_hostname}}
 baseurl={{linux_install_server_url}}/fedora/releases/$releasever/Modular/$basearch/os/
 #metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-modular-$releasever&arch=$basearch
 enabled=1
@@ -11,8 +11,8 @@ gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=False
 
-[fedora-modular-debuginfo-server0]
-name=Fedora Modular $releasever - $basearch - Debug - server0
+[fedora-modular-debuginfo]
+name=Fedora Modular $releasever - $basearch - Debug
 #baseurl={{linux_install_server_url}}/fedora/releases/$releasever/Modular/$basearch/debug/tree/
 metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-modular-debug-$releasever&arch=$basearch
 enabled=0
@@ -23,8 +23,8 @@ gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=False
 
-[fedora-modular-source-server0]
-name=Fedora Modular $releasever - Source - server0
+[fedora-modular-source-{{linux_install_server_hostname}}]
+name=Fedora Modular $releasever - Source - {{linux_install_server_hostname}}
 baseurl={{linux_install_server_url}}/fedora/releases/$releasever/Modular/source/tree/
 #metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-modular-source-$releasever&arch=$basearch
 enabled=0

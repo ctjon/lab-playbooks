@@ -1,6 +1,6 @@
 ---
 #
-# Configure Server0
+# Configure Server1
 #
 
 # CentOS 8 Prerequisites: 
@@ -8,7 +8,7 @@
 #	policycoreutils-python3
 #	rsync
 
-- hosts: server0
+- hosts: server1
   become: yes
 
   roles:
@@ -27,8 +27,8 @@
     - role: selinux
       tags: ['selinux']
 
-    - role: setup-br0
-      tags: ['setup-br0']
+#    - role: setup-br0
+#      tags: ['setup-br0']
 
 #    - role: tune-network
 #      tags: ['tune-network']
@@ -45,8 +45,8 @@
     - role: apply-updates
       tags: ['apply-updates']
 
-    - role: time-server
-      tags: ['time-server']
+#    - role: time-server
+#      tags: ['time-server']
 
     - role: tftp-server
       tags: ['tftp-server']
@@ -60,8 +60,11 @@
     - role: set-default-editor
       tags: ['set-default-editor']
 
-    - role: syncscripts
-      tags: ['syncscripts']
+#    - role: syncscripts
+#      tags: ['syncscripts']
+
+    - role: http-repo
+      tags: ['http-repo']
 
     - role: config-local-virtio-win-repos
       tags: ['config-local-virtio-win-repos']
@@ -73,14 +76,11 @@
     - role: kickstart
       tags: ['kickstart']
 
-    - role: http-repo
-      tags: ['http-repo']
+#    - role: samba-server
+#      tags: ['samba-server']
 
-    - role: samba-server
-      tags: ['samba-server']
-
-    - role: nfs-server
-      tags: ['nfs-server']
+#    - role: nfs-server
+#      tags: ['nfs-server']
 
     - role: rsync-server
       tags: ['rsync-server']
@@ -88,14 +88,14 @@
     - role: setup-epel
       tags: ['setup-epel']
 
-    - role: virt-server
-      tags: ['virt-server']
+#    - role: virt-server
+#      tags: ['virt-server']
 
-    - role: appletalk-server
-      tags: ['appletalk-server']
+#    - role: appletalk-server
+#      tags: ['appletalk-server']
 
-    - role: apcupsd
-      tags: ['apcupsd']
+#    - role: apcupsd
+#      tags: ['apcupsd']
 
 #    - role: openvpn-server
 #      tags: ['openvpn-server']
@@ -109,8 +109,8 @@
 #    - role: backup
 #      tags: ['backup']
 
-    - role: plex-server
-      tags: ['plex-server']
+#    - role: plex-server
+#      tags: ['plex-server']
 
 #    - role: insights-register
 #      tags: ['insights']

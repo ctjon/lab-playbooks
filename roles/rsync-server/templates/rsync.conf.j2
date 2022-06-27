@@ -9,13 +9,13 @@ lock file = /var/run/rsync.lock
         hosts allow = {{primary_subnet}}
         hosts deny = *
 
-[rhel-reposyncs]
-        path = /export/install/Linux/rhel-reposyncs
-        comment = Server0 RHEL RepoSyncs Installation Repos
-        read only = yes
-        hosts allow = {{primary_subnet}}
-        hosts deny = *
-        list = true
+#[rhel-reposyncs]
+#        path = /export/install/Linux/rhel-reposyncs
+#        comment = Server0 RHEL RepoSyncs Installation Repos
+#        read only = yes
+#        hosts allow = {{primary_subnet}}
+#        hosts deny = *
+#        list = true
 
 [centos]
         path = /export/install/Linux/centos
@@ -72,4 +72,13 @@ lock file = /var/run/rsync.lock
         hosts allow = {{primary_subnet}}
         hosts deny = *
         list = true
+
+[openwrt]
+        path = /export/install/OpenWRT
+        comment = Server0 OpenWRT Installation Repo
+        read only = yes
+        hosts allow = {{primary_subnet}}
+        hosts deny = *
+        list = true
+
 

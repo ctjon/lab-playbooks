@@ -1,4 +1,4 @@
-[rpmfusion-nonfree-nvidia-driver-server0]
+[rpmfusion-nonfree-nvidia-driver-{{linux_install_server_hostname}}]
 name=RPM Fusion for Fedora $releasever - Nonfree - NVIDIA Driver
 baseurl=http://install.internal.tjon.net/Linux/rpm-fusion/nonfree/fedora/nvidia-driver/$releasever/$basearch/
 #metalink=https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-nvidia-driver-$releasever&arch=$basearch
@@ -20,7 +20,7 @@ repo_gpgcheck=0
 gpgkey=file:///usr/share/distribution-gpg-keys/rpmfusion/RPM-GPG-KEY-rpmfusion-nonfree-fedora-$releasever
 skip_if_unavailable=True
 
-[rpmfusion-nonfree-nvidia-driver-source-server0]
+[rpmfusion-nonfree-nvidia-driver-source-{{linux_install_server_hostname}}]
 name=RPM Fusion for Fedora $releasever - Nonfree - NVIDIA Driver Source
 baseurl=http://install.internal.tjon.net/Linux/rpm-fusion/nonfree/fedora/nvidia-driver/$releasever/SRPMS/
 #metalink=https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-nvidia-driver-source-$releasever&arch=$basearch

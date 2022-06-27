@@ -45,6 +45,7 @@
     - ansible_distribution == "Fedora"
     - ansible_distribution_major_version >= "28"  # 28,29...
     - ansible_hostname != "server0"
+    - ansible_hostname != "server1"
 #    - ansible_hostname != linux_install_server_hostname
   # END BLOCK
 
@@ -69,7 +70,7 @@
   when:
     - ansible_distribution == "Fedora"
     - ansible_distribution_major_version >= "28"  # 28,29...
-    - ansible_hostname == "server0"
+    - ((ansible_hostname == "server0")) or ((ansible_hostname == "server1"))
 #    - ansible_hostname == linux_install_server_hostname
   # END BLOCK
 ...

@@ -1,0 +1,467 @@
+#
+# host_vars file for server1
+#
+
+use_ssh_agent: yes
+copy_ssh_keys: yes
+setup_ansible_config: yes
+setup_git_update: yes
+ssh_private_key_list:
+  - ctjon.pem
+  - ctjon-github_rsa
+
+ssh_public_key_list:
+  - ctjon-github_rsa
+
+enable_public_sshd: true
+
+TIMEZONE: "America/Phoenix"
+time_servers:
+  - time.internal.tjon.net
+#  - 0.rhel.pool.ntp.org
+#  - 1.rhel.pool.ntp.org
+#  - 2.rhel.pool.ntp.org
+#  - 3.rhel.pool.ntp.org
+
+################################################################################
+# Primary Network Interface Configuration Parameters                           #
+################################################################################
+primary_domain_name: internal.tjon.net
+primary_subnet: 172.16.1.0/24
+primary_ipaddr: 172.16.1.9
+primary_prefix: 24
+primary_short_net: 172.16.1
+primary_netmask: 255.255.255.0
+primary_gateway: 172.16.1.1
+search_domains: 
+ - internal.tjon.net
+primary_dns_servers: 
+ - 172.16.1.1
+primary_bridge: br0
+primary_interface: eth0
+public_firewall_interface: eth0
+#public_firewall_interface: br0
+use_dhcp: 'false'
+bridge_wireless: 'false'
+#wireless_interface: 
+trusted_firewall_interface: eth0
+
+################################################################################
+# Installation Source Parameters                                               #
+################################################################################
+linux_install_server_url: "http://install1.internal.tjon.net/Linux"
+linux_install_server_hostname: server1
+config_files_url: "http://install1.internal.tjon.net/ConfigFiles"
+doc_files_url: "http://install1.internal.tjon.net/Documentation"
+
+################################################################################
+# Time Server Configuration Parameters                                         #
+################################################################################
+time_client_servers:
+  - "time.{{primary_domain_name}}"
+  - "time.{{secondary_domain_name}}"
+
+################################################################################
+# TFTP Boot Server Parameters                                                  #
+################################################################################
+tftpbootdir: /var/lib/tftpboot
+installdir: /export/install
+doc_files_dir: /export/install/Documentation
+
+################################################################################
+# HTTP Server Parameters                                                       #
+################################################################################
+vhosts: 
+  - {name: server1, document_root: /var/www/html, alias: server1, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
+  - {name: install1, document_root: /export/install, alias: install1, fcontext: public_content_rw_t, lv_name: /dev/sda2}
+
+################################################################################
+# Firewall Configuration Parameters                                            #
+################################################################################
+#public_firewall_zone: public
+#trusted_firewall_zone: public
+public_firewall_zone: FedoraServer
+trusted_firewall_zone: FedoraServer
+additional_fw_ports:
+  - 8443
+
+################################################################################
+# KVM Virtualization Configuration Parameters                                  #
+################################################################################
+virt_nets:
+  - vnet_nat1
+  - vnet_nat2
+
+virt_users:
+  - chris
+
+vm_storage_vg: rootvg
+vm_storage_lv: imageslv
+vm_storage_lv_size: 768g
+vm_storage_path: /var/lib/libvirt/images
+vm_storage_fs_type: xfs
+vm_bridge_interface: "{{primary_bridge}}"
+
+################################################################################
+# SSH Configuration Parameters                                                 #
+################################################################################
+#ssh_root_login_permited: "yes"
+#allowed_ssh_users: chris root
+ssh_root_login_permited: "no"
+allowed_ssh_users: chris
+
+################################################################################
+# SSH Keys to Install on Managed Hosts                                         #
+################################################################################
+ssh_keys_required:
+  - chris-x1carbon-id_rsa.pub
+
+################################################################################
+# Kickstart Config Parameters                                                  #
+################################################################################
+ks_configs_list:
+  - eagle-preserve-ks.cfg
+  - kvmhost-ks.cfg
+  - fipstest-ks.cfg
+  - x1carbon-fedora-initial-ks.cfg
+  - x1carbon-fedora-preserve-ks.cfg
+  - x1carbon-rhel8-initial-ks.cfg
+  - x1carbon-rhel8-preserve-ks.cfg
+  - test-centos7-ks.cfg
+  - test-centos8-ks.cfg
+  - test-fedora35-ks.cfg
+  - test-fedora36-ks.cfg
+  - test-rhel6-ks.cfg
+  - test-rhel7-ks.cfg
+  - test-rhel8-ks.cfg
+  - test-rhel9-ks.cfg
+  - gitlab-ks.cfg
+  - fetcher-ks.cfg
+  - satellite6-ks.cfg
+  - satclient0-ks.cfg
+  - satclient1-ks.cfg
+  - satclient2-ks.cfg
+  - satclient3-ks.cfg
+  - server0-ks.cfg
+  - synchost6-ks.cfg
+  - synchost7-ks.cfg
+  - synchost8-ks.cfg
+  - synchost9-ks.cfg
+  - tower-ks.cfg
+  - tower-nodeA-ks.cfg
+
+pxelinux_files:
+    - LinuxMenu
+    - fedora
+    - rhel-satclients
+    - rhel
+    - rhel-synchosts
+    - rhel-testvms
+    - tower-cluster
+    - x1carbon
+    - OpenBSD
+    - vmware
+    - ubuntu
+#    - centos
+
+pxewindows_files:
+    - windows
+
+################################################################################
+# REPO Configuration Parameters - FROM HERE TO EOF                             #
+################################################################################
+repo_owner: chris
+repo_owner_homedir: /home/chris
+start_hour_offset: 0
+
+syncscripts_dir: "{{repo_owner_homedir}}/syncscripts/scripts"
+syncscripts_logs_dir: "{{repo_owner_homedir}}/syncscripts/logs"
+
+sync_scripts_list:
+  - sync-fedora.sh
+  - sync-rpmfusion.sh
+  - sync-centos.sh
+  - sync-epel.sh
+  - sync-openbsd.sh
+  - sync-openwrt.sh
+  - sync-virtio-win.sh
+
+sync_script_retries: true
+
+linux_repo_includes_list:
+  - x86_64
+  - source
+  - SRPMS
+  - aarch64
+  - armhfp
+  - ppc
+  - ppc64
+  - ppc64le
+  - "*.iso"
+  - "*.qcow2"
+  - "*.raw.xz"
+  - testing
+  - updates/testing
+
+linux_repo_excludes_list:
+  - development
+  - releases/test
+  - debug
+  - beta
+  - debug
+  - arm
+  - alpha
+  - ia64
+  - i386
+  - s390
+  - s390x
+  - "*.torrent"
+  - "*.box"
+
+ubuntu_repo_includes_list:
+  - "xenial*"  # 16.04.6 LTS Xenial Xerus
+
+ubuntu_repo_excludes_list:
+  - binary-i386
+  - "devel*"
+  - "precise*" # 12.04.5 LTS Precise Pangolin
+  - "trusty*"  # 14.04.6 LTS Trusty Tahr
+  - "artful*"  # 17.10.1 Artful Ardvark
+  - "bionic*"  # 18.04.2 LTS Bionic Beaver
+  - "cosmic*"  # 18.10 Cosmic Cuttlefish
+  - "disco*"   # 19.04 Beta Disco Dingo
+
+openbsd_repo_includes_list:
+  - amd64
+  - arm64
+  - armv7
+  - aarch64
+  - macppc
+  - powerpc
+  - powerpc64
+  - sparc64
+  - sh
+
+openbsd_repo_excludes_list:
+  - i386
+  - arm
+  - armish
+  - armv7
+  - arm64
+  - alpha
+  - snapshots
+  - songs
+  - aviion
+  - beagle
+  - hp300
+  - hppa
+  - landisk
+  - loongson
+  - luna88k
+  - mips64
+  - mips64el
+  - m68k
+  - m88k
+  - mvme68k
+  - mvme88k
+  - octeon
+  - riscv64
+  - sgi
+  - socppc
+  - sparc
+  - vax
+  - zaurus
+  - 'debug-*'
+  - '*.torrent'
+
+linux_distros:
+  - fedora
+  - rhel
+  - centos
+
+rhel_versions:
+  - 6
+  - 7
+  - 8
+  - 9
+
+# rhel versions that include upgrade.img
+rhel_upgrade_versions:
+  - 7
+
+rhel_architectures:
+  - x86_64
+
+centos_versions:
+  - 7
+
+centos_architectures:
+  - x86_64
+
+centos_stream_versions:
+  - 8-stream
+#  - 9-stream
+
+centos_stream_architectures:
+  - x86_64
+#  - aarch64 <<<< breaks shit, need to create a hash table instead
+
+fedora_versions:
+  - 36
+  - 35
+
+# fedora versions that include upgrade.img
+fedora_upgrade_versions:
+  - 36
+  - 35
+
+fedora_prev_release_ones_digit: 4
+fedora_prev_release: 34
+
+fedora_architectures:
+  - x86_64
+  - aarch64
+  - armhfp
+#  - ppc64le #### WANT THIS BUT BROKEN RIGHT NOW
+
+fedora_secondary_architectures:
+  - ppc
+  - ppc64
+
+ubuntu_server_versions:
+  - 16.04.6
+
+ubuntu_server_architectures:
+  - amd64
+
+openbsd_versions:
+  - 7.1
+
+openbsd_prev_dot_release: 0
+
+openbsd_arch_includes:
+  - amd64
+  - arm64 
+  - armv7 
+  - aarch64 
+  - macppc 
+  - powerpc
+  - powerpc64 
+  - sparc64 
+  - sh
+
+openbsd_arch_excludes:
+  - i386 
+  - arm 
+  - armish 
+  - armv7 
+  - arm64 
+  - alpha 
+  - aviion 
+  - beagle 
+  - hp300 
+  - hppa 
+  - landisk 
+  - loongson 
+  - luna88k 
+  - mips64 
+  - mips64el 
+  - m68k 
+  - m88k 
+  - mvme68k 
+  - mvme88k 
+  - octeon
+  - riscv64
+  - sgi
+  - socppc
+  - sparc
+  - vax
+  - zaurus
+
+vmware_versions:
+  - 6.7.0
+
+vmware_architectures:
+  - x86_64
+
+windows_versions:
+  - 10
+
+windows_architectures:
+  - amd64
+
+centos8_gpg_key_url: /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+
+openwrt_arch_includes:
+  - mvebu/cortexa9
+  - arm_cortex-a9
+
+openwrt_arch_excludes:
+  - aarch64_cortex-a53
+  - aarch64_cortex-a72
+  - aarch64_generic
+  - apm821xx
+  - arc_arc700
+  - arc_archs
+  - arc770 
+  - archs38
+  - armvirt 
+  - arm_arm1176jzf-s_vfp
+  - arm_arm926ej-s
+  - arm_cortex-a15_neon-vfpv4
+  - arm_cortex-a5_vfpv4
+  - arm_cortex-a7
+  - arm_cortex-a7_vfpv4
+  - arm_cortex-a7_neon-vfpv4
+  - arm_cortex-a8_vfpv3
+  - arm_cortex-a9_neon
+  - arm_cortex-a9_vfpv3-d16
+  - arm_fa526
+  - arm_mpcore
+  - arm_xscale
+  - at91 
+  - ath25
+  - ath79 
+  - bcm27xx 
+  - bcm47xx 
+  - bcm4908 
+  - bcm53xx 
+  - bcm63xx 
+  - gemini 
+  - i386_pentium4
+  - i386_pentium-mmx
+  - imx6 
+  - ipq40xx
+  - ipq806x
+  - kirkwood
+  - lantiq
+  - layerscape
+  - malta
+  - mediatek
+  - mpc85xx
+  - mips_24kc
+  - mips_4kec
+  - mips64_octeonplus
+  - mipsel_24kc
+  - mipsel_24kc_24kf
+  - mipsel_74kc
+  - mipsel_mips32
+  - mips_mips32
+  - mvebu/cortexa53
+  - mvebu/cortexa72
+  - mxs
+  - octeon
+  - octeontx
+  - omap
+  - oxnas
+  - pistachio
+  - powerpc_464fp
+  - powerpc_8540
+  - ramips
+  - realtek
+  - rockchip
+  - sunxi
+  - tegra
+  - x86
+  - x86_64
+  - zynq
