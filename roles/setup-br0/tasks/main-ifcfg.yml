@@ -1,0 +1,86 @@
+---
+- name: install bridge-utils package
+  ansible.builtin.package:
+    name: bridge-utils
+    state: latest
+  when:
+    - ansible_distribution != "RedHat" or ansible_distribution != "CentOS"
+    - ansible_distribution_major_version != "8"
+
+- name: install /etc/sysconfig/network-scripts/ifcfg-{{primary_bridge}} Static IP template
+  ansible.builtin.template:
+    src: "ifcfg-{{primary_bridge}}.static.j2"
+    dest: "/etc/sysconfig/network-scripts/ifcfg-{{primary_bridge}}"
+    owner: root
+    group: root
+    mode: 0644
+  when:
+    use_dhcp == 'false'
+
+- name: install /etc/sysconfig/network-scripts/ifcfg-{{primary_bridge}} DHCP template
+  ansible.builtin.template:
+    src: "ifcfg-{{primary_bridge}}.dhcp.j2"
+    dest: "/etc/sysconfig/network-scripts/ifcfg-{{primary_bridge}}"
+    owner: root
+    group: root
+    mode: 0644
+  when:
+    use_dhcp == 'true'
+
+- name: install /etc/sysconfig/network-scripts/ifcfg-{{primary_interface}} template
+  ansible.builtin.template:
+    src: "ifcfg-{{primary_interface}}.j2"
+    dest: "/etc/sysconfig/network-scripts/ifcfg-{{primary_interface}}"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: install /etc/sysconfig/network-scripts/ifcfg-wlan template
+  ansible.builtin.template:
+    src: "ifcfg-{{wireless_interface}}.j2"
+    dest: "/etc/sysconfig/network-scripts/ifcfg-{{wireless_interface}}"
+    owner: root
+    group: root
+    mode: 0644
+  when:
+    bridge_wireless == 'true'
+
+- name: reconfigure firewall for bridge
+  ansible.builtin.firewalld:
+    zone: "{{public_firewall_zone}}"
+    interface: "{{primary_bridge}}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+- name: Set ip forwarding sysctl and reload if necessary
+  ansible.builtin.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: restart network
+  ansible.builtin.service:
+    name: network
+    state: restarted
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "6" or ansible_distribution_major_version == "7"
+
+- name: restart NetworkManager
+  ansible.builtin.service:
+    name: NetworkManager
+    state: restarted
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version >= "8"
+
+- name: restart NetworkManager
+  ansible.builtin.service:
+    name: NetworkManager
+    state: restarted
+  when:
+    - ansible_distribution == "Fedora" 
+    - ansible_distribution_major_version >= "28"

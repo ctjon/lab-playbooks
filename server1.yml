@@ -27,8 +27,8 @@
     - role: selinux
       tags: ['selinux']
 
-#    - role: setup-br0
-#      tags: ['setup-br0']
+    - role: setup-br0
+      tags: ['setup-br0']
 
 #    - role: tune-network
 #      tags: ['tune-network']
