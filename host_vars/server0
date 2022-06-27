@@ -340,6 +340,8 @@ linux_repo_excludes_list:
   - i386
   - s390
   - s390x
+  - testing
+  - updates/testing
   - "*.torrent"
   - "*.box"
 
