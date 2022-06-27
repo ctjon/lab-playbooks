@@ -327,8 +327,6 @@ linux_repo_includes_list:
   - "*.iso"
   - "*.qcow2"
   - "*.raw.xz"
-  - testing
-  - updates/testing
 
 linux_repo_excludes_list:
   - development
