@@ -60,8 +60,8 @@
     - role: set-default-editor
       tags: ['set-default-editor']
 
-#    - role: syncscripts
-#      tags: ['syncscripts']
+    - role: syncscripts
+      tags: ['syncscripts']
 
     - role: http-repo
       tags: ['http-repo']
@@ -115,10 +115,8 @@
 #    - role: insights-register
 #      tags: ['insights']
 
-## DON'T AUTO REBOOT IF RUNNING KVM VMs
-## At least not until the role is modified to accomodate it
-#    - role: reboot-if-required
-#      tags: ['reboot-if-required']
+    - role: reboot-if-required
+      tags: ['reboot-if-required']
 
 
   tasks:

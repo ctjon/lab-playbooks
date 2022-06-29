@@ -19,7 +19,7 @@
         dns4_search: "{{ primary_domain_name }}"
         method6: disabled
         mtu: 1500
-        stp: yes
+        stp: no
         state: present
       notify: restart NetworkManager
 

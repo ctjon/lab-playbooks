@@ -42,8 +42,8 @@
 #    - role: dnsmasq
 #      tags: ['dnsmasq']
 
-    - role: apply-updates
-      tags: ['apply-updates']
+#    - role: apply-updates
+#      tags: ['apply-updates']
 
     - role: time-server
       tags: ['time-server']
@@ -73,9 +73,6 @@
     - role: kickstart
       tags: ['kickstart']
 
-    - role: http-repo
-      tags: ['http-repo']
-
     - role: samba-server
       tags: ['samba-server']
 
@@ -103,14 +100,17 @@
     - role: fail2ban
       tags: ['fail2ban']
 
-#    - role: rsyslog-server
-#      tags: ['rsyslog-server']
+    - role: rsyslog-server
+      tags: ['rsyslog-server']
 
 #    - role: backup
 #      tags: ['backup']
 
     - role: plex-server
       tags: ['plex-server']
+
+    - role: http-repo
+      tags: ['http-repo']
 
 #    - role: insights-register
 #      tags: ['insights']

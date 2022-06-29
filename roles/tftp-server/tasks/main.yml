@@ -18,3 +18,7 @@
     name: tftp
     state: started
     enabled: yes
+
+- name: make sure tftp is enabled (there seems to be a bug to work around here)
+  command: systemctl enable tftp
+  become: yes
