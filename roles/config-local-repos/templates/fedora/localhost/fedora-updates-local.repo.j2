@@ -1,6 +1,6 @@
 [updates-local]
 name=Fedora $releasever - $basearch - Updates - local
-baseurl=file://{{installdir}}/Linux/fedora/updates/$releasever/Everything/$basearch/
+baseurl=file://{{install_dir}}/Linux/fedora/updates/$releasever/Everything/$basearch/
 #metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-f$releasever&arch=$basearch
 enabled=1
 countme=1
@@ -13,7 +13,7 @@ skip_if_unavailable=False
 
 [updates-debuginfo]
 name=Fedora $releasever - $basearch - Updates - Debug - local
-#baseurl=file://{{installdir}}/Linux/updates/$releasever/Everything/$basearch/debug/
+#baseurl=file://{{install_dir}}/Linux/updates/$releasever/Everything/$basearch/debug/
 metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-debug-f$releasever&arch=$basearch
 enabled=0
 repo_gpgcheck=0
@@ -25,7 +25,7 @@ skip_if_unavailable=False
 
 [updates-source-local]
 name=Fedora $releasever - Updates Source - local
-baseurl=file://{{installdir}}/Linux/fedora/updates/$releasever/Everything/source/tree
+baseurl=file://{{install_dir}}/Linux/fedora/updates/$releasever/Everything/source/tree
 #metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-source-f$releasever&arch=$basearch
 enabled=0
 repo_gpgcheck=0

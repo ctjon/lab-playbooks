@@ -1,6 +1,6 @@
 [rpmfusion-nonfree-steam-local]
 name=RPM Fusion for Fedora $releasever - Nonfree - Steam
-baseurl=file:///export/install/Linux/rpm-fusion/nonfree/fedora/steam/$releasever/$basearch/
+baseurl=file://{{install_dir}}/Linux/rpm-fusion/nonfree/fedora/steam/$releasever/$basearch/
 #metalink=https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-steam-$releasever&arch=$basearch
 enabled=1
 type=rpm-md
@@ -11,7 +11,7 @@ skip_if_unavailable=True
 
 [rpmfusion-nonfree-steam-debuginfo]
 name=RPM Fusion for Fedora $releasever - Nonfree - Steam Debug
-#baseurl=file:///export/install/Linux/rpm-fusion/nonfree/fedora/steam/$releasever/$basearch/debug/
+#baseurl=file://{{install_dir}}/Linux/rpm-fusion/nonfree/fedora/steam/$releasever/$basearch/debug/
 metalink=https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-steam-debug-$releasever&arch=$basearch
 enabled=0
 type=rpm-md
@@ -22,7 +22,7 @@ skip_if_unavailable=True
 
 [rpmfusion-nonfree-steam-source-local]
 name=RPM Fusion for Fedora $releasever - Nonfree - Steam Source
-baseurl=file:///export/install/Linux/rpm-fusion/nonfree/fedora/steam/$releasever/SRPMS/
+baseurl=file://{{install_dir}}/Linux/rpm-fusion/nonfree/fedora/steam/$releasever/SRPMS/
 #metalink=https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-steam-source-$releasever&arch=$basearch
 enabled=0
 type=rpm-md

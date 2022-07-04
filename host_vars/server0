@@ -2,6 +2,8 @@
 # host_vars file for server0
 #
 
+test_nmcli: false
+
 use_ssh_agent: yes
 copy_ssh_keys: yes
 setup_ansible_config: yes
@@ -61,13 +63,28 @@ secondary_interface: eth1
 secondary_bridge: br1
 trusted_firewall_interface: eth0
 
+datastore_vg: raid10vg
 ################################################################################
 # Installation Source Parameters                                               #
 ################################################################################
-linux_install_server_url: "http://install.internal.tjon.net/Linux"
+install_dir: /export/install
+install_vol: installlv
+install_vg: "{{datastore_vg}}"
+install_url: "http://install.internal.tjon.net"
+install_vol_fstype: xfs
+
+archive_dir: /export/archive
+archive_vol: archivelv
+archive_vg: "{{datastore_vg}}"
+archive_url: http://archive.internal.tjon.net
+archive_vol_fstype: xfs
+
 linux_install_server_hostname: server0
-config_files_url: "http://install.internal.tjon.net/ConfigFiles"
-doc_files_url: "http://install.internal.tjon.net/Documentation"
+linux_install_server_url: "{{install_url}}/Linux"
+config_files_url: "{{install_url}}/ConfigFiles"
+
+doc_files_url: "{{install_url}}/Documentation"
+doc_files_dir: "{{install_dir}}/Documentation"
 
 ################################################################################
 # Time Server Configuration Parameters                                         #
@@ -80,20 +97,16 @@ time_client_servers:
 # TFTP Boot Server Parameters                                                  #
 ################################################################################
 tftpbootdir: /var/lib/tftpboot
-installdir: /export/install
-doc_files_dir: /export/install/Documentation
-archive_dir: /export/archive
-archive_url: http://archive.internal.tjon.net
 
 ################################################################################
 # HTTP Server Parameters                                                       #
 ################################################################################
 vhosts: 
   - {name: server0, document_root: /var/www/html, alias: server0, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
-  - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: /dev/sda2}
-  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: /dev/rootvg/archivelv}
-  - {name: plex, document_root: /export/plex, alias: plex, fcontext: public_content_rw_t, lv_name: /dev/datavg/plexlv}
-#  - {name: satcontent, document_root: /export/satcontent, alias: satcontent, fcontext: public_content_rw_t, lv_name: /dev/datavg/sat_content_lv}
+  - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: "/dev/{{install_vg}}/installlv"}
+  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: "/dev/{{archive_vg}}/archivelv"}
+  - {name: plex, document_root: /export/plex, alias: plex, fcontext: public_content_rw_t, lv_name: "/dev/{{datastore_vg}}/plexlv"}
+#  - {name: satcontent, document_root: /export/satcontent, alias: satcontent, fcontext: public_content_rw_t, lv_name: "/dev/{{datastore_vg}}/sat_content_lv}"
 
 ################################################################################
 # Firewall Configuration Parameters                                            #

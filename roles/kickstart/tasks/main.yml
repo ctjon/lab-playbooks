@@ -125,7 +125,7 @@
 
 - name: synchronize RHEL pxeboot content to {{tftpbootdir}}/images/rhel
   ansible.builtin.synchronize:
-    src: "{{installdir}}/Linux/rhel/{{item[0]}}/{{item[1]}}/images/pxeboot/"
+    src: "{{install_dir}}/Linux/rhel/{{item[0]}}/{{item[1]}}/images/pxeboot/"
     dest: "{{tftpbootdir}}/images/rhel/{{item[0]}}/{{item[1]}}/"
     archive: yes
     delete: yes
@@ -165,7 +165,7 @@
 
 - name: synchronize CentOS initrd and vmlinuz to {{tftpbootdir}}/images/centos
   ansible.builtin.synchronize:
-    src: "{{installdir}}/Linux/centos/{{item[0]}}/os/{{item[1]}}/images/pxeboot/"
+    src: "{{install_dir}}/Linux/centos/{{item[0]}}/os/{{item[1]}}/images/pxeboot/"
     dest: "{{tftpbootdir}}/images/centos/{{item[0]}}/{{item[1]}}/"
     archive: yes
     delete: yes
@@ -178,7 +178,7 @@
 
 - name: copy CentOS 7- BOOTX64.EFI to {{tftpbootdir}}/images/centos
   ansible.builtin.copy:
-    src: "{{installdir}}/Linux/centos/{{item[0]}}/os/{{item[1]}}/EFI/BOOT/BOOTX64.EFI"
+    src: "{{install_dir}}/Linux/centos/{{item[0]}}/os/{{item[1]}}/EFI/BOOT/BOOTX64.EFI"
     dest: "{{tftpbootdir}}/images/centos/{{item[0]}}/{{item[1]}}/"
     owner: root
     group: root
@@ -189,7 +189,7 @@
 
 - name: copy CentOS 7- grubx64.efi to {{tftpbootdir}}/images/centos
   ansible.builtin.copy:
-    src: "{{installdir}}/Linux/centos/{{item[0]}}/os/{{item[1]}}/EFI/BOOT/grubx64.efi"
+    src: "{{install_dir}}/Linux/centos/{{item[0]}}/os/{{item[1]}}/EFI/BOOT/grubx64.efi"
     dest: "{{tftpbootdir}}/images/centos/{{item[0]}}/{{item[1]}}/"
     owner: root
     group: root
@@ -200,7 +200,7 @@
 
 - name: synchronize CentOS content to {{tftpbootdir}}/images/centos
   ansible.builtin.synchronize:
-    src: "{{installdir}}/Linux/centos/{{item[0]}}/BaseOS/{{item[1]}}/os/images/pxeboot/"
+    src: "{{install_dir}}/Linux/centos/{{item[0]}}/BaseOS/{{item[1]}}/os/images/pxeboot/"
     dest: "{{tftpbootdir}}/images/centos/{{item[0]}}/{{item[1]}}/"
     archive: yes
     delete: yes
@@ -213,7 +213,7 @@
 
 - name: copy CentOS 8-stream+ BOOTX64.EFI to {{tftpbootdir}}/images/centos
   ansible.builtin.copy:
-    src: "{{installdir}}/Linux/centos/{{item[0]}}/BaseOS/{{item[1]}}/os/EFI/BOOT/BOOTX64.EFI"
+    src: "{{install_dir}}/Linux/centos/{{item[0]}}/BaseOS/{{item[1]}}/os/EFI/BOOT/BOOTX64.EFI"
     dest: "{{tftpbootdir}}/images/centos/{{item[0]}}/{{item[1]}}/"
     owner: root
     group: root
@@ -224,7 +224,7 @@
 
 - name: copy CentOS 8-stream+ grubx64.efi to {{tftpbootdir}}/images/centos
   ansible.builtin.copy:
-    src: "{{installdir}}/Linux/centos/{{item[0]}}/BaseOS/{{item[1]}}/os/EFI/BOOT/grubx64.efi"
+    src: "{{install_dir}}/Linux/centos/{{item[0]}}/BaseOS/{{item[1]}}/os/EFI/BOOT/grubx64.efi"
     dest: "{{tftpbootdir}}/images/centos/{{item[0]}}/{{item[1]}}/"
     owner: root
     group: root
@@ -250,7 +250,7 @@
 
 - name: synchronize Fedora pxeboot content to {{tftpbootdir}}/images/fedora
   ansible.builtin.synchronize:
-    src: "{{installdir}}/Linux/fedora/releases/{{item[0]}}/Everything/{{item[1]}}/os/images/pxeboot/"
+    src: "{{install_dir}}/Linux/fedora/releases/{{item[0]}}/Everything/{{item[1]}}/os/images/pxeboot/"
     dest: "{{tftpbootdir}}/images/fedora/{{item[0]}}/{{item[1]}}/"
     archive: yes
     delete: yes
@@ -263,7 +263,7 @@
 
 - name: synchronize Fedora BOOTX64.EFI to {{tftpbootdir}}/images/fedora
   ansible.builtin.synchronize:
-    src: "{{installdir}}/Linux/fedora/releases/{{item}}/Everything/x86_64/os/EFI/BOOT/BOOTX64.EFI"
+    src: "{{install_dir}}/Linux/fedora/releases/{{item}}/Everything/x86_64/os/EFI/BOOT/BOOTX64.EFI"
     dest: "{{tftpbootdir}}/images/fedora/{{item}}/x86_64/"
     archive: yes
     delete: yes
@@ -275,7 +275,7 @@
 
 - name: synchronize Fedora grubx64.efi to {{tftpbootdir}}/images/fedora
   ansible.builtin.synchronize:
-    src: "{{installdir}}/Linux/fedora/releases/{{item}}/Everything/x86_64/os/EFI/BOOT/grubx64.efi"
+    src: "{{install_dir}}/Linux/fedora/releases/{{item}}/Everything/x86_64/os/EFI/BOOT/grubx64.efi"
     dest: "{{tftpbootdir}}/images/fedora/{{item}}/x86_64/"
     archive: yes
     delete: yes
@@ -302,7 +302,7 @@
 
 #- name: synchronize Ubuntu Server netboot content to {{tftpbootdir}}/images/ubuntu
 #  ansible.builtin.synchronize:
-#    src: "{{installdir}}/Linux/ubuntu/server/{{item[0]}}/{{item[1]}}/install/netboot/ubuntu-installer/{{item[1]}}/"
+#    src: "{{install_dir}}/Linux/ubuntu/server/{{item[0]}}/{{item[1]}}/install/netboot/ubuntu-installer/{{item[1]}}/"
 #    dest: "{{tftpbootdir}}/images/ubuntu/server/{{item[0]}}/{{item[1]}}/"
 #    archive: yes
 #    delete: yes

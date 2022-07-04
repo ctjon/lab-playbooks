@@ -1,6 +1,6 @@
 [fedora-modular-local]
 name=Fedora Modular $releasever - $basearch - local
-baseurl=file://{{installdir}}/Linux/fedora/releases/$releasever/Modular/$basearch/os/
+baseurl=file://{{install_dir}}/Linux/fedora/releases/$releasever/Modular/$basearch/os/
 #metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-modular-$releasever&arch=$basearch
 enabled=1
 countme=1
@@ -13,7 +13,7 @@ skip_if_unavailable=False
 
 [fedora-modular-debuginfo]
 name=Fedora Modular $releasever - $basearch - Debug - local
-#baseurl=file://{{installdir}}/Linux/fedora/releases/$releasever/Modular/$basearch/debug/tree/
+#baseurl=file://{{install_dir}}/Linux/fedora/releases/$releasever/Modular/$basearch/debug/tree/
 metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-modular-debug-$releasever&arch=$basearch
 enabled=0
 metadata_expire=7d
@@ -25,7 +25,7 @@ skip_if_unavailable=False
 
 [fedora-modular-source-local]
 name=Fedora Modular $releasever - Source - local
-baseurl=file://{{installdir}}/Linux/fedora/releases/$releasever/Modular/source/tree/
+baseurl=file://{{install_dir}}/Linux/fedora/releases/$releasever/Modular/source/tree/
 #metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-modular-source-$releasever&arch=$basearch
 enabled=0
 metadata_expire=7d

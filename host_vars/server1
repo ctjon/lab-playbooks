@@ -1,6 +1,7 @@
 #
 # host_vars file for server1
 #
+test_nmcli: true
 
 use_ssh_agent: yes
 copy_ssh_keys: yes

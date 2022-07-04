@@ -26,4 +26,39 @@
     owner: root
     group: root
     mode: '0644'
+
+- name: Create {{install_dir}} mount point
+  ansible.builtin.file:
+    path: "{{install_dir}}"
+    state: directory
+    recurse: no
+    owner: root
+    group: root
+    mode: 0700
+
+- name: mount {{install_dir}}
+  ansible.builtin.mount:
+    path: "{{ install_dir }}"
+    src: "/dev/{{install_vg}}/{{install_vol}}"
+    fstype: "{{ install_vol_fstype }}"
+    opts: defaults
+    state: mounted
+
+- name: Create {{archive_dir}} mount point
+  ansible.builtin.file:
+    path: "{{archive_dir}}"
+    state: directory
+    recurse: no
+    owner: root
+    group: root
+    mode: 0700
+
+- name: mount {{archive_dir}}
+  ansible.builtin.mount:
+    path: "{{ archive_dir }}"
+    src: "/dev/{{archive_vg}}/{{archive_vol}}"
+    fstype: "{{ archive_vol_fstype }}"
+    opts: defaults
+    state: mounted
+
 ...
