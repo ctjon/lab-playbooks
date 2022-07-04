@@ -1,0 +1,51 @@
+#version=DEVEL
+# Use graphical install
+graphical
+
+# Keyboard layouts
+keyboard --vckeymap=us --xlayouts='us'
+# System language
+lang en_US.UTF-8
+
+# Network information
+network  --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.9 --nameserver={{primary_dns_servers|join(",")}} --netmask={{primary_netmask}} --noipv6 --activate
+network  --hostname=server1.internal.tjon.net
+
+# Use network installation
+url --url="{{linux_install_server_url}}/fedora/releases/36/Server/x86_64/os/"
+
+%packages
+@^server-product-environment
+
+%end
+
+# Run the Setup Agent on first boot
+firstboot --enable
+
+# Generated using Blivet version 3.4.2
+ignoredisk --only-use=sda
+autopart
+# Partition clearing information
+clearpart --all --initlabel
+
+# System timezone
+timezone America/Phoenix --utc
+reboot
+# Root password
+rootpw --iscrypted $y$j9T$eaqL.vAFZkqpJ9zYF9u3Sjr7$ICWIKWCrBNHTVzYXlzntW3s17QtTwrqaEqaBcdxdCZ7
+user --groups=wheel --name=chris --password=$y$j9T$lgF4Wk/w9XFB0ZvLG9Xp9S0B$R4a867hoZs4D5k3nn2UNJ4/VFcg9XFoKu3IkCAEcZv7 --iscrypted --gecos="Chris Tjon"
+
+%post
+echo "/dev/sdb1    /export/install      xfs     defaults        0 0">>/etc/fstab
+
+
+# install ssh key for chris
+curl http://install.internal.tjon.net/ConfigFiles/chris-server0-id_rsa.pub -o /home/chris/.ssh/authorized_keys  --create-dirs
+curl  http://install.internal.tjon.net/ConfigFiles/chris-x1carbon-id_rsa.pub >> /home/chris/.ssh/authorized_keys
+curl  http://install.internal.tjon.net/ConfigFiles/chris-mbp-id_rsa.pub >> /home/chris/.ssh/authorized_keys
+chown -R chris:chris /home/chris/.ssh
+chmod 700 /home/chris/.ssh
+chmod 600 /home/chris/.ssh/authorized_keys
+restorecon -RFv /home/chris/.ssh/authorized_keys
+%end
+
