@@ -1,0 +1,18 @@
+---
+- name: Create {{backup_dir}} mount point
+  ansible.builtin.file:
+    path: "{{backup_dir}}"
+    state: directory
+    recurse: no
+    owner: root
+    group: root
+    mode: 0700
+
+- name: mount {{backup_dir}}
+  ansible.builtin.mount:
+    path: "{{ backup_dir }}"
+    src: "/dev/{{backup_vg}}/{{backup_vol}}"
+    fstype: "{{ backup_vol_fstype }}"
+    opts: defaults
+    state: mounted
+

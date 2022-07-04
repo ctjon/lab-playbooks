@@ -87,6 +87,14 @@ doc_files_url: "{{install_url}}/Documentation"
 doc_files_dir: "{{install_dir}}/Documentation"
 
 ################################################################################
+# Backup Server Parameters                                                     #
+################################################################################
+backup_dir: /export/backup
+backup_vol: backuplv
+backup_vg: backupvg
+backup_vol_fstype: xfs
+
+################################################################################
 # Time Server Configuration Parameters                                         #
 ################################################################################
 time_client_servers:

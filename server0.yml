@@ -42,8 +42,8 @@
 #    - role: dnsmasq
 #      tags: ['dnsmasq']
 
-#    - role: apply-updates
-#      tags: ['apply-updates']
+    - role: apply-updates
+      tags: ['apply-updates']
 
     - role: time-server
       tags: ['time-server']
@@ -103,8 +103,8 @@
     - role: rsyslog-server
       tags: ['rsyslog-server']
 
-#    - role: backup
-#      tags: ['backup']
+    - role: backup
+      tags: ['backup']
 
     - role: plex-server
       tags: ['plex-server']
