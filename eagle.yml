@@ -70,7 +70,7 @@
 
     - name: install other fedora packages 
       ansible.builtin.package:
-        name: openscap-containers, openscap-daemon, python3-boto, openwsman-winrs.x86_64, vnstat, nmon
+        name: openscap-containers, openscap-daemon, python3-boto, openwsman-winrs.x86_64, vnstat, nmon, flatpak
         state: latest
       when: 
         - ansible_distribution == "Fedora"
@@ -82,3 +82,25 @@
         name: vnstat
         state: started
         enabled: yes
+        
+    - name: Add the flathub flatpak repository 
+      community.general.flatpak_remote:
+        name: flathub
+        state: present
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        method: user
+      become: no
+
+    - name: Install packages from flathub for current user
+      community.general.flatpak:
+        name: "{{item}}"
+        state: present
+        method: user
+      become: no
+      with_items:
+        - https://dl.flathub.org/repo/appstream/org.signal.Signal.flatpakref
+        - https://dl.flathub.org/repo/appstream/com.tdameritrade.ThinkOrSwim.flatpakref
+        - https://dl.flathub.org/repo/appstream/com.bluejeans.BlueJeans.flatpakref
+        - https://dl.flathub.org/repo/appstream/org.telegram.desktop.flatpakref
+
+...
