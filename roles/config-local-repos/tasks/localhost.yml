@@ -39,26 +39,30 @@
 - name: mount {{install_dir}}
   ansible.builtin.mount:
     path: "{{ install_dir }}"
-    src: "/dev/{{install_vg}}/{{install_vol}}"
+    src: "{{install_dev}}"
     fstype: "{{ install_vol_fstype }}"
     opts: defaults
     state: mounted
 
-- name: Create {{archive_dir}} mount point
-  ansible.builtin.file:
-    path: "{{archive_dir}}"
-    state: directory
-    recurse: no
-    owner: root
-    group: root
-    mode: 0700
+- name: Special Configuration of {{archive_dir}} on server0 only
+  block:
+    - name: Create {{archive_dir}} mount point
+      ansible.builtin.file:
+        path: "{{archive_dir}}"
+        state: directory
+        recurse: no
+        owner: root
+        group: root
+        mode: 0700
 
-- name: mount {{archive_dir}}
-  ansible.builtin.mount:
-    path: "{{ archive_dir }}"
-    src: "/dev/{{archive_vg}}/{{archive_vol}}"
-    fstype: "{{ archive_vol_fstype }}"
-    opts: defaults
-    state: mounted
+    - name: mount {{archive_dir}}
+      ansible.builtin.mount:
+        path: "{{ archive_dir }}"
+        src: "{{archive_dev}}"
+        fstype: "{{ archive_vol_fstype }}"
+        opts: defaults
+        state: mounted
+
+  when: ansible_hostname == "server-"
 
 ...
