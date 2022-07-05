@@ -50,7 +50,7 @@ label satellite6
 label server1-f36
   menu label Install server1-f36
   kernel images/fedora/36/x86_64/vmlinuz
-  append initrd=images/fedora/36/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/server1-f36-ks.cfg
+  append initrd=images/fedora/36/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 inst.ks={{linux_install_server_url}}/ks-configs/server1-f36-ks.cfg
 
 #
 # server1 with fedora 35
@@ -58,7 +58,7 @@ label server1-f36
 label server1-f35
   menu label Install server1-f35
   kernel images/fedora/35/x86_64/vmlinuz
-  append initrd=images/fedora/35/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/server1-f35-ks.cfg
+  append initrd=images/fedora/35/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 inst.ks={{linux_install_server_url}}/ks-configs/server1-f35-ks.cfg
 
 #
 # KVMHOST
