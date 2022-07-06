@@ -3,7 +3,7 @@
   include_vars:
     file: group_vars/sm_creds.yml
 
-- name: Use subscription-manager to Register System RHEL 6/7/8
+- name: Use subscription-manager to Register System RHEL 6/7/8/9
   ansible.builtin.redhat_subscription:
     state: present
     username: "{{ redhat_portal_username }}"
