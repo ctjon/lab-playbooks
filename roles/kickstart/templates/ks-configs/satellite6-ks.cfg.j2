@@ -1,10 +1,8 @@
 #version=RHEL8
-# System authorization information
-authconfig --enableshadow --passalgo=sha512
 # Use network installation
 repo --name="AppStream" --baseurl="{{linux_install_server_url}}/rhel/8/x86_64/AppStream"
 # Use network installation
-url --url="{{linux_install_server_url}}/rhel/8/x86_64/"
+url --url="{{linux_install_server_url}}/rhel/8/x86_64/BaseOS/"
 
 # Use graphical install
 graphical
@@ -57,7 +55,7 @@ logvol /var/lib/pulp  --fstype="ext4" --size=307200 --name=pulplv --vgname=sat6v
 logvol /var/lib/qpidd  --fstype="ext4" --size=25 --name=qpiddlv --vgname=sat6vg
 
 %packages
-@^minimal
+@^minimal-environment
 @core
 python3
 chrony

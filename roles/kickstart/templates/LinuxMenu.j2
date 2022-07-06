@@ -41,8 +41,8 @@ LABEL x1carbon
 #
 label satellite6
   menu label satellite6
-  kernel images/rhel/7/x86_64/vmlinuz
-  append initrd=images/rhel/7/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 inst.ks={{linux_install_server_url}}/ks-configs/satellite6-ks.cfg
+  kernel images/rhel/8/x86_64/vmlinuz
+  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 inst.ks={{linux_install_server_url}}/ks-configs/satellite6-ks.cfg
 
 #
 # server1 with fedora 36
