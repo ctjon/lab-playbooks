@@ -153,7 +153,8 @@ ks_configs_list:
   - test-rhel9-ks.cfg
   - gitlab-ks.cfg
   - fetcher-ks.cfg
-  - satellite6-ks.cfg
+  - satellite6-rhel7-ks.cfg
+  - satellite6-rhel8-ks.cfg
   - satclient0-ks.cfg
   - satclient1-ks.cfg
   - satclient2-ks.cfg
