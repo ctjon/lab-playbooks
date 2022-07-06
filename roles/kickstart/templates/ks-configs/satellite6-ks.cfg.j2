@@ -1,8 +1,7 @@
 #version=RHEL8
 # Use network installation
-repo --name="AppStream" --baseurl="{{linux_install_server_url}}/rhel/8/x86_64/AppStream"
-# Use network installation
 url --url="{{linux_install_server_url}}/rhel/8/x86_64/BaseOS/"
+repo --name="AppStream" --baseurl="{{linux_install_server_url}}/rhel/8/x86_64/AppStream"
 
 # Use graphical install
 graphical
