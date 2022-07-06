@@ -24,9 +24,6 @@ network  --hostname=satellite6.{{primary_domain_name}} --bootproto=static --devi
 # Root password
 rootpw --iscrypted $6$KY6TFtdCk7.SV2G5$fb02sjorNVYVi6SAiFLswjDMBzWx7zzKgKmnw9fHR8rR6lsQIL7GP1wVvJn3WoVPCj6hWohW.0aBgAaDBsGux/
 
-# System services
-services --enabled="chronyd rsyslog" ### BROKEN
-
 # System timezone
 timezone America/Phoenix --isUtc --ntpservers=gatekeeper.internal.tjon.net
 user --groups=wheel --name=chris --password=$6$OU1WFAy6UrhSBCDv$0mcg4YPZiZOvbLUUIP7neohCYTbzNNBaRgIqp/NAJDuNeI2nD.Br1LItDoFfZp/aWs8ZnEeGvTopVixzD0rlh. --iscrypted --gecos="Chris Tjon"
