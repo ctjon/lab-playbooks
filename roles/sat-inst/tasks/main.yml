@@ -1,4 +1,8 @@
 ---
+#
+# Satellite 6.11 Installer Playbook
+#
+
 - name: Disable all Repos
   ansible.builtin.command: subscription-manager repos --disable "*"
   tags:
@@ -30,8 +34,12 @@
     - sat-config
 
 - name: Enable the Satellite dnf module for RHEL8
-  ansible.builtin.command: dnf module enable satellite:el8
+  ansible.builtin.command: dnf -y module enable satellite:el8
   when: ansible_distribution_major_version == "8"
+  register: result
+  changed_when:
+    - '"Enabling module streams" in result.stdout'
+    - '"Complete!" in result.stdout'
   tags:
     - sat-inst
     - sat-config
@@ -115,8 +123,8 @@
   ansible.builtin.command: satellite-installer --scenario satellite \
     --foreman-initial-organization "{{ foreman_initial_organization }}" \
     --foreman-initial-location "{{ foreman_initial_location }}" \
-    --foreman-admin-username "{{ foreman_admin_username }}" \
-    --foreman-admin-password "{{ foreman_admin_password }}" \
+    --foreman-initial-admin-username "{{ foreman_admin_username }}" \
+    --foreman-initial-admin-password "{{ foreman_admin_password }}" \
     --foreman-proxy-dns-managed=false \
     --foreman-proxy-dhcp-managed=false
   tags: 
@@ -133,8 +141,8 @@
 #      --foreman-proxy-dns-reverse "{{ foreman_proxy_dns_reverse }}" \
 #      --foreman-proxy-tftp "{{ foreman_proxy_tftp }}" \
 #      --foreman-proxy-tftp-servername "{{ foreman_proxy_tftp_servername }}" \
-#      --foreman-admin-username "{{ foreman_admin_username }}" \
-#      --foreman-admin-password "{{ foreman_admin_password }}"
+#      --foreman-initial-admin-username "{{ foreman_admin_username }}" \
+#      --foreman-initial-admin-password "{{ foreman_admin_password }}"
 #  tags: 
 #    - sat-inst
 
@@ -159,4 +167,17 @@
   tags: 
     - sat-inst
     - sat-config
+
+- name: Install RedHat Insights on Satellite Server
+  ansible.builtin.command: satellite-maintain packages install insights-client
+  tags:
+    - sat-inst
+    - sat-config
+
+- name: Register Satellite Server with RedHat Insights
+  ansible.builtin.command: satellite-installer --register-with-insights
+  tags:
+    - sat-inst
+    - sat-config
+
 

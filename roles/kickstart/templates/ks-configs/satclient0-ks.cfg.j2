@@ -70,12 +70,11 @@ chmod 700 /home/chris/.ssh
 chmod 600 /home/chris/.ssh/authorized_keys
 restorecon -RFv /home/chris/.ssh/authorized_keys
 
-curl http://satellite6.internal.tjon.net/pub/bootstrap.py -o /tmp/bootstrap.py
-chmod 700 /tmp/bootstrap.py
-/tmp/bootstrap.py -l admin -s satellite6.internal.tjon.net -o "ctjon-org" -L Home-Office -g "satclients" -a ak-satclients -p redhat -O "RedHat 7.7" --force
+rpm -ivh http://satellite6.internal.tjon.net/pub/katello-ca-consumer-latest.noarch.rpm
+subscription-manager register --activationkey=RHEL7-Lab --org=ctjon-org 
 
-curl  {{config_files_url}}/rhel7-callback.service >> /etc/systemd/system/rhel7-callback.service
-chmod 644 /etc/systemd/system/rhel7-callback.service
-systemctl enable rhel7-callback.service
+#curl  {{config_files_url}}/rhel7-callback.service >> /etc/systemd/system/rhel7-callback.service
+#chmod 644 /etc/systemd/system/rhel7-callback.service
+#systemctl enable rhel7-callback.service
 
 %end

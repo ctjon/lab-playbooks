@@ -25,6 +25,10 @@
 172.16.1.36	test-centos6.internal.tjon.net test-centos6
 172.16.1.37	test-fedora35.internal.tjon.net test-fedora35
 172.16.1.38	test-fedora36.internal.tjon.net test-fedora34
+172.16.1.40	satclient0.internal.tjon.net satclient0
+172.16.1.41	satclient1.internal.tjon.net satclient1
+172.16.1.42	satclient2.internal.tjon.net satclient2
+172.16.1.43	satclient3.internal.tjon.net satclient3
 172.16.1.99	server0-br0.internal.tjon.net server0-br0
 
 50.18.226.197   ec2-50-18-226-197.us-west-1.compute.amazonaws.com tower-aws
