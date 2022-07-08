@@ -54,6 +54,9 @@
     - role: tftp-server
       tags: ['tftp-server']
 
+    - role: syncscripts
+      tags: ['syncscripts']
+
     - role: http-repo
       tags: ['http-repo']
 
@@ -75,7 +78,7 @@
 
     - name: install other packages 
       ansible.builtin.package:
-        name: nmap, lftp, ftp, openscap, openscap-scanner, openscap-utils, openscap-python3, python3-botocore, python3-boto3, python3-pyvmomi, ansible, screen, virtio-win, virt-install, virt-manager, virt-viewer, flatpak, remmina
+        name: nmap, lftp, ftp, openscap, openscap-scanner, openscap-utils, openscap-python3, python3-botocore, python3-boto3, python3-pyvmomi, ansible, screen, virtio-win, virt-install, virt-manager, virt-viewer, flatpak, remmina, vlc
         state: latest
       tags:
         - localpkgs
@@ -86,6 +89,13 @@
         state: latest
       when: 
         - ansible_distribution == "Fedora"
+      tags:
+        - localpkgs
+
+    - name: install gstreamer packages 
+      ansible.builtin.package:
+        name: gstreamer1-devel,gstreamer1-plugins-base-tools,gstreamer1-doc,gstreamer1-plugins-base-devel,gstreamer1-plugins-good,gstreamer1-plugins-good-extras,gstreamer1-plugins-ugly,gstreamer1-plugins-bad-free,gstreamer1-plugins-bad-free-devel,gstreamer1-plugins-bad-free-extras,gstreamer1-plugin-openh264.x86_64
+        state: latest
       tags:
         - localpkgs
 
@@ -115,6 +125,7 @@
         - https://dl.flathub.org/repo/appstream/com.bluejeans.BlueJeans.flatpakref
         - https://dl.flathub.org/repo/appstream/org.telegram.desktop.flatpakref
         - https://dl.flathub.org/repo/appstream/com.microsoft.Teams.flatpakref
+        - https://dl.flathub.org/repo/appstream/us.zoom.Zoom.flatpakref
 
     - name: disable Wayland
       ansible.builtin.lineinfile:

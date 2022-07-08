@@ -69,15 +69,15 @@ datastore_vg: raid10vg
 ################################################################################
 install_dir: /export/install
 install_vol: installlv
-install_vg: "{{datastore_vg}}"
-install_dev: "/dev/{{install_vg}}/{{install_vol}}"
+install_vg: installvg
+install_dev: "/dev/mapper/{{install_vg}}-{{install_vol}}"
 install_url: "http://install.internal.tjon.net"
 install_vol_fstype: xfs
 
 archive_dir: /export/archive
-archive_vol: archivelv
-archive_vg: "{{datastore_vg}}"
-archive_dev: "/dev/{{archive_vg}}/{{archive_vol}}"
+#archive_vol: archivelv
+#archive_vg: "{{datastore_vg}}"
+archive_dev: /dev/sda1
 archive_url: http://archive.internal.tjon.net
 archive_vol_fstype: xfs
 
