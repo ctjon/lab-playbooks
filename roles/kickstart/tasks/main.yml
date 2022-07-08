@@ -20,7 +20,7 @@
     state: started
     enabled: yes
 
-- name: open firewall ports for tftp
+- name: open trusted firewall zone for tftp
   ansible.builtin.firewalld:
     zone: "{{trusted_firewall_zone}}"
     service: tftp
@@ -28,7 +28,16 @@
     state: enabled
     permanent: yes
 
-- name: configure bootpc and pxe services in firewalld config
+- name: open public firewall zone for tftp
+  ansible.builtin.firewalld:
+    zone: "{{public_firewall_zone}}"
+    service: tftp
+    immediate: yes
+    state: enabled
+    permanent: yes
+  when: offer_public_services == "true"
+
+- name: configure bootpc and pxe services in trusted firewall zone
   ansible.builtin.firewalld:
     zone: "{{trusted_firewall_zone}}"
     port: "{{ item }}"
@@ -39,6 +48,19 @@
     - 68/tcp    # bootpc TCP
     - 68/udp    # bootpc UDP
     - 4011/udp  # pxe
+
+- name: configure bootpc and pxe services in public firewall zone
+  ansible.builtin.firewalld:
+    zone: "{{public_firewall_zone}}"
+    port: "{{ item }}"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  with_items:
+    - 68/tcp    # bootpc TCP
+    - 68/udp    # bootpc UDP
+    - 4011/udp  # pxe
+  when: offer_public_services == "true"
 
 - name: synchronize /usr/share/syslinux content to {{tftpbootdir}}
   ansible.builtin.synchronize:

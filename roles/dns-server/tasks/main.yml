@@ -5,13 +5,22 @@
     state: latest
   notify: restart named
 
-- name: configure firewall for DNS services
+- name: configure trusted firewall zone for DNS services
   ansible.builtin.firewalld:
     zone: "{{trusted_firewall_zone}}"
     service: dns
     immediate: yes
     state: enabled
     permanent: yes
+
+- name: configure public firewall zone for DNS services
+  ansible.builtin.firewalld:
+    zone: "{{public_firewall_zone}}"
+    service: dns
+    immediate: yes
+    state: enabled
+    permanent: yes
+  when: offer_public_services == "true"
 
 - name: install named.conf
   ansible.builtin.template:

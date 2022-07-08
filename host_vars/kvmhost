@@ -42,8 +42,8 @@ primary_bridge: br0
 ################################################################################
 # Firewall Configuration Parameters                                            #
 ################################################################################
-public_firewall_zone: public
-trusted_firewall_zone: public
+public_firewall_zone: FedoraServer
+trusted_firewall_zone: libvirt
 additional_fw_ports:
   - 8443
 

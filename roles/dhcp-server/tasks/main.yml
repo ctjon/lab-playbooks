@@ -5,13 +5,31 @@
     state: latest
   notify: restart dhcpd
 
-- name: configure firewall for DHCP services
+- name: configure public firewall zone for DHCP services
+  ansible.builtin.firewalld:
+    zone: "{{public_firewall_zone}}"
+    service: dhcp
+    immediate: yes
+    state: enabled
+    permanent: yes
+  when: offer_public_services == "true"
+
+- name: configure trusted firewall zone for DHCP services
   ansible.builtin.firewalld:
     zone: "{{trusted_firewall_zone}}"
     service: dhcp
     immediate: yes
     state: enabled
     permanent: yes
+
+- name: configure public firewall zone for DHCP services
+  ansible.builtin.firewalld:
+    zone: "{{public_firewall_zone}}"
+    service: dhcp
+    immediate: yes
+    state: enabled
+    permanent: yes
+  when: offer_public_services == "true"
 
 - name: install dhcpd.conf
   ansible.builtin.template:

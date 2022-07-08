@@ -110,8 +110,8 @@
 ;	netbios name = MYSERVER
 	netbios name = {{samba_netbios_name}}
 
-	interfaces = lo virbr0
-	hosts allow = 127. 192.168.168.0/24
+	interfaces = lo {{ trusted_interfaces | join(" ") }}
+	hosts allow = 127. {{ trusted_subnets | join(" ") }}
 
 ;	interfaces = lo eth0 192.168.12.2/24 192.168.13.2/24
 ;	hosts allow = 127. 192.168.12. 192.168.13.
@@ -343,4 +343,128 @@
 ;	writable = yes
 ;	printable = no
 ;	write list = +staff
+
+{% for item in samba_shares %}
+[{{item.name}}]
+	comment = {{item.name}}
+	path = {{item.path}}
+	public = {{item.public}}
+	guest ok = {{item.guest_ok}}
+	browseable = {{item.browseable}}
+	writable = {{item.writeable}}
+	printable = {{item.printable}}
+	write list = {{item.trusted_write_users}}
+
+{% endfor %}
+
+{% for item in tm_users %}
+[{{item.tm_username}}-TM]
+        vfs objects = acl_xattr catia fruit streams_xattr
+        fruit: nfs_access = no
+	valid users = {{item.tm_username}}
+	comment = {{item.tm_username}}'s Time Machine SMB Share
+	path = {{tm_storage_path}}/{{item.tm_username}}
+	public = no
+	guest ok = no
+	browseable = yes
+	writable =  yes
+	printable = no
+        create mask = 0600
+        directory mask = 0700
+        spotlight = no
+        fruit:appl = yes
+        fruit:time machine = yes
+        fruit:time machine max size = {{item.tm_vol_size_bytes}}
+
+{% endfor %}
+
+[ mp61-TM ]
+        vfs objects = acl_xattr catia fruit streams_xattr
+        fruit: nfs_access = no
+	valid users = chris
+	comment = Chris' mp61 TM SMB Share
+	path = {{ tm_storage_path }}/chris/mp61
+	public = no
+	guest ok = no
+	browseable = yes
+	writable =  yes
+	printable = no
+        create mask = 0600
+        directory mask = 0700
+        spotlight = no
+        fruit:appl = yes
+        fruit:time machine = yes
+        fruit:time machine max size = 2048000000000
+
+[ mp51-mojave-TM ]
+        vfs objects = acl_xattr catia fruit streams_xattr
+        fruit: nfs_access = no
+	valid users = chris
+	comment = Chris' mp51 Mojave TM SMB Share
+	path = {{ tm_storage_path }}/chris/mp51-mojave
+	public = no
+	guest ok = no
+	browseable = yes
+	writable =  yes
+	printable = no
+        create mask = 0600
+        directory mask = 0700
+        spotlight = no
+        fruit:appl = yes
+        fruit:time machine = yes
+        fruit:time machine max size = 250000000000
+
+[ mp51-test-TM ]
+        vfs objects = acl_xattr catia fruit streams_xattr
+        fruit: nfs_access = no
+	valid users = chris
+	comment = Chris' mp51-test TM SMB Share
+	path = {{ tm_storage_path }}/chris/mp51-test
+	public = no
+	guest ok = no
+	browseable = yes
+	writable =  yes
+	printable = no
+        create mask = 0600
+        directory mask = 0700
+        spotlight = no
+        fruit:appl = yes
+        fruit:time machine = yes
+        fruit:time machine max size = 250000000000
+
+[ mp51-HighSierra-TM ]
+        vfs objects = acl_xattr catia fruit streams_xattr
+        fruit: nfs_access = no
+	valid users = chris
+	comment = Chris' mp51-HighSierra TM SMB Share
+	path = {{ tm_storage_path }}/chris/mp51-HighSierra
+	public = no
+	guest ok = no
+	browseable = yes
+	writable =  yes
+	printable = no
+        create mask = 0600
+        directory mask = 0700
+        spotlight = no
+        fruit:appl = yes
+        fruit:time machine = yes
+        fruit:time machine max size = 160000000000
+
+[ mp51-Monterey-TM ]
+        vfs objects = acl_xattr catia fruit streams_xattr
+        fruit: nfs_access = no
+	valid users = chris
+	comment = Chris' mp51-Monterey TM SMB Share
+	path = {{ tm_storage_path }}/chris/mp51-Monterey
+	public = no
+	guest ok = no
+	browseable = yes
+	writable =  yes
+	printable = no
+        create mask = 0600
+        directory mask = 0700
+        spotlight = no
+        fruit:appl = yes
+        fruit:time machine = yes
+        fruit:time machine max size = 250000000000
 

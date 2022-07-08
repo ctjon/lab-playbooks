@@ -29,11 +29,20 @@
     state: started
     enabled: yes
 
-- name: open firewall ports for chrony
+- name: open trusted firewall zone for chrony
   ansible.builtin.firewalld:
     zone: "{{trusted_firewall_zone}}"
     service: ntp
     immediate: yes
     state: enabled
     permanent: yes
+
+- name: open public firewall zone for chrony
+  ansible.builtin.firewalld:
+    zone: "{{public_firewall_zone}}"
+    service: ntp
+    immediate: yes
+    state: enabled
+    permanent: yes
+  when: offer_public_services == "true"
 ...

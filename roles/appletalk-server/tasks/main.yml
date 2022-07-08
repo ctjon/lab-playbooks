@@ -136,6 +136,15 @@
     mode: '0644'
 
 - ansible.posix.firewalld:
+    zone: "{{ public_firewall_zone }}"
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+  with_items:
+    - "{{ tm_ports }}"
+  when: offer_public_services == "true"
+
+- ansible.posix.firewalld:
     zone: "{{ trusted_firewall_zone }}"
     port: "{{ item }}"
     permanent: yes

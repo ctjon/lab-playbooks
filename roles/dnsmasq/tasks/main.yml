@@ -55,7 +55,7 @@
       notify: restart dnsmasq
   when: dhcp_enabled == true
 
-- name: configure firewall for DHCP # Need this for PXE
+- name: configure trusted firewall zone for DHCP # Need this for PXE
   ansible.builtin.firewalld:
     zone: "{{trusted_firewall_zone}}"
     service: dhcp
@@ -64,6 +64,18 @@
     permanent: yes
   notify: restart dnsmasq
   when: dhcp_enabled == true
+
+- name: configure public firewall zone for DHCP # Need this for PXE
+  ansible.builtin.firewalld:
+    zone: "{{public_firewall_zone}}"
+    service: dhcp
+    immediate: yes
+    state: enabled
+    permanent: yes
+  notify: restart dnsmasq
+  when: 
+    - dhcp_enabled == true
+    - offer_public_services == true
 
 - name: install /etc/hosts file
   ansible.builtin.copy:

@@ -5,12 +5,20 @@
     state: latest
   notify: restart rsyslog
 
-- name: Open Firewall Port for Syslogd
+- name: Open trusted firewall zone for Syslogd
   ansible.posix.firewalld:
     port: "{{log_port}}/{{log_protocol}}"
     permanent: yes
     state: enabled
     zone: "{{ trusted_firewall_zone }}"
+
+- name: Open public firewall zone for Syslogd
+  ansible.posix.firewalld:
+    port: "{{log_port}}/{{log_protocol}}"
+    permanent: yes
+    state: enabled
+    zone: "{{ public_firewall_zone }}"
+  when: offer_public_services == "true"
 
 - name: Install /etc/rsyslog.conf
   ansible.builtin.template:

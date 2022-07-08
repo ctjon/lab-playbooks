@@ -19,29 +19,36 @@
     group: polkitd
     mode: 0750
 
-- name: create vm storage in {{vm_storage_path}}
-  ansible.builtin.lvol:
-    vg: "{{ vm_storage_vg }}"
-    lv: "{{ vm_storage_lv }}"
-    size: "{{ vm_storage_lv_size }}"
-    shrink: no
-    force: no
-    state: present
-    resizefs: yes
-
-- name: Create a {{vm_storage_fs_type}}  filesystem on {{ vm_storage_lv }}
-  ansible.builtin.filesystem:
-    fstype: "{{ vm_storage_fs_type }}"
-    dev: "/dev/{{vm_storage_vg}}/{{vm_storage_lv}}"
-    force: no
-
-- name: mount {{vm_storage_path}}
-  ansible.builtin.mount:
-    path: "{{ vm_storage_path }}"
-    src: "/dev/{{vm_storage_vg}}/{{vm_storage_lv}}"
-    fstype: "{{ vm_storage_fs_type }}"
-    opts: defaults
-    state: mounted
+# 
+# This breaks with luks dm-mapper
+# #
+#- name: create vm storage in {{vm_storage_path}}
+#  ansible.builtin.lvol:
+#    vg: "{{ vm_storage_vg }}"
+#    lv: "{{ vm_storage_lv }}"
+#    size: "{{ vm_storage_lv_size }}"
+#    shrink: no
+#    force: no
+#    state: present
+#    resizefs: yes
+#
+# this is a problem when using luks encryption because ansible sees fs as 
+# "cryptoLuks" and wants to reformat it even though it is actually xfs 
+# hence ignore_errors=yes
+#- name: Create a {{vm_storage_fs_type}}  filesystem on {{ vm_storage_lv }}
+#  ansible.builtin.filesystem:
+#    fstype: "{{ vm_storage_fs_type }}"
+#    dev: "/dev/{{vm_storage_vg}}/{{vm_storage_lv}}"
+#    force: no
+#  ignore_errors: yes 
+#
+#- name: mount {{vm_storage_path}}
+#  ansible.builtin.mount:
+#    path: "{{ vm_storage_path }}"
+#    src: "/dev/{{vm_storage_vg}}/{{vm_storage_lv}}"
+#    fstype: "{{ vm_storage_fs_type }}"
+#    opts: defaults
+#    state: mounted
 
 - name: Install RHEL/CentOS Packages
   ansible.builtin.yum: 

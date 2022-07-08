@@ -46,7 +46,8 @@ config_files_url: "http://install.internal.tjon.net/ConfigFiles"
 # Firewall Configuration Parameters                                            #
 ################################################################################
 public_firewall_zone: FedoraWorkstation
-trusted_firewall_zone: internal
+trusted_firewall_zone: libvirt
+offer_public_services: false
 
 ################################################################################
 # SSH Configuration Parameters                                                 #

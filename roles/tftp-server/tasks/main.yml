@@ -5,13 +5,22 @@
     state: latest
   notify: restart tftp
 
-- name: configure firewall for TFTP services
+- name: configure trusted firewall zone for TFTP services
   ansible.builtin.firewalld:
     zone: "{{trusted_firewall_zone}}"
     service: tftp
     immediate: yes
     state: enabled
     permanent: yes
+
+- name: configure public firewall zone for TFTP services
+  ansible.builtin.firewalld:
+    zone: "{{public_firewall_zone}}"
+    service: tftp
+    immediate: yes
+    state: enabled
+    permanent: yes
+  when: offer_public_services == "true"
 
 - name: start and enable tftp service
   ansible.builtin.service:

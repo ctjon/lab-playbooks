@@ -94,12 +94,11 @@ vhosts:
 ################################################################################
 # Firewall Configuration Parameters                                            #
 ################################################################################
-#public_firewall_zone: public
-#trusted_firewall_zone: public
 public_firewall_zone: FedoraServer
-trusted_firewall_zone: FedoraServer
+trusted_firewall_zone: libvirt
 additional_fw_ports:
   - 8443
+offer_public_services: true
 
 ################################################################################
 # KVM Virtualization Configuration Parameters                                  #

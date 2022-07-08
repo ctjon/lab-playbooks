@@ -1,6 +1,6 @@
 ---
 #
-# Configure eagle workstation
+# Configure ws0 workstation
 #
 
 # CentOS 8 Prerequisites: 
@@ -8,7 +8,7 @@
 #	policycoreutils-python3
 #	rsync
 
-- hosts: eagle
+- hosts: ws0
   become: yes
 
   roles:
@@ -44,6 +44,18 @@
 
     - role: fail2ban
       tags: ['fail2ban']
+
+    - role: samba-server
+      tags: ['samba-server']
+
+    - role: virt-server
+      tags: ['virt-server']
+
+    - role: tftp-server
+      tags: ['tftp-server']
+
+    - role: http-repo
+      tags: ['http-repo']
 
 ## DON'T AUTO REBOOT IF RUNNING KVM VMs
 ## At least not until the role is modified to accomodate it
@@ -102,6 +114,7 @@
         - https://dl.flathub.org/repo/appstream/com.tdameritrade.ThinkOrSwim.flatpakref
         - https://dl.flathub.org/repo/appstream/com.bluejeans.BlueJeans.flatpakref
         - https://dl.flathub.org/repo/appstream/org.telegram.desktop.flatpakref
+        - https://dl.flathub.org/repo/appstream/com.microsoft.Teams.flatpakref
 
     - name: disable Wayland
       ansible.builtin.lineinfile:

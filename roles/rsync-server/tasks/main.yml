@@ -25,7 +25,7 @@
     state: started
     enabled: yes
 
-- name: open firewall ports for rsyncd
+- name: open trusted firewall zone for rsyncd
   ansible.builtin.firewalld:
     zone: "{{trusted_firewall_zone}}"
     service: rsyncd
@@ -33,4 +33,12 @@
     state: enabled
     permanent: yes
 
+- name: open public firewall zone for rsyncd
+  ansible.builtin.firewalld:
+    zone: "{{public_firewall_zone}}"
+    service: rsyncd
+    immediate: yes
+    state: enabled
+    permanent: yes
+  when: offer_public_services == "true"
 ...

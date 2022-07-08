@@ -74,6 +74,21 @@
 
 #- name: open firewall for MaxView Storage Management
 #  ansible.builtin.firewalld:
+#    zone: "{{public_firewall_zone}}"
+#    port: "{{item}}"
+#    immediate: yes
+#    state: enabled
+#    permanent: yes
+#  with_items:
+#    - 5988-5989/tcp 
+#    - 8443/tcp
+#    - 34570-34580/tcp
+#    - 34570/udp
+#    - 34577-34580/udp
+#   when: offer_public_services == "true"
+#
+#- name: open firewall for MaxView Storage Management
+#  ansible.builtin.firewalld:
 #    zone: "{{trusted_firewall_zone}}"
 #    port: "{{item}}"
 #    immediate: yes

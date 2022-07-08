@@ -1,6 +1,8 @@
 #
-# host_vars file for server0
+# host_vars file for ws0
 #
+
+test_nmcli: false
 
 use_ssh_agent: yes
 copy_ssh_keys: yes
@@ -26,31 +28,24 @@ time_servers:
 ################################################################################
 # Primary Network Interface Configuration Parameters                           #
 ################################################################################
-#primary_domain_name: internal.tjon.net
+primary_domain_name: internal.tjon.net
+primary_subnet: 172.16.1.0/24
+primary_ipaddr: 172.16.1.2
+primary_prefix: 24
+primary_short_net: 172.16.1
+primary_netmask: 255.255.255.0
+primary_gateway: 172.16.1.1
 search_domains: 
-# - internal.tjon.net
-#primary_dns_servers: 
-# - 172.16.1.1
-use_dhcp: 'true'
-primary_bridge: br0
+ - internal.tjon.net
+primary_dns_servers: 
+ - 172.16.1.1
+#primary_bridge: br0
 primary_interface: eth0
-wireless_interface: wlan0
+#public_firewall_interface: eth0
 public_firewall_interface: br0
-
-trusted_subnets: 
- - 172.16.1.0/24
- - 172.16.5.0/24
- - 172.16.6.0/24
- - 192.168.11.0/24
- - 192.168.12.0/24
- - 192.168.122.0/24
-
-trusted_interfaces:
-  - "{{primary_bridge}}"
-  - virbr0
-  - vnet_nat1
-  - vnet_nat2
-  - wlan0
+use_dhcp: 'false'
+bridge_wireless: 'false'
+wireless_interface: wlan0
 
 ################################################################################
 # Secondary Network Interface Configuration Parameters                         #
@@ -68,13 +63,38 @@ secondary_interface: eth1
 secondary_bridge: br1
 trusted_firewall_interface: eth0
 
+datastore_vg: raid10vg
 ################################################################################
 # Installation Source Parameters                                               #
 ################################################################################
-linux_install_server_url: "http://install.internal.tjon.net/Linux"
-linux_install_server_hostname: server0
-config_files_url: "http://install.internal.tjon.net/ConfigFiles"
-doc_files_url: "http://install.internal.tjon.net/Documentation"
+install_dir: /export/install
+install_vol: installlv
+install_vg: "{{datastore_vg}}"
+install_dev: "/dev/{{install_vg}}/{{install_vol}}"
+install_url: "http://install.internal.tjon.net"
+install_vol_fstype: xfs
+
+archive_dir: /export/archive
+archive_vol: archivelv
+archive_vg: "{{datastore_vg}}"
+archive_dev: "/dev/{{archive_vg}}/{{archive_vol}}"
+archive_url: http://archive.internal.tjon.net
+archive_vol_fstype: xfs
+
+linux_install_server_hostname: ws0
+linux_install_server_url: "{{install_url}}/Linux"
+config_files_url: "{{install_url}}/ConfigFiles"
+
+doc_files_url: "{{install_url}}/Documentation"
+doc_files_dir: "{{install_dir}}/Documentation"
+
+################################################################################
+# Backup Server Parameters                                                     #
+################################################################################
+backup_dir: /export/backup
+backup_vol: backuplv
+backup_vg: backupvg
+backup_vol_fstype: xfs
 
 ################################################################################
 # Time Server Configuration Parameters                                         #
@@ -87,29 +107,26 @@ time_client_servers:
 # TFTP Boot Server Parameters                                                  #
 ################################################################################
 tftpbootdir: /var/lib/tftpboot
-installdir: /export/install
-doc_files_dir: /export/install/Documentation
-archive_dir: /export/archive
 
 ################################################################################
 # HTTP Server Parameters                                                       #
 ################################################################################
 vhosts: 
-  - {name: server0, document_root: /var/www/html, alias: server0, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
-  - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: /dev/sda2}
-  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: /dev/rootvg/archivelv}
-  - {name: plex, document_root: /export/plex, alias: plex, fcontext: public_content_rw_t, lv_name: /dev/datavg/plexlv}
-#  - {name: satcontent, document_root: /export/satcontent, alias: satcontent, fcontext: public_content_rw_t, lv_name: /dev/datavg/sat_content_lv}
+  - {name: ws0, document_root: /export/install, alias: ws0, fcontext: httpd_sys_content_t, lv_name: /dev/mapper/installvg-installlv}
+#  - {name: ws0, document_root: /var/www/html, alias: ws0, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
+#  - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: "/dev/{{install_vg}}/installlv"}
+#  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: "/dev/{{archive_vg}}/archivelv"}
+#  - {name: plex, document_root: /export/plex, alias: plex, fcontext: public_content_rw_t, lv_name: "/dev/{{datastore_vg}}/plexlv"}
+#  - {name: satcontent, document_root: /export/satcontent, alias: satcontent, fcontext: public_content_rw_t, lv_name: "/dev/{{datastore_vg}}/sat_content_lv}"
 
 ################################################################################
 # Firewall Configuration Parameters                                            #
 ################################################################################
-#public_firewall_zone: public
-#trusted_firewall_zone: public
 public_firewall_zone: FedoraServer
-trusted_firewall_zone: FedoraServer
+trusted_firewall_zone: libvirt
 additional_fw_ports:
   - 8443
+offer_public_services: true
 
 ################################################################################
 # SSH Configuration Parameters                                                 #
@@ -123,8 +140,8 @@ allowed_ssh_users: chris ctjon
 # DNSMASQ Configuration Parameters                                             #
 ################################################################################
 dnsmasq_interfaces:
-  - "{{primary_bridge}}"
-#  - "{{secondary_interface}}"
+  - "{{secondary_interface}}"
+#  - "{{primary_bridge}}"
  
 dhcp_enabled: false
 pxe_enabled: true
@@ -137,11 +154,19 @@ dnsmasq_dhcp_interfaces:
 samba_workgroup: PARANOID
 samba_netbios_name: SERVER0
 
-samba_trusted_interfaces:
-  - "{{trusted_interfaces}}"
+trusted_interfaces:
+  - "{{primary_interface}}"
+  - virbr0
+  - vnet_nat1
+  - vnet_nat2
+#  - "{{wireless_interface}}"
+#  - "{{primary_bridge}}"
 
-samba_trusted_subnets:
-  - "{{trusted_subnets}}"
+trusted_subnets:
+  - 172.16.1.0/24
+  - 172.16.5.0/24
+  - 172.16.6.0/24
+  - 192.168.122.0/24
 
 samba_trusted_write_users:
   - chris
@@ -158,7 +183,6 @@ backup_trusted_write_users:
 samba_shares:
   - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
   - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
-  - {path: /export/time_machine, name: TimeMachine, public: 'no', guest_ok: 'no', browseable: 'yes', writeable: 'yes', printable: 'no', vfs objects: 'fruit streams_xattr', fruit:time machine: 'yes', trusted_write_users: '{{tm_trusted_write_users}}'}
   - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
   - {path: /export/backup, name: Backup, public: 'no', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{backup_trusted_write_users}}'}
 
@@ -174,12 +198,12 @@ atalk_users:
 # Time Machine Specific Configuration Paramters (AFP & SMB)                    #
 ################################################################################
 tm_users:
-  - {tm_username: 'chris', tm_vol_size_mb: '2048000'}
-  - {tm_username: 'kelly', tm_vol_size_mb: '1024000'}
+  - {tm_username: 'chris', tm_vol_size_bytes: '2000000000000'}
+  - {tm_username: 'kelly', tm_vol_size_bytes: '1000000000000'}
 
 tm_storage_vg: backupvg
 tm_storage_lv: tmlv
-tm_storage_lv_size: 4t
+tm_storage_lv_size: 2t
 tm_storage_fs_type: xfs
 tm_storage_path: /export/time_machine
 
@@ -195,10 +219,10 @@ virt_users:
 
 vm_storage_vg: rootvg
 vm_storage_lv: imageslv
-vm_storage_lv_size: 1g
+vm_storage_lv_size: 768g
 vm_storage_path: /var/lib/libvirt/images
 vm_storage_fs_type: xfs
-vm_bridge_interface: "{{primary_bridge}}"
+vm_bridge_interface: "{{primary_interface}}"
 
 ################################################################################
 # SSH Keys to Install on Managed Hosts                                         #
@@ -220,18 +244,21 @@ ks_configs_list:
   - test-centos7-ks.cfg
   - test-centos8-ks.cfg
   - test-fedora35-ks.cfg
-  - test-fedora34-ks.cfg
+  - test-fedora36-ks.cfg
   - test-rhel6-ks.cfg
   - test-rhel7-ks.cfg
   - test-rhel8-ks.cfg
   - test-rhel9-ks.cfg
   - gitlab-ks.cfg
-  - satellite6-ks.cfg
+  - fetcher-ks.cfg
+  - satellite6-rhel7-ks.cfg
+  - satellite6-rhel8-ks.cfg
   - satclient0-ks.cfg
   - satclient1-ks.cfg
   - satclient2-ks.cfg
   - satclient3-ks.cfg
-  - server0-ks.cfg
+  - server1-f35-ks.cfg
+  - server1-f36-ks.cfg
   - synchost6-ks.cfg
   - synchost7-ks.cfg
   - synchost8-ks.cfg
@@ -263,8 +290,8 @@ repo_owner: chris
 repo_owner_homedir: /home/chris
 start_hour_offset: 0
 
-scripts_dir: /home/chris/scripts
-scripts_logs_dir: /home/chris/logs
+syncscripts_dir: "{{repo_owner_homedir}}/syncscripts/scripts"
+syncscripts_logs_dir: "{{repo_owner_homedir}}/syncscripts/logs"
 
 sync_scripts_list:
   - sync-fedora.sh
@@ -272,6 +299,7 @@ sync_scripts_list:
   - sync-centos.sh
   - sync-epel.sh
   - sync-openbsd.sh
+  - sync-openwrt.sh
   - sync-virtio-win.sh
 
 sync_script_retries: true
@@ -303,7 +331,7 @@ scripts_list:
   - kvms/define-centos6-test.sh
   - kvms/define-centos7-test.sh
   - kvms/define-centos8-test.sh
-  - kvms/define-fedora34-test.sh
+  - kvms/define-fedora36-test.sh
   - kvms/define-fedora35-test.sh
   - kvms/delete-testvms.sh
   - kvms/define-satellite6.sh
@@ -329,8 +357,6 @@ linux_repo_includes_list:
   - "*.iso"
   - "*.qcow2"
   - "*.raw.xz"
-  - testing
-  - updates/testing
 
 linux_repo_excludes_list:
   - development
@@ -344,6 +370,8 @@ linux_repo_excludes_list:
   - i386
   - s390
   - s390x
+  - testing
+  - updates/testing
   - "*.torrent"
   - "*.box"
 
@@ -375,6 +403,8 @@ openbsd_repo_excludes_list:
   - i386
   - arm
   - armish
+  - armv7
+  - arm64
   - alpha
   - snapshots
   - songs
@@ -434,13 +464,13 @@ centos_stream_architectures:
 #  - aarch64 <<<< breaks shit, need to create a hash table instead
 
 fedora_versions:
-  - 35
   - 36
+  - 35
 
 # fedora versions that include upgrade.img
 fedora_upgrade_versions:
-  - 35
   - 36
+  - 35
 
 fedora_prev_release_ones_digit: 4
 fedora_prev_release: 34
@@ -452,8 +482,8 @@ fedora_architectures:
 #  - ppc64le #### WANT THIS BUT BROKEN RIGHT NOW
 
 fedora_secondary_architectures:
-  #- ppc
-  #- ppc64
+  - ppc
+  - ppc64
 
 ubuntu_server_versions:
   - 16.04.6
@@ -472,6 +502,7 @@ openbsd_arch_includes:
   - armv7 
   - aarch64 
   - macppc 
+  - powerpc
   - powerpc64 
   - sparc64 
   - sh
@@ -497,7 +528,6 @@ openbsd_arch_excludes:
   - mvme68k 
   - mvme88k 
   - octeon
-  - powerpc
   - riscv64
   - sgi
   - socppc
@@ -519,3 +549,76 @@ windows_architectures:
 
 centos8_gpg_key_url: /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 
+openwrt_arch_includes:
+  - mvebu/cortexa9
+  - arm_cortex-a9
+
+openwrt_arch_excludes:
+  - aarch64_cortex-a53
+  - aarch64_cortex-a72
+  - aarch64_generic
+  - apm821xx
+  - arc_arc700
+  - arc_archs
+  - arc770 
+  - archs38
+  - armvirt 
+  - arm_arm1176jzf-s_vfp
+  - arm_arm926ej-s
+  - arm_cortex-a15_neon-vfpv4
+  - arm_cortex-a5_vfpv4
+  - arm_cortex-a7
+  - arm_cortex-a7_vfpv4
+  - arm_cortex-a7_neon-vfpv4
+  - arm_cortex-a8_vfpv3
+  - arm_cortex-a9_neon
+  - arm_cortex-a9_vfpv3-d16
+  - arm_fa526
+  - arm_mpcore
+  - arm_xscale
+  - at91 
+  - ath25
+  - ath79 
+  - bcm27xx 
+  - bcm47xx 
+  - bcm4908 
+  - bcm53xx 
+  - bcm63xx 
+  - gemini 
+  - i386_pentium4
+  - i386_pentium-mmx
+  - imx6 
+  - ipq40xx
+  - ipq806x
+  - kirkwood
+  - lantiq
+  - layerscape
+  - malta
+  - mediatek
+  - mpc85xx
+  - mips_24kc
+  - mips_4kec
+  - mips64_octeonplus
+  - mipsel_24kc
+  - mipsel_24kc_24kf
+  - mipsel_74kc
+  - mipsel_mips32
+  - mips_mips32
+  - mvebu/cortexa53
+  - mvebu/cortexa72
+  - mxs
+  - octeon
+  - octeontx
+  - omap
+  - oxnas
+  - pistachio
+  - powerpc_464fp
+  - powerpc_8540
+  - ramips
+  - realtek
+  - rockchip
+  - sunxi
+  - tegra
+  - x86
+  - x86_64
+  - zynq
