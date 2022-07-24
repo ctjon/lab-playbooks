@@ -271,7 +271,6 @@ pxelinux_files:
     - x1carbon
     - OpenBSD
     - vmware
-    - ubuntu
 #    - centos
 
 pxewindows_files:
