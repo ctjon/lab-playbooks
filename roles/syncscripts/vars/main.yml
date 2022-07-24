@@ -1,3 +1,77 @@
+#
+# Linux includes/excludes
+#
+linux_repo_includes_list:
+  - x86_64
+  - source
+  - SRPMS
+  - aarch64
+  - "*.iso"
+  - "*.qcow2"
+
+linux_repo_excludes_list:
+  - development
+  - releases/test
+  - debug
+  - beta
+  - debug
+  - arm
+  - armhfp
+  - alpha
+  - ia64
+  - i386
+  - s390
+  - s390x
+  - ppc
+  - ppc64
+  - ppc64le
+  - testing
+  - updates/testing
+  - "*.torrent"
+  - "*.box"
+  - "*.raw.xz"
+
+#
+# OpenBSD includes/excludes
+#
+openbsd_arch_includes:
+  - amd64
+  - arm64
+  - macppc
+
+openbsd_arch_excludes:
+  - powerpc
+  - powerpc64
+  - sparc64
+  - i386
+  - arm
+  - armish
+  - armv7
+  - alpha
+  - aviion
+  - beagle
+  - hp300
+  - hppa
+  - landisk
+  - loongson
+  - luna88k
+  - mips64
+  - mips64el
+  - m68k
+  - m88k
+  - mvme68k
+  - mvme88k
+  - octeon
+  - riscv64
+  - sgi
+  - socppc
+  - sparc
+  - vax
+  - zaurus
+
+#
+# OpenWRT includes/excludes
+#
 openwrt_arch_includes:
   - mvebu/cortexa9
   - arm_cortex-a9
