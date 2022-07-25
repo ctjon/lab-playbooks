@@ -27,6 +27,7 @@
     immediate: yes
     state: enabled
     permanent: yes
+  when: trusted_firewall_zone is defined
 
 - name: open public firewall zone for tftp
   ansible.builtin.firewalld:
@@ -48,6 +49,7 @@
     - 68/tcp    # bootpc TCP
     - 68/udp    # bootpc UDP
     - 4011/udp  # pxe
+  when: trusted_firewall_zone is defined
 
 - name: configure bootpc and pxe services in public firewall zone
   ansible.builtin.firewalld:
@@ -310,17 +312,17 @@
 ################################################################################
 # Ubuntu images Files copies                                                   #
 ################################################################################
-- name: create {{tftpbootdir}}/images/ubuntu/server/version/architeture directory
-  ansible.builtin.file:
-    path: "{{tftpbootdir}}/images/ubuntu/server/{{item[0]}}/{{item[1]}}/"
-    owner: root
-    group: root
-    mode: 0755
-    state: directory
-    recurse: yes
-  with_nested:
-    - "{{ubuntu_server_versions}}"
-    - "{{ubuntu_server_architectures}}"
+#- name: create {{tftpbootdir}}/images/ubuntu/server/version/architeture directory
+#  ansible.builtin.file:
+#    path: "{{tftpbootdir}}/images/ubuntu/server/{{item[0]}}/{{item[1]}}/"
+#    owner: root
+#    group: root
+#    mode: 0755
+#    state: directory
+#    recurse: yes
+#  with_nested:
+#    - "{{ubuntu_server_versions}}"
+#    - "{{ubuntu_server_architectures}}"
 
 #- name: synchronize Ubuntu Server netboot content to {{tftpbootdir}}/images/ubuntu
 #  ansible.builtin.synchronize:

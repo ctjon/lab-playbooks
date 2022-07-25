@@ -68,6 +68,7 @@
     immediate: yes
     state: enabled
     permanent: yes
+  when: trusted_firewall_zone is defined
 
 - name: open public firewall zone for samba
   ansible.builtin.firewalld:

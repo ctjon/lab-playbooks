@@ -12,6 +12,7 @@
     immediate: yes
     state: enabled
     permanent: yes
+  when: trusted_firewall_zone is defined
 
 - name: configure public firewall zone for DNS services
   ansible.builtin.firewalld:

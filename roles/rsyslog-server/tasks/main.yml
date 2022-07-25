@@ -11,6 +11,7 @@
     permanent: yes
     state: enabled
     zone: "{{ trusted_firewall_zone }}"
+  when: trusted_firewall_zone is defined
 
 - name: Open public firewall zone for Syslogd
   ansible.posix.firewalld:

@@ -122,7 +122,7 @@ vhosts:
 # Firewall Configuration Parameters                                            #
 ################################################################################
 public_firewall_zone: FedoraServer
-trusted_firewall_zone: libvirt
+#trusted_firewall_zone: libvirt
 additional_fw_ports:
   - 8443
 offer_public_services: true

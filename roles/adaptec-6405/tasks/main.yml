@@ -100,4 +100,6 @@
 #    - 34570-34580/tcp
 #    - 34570/udp
 #    - 34577-34580/udp
+#  when: trusted_firewall_zone is defined
+
 

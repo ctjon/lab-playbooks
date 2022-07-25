@@ -46,6 +46,8 @@
     immediate: yes
     state: enabled
     permanent: yes
+  when: trusted_firewall_zone is defined
+
 
 - name: open NIS port in public Firewall zone
   ansible.builtin.firewalld:

@@ -151,6 +151,7 @@
     state: enabled
   with_items:
     - "{{ tm_ports }}"
+  when: trusted_firewall_zone is defined
 
 #- name: configure /etc/resolv.conf for MDNS
 #  ansible.builtin.lineinfile:

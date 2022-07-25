@@ -58,6 +58,7 @@
     zone: "{{trusted_firewall_zone}}"
     autoconnect: yes
     state: present
+  when: trusted_firewall_zone is defined
   notify: restart Network
 
 - name: add {{trusted_firewall_interface}} to {{trusted_firewall_zone}}
@@ -66,6 +67,7 @@
     interface: "{{trusted_firewall_interface}}"
     permanent: yes
     state: enabled
+  when: trusted_firewall_zone is defined
 
 - name: add {{public_firewall_interface}} to {{public_firewall_zone}}
   ansible.builtin.firewalld:
@@ -124,3 +126,5 @@
     state: enabled
     permanent: yes
     zone: "{{ trusted_firewall_zone }}"
+  when: trusted_firewall_zone is defined
+
