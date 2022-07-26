@@ -1,2 +1,3 @@
-brew install ansible
-pip install kerberos pykerberos requests_kerberos pywinrm
+sudo dnf install ansible-core
+ansible-galaxy collection install community.libvirt
+ansible-galaxy collection install community.general

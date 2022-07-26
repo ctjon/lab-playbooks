@@ -81,7 +81,7 @@
 - name: setup virtual networks
   block:
     - name: define nets
-      ansible.builtin.virt_net:
+      community.libvirt.virt_net:
         command: define
         name: "{{item}}"
         xml: '{{ lookup("template", "{{item}}.j2") }}'
@@ -90,7 +90,7 @@
         - "{{virt_nets}}"
 
     - name: create nets
-      ansible.builtin.virt_net:
+      community.libvirt.virt_net:
         command: create
         name: "{{item}}"
       ignore_errors: yes #set because module fails if network already exists
@@ -98,21 +98,22 @@
         - "{{virt_nets}}"
 
     - name: set nets for autostart
-      ansible.builtin.virt_net:
+      community.libvirt.virt_net:
         name: "{{item}}"
         autostart: yes
       with_items:
         - "{{virt_nets}}"
 
-    - name: add virt_nets to internal firewall zone
+    - name: add virt_nets to trusted firewall zone
       ansible.builtin.firewalld: 
-        zone: internal
+        zone: "{{trusted_firewall_zone}}"
         interface: "{{item}}"
         permanent: yes
         immediate: yes
         state: enabled
       with_items:
         - "{{ virt_nets}}"
+  tags: config_virtual_networks
 
 - name: restore SELinux Context on /etc/yum.repos.d
   ansible.builtin.command: restorecon -RFv /etc/yum.repos.d

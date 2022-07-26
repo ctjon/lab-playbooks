@@ -1,0 +1,114 @@
+#
+# host_vars file for eagle
+#
+
+test_nmcli: false
+
+use_ssh_agent: yes
+copy_ssh_keys: yes
+setup_ansible_config: yes
+setup_git_update: yes
+ssh_private_key_list:
+  - ctjon.pem
+  - ctjon-github_rsa
+
+ssh_public_key_list:
+  - ctjon-github_rsa
+
+enable_public_sshd: true
+
+TIMEZONE: "America/Phoenix"
+time_servers:
+  - time.internal.tjon.net
+#  - 0.rhel.pool.ntp.org
+#  - 1.rhel.pool.ntp.org
+#  - 2.rhel.pool.ntp.org
+#  - 3.rhel.pool.ntp.org
+
+################################################################################
+# Primary Network Interface Configuration Parameters                           #
+################################################################################
+primary_domain_name: internal.tjon.net
+primary_subnet: 172.16.1.0/24
+#primary_ipaddr: 172.16.1.2
+primary_prefix: 24
+primary_short_net: 172.16.1
+primary_netmask: 255.255.255.0
+primary_gateway: 172.16.1.1
+search_domains: 
+ - internal.tjon.net
+primary_dns_servers: 
+ - 172.16.1.1
+#primary_bridge: br0
+primary_interface: eth0
+public_firewall_interface: eth0
+#public_firewall_interface: br0
+use_dhcp: 'false'
+bridge_wireless: 'false'
+wireless_interface: wlan0
+
+#datastore_vg: raid10vg
+################################################################################
+# Installation Source Parameters                                               #
+################################################################################
+#install_dir: /export/install
+#install_vol: installlv
+#install_vg: installvg
+#install_dev: "/dev/mapper/{{install_vg}}-{{install_vol}}"
+#install_url: "http://install.internal.tjon.net"
+#install_vol_fstype: xfs
+
+#archive_dir: /export/archive
+#archive_vol: archivelv
+#archive_vg: "{{datastore_vg}}"
+archive_dev: /dev/sda1
+archive_url: http://archive.internal.tjon.net
+archive_vol_fstype: xfs
+
+#linux_install_server_hostname: server0
+#linux_install_server_url: "{{install_url}}/Linux"
+#config_files_url: "{{install_url}}/ConfigFiles"
+
+#doc_files_url: "{{install_url}}/Documentation"
+#doc_files_dir: "{{install_dir}}/Documentation"
+
+################################################################################
+# Firewall Configuration Parameters                                            #
+################################################################################
+public_firewall_zone: FedoraServer
+trusted_firewall_zone: FedoraServer
+additional_fw_ports:
+  - 8443
+#offer_public_services: true
+
+################################################################################
+# SSH Configuration Parameters                                                 #
+################################################################################
+#ssh_root_login_permited: "yes"
+#allowed_ssh_users: chris root
+ssh_root_login_permited: "no"
+allowed_ssh_users: chris ctjon
+
+################################################################################
+# KVM Virtualization Configuration Parameters                                  #
+################################################################################
+virt_nets:
+  - vnet_nat1
+  - vnet_nat2
+
+virt_users:
+  - chris
+
+vm_storage_vg: rootvg
+vm_storage_lv: imageslv
+vm_storage_lv_size: 128g
+vm_storage_path: /var/lib/libvirt/images
+vm_storage_fs_type: xfs
+vm_bridge_interface: "{{primary_interface}}"
+
+################################################################################
+# SSH Keys to Install on Managed Hosts                                         #
+################################################################################
+#ssh_keys_required:
+#  - chris-x1carbon-id_rsa.pub
+
