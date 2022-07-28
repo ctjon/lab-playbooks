@@ -45,8 +45,8 @@
     - role: apply-updates
       tags: ['apply-updates']
 
-#    - role: time-server
-#      tags: ['time-server']
+    - role: time-server
+      tags: ['time-server']
 
     - role: tftp-server
       tags: ['tftp-server']
@@ -63,9 +63,6 @@
     - role: syncscripts
       tags: ['syncscripts']
 
-    - role: http-repo
-      tags: ['http-repo']
-
     - role: config-local-virtio-win-repos
       tags: ['config-local-virtio-win-repos']
 
@@ -76,11 +73,11 @@
     - role: kickstart
       tags: ['kickstart']
 
-#    - role: samba-server
-#      tags: ['samba-server']
+    - role: samba-server
+      tags: ['samba-server']
 
-#    - role: nfs-server
-#      tags: ['nfs-server']
+    - role: nfs-server
+      tags: ['nfs-server']
 
     - role: rsync-server
       tags: ['rsync-server']
@@ -88,14 +85,14 @@
     - role: setup-epel
       tags: ['setup-epel']
 
-#    - role: virt-server
-#      tags: ['virt-server']
+    - role: virt-server
+      tags: ['virt-server']
 
-#    - role: appletalk-server
-#      tags: ['appletalk-server']
+    - role: appletalk-server
+      tags: ['appletalk-server']
 
-#    - role: apcupsd
-#      tags: ['apcupsd']
+    - role: apcupsd
+      tags: ['apcupsd']
 
 #    - role: openvpn-server
 #      tags: ['openvpn-server']
@@ -103,20 +100,25 @@
     - role: fail2ban
       tags: ['fail2ban']
 
-#    - role: rsyslog-server
-#      tags: ['rsyslog-server']
+    - role: rsyslog-server
+      tags: ['rsyslog-server']
 
-#    - role: backup
-#      tags: ['backup']
+    - role: backup
+      tags: ['backup']
 
-#    - role: plex-server
-#      tags: ['plex-server']
+    - role: plex-server
+      tags: ['plex-server']
+
+    - role: http-repo
+      tags: ['http-repo']
 
 #    - role: insights-register
 #      tags: ['insights']
 
-    - role: reboot-if-required
-      tags: ['reboot-if-required']
+## DON'T AUTO REBOOT IF RUNNING KVM VMs
+## At least not until the role is modified to accomodate it
+#    - role: reboot-if-required
+#      tags: ['reboot-if-required']
 
 
   tasks:

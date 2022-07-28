@@ -1,7 +1,8 @@
 #
 # host_vars file for server1
 #
-test_nmcli: true
+
+test_nmcli: false
 
 use_ssh_agent: yes
 copy_ssh_keys: yes
@@ -40,37 +41,60 @@ primary_dns_servers:
  - 172.16.1.1
 primary_bridge: br0
 primary_interface: eth0
-public_firewall_interface: eth0
-#public_firewall_interface: br0
+#public_firewall_interface: eth0
+public_firewall_interface: br0
 use_dhcp: 'false'
 bridge_wireless: 'false'
 #wireless_interface: 
+
+################################################################################
+# Secondary Network Interface Configuration Parameters                         #
+################################################################################
+secondary_domain_name: internal.tjon.net
+secondary_subnet: 192.168.168.0/24
+secondary_ipaddr: 192.168.168.2
+secondary_prefix: 24
+secondary_short_net: 192.168.168
+secondary_netmask: 255.255.255.0
+secondary_gateway: 192.168.168.2
+secondary_dns_servers: 
+ - 192.168.168.2
+secondary_interface: eth1
+secondary_bridge: br1
 trusted_firewall_interface: eth0
 
-datastore_vg: datavg
+datastore_vg: raid10vg
 ################################################################################
 # Installation Source Parameters                                               #
 ################################################################################
 install_dir: /export/install
 install_vol: installlv
 install_vg: "{{datastore_vg}}"
-install_dev: /dev/sdb1
-install_url: "http://install1.internal.tjon.net"
+install_dev: "/dev/{{install_vg}}/{{install_vol}}"
+install_url: "http://install.internal.tjon.net"
 install_vol_fstype: xfs
 
-#archive_dir: /export/archive
-#archive_vol: archivelv
-#archive_vg: "{{datastore_vg}}"
-#archive_dev: /dev/xyz
-#archive_url: http://archive1.internal.tjon.net
-#archive_vol_fstype: xfs
+archive_dir: /export/archive
+archive_vol: archivelv
+archive_vg: "{{datastore_vg}}"
+archive_dev: "/dev/{{archive_vg}}/{{archive_vol}}"
+archive_url: http://archive.internal.tjon.net
+archive_vol_fstype: xfs
 
-linux_install_server_hostname: server0
+linux_install_server_hostname: server1
 linux_install_server_url: "{{install_url}}/Linux"
 config_files_url: "{{install_url}}/ConfigFiles"
 
 doc_files_url: "{{install_url}}/Documentation"
 doc_files_dir: "{{install_dir}}/Documentation"
+
+################################################################################
+# Backup Server Parameters                                                     #
+################################################################################
+backup_dir: /export/backup
+backup_vol: backuplv
+backup_vg: backupvg
+backup_vol_fstype: xfs
 
 ################################################################################
 # Time Server Configuration Parameters                                         #
@@ -89,16 +113,93 @@ tftpbootdir: /var/lib/tftpboot
 ################################################################################
 vhosts: 
   - {name: server1, document_root: /var/www/html, alias: server1, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
-  - {name: install1, document_root: /export/install, alias: install1, fcontext: public_content_rw_t, lv_name: /dev/sda2}
+  - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: "/dev/{{install_vg}}/installlv"}
+  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: "/dev/{{archive_vg}}/archivelv"}
+  - {name: plex, document_root: /export/plex, alias: plex, fcontext: public_content_rw_t, lv_name: "/dev/{{datastore_vg}}/plexlv"}
+#  - {name: satcontent, document_root: /export/satcontent, alias: satcontent, fcontext: public_content_rw_t, lv_name: "/dev/{{datastore_vg}}/sat_content_lv}"
 
 ################################################################################
 # Firewall Configuration Parameters                                            #
 ################################################################################
 public_firewall_zone: FedoraServer
-trusted_firewall_zone: libvirt
+#trusted_firewall_zone: libvirt
 additional_fw_ports:
   - 8443
 offer_public_services: true
+
+################################################################################
+# SSH Configuration Parameters                                                 #
+################################################################################
+#ssh_root_login_permited: "yes"
+#allowed_ssh_users: chris root
+ssh_root_login_permited: "no"
+allowed_ssh_users: chris ctjon
+
+################################################################################
+# DNSMASQ Configuration Parameters                                             #
+################################################################################
+dnsmasq_interfaces:
+  - "{{primary_bridge}}"
+#  - "{{secondary_interface}}"
+ 
+dhcp_enabled: false
+pxe_enabled: true
+dnsmasq_dhcp_interfaces:
+  - "{{secondary_interface}}"
+
+################################################################################
+# Samba Configuration Parameters                                               #
+################################################################################
+samba_workgroup: PARANOID
+samba_netbios_name: SERVER0
+
+trusted_interfaces:
+  - "{{primary_bridge}}"
+
+trusted_subnets:
+  - 172.16.1.0/24
+  - 172.16.5.0/24
+  - 172.16.6.0/24
+  - 192.168.168.0/24
+
+samba_trusted_write_users:
+  - chris
+
+tm_trusted_write_users:
+  - chris
+#  - kelly
+
+backup_trusted_write_users:
+  - chris
+#  - kelly
+#  - james
+
+samba_shares:
+  - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
+  - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
+  - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
+  - {path: /export/backup, name: Backup, public: 'no', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{backup_trusted_write_users}}'}
+
+
+################################################################################
+# Netatalk Configuration Parameters                                            #
+################################################################################
+atalk_users:
+  - chris
+  - kelly
+
+################################################################################
+# Time Machine Specific Configuration Paramters (AFP & SMB)                    #
+################################################################################
+tm_users:
+  - {tm_username: 'chris', tm_vol_size_bytes: '2000000000000'}
+  - {tm_username: 'kelly', tm_vol_size_bytes: '1000000000000'}
+
+tm_storage_vg: backupvg
+tm_storage_lv: tmlv
+tm_storage_lv_size: 2t
+tm_storage_fs_type: xfs
+tm_storage_path: /export/time_machine
 
 ################################################################################
 # KVM Virtualization Configuration Parameters                                  #
@@ -116,14 +217,6 @@ vm_storage_lv_size: 768g
 vm_storage_path: /var/lib/libvirt/images
 vm_storage_fs_type: xfs
 vm_bridge_interface: "{{primary_bridge}}"
-
-################################################################################
-# SSH Configuration Parameters                                                 #
-################################################################################
-#ssh_root_login_permited: "yes"
-#allowed_ssh_users: chris root
-ssh_root_login_permited: "no"
-allowed_ssh_users: chris
 
 ################################################################################
 # SSH Keys to Install on Managed Hosts                                         #
@@ -158,7 +251,8 @@ ks_configs_list:
   - satclient1-ks.cfg
   - satclient2-ks.cfg
   - satclient3-ks.cfg
-  - server0-ks.cfg
+  - server1-f35-ks.cfg
+  - server1-f36-ks.cfg
   - synchost6-ks.cfg
   - synchost7-ks.cfg
   - synchost8-ks.cfg
@@ -177,7 +271,6 @@ pxelinux_files:
     - x1carbon
     - OpenBSD
     - vmware
-    - ubuntu
 #    - centos
 
 pxewindows_files:
@@ -204,91 +297,46 @@ sync_scripts_list:
 
 sync_script_retries: true
 
-linux_repo_includes_list:
-  - x86_64
-  - source
-  - SRPMS
-  - aarch64
-  - armhfp
-  - ppc
-  - ppc64
-  - ppc64le
-  - "*.iso"
-  - "*.qcow2"
-  - "*.raw.xz"
-  - testing
-  - updates/testing
+scripts_list:
+  - backup-archive.sh
+  - backup-install.sh
+  - backup-vms.sh
+  - migrate-archive.sh
+  - migrate-install.sh
+  - mount_backup.sh
+  - restore-archive.sh
+  - restore-install.sh
+  - restore-vms.sh
+  - unmount_backup.sh
+  - kvms/import-iTunesServer.sh
+  - kvms/import-synchost6.sh
+  - kvms/import-synchost7.sh
+  - kvms/import-synchost8.sh
+  - kvms/import-synchost9.sh
+  - kvms/define-synchost6.sh
+  - kvms/define-synchost7.sh
+  - kvms/define-synchost8.sh
+  - kvms/define-synchost9.sh
+  - kvms/define-rhel6-test.sh
+  - kvms/define-rhel7-test.sh
+  - kvms/define-rhel8-test.sh
+  - kvms/define-rhel9-test.sh
+  - kvms/define-centos6-test.sh
+  - kvms/define-centos7-test.sh
+  - kvms/define-centos8-test.sh
+  - kvms/define-fedora36-test.sh
+  - kvms/define-fedora35-test.sh
+  - kvms/delete-testvms.sh
+  - kvms/define-satellite6.sh
+  - kvms/define-satclients.sh
+  - kvms/delete-satclients.sh
+#  - kvms/define-win10.sh
+#  - kvms/import-Win10x64.sh
+#  - kvms/define_wintest.sh
+#  - kvms/define-adserver.sh
+#  - kvms/delete-adserver.sh
+#  - kvms/import-tower.sh
 
-linux_repo_excludes_list:
-  - development
-  - releases/test
-  - debug
-  - beta
-  - debug
-  - arm
-  - alpha
-  - ia64
-  - i386
-  - s390
-  - s390x
-  - "*.torrent"
-  - "*.box"
-
-ubuntu_repo_includes_list:
-  - "xenial*"  # 16.04.6 LTS Xenial Xerus
-
-ubuntu_repo_excludes_list:
-  - binary-i386
-  - "devel*"
-  - "precise*" # 12.04.5 LTS Precise Pangolin
-  - "trusty*"  # 14.04.6 LTS Trusty Tahr
-  - "artful*"  # 17.10.1 Artful Ardvark
-  - "bionic*"  # 18.04.2 LTS Bionic Beaver
-  - "cosmic*"  # 18.10 Cosmic Cuttlefish
-  - "disco*"   # 19.04 Beta Disco Dingo
-
-openbsd_repo_includes_list:
-  - amd64
-  - arm64
-  - armv7
-  - aarch64
-  - macppc
-  - powerpc
-  - powerpc64
-  - sparc64
-  - sh
-
-openbsd_repo_excludes_list:
-  - i386
-  - arm
-  - armish
-  - armv7
-  - arm64
-  - alpha
-  - snapshots
-  - songs
-  - aviion
-  - beagle
-  - hp300
-  - hppa
-  - landisk
-  - loongson
-  - luna88k
-  - mips64
-  - mips64el
-  - m68k
-  - m88k
-  - mvme68k
-  - mvme88k
-  - octeon
-  - riscv64
-  - sgi
-  - socppc
-  - sparc
-  - vax
-  - zaurus
-  - 'debug-*'
-  - '*.torrent'
 
 linux_distros:
   - fedora
@@ -337,62 +385,15 @@ fedora_prev_release: 34
 fedora_architectures:
   - x86_64
   - aarch64
-  - armhfp
-#  - ppc64le #### WANT THIS BUT BROKEN RIGHT NOW
 
 fedora_secondary_architectures:
   - ppc
   - ppc64
 
-ubuntu_server_versions:
-  - 16.04.6
-
-ubuntu_server_architectures:
-  - amd64
-
 openbsd_versions:
   - 7.1
 
 openbsd_prev_dot_release: 0
-
-openbsd_arch_includes:
-  - amd64
-  - arm64 
-  - armv7 
-  - aarch64 
-  - macppc 
-  - powerpc
-  - powerpc64 
-  - sparc64 
-  - sh
-
-openbsd_arch_excludes:
-  - i386 
-  - arm 
-  - armish 
-  - armv7 
-  - arm64 
-  - alpha 
-  - aviion 
-  - beagle 
-  - hp300 
-  - hppa 
-  - landisk 
-  - loongson 
-  - luna88k 
-  - mips64 
-  - mips64el 
-  - m68k 
-  - m88k 
-  - mvme68k 
-  - mvme88k 
-  - octeon
-  - riscv64
-  - sgi
-  - socppc
-  - sparc
-  - vax
-  - zaurus
 
 vmware_versions:
   - 6.7.0
@@ -408,76 +409,3 @@ windows_architectures:
 
 centos8_gpg_key_url: /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 
-openwrt_arch_includes:
-  - mvebu/cortexa9
-  - arm_cortex-a9
-
-openwrt_arch_excludes:
-  - aarch64_cortex-a53
-  - aarch64_cortex-a72
-  - aarch64_generic
-  - apm821xx
-  - arc_arc700
-  - arc_archs
-  - arc770 
-  - archs38
-  - armvirt 
-  - arm_arm1176jzf-s_vfp
-  - arm_arm926ej-s
-  - arm_cortex-a15_neon-vfpv4
-  - arm_cortex-a5_vfpv4
-  - arm_cortex-a7
-  - arm_cortex-a7_vfpv4
-  - arm_cortex-a7_neon-vfpv4
-  - arm_cortex-a8_vfpv3
-  - arm_cortex-a9_neon
-  - arm_cortex-a9_vfpv3-d16
-  - arm_fa526
-  - arm_mpcore
-  - arm_xscale
-  - at91 
-  - ath25
-  - ath79 
-  - bcm27xx 
-  - bcm47xx 
-  - bcm4908 
-  - bcm53xx 
-  - bcm63xx 
-  - gemini 
-  - i386_pentium4
-  - i386_pentium-mmx
-  - imx6 
-  - ipq40xx
-  - ipq806x
-  - kirkwood
-  - lantiq
-  - layerscape
-  - malta
-  - mediatek
-  - mpc85xx
-  - mips_24kc
-  - mips_4kec
-  - mips64_octeonplus
-  - mipsel_24kc
-  - mipsel_24kc_24kf
-  - mipsel_74kc
-  - mipsel_mips32
-  - mips_mips32
-  - mvebu/cortexa53
-  - mvebu/cortexa72
-  - mxs
-  - octeon
-  - octeontx
-  - omap
-  - oxnas
-  - pistachio
-  - powerpc_464fp
-  - powerpc_8540
-  - ramips
-  - realtek
-  - rockchip
-  - sunxi
-  - tegra
-  - x86
-  - x86_64
-  - zynq
