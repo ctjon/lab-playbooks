@@ -4,7 +4,7 @@ plex_group: plex
 plex_storage_vg: "{{datastore_vg}}"
 plex_storage_lv: plexlv
 #plex_storage_lv_size: 5T
-plex_storage_lv_size: 500g
+plex_storage_lv_size: 100g
 plex_storage_fs_type: xfs
 plex_storage_path: /export/plex
 plex_local_net: 172.16.1.0

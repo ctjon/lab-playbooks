@@ -63,6 +63,6 @@
         opts: defaults
         state: mounted
 
-  when: ansible_hostname == "server0"
+  when: ((ansible_hostname == "server0") or (ansible_hostname == "server1"))
 
 ...
