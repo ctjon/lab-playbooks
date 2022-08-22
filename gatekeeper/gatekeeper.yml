@@ -93,7 +93,7 @@
 
       #community.general.opkg:
     - name: install ddns packages for {{ddns_service_name}}
-      opkg:
+      community.general.opkg:
         name: "{{ item }}"
         state: present
         update_cache: yes
@@ -104,8 +104,33 @@
         - curl
         - ca-bundle
         - luci-app-ddns
-        - diffutils
       notify: restart luci
+      tags: ddns-packages
+
+      #community.general.opkg:
+    - name: install other packages
+      community.general.opkg:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - diffutils
+        - libblkid
+        - block-mount
+        - gdisk
+        - e2fsprogs
+        - kmod-fs-ext4
+      tags: other-packages
+
+      #community.general.opkg:
+    - name: install packages for adguardhome
+      community.general.opkg:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - adguardhome
+      notify: restart adguardhome
       tags: ddns-packages
 
     - name: install /etc/config/ddns template
@@ -176,6 +201,12 @@
     - name: restart ddns
       ansible.builtin.service:
         name: ddns
+        state: restarted
+        enabled: yes
+
+    - name: restart adguardhom
+      ansible.builtin.service:
+        name: adguardhom
         state: restarted
         enabled: yes
 
