@@ -27,8 +27,8 @@
     - role: selinux
       tags: ['selinux']
 
-    - role: setup-br0
-      tags: ['setup-br0']
+#    - role: setup-br0
+#      tags: ['setup-br0']
 
 #    - role: tune-network
 #      tags: ['tune-network']
@@ -63,8 +63,8 @@
     - role: syncscripts
       tags: ['syncscripts']
 
-    - role: config-local-virtio-win-repos
-      tags: ['config-local-virtio-win-repos']
+#    - role: config-local-virtio-win-repos
+#      tags: ['config-local-virtio-win-repos']
 
 # BROKEN - needs fixing
 #    - role: scripts
@@ -73,11 +73,11 @@
     - role: kickstart
       tags: ['kickstart']
 
-    - role: samba-server
-      tags: ['samba-server']
+#    - role: samba-server
+#      tags: ['samba-server']
 
-    - role: nfs-server
-      tags: ['nfs-server']
+#    - role: nfs-server
+#      tags: ['nfs-server']
 
     - role: rsync-server
       tags: ['rsync-server']
@@ -85,14 +85,14 @@
     - role: setup-epel
       tags: ['setup-epel']
 
-    - role: virt-server
-      tags: ['virt-server']
+#    - role: virt-server
+#      tags: ['virt-server']
 
-    - role: appletalk-server
-      tags: ['appletalk-server']
+#    - role: appletalk-server
+#      tags: ['appletalk-server']
 
-    - role: apcupsd
-      tags: ['apcupsd']
+#    - role: apcupsd
+#      tags: ['apcupsd']
 
 #    - role: openvpn-server
 #      tags: ['openvpn-server']
@@ -103,11 +103,11 @@
     - role: rsyslog-server
       tags: ['rsyslog-server']
 
-    - role: backup
-      tags: ['backup']
+#    - role: backup
+#      tags: ['backup']
 
-    - role: plex-server
-      tags: ['plex-server']
+#    - role: plex-server
+#      tags: ['plex-server']
 
     - role: http-repo
       tags: ['http-repo']

@@ -63,7 +63,7 @@ secondary_interface: eth1
 secondary_bridge: br1
 trusted_firewall_interface: eth0
 
-datastore_vg: raid10vg
+datastore_vg: datavg
 ################################################################################
 # Installation Source Parameters                                               #
 ################################################################################
@@ -75,11 +75,12 @@ install_url: "http://install.internal.tjon.net"
 install_vol_fstype: xfs
 
 archive_dir: /export/archive
-archive_vol: archivelv
-archive_vg: "{{datastore_vg}}"
-archive_dev: "/dev/{{archive_vg}}/{{archive_vol}}"
+#archive_vol: archivelv
+#archive_vg: "{{datastore_vg}}"
+#archive_dev: "/dev/{{archive_vg}}/{{archive_vol}}"
+archive_dev: //172.16.248.1/Archive
 archive_url: http://archive.internal.tjon.net
-archive_vol_fstype: xfs
+archive_vol_fstype: cifs
 
 linux_install_server_hostname: server0
 linux_install_server_url: "{{install_url}}/Linux"
