@@ -281,6 +281,7 @@ pxewindows_files:
 # REPO Configuration Parameters - FROM HERE TO EOF                             #
 ################################################################################
 repo_owner: chris
+repo_group: chris
 repo_owner_homedir: /home/chris
 start_hour_offset: 0
 

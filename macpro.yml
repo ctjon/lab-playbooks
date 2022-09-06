@@ -1,0 +1,11 @@
+---
+#
+# Configure macpro
+#
+
+- hosts: macpro
+  become: yes
+
+  roles:
+    - role: syncscripts
+      tags: ['syncscripts']

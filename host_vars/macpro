@@ -1,0 +1,97 @@
+#
+# host_vars file for macpro
+#
+
+################################################################################
+# REPO Configuration Parameters - FROM HERE TO EOF                             #
+################################################################################
+repo_owner: chris
+repo_group: staff
+repo_owner_homedir: /home/chris
+start_hour_offset: 0
+
+syncscripts_dir: "{{repo_owner_homedir}}/syncscripts/scripts"
+syncscripts_logs_dir: "{{repo_owner_homedir}}/syncscripts/logs"
+
+sync_scripts_list:
+  - sync-fedora.sh
+  - sync-rpmfusion.sh
+  - sync-centos.sh
+  - sync-epel.sh
+  - sync-openbsd.sh
+  - sync-openwrt.sh
+  - sync-virtio-win.sh
+
+sync_script_retries: true
+
+linux_distros:
+  - fedora
+  - rhel
+  - centos
+
+rhel_versions:
+  - 6
+  - 7
+  - 8
+  - 9
+
+# rhel versions that include upgrade.img
+rhel_upgrade_versions:
+  - 7
+
+rhel_architectures:
+  - x86_64
+
+centos_versions:
+  - 7
+
+centos_architectures:
+  - x86_64
+
+centos_stream_versions:
+  - 8-stream
+#  - 9-stream
+
+centos_stream_architectures:
+  - x86_64
+  - aarch64 <<<< breaks shit, need to create a hash table instead
+
+fedora_versions:
+  - 36
+  - 35
+
+# fedora versions that include upgrade.img
+fedora_upgrade_versions:
+  - 36
+  - 35
+
+fedora_prev_release_ones_digit: 4
+fedora_prev_release: 34
+
+fedora_architectures:
+  - x86_64
+  - aarch64
+
+fedora_secondary_architectures:
+  - ppc
+  - ppc64
+
+openbsd_versions:
+  - 7.1
+
+openbsd_prev_dot_release: 0
+
+#vmware_versions:
+#  - 6.7.0
+#
+#vmware_architectures:
+#  - x86_64
+#
+#windows_versions:
+#  - 10
+#
+#windows_architectures:
+#  - amd64
+#
+#centos8_gpg_key_url: /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+

@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{item}}"
     owner: "{{repo_owner}}"
-    group: "{{repo_owner}}"
+    group: "{{repo_group}}"
     mode: 0755
     state: directory
   with_items:
@@ -15,7 +15,7 @@
     src: "{{item}}.j2"
     dest: "{{syncscripts_dir}}/{{item}}"
     owner: "{{repo_owner}}"
-    group: "{{repo_owner}}"
+    group: "{{repo_group}}"
     mode: 0755
   with_items:
     - "{{sync_scripts_list}}"
