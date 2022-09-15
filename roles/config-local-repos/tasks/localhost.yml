@@ -44,8 +44,22 @@
     opts: defaults
     state: mounted
 
+- name: set permissions on {{install_dir}} after mount
+  ansible.builtin.file:
+    path: "{{install_dir}}"
+    state: directory
+    recurse: no
+    owner: "{{install_dir_owner}}"
+    group: "{{install_dir_group}}"
+    mode: 0755
+
 - name: Special Configuration of {{archive_dir}} on server0 only
   block:
+    - name: create /etc/hosts entry for macpro
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        line: "{{archive_server_ip}} {{archive_server_hostname}}"
+
     - name: Create {{archive_dir}} mount point
       ansible.builtin.file:
         path: "{{archive_dir}}"
@@ -60,7 +74,7 @@
         path: "{{ archive_dir }}"
         src: "{{archive_dev}}"
         fstype: "{{ archive_vol_fstype }}"
-        opts: defaults
+        opts: "{{archive_vol_opts}}"
         state: mounted
 
   when: ((ansible_hostname == "server0") or (ansible_hostname == "server1"))

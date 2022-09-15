@@ -73,14 +73,23 @@ install_vg: "{{datastore_vg}}"
 install_dev: "/dev/{{install_vg}}/{{install_vol}}"
 install_url: "http://install.internal.tjon.net"
 install_vol_fstype: xfs
+install_dir_owner: chris
+install_dir_group: chris
 
+archive_server_hostname: macpro
+archive_server_ip: 172.16.248.1
+archive_dev: "//{{archive_server_hostname}}/Archive"
 archive_dir: /export/archive
+archive_vol_fstype: cifs
+archive_vol_opts: uid=1000,gid=1000,nounix,sec=ntlmssp,credentials=/home/chris/.credentials
+
 #archive_vol: archivelv
 #archive_vg: "{{datastore_vg}}"
 #archive_dev: "/dev/{{archive_vg}}/{{archive_vol}}"
-archive_dev: //172.16.248.1/Archive
+#archive_vol_fstype: xfs
+#archive_vol_opts: defaults
+
 archive_url: http://archive.internal.tjon.net
-archive_vol_fstype: cifs
 
 linux_install_server_hostname: server0
 linux_install_server_url: "{{install_url}}/Linux"
