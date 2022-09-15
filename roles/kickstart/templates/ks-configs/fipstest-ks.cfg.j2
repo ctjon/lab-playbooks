@@ -12,7 +12,7 @@ keyboard --vckeymap=us --xlayouts='us'
 lang en_US.UTF-8
 
 # Network information
-network  --hostname=fipstest.{{primary_domain_name}} --bootproto=static --device=eth0 --ip={{primary_short_net}}.15 --nameserver={{primary_dns_servers|join(",")}} --netmask={{primary_netmask}} --noipv6 --activate
+network  --hostname=fipstest.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --ip={{trusted_network_short_net}}.15 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --noipv6 --activate
 network  --bootproto=dhcp --device=eth1 --onboot=on --noipv6 --activate
 repo --name="AppStream" --baseurl=http://install.internal.tjon.net/Linux/rhel/8/x86_64/AppStream
 # Use network installation

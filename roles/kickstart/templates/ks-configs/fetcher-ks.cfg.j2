@@ -11,7 +11,7 @@ lang en_US.UTF-8
 url --url="{{linux_install_server_url}}/fedora/releases/35/Server/x86_64/os/"
 
 # Network information
-network  --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.8 --nameserver={{primary_dns_servers|join(",")}} --netmask={{primary_netmask}} --hostname=fetcher.{{primary_domain_name}} --activate
+network  --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.8 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --hostname=fetcher.{{trusted_network_domain_name}} --activate
 
 # Root password
 rootpw --iscrypted $6$EWvRuPP7F8pRTFrm$749vEu5HoijsEhVWzw691ZquSDP.FmK2Qc56HGpgE03pHMgxIMlal4YPM/BrmwfA10q0nKUDxkC7D21H1q7xH/

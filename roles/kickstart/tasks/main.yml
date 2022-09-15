@@ -22,25 +22,16 @@
 
 - name: open trusted firewall zone for tftp
   ansible.builtin.firewalld:
-    zone: "{{trusted_firewall_zone}}"
+    zone: "{{trusted_network_firewall_zone}}"
     service: tftp
     immediate: yes
     state: enabled
     permanent: yes
-  when: trusted_firewall_zone is defined
-
-- name: open public firewall zone for tftp
-  ansible.builtin.firewalld:
-    zone: "{{public_firewall_zone}}"
-    service: tftp
-    immediate: yes
-    state: enabled
-    permanent: yes
-  when: offer_public_services == "true"
+  when: trusted_network_firewall_zone is defined
 
 - name: configure bootpc and pxe services in trusted firewall zone
   ansible.builtin.firewalld:
-    zone: "{{trusted_firewall_zone}}"
+    zone: "{{trusted_network_firewall_zone}}"
     port: "{{ item }}"
     permanent: yes
     immediate: yes
@@ -49,20 +40,7 @@
     - 68/tcp    # bootpc TCP
     - 68/udp    # bootpc UDP
     - 4011/udp  # pxe
-  when: trusted_firewall_zone is defined
-
-- name: configure bootpc and pxe services in public firewall zone
-  ansible.builtin.firewalld:
-    zone: "{{public_firewall_zone}}"
-    port: "{{ item }}"
-    permanent: yes
-    immediate: yes
-    state: enabled
-  with_items:
-    - 68/tcp    # bootpc TCP
-    - 68/udp    # bootpc UDP
-    - 4011/udp  # pxe
-  when: offer_public_services == "true"
+  when: trusted_network_firewall_zone is defined
 
 - name: synchronize /usr/share/syslinux content to {{tftpbootdir}}
   ansible.builtin.synchronize:
@@ -340,28 +318,28 @@
 ################################################################################
 # OpenWRT images Files copies                                                  #
 ################################################################################
-- name: setup OpenWRT PXE Environment
-  block:
-    - name: create OpenWRT {{tftpbootdir}}/images/openwrt directory
-      ansible.builtin.file:
-        path: "{{tftpbootdir}}/images/openwrt"
-        owner: root
-        group: root
-        mode: 0755
-        state: directory
-        recurse: yes
-      when: ansible_hostname == "server0"
-
-    - name: synchronize OpenWRT image content to {{tftpbootdir}}/images/openwrt
-      ansible.builtin.synchronize:
-        src: "{{archive_dir}}/OpenWRT/images/"
-        dest: "{{tftpbootdir}}/images/openwrt"
-        archive: yes
-        delete: yes
-        links: yes
-        times: yes
-      delegate_to: "{{ inventory_hostname }}"
-  when: ansible_hostname == "server0"
+#- name: setup OpenWRT PXE Environment
+#  block:
+#    - name: create OpenWRT {{tftpbootdir}}/images/openwrt directory
+#      ansible.builtin.file:
+#        path: "{{tftpbootdir}}/images/openwrt"
+#        owner: root
+#        group: root
+#        mode: 0755
+#        state: directory
+#        recurse: yes
+#      when: ansible_hostname == "server0"
+#
+#    - name: synchronize OpenWRT image content to {{tftpbootdir}}/images/openwrt
+#      ansible.builtin.synchronize:
+#        src: "{{archive_dir}}/OpenWRT/images/"
+#        dest: "{{tftpbootdir}}/images/openwrt"
+#        archive: yes
+#        delete: yes
+#        links: yes
+#        times: yes
+#      delegate_to: "{{ inventory_hostname }}"
+#  when: ansible_hostname == "server0"
 
 
 ################################################################################

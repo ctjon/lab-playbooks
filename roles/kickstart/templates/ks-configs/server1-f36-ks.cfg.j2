@@ -8,7 +8,7 @@ keyboard --vckeymap=us --xlayouts='us'
 lang en_US.UTF-8
 
 # Network information
-network  --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.9 --nameserver={{primary_dns_servers|join(",")}} --netmask={{primary_netmask}} --device=eth0 --noipv6 --activate
+network  --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.9 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --device=eth0 --noipv6 --activate
 network  --hostname=server1.internal.tjon.net
 
 # Use network installation

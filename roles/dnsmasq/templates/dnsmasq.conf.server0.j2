@@ -66,7 +66,7 @@ bogus-priv
 # Add other name servers here, with domain specs if they are for
 # non-public domains.
 #server=/localnet/192.168.0.1
-server={{primary_gateway}}
+server={{upstream_dns_server}}
 
 # Example of routing PTR queries to nameservers: this will send all
 # address->name queries for 192.168.3/24 to nameserver 10.1.2.3
@@ -75,7 +75,7 @@ server={{primary_gateway}}
 # Add local-only domains here, queries in these domains are answered
 # from /etc/hosts or DHCP only.
 #local=/localnet/
-local=/{{primary_domain_name}}/
+local=/{{trusted_network_domain_name}}/
 
 # Add domains which you want to force to an IP address here.
 # The example below send any host in double-click.net to a local
@@ -149,7 +149,7 @@ expand-hosts
 #    domain of all systems configured by DHCP
 # 3) Provides the domain part for "expand-hosts"
 #domain=thekelleys.org.uk
-domain={{primary_domain_name}}
+domain={{trusted_network_domain_name}}
 
 # Set a different domain for a particular subnet
 #domain=wireless.thekelleys.org.uk,192.168.2.0/24

@@ -16,7 +16,7 @@ keyboard --vckeymap=us --xlayouts='us'
 lang en_US.UTF-8
 
 # Network information
-network  --hostname=kvmhost.{{primary_domain_name}} --bootproto=static --device=eth0 --gateway={{primary_gateway}} --ip={{primary_short_net}}.8 --nameserver={{primary_dns_servers|join(",")}} --netmask={{primary_netmask}} --activate
+network  --hostname=kvmhost.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.8 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
 
 # Root password
 rootpw --iscrypted $6$Mpqrkg2HFvlND9bA$MWkZ03ZuyJ5m97r03QPRMVgMtPCJBj7bHwpB/s07DHAeEjnd8LbVSRTkHPv3m7FFzYWXSFeY3sjFv3zA9A6cx0
@@ -46,7 +46,7 @@ part pv.13401 --fstype="lvmpv" --ondisk=nvme0n1 --size=1 --grow
 volgroup rootvg --pesize=4096 pv.13401 
 logvol /opt --fstype="ext4" --size=32 --label="opt" --name=optlv --vgname=rootvg
 logvol / --fstype="ext4" --size=1024 --label="root" --name=rootlv --vgname=rootvg
-logvol /var/lib/libvirt/images --fstype="ext4" --size=1048576 --label="images" --name={{vm_storage_lv}} --vgname=rootvg
+logvol /var/lib/libvirt/images --fstype="ext4" --size=1048576 --label="images" --name=mageslv --vgname=rootvg
 logvol /tmp --fstype="ext4" --size=10240 --label="tmp" --name=tmplv --vgname=rootvg
 logvol /var --fstype="ext4" --size=2048 --label="var" --name=varlv --vgname=rootvg
 logvol /home --fstype="ext4" --size=512 --label="home" --name=homelv --vgname=rootvg

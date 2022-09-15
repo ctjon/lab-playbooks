@@ -5,12 +5,6 @@
     state: latest
   notify: restart dnsmasq
 
-#- name: start and enable dnsmasq
-#  ansible.builtin.service:
-#    name: dnsmasq
-#    state: started
-#    enabled: true
-
 - name: install dnsmasq.conf file
   ansible.builtin.template:
     src: dnsmasq.conf.{{ansible_hostname}}.j2
@@ -55,9 +49,9 @@
       notify: restart dnsmasq
   when: dhcp_enabled == true
 
-- name: configure trusted firewall zone for DHCP # Need this for PXE
+- name: configure {{trusted_network_firewall_zone}} firewall zone for DHCP # Need this for PXE
   ansible.builtin.firewalld:
-    zone: "{{trusted_firewall_zone}}"
+    zone: "{{trusted_network_firewall_zone}}"
     service: dhcp
     immediate: yes
     state: enabled
@@ -65,19 +59,7 @@
   notify: restart dnsmasq
   when: 
     - dhcp_enabled == true
-    - trusted_firewall_zone is defined
-
-- name: configure public firewall zone for DHCP # Need this for PXE
-  ansible.builtin.firewalld:
-    zone: "{{public_firewall_zone}}"
-    service: dhcp
-    immediate: yes
-    state: enabled
-    permanent: yes
-  notify: restart dnsmasq
-  when: 
-    - dhcp_enabled == true
-    - offer_public_services == true
+    - trusted_network_firewall_zone is defined
 
 - name: install /etc/hosts file
   ansible.builtin.copy:
@@ -98,16 +80,16 @@
 
 - name: configure firewall for DNS
   ansible.builtin.firewalld:
-    zone: "{{trusted_firewall_zone}}"
+    zone: "{{trusted_network_firewall_zone}}"
     service: dns
     immediate: yes
     state: enabled
     permanent: yes
-  when: trusted_firewall_zone is defined
+  when: trusted_network_firewall_zone is defined
 
 - name: configure firewall for PXE
   ansible.builtin.firewalld:
-    zone: "{{trusted_firewall_zone}}"
+    zone: "{{trusted_network_firewall_zone}}"
     port: "{{item}}"
     immediate: yes
     state: enabled
@@ -116,6 +98,6 @@
     - "69/tcp"
     - "69/udp"
     - "4011/udp"
-  when: trusted_firewall_zone is defined
+  when: trusted_network_firewall_zone is defined
   notify: restart dnsmasq
 ...

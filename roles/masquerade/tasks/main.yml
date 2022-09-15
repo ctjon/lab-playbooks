@@ -1,80 +1,19 @@
 ---
-#- name: setup ifcfg-{{public_firewall_interface}}
-#  ansible.builtin.template:
-#    src: "ifcfg-public.j2"
-#    dest: /etc/sysconfig/network-scripts/ifcfg-{{public_firewall_interface}}
-#    owner: root
-#    group: root
-#    mode: 0644
-#  notify: restart Network
-
-#- name: setup ifcfg-{{trusted_firewall_interface}}
-#  ansible.builtin.template:
-#    src: "ifcfg-trusted.j2"
-#    dest: "/etc/sysconfig/network-scripts/ifcfg-{{trusted_firewall_interface}}"
-#    owner: root
-#    group: root
-#    mode: 0644
-#  notify: restart Network
-
-- name: setup {{primary_interface}}
-  community.general.nmcli:
-    conn_name: "{{primary_interface}}"
-    ifname: "{{primary_interface}}"
-    type: bridge-slave
-    master: "{{primary_bridge}}"
-    mtu: "{{mtu_size}}"
-    method6: disabled
-    state: present
-  notify: restart Network
-
-- name: setup {{primary_bridge}}
-  community.general.nmcli:
-    conn_name: "{{primary_bridge}}"
-    ifname: "{{primary_bridge}}"
-    type: bridge
-    mtu: "{{mtu_size}}"
-    method4: manual
-    method6: disabled
-    ip4: "{{primary_ipaddr}}/{{primary_prefix}}"
-    gw4: "{{primary_gateway}}"
-    dns4: "{{primary_dns_servers}}"
-    zone: "{{public_firewall_zone}}"
-    autoconnect: yes
-    state: present
-  notify: restart Network
-
-- name: setup {{secondary_interface}}
-  community.general.nmcli:
-    conn_name: "{{secondary_interface}}"
-    ifname: "{{secondary_interface}}"
-    type: ethernet
-    mtu: "{{mtu_size}}"
-    method4: manual
-    method6: disabled
-    ip4: "{{secondary_ipaddr}}/{{secondary_prefix}}"
-    gw4: "{{secondary_gateway}}"
-    dns4: "{{secondary_dns_servers}}"
-    zone: "{{trusted_firewall_zone}}"
-    autoconnect: yes
-    state: present
-  when: trusted_firewall_zone is defined
-  notify: restart Network
-
-- name: add {{trusted_firewall_interface}} to {{trusted_firewall_zone}}
+- name: add {{trusted_network_interface}} to {{trusted_network_firewall_zone}} zone
   ansible.builtin.firewalld:
-    zone: "{{trusted_firewall_zone}}"
-    interface: "{{trusted_firewall_interface}}"
+    zone: "{{trusted_network_firewall_zone}}"
+    interface: "{{trusted_network_interface}}"
     permanent: yes
     state: enabled
-  when: trusted_firewall_zone is defined
+    immediate: yes
 
-- name: add {{public_firewall_interface}} to {{public_firewall_zone}}
+- name: add {{public_network_interface}} to {{public_network_firewall_zone}} zone
   ansible.builtin.firewalld:
-    zone: "{{public_firewall_zone}}"
-    interface: "{{public_firewall_interface}}"
+    zone: "{{public_network_firewall_zone}}"
+    interface: "{{public_network_interface}}"
     permanent: yes
     state: enabled
+    immediate: yes
 
 - name: Set ip forwarding and reload if necessary
   ansible.builtin.sysctl:
@@ -89,42 +28,6 @@
     masquerade: "yes"
     state: enabled
     permanent: yes
-    zone: "{{ public_firewall_zone }}"
-
-- name: block firewall ports for unwanted services on {{public_firewall_zone}} zone
-  ansible.builtin.firewalld:
-    service: "{{item}}"
-    state: disabled
-    permanent: yes
-    zone: "{{ public_firewall_zone }}"
-  with_items:
-    - cockpit
-    - dhcpv6-client
-  notify: restart firewalld
-
-- name: enable firewall for sshd on {{public_firewall_zone}} zone
-  ansible.builtin.firewalld:
-    service: ssh
-    state: enabled
-    permanent: yes
-    zone: "{{ public_firewall_zone }}"
-  when: enable_public_sshd|bool 
-  notify: restart firewalld
-
-- name: disable firewall for sshd on {{public_firewall_zone}} zone
-  ansible.builtin.firewalld:
-    service: ssh
-    state: disabled
-    permanent: yes
-    zone: "{{ public_firewall_zone }}"
-  when: not enable_public_sshd|bool
-  notify: restart firewalld
-
-- name: open firewall for sshd on {{trusted_firewall_zone}} zone
-  ansible.builtin.firewalld:
-    service: ssh
-    state: enabled
-    permanent: yes
-    zone: "{{ trusted_firewall_zone }}"
-  when: trusted_firewall_zone is defined
+    immediate: yes
+    zone: "{{ public_network_firewall_zone }}"
 

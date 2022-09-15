@@ -7,21 +7,12 @@
 
 - name: configure trusted firewall zone for TFTP services
   ansible.builtin.firewalld:
-    zone: "{{trusted_firewall_zone}}"
+    zone: "{{trusted_network_firewall_zone}}"
     service: tftp
     immediate: yes
     state: enabled
     permanent: yes
-  when: trusted_firewall_zone is defined
-
-- name: configure public firewall zone for TFTP services
-  ansible.builtin.firewalld:
-    zone: "{{public_firewall_zone}}"
-    service: tftp
-    immediate: yes
-    state: enabled
-    permanent: yes
-  when: offer_public_services == "true"
+  when: trusted_network_firewall_zone is defined
 
 - name: start and enable tftp service
   ansible.builtin.service:
