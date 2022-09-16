@@ -7,6 +7,15 @@
     state: enabled
     immediate: yes
 
+- name: Configure {{trusted_network_interface}} to be in {{trusted_network_firewall_zone}}
+  community.general.nmcli:
+    type: ethernet
+    conn_name: "{{trusted_network_interface}}"
+    ip4: "{{trusted_network_ipaddr}}/{{trusted_network_prefix}}"
+    zone: "{{trusted_network_firewall_zone}}"
+    state: present
+#    ifname: "{{trusted_network_interface}}"
+
 - name: add {{public_network_interface}} to {{public_network_firewall_zone}} zone
   ansible.builtin.firewalld:
     zone: "{{public_network_firewall_zone}}"
@@ -14,6 +23,17 @@
     permanent: yes
     state: enabled
     immediate: yes
+
+- name: Configure {{public_network_interface}} to be in {{public_network_firewall_zone}}
+  community.general.nmcli:
+    type: ethernet
+    conn_name: "{{public_network_interface}}"
+    zone: "{{public_network_firewall_zone}}"
+    state: present
+#    ifname: "{{public_network_interface}}"
+
+- name: Set {{trusted_network_firewall_zone}} as the default zone
+  command: firewall-cmd --set-default-zone={{trusted_network_firewall_zone}}
 
 - name: Set ip forwarding and reload if necessary
   ansible.builtin.sysctl:
