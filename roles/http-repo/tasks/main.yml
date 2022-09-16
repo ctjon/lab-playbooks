@@ -49,14 +49,14 @@
     state: started
     enabled: yes
 
-- name: open trusted firewall zone for http
+- name: open {{trusted_network_firewall_zone}} firewall zone for http
   ansible.builtin.firewalld:
-    zone: "{{trusted_firewall_zone}}"
+    zone: "{{trusted_network_firewall_zone}}"
     service: http
     immediate: yes
     state: enabled
     permanent: yes
-  when: trusted_firewall_zone is defined
+  when: trusted_network_firewall_zone is defined
 
 - name: set permissions on vhost directories
   ansible.builtin.file:
@@ -88,6 +88,12 @@
     minute: "30"
     hour: "5"
     job: "/usr/sbin/restorecon -RFv /export > /{{ansible_user_id}}/logs/restorecon.log 2>&1"
+
+- name: Enable ablity to service content from CIFS shares
+  ansible.posix.seboolean:
+    name: httpd_use_cifs
+    state: yes
+    persistent: yes
 
 - name: Apply new SELinux file context to vhosts directories
   ansible.builtin.command: restorecon -FR {{item.document_root}}
