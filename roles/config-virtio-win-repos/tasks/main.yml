@@ -6,3 +6,9 @@
     mode: '0644'
     owner: root
     group: root
+
+- name: install virtio-win
+  ansible.builtin.package:
+    name: virtio-win
+    state: latest
+

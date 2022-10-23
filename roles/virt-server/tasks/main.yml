@@ -65,7 +65,7 @@
 - name: start and enable libvirtd service
   ansible.builtin.service:
     name: "{{item}}"
-    state: reloaded
+    state: started
     enabled: yes
   with_items:
     - libvirtd
