@@ -1,5 +1,7 @@
 #
-# run the virtio-win-local-repo role prior to this one!
+# make sure you have virtio-win repo installed by using either of the following:
+# role: config-local-virtio-win-repos
+# role: config-virtio-win-repos
 # 
 ---
 - name: validate cpu architecture supports virtualization
@@ -48,23 +50,26 @@
 #    src: "/dev/{{vm_storage_vg}}/{{vm_storage_lv}}"
 #    fstype: "{{ vm_storage_fs_type }}"
 #    opts: defaults
-#    state: mounted
+##    state: mounted
 
 - name: Install RHEL/CentOS Packages
   ansible.builtin.yum: 
     name: qemu-kvm, virt-manager, virt-viewer, virt-install, libvirt, libvirt-client, virt-what, libguestfs, python3-lxml
     state: latest
 
-#- name: virtio-win
-#  ansible.builtin.yum: 
-#    name: virtio-win
-#    state: latest
+- name: virtio-win
+  ansible.builtin.yum: 
+    name: virtio-win
+    state: latest
 
 - name: start and enable libvirtd service
   ansible.builtin.service:
-    name: libvirtd
-    state: restarted
+    name: "{{item}}"
+    state: reloaded
     enabled: yes
+  with_items:
+    - libvirtd
+    - virtnetworkd
 
 - name: validate kvm modules loaded properly
   ansible.builtin.shell: lsmod |grep kvm
