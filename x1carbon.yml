@@ -1,260 +1,134 @@
 ---
 #
-# Configure x1carbon
+# Configure x1carbon workstation
 #
 
+# CentOS 8 Prerequisites: 
+#	python3
+#	policycoreutils-python3
+#	rsync
+
 - hosts: x1carbon
-  connection: local
   become: yes
 
   roles:
-    - role: setup-azure
-      tags: ['setup-azure']
+    - role: config-rpmfusion-repos
+      tags: ['config-rpmfusion-repos']
 
-    - role: setup-vscode
-      tags: ['setup-vscode']
+    - role: disable-ipv6
+      tags: ['disable-ipv6']
 
-    - role: apply-updates
-      tags: ['apply-updates']
-
-    - role: time-client
-      tags: ['time-client']
+    - role: selinux
+      tags: ['selinux']
 
     - role: ssh-config
       tags: ['ssh-config']
 
-    - role: shell-env
+    - role: shell-env #including both ssh-keys on server and p51s ??
       tags: ['shell-env']
 
     - role: set-default-editor
       tags: ['set-default-editor']
 
-    - role: virt-server
-      tags: ['virt-server']
+    - role: apply-updates
+      tags: ['apply-updates']
+
+    - role: config-virtio-win-repos
+      tags: ['config-virtio-win-repos']
+
+    - role: setup-epel
+      tags: ['setup-epel']
 
     - role: fail2ban
       tags: ['fail2ban']
 
-#    - role: backup
-#      tags: ['backup']
-
-    - role: selinux
-      tags: ['selinux']
-
-    - role: yubikey-customize
-      tags: ['yubikey-customize']
+    - role: virt-server
+      tags: ['virt-server']
+      become: true
 
 #    - role: reboot-if-required
 #      tags: ['reboot-if-required']
 
-  tasks:
-    - name: set hostname
-      hostname:
-        name: "{{ansible_hostname}}.{{domain_name}}"
 
-    - name: Configure Wayland
-      copy:
-        src: files/gdm.custom.conf
-        dest: /etc/gdm/custom.conf
+  tasks:
+    - name: configure system to keep only 2 most recent kernels
+      ansible.builtin.replace:
+        path: /etc/dnf/dnf.conf
+        regexp: '^installonly_limit=.+\n'
+        replace: 'installonly_limit="{{installed_kernel_limit}}"\n'
         owner: root
         group: root
-        mode: 0644
-    
-    - name: install bluejeans
-      package:
-        name: http://archive.internal.tjon.net/Linux/RPMS/BlueJeans_2.5.0.50.rpm
-        state: present
+        mode: '0644'
 
-    - name: install adobe flashplayer repo
-      package:
-        name: http://archive.internal.tjon.net/Linux/RPMS/adobe-release-x86_64-1.0-1.noarch.rpm
-        state: present
-
-    - name: install flashplugin
-      package:
-        name: flash-plugin
+    - name: install other packages 
+      ansible.builtin.package:
+        name: nmap, lftp, ftp, openscap, openscap-scanner, openscap-utils, openscap-python3, python3-botocore, python3-boto3, python3-pyvmomi, ansible, screen, virt-install, virt-manager, virt-viewer, flatpak, remmina
         state: latest
+      tags:
+        - localpkgs
 
-    - name: install zoom
-      package:
-        name: http://archive.internal.tjon.net/Linux/RPMS/zoom_x86_64.rpm
-        state: present
-
-    - name: install awscli
-      package:
-        name: awscli, python3-boto, python3-boto3, python3-botocore 
-        state: latest
-
-    - name: import atom gpg key
-      rpm_key:
-        state: present
-        key: https://packagecloud.io/AtomEditor/atom/gpgkey
-
-    - name: setup atom repo
-      yum_repository:
-        name: Atom
-        description: "Atom Editor"
-        file: /etc/yum.repos.d/atom
-        baseurl: https://packagecloud.io/AtomEditor/atom/el/7/$basearch
-        enabled: yes
-        metadata_expire: 1d
-        repo_gpgcheck: no
-        #type: rpm
-        gpgcheck: no
-        gpgkey: https://packagecloud.io/AtomEditor/atom/gpgkey
-        skip_if_unavailable: "1"
-        keepcache: "0"
-
-    - name: import packagecloud.io gpgkey
-      rpm_key:
-        state: present
-        key: https://packagecloud.io/AtomEditor/atom/gpgkey
-
-    - name: install atom
-      package:
-        name: atom
-        state: latest
-        disable_gpg_check: yes
-
-#    - name: import rhel7-csb gpg key
-#      rpm_key:
-#        state: present
-#        key: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-helpdesk-new
-
-#    - name: setup rhel7-csb repo
-#      yum_repository:
-#        name: rhel7-csb
-#        description: "RHEL7 CSB Packages"
-#        file: /etc/yum.repos.d/rhel7-csb
-#        baseurl: http://install.internal.tjon.net/Linux/rhel7-csb
-##        baseurl: http://hdn.corp.redhat.com/rhel7-csb-stage
-#        enabled: no
-#        metadata_expire: 1d
-#        repo_gpgcheck: 0
-#        #type: rpm
-#        gpgcheck: yes
-#        gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-helpdesk-new
-#        skip_if_unavailable: true
-#        keepcache: false
-
-#    - name: install RedHat VPN
-#      yum:
-#        name: http://archive.internal.tjon.net/Linux/RedHat/RedHat-Internal/redhat-internal-NetworkManager-openvpn-profiles-0.1-30.el7.csb.noarch.rpm, http://archive.internal.tjon.net/Linux/RedHat/RedHat-Internal/redhat-internal-cert-install-0.1-7.el7.csb.noarch.rpm
+#    - name: install virtio-win
+#      ansible.builtin.package:
+#        name: virtio-win
 #        state: latest
-##        enablerepo: rhel7-csb
-    
-    - name: install slack
-      package:
-        name: http://archive.internal.tjon.net/Linux/RPMS/slack-4.4.3-0.1.fc21.x86_64.rpm
-        state: present
-    
-    - name: check if /usr/lib/slack/libnode.so.old exists
-      stat:
-        path: /usr/lib/slack/libnode.so.old
-      register: libnode
+#      tags:
+#        - localpkgs
 
-#    - name: setup slack
-#      block:
-#    
-#        - name: copy file fix broken slack libnode.so on fedora
-#          copy: 
-#            remote_src: true
-#            src: /usr/lib/slack/libnode.so
-#            dest: /usr/lib/slack/libnode.so.old
-#            owner: root
-#            group: root
-#            mode: 0755
-#
-#        - name: copy file fix broken slack libnode.so on fedora
-#          file: 
-#            path: /usr/lib/slack/libnode.so
-#            state: absent
-#
-#        - name: make link to fix broken slack libnode.so on fedora
-#          file: 
-#            src: /usr/share/atom/libnode.so
-#            dest: /usr/lib/slack/libnode.so
-#            owner: root
-#            group: root
-#            mode: 0755
-#            state: link
-#      when: libnode.stat.exists == false
-    
-    - name: configure chris' group memberships
-      user:
-        name: chris
-        groups: 
-          - wheel
-          - disk
+#    - name: vlc
+#      ansible.builtin.package:
+#        name: vlc
+#        state: latest
+#      tags:
+#        - localpkgs
 
-    - name: install rpmfusion packages
-      package: 
-        name: "{{item}}"
+    - name: install other fedora packages 
+      ansible.builtin.package:
+        name: openscap-containers, openscap-daemon, python3-boto, openwsman-winrs.x86_64, vnstat, nmon
         state: latest
-      with_items:
-        - https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ansible_distribution_major_version}}.noarch.rpm
-        - https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ansible_distribution_major_version}}.noarch.rpm
+      when: 
+        - ansible_distribution == "Fedora"
+      tags:
+        - localpkgs
 
-    - name: install fedora video packages
-      package:
-        name: gstreamer-plugins-base, gstreamer1-plugins-base, gstreamer-plugins-ugly, gstreamer1-plugins-ugly, gstreamer1-plugins-bad-freeworld, ffmpeg, gstreamer-ffmpeg, vlc, x264
-
-    - name: install packages specific to ansible
-      package: 
-        name: python3-winrm, python3-pyvmomi, python3-requests.noarch, python3-google-auth        #  python3-requests-credssp.noarch
+    - name: install gstreamer packages 
+      ansible.builtin.package:
+        name: gstreamer1-devel,gstreamer1-plugins-base-tools,gstreamer1-doc,gstreamer1-plugins-base-devel,gstreamer1-plugins-good,gstreamer1-plugins-good-extras,gstreamer1-plugins-ugly,gstreamer1-plugins-bad-free,gstreamer1-plugins-bad-free-devel,gstreamer1-plugins-bad-free-extras,gstreamer1-plugin-openh264.x86_64
         state: latest
+      tags:
+        - localpkgs
 
-    - name: install packages specific to workstation
-      package: 
-        name: mediawriter, icedtea-web, elfutils-devel, grive2, kernel-devel, remmina, remmina-plugins-*, remmina-gnome-session, gns3-gui, gns3-server-doc, thunderbird, thunderbird-wayland, gscan2pdf, gimp, pdfmod, NetworkManager-openvpn-gnome, nmap, nmap-ncat, python3-nmap, gcc, gdb, lftp, ftp, iptraf-ng, nmon, iperf, vnstat, sysstat, openscap, openscap-scanner, openscap-utils, openscap-python3, openscap-containers, wireshark-cli, wireshark, libvirt-wireshark, virt-manager, torbrowser-launcher, openwsman-winrs.x86_64
-        state: latest
-
-    - name: install google-chrome repo
-      yum_repository:
-        name: google-chrome
-        description: "Google Chrome Repo"
-        file: /etc/yum.repos.d/google-chrome
-        baseurl: http://dl.google.com/linux/chrome/rpm/stable/x86_64
+    - name: start and enable vnstat
+      ansible.builtin.service:
+        name: vnstat
+        state: started
         enabled: yes
-        metadata_expire: 1d
-        repo_gpgcheck: 0
-        #type: rpm
-        gpgcheck: yes
-        gpgkey: https://dl.google.com/linux/linux_signing_key.pub
-        skip_if_unavailable: true
-        keepcache: "0"
-
-    - name: install google-chrome & prerequisites
-      package:
-        name: libappindicator-gtk3, liberation-fonts, google-chrome-stable
-        state: latest
-
-#    - name: install Sun Java (for TOS) #BUG with Java & Coreutils
-#      package:
-#        name: /export/archive/Linux/Java/jre-8u251-linux-x64.rpm
-#        state: present
-    
-    - name: install Sun Java (for TOS)
-      command: rpm -ivh http://archive.internal.tjon.net/Linux/Java/jre-8u251-linux-x64.rpm
-      become: true
-      ignore_errors: true   # set this because yum cannot install this due to deps
-      args: 
-        warn: false
-
-    - name: set Sun Java as default (for TOS)
-      alternatives:
-        name: java
-        path: /usr/java/jre1.8.0_251-amd64/bin/java
-
-    - name: install/update pywinrm python module for skylight
-      command: pip install pywinrm --upgrade --user
+        
+    - name: Add the flathub flatpak repository for current user
+      community.general.flatpak_remote:
+        name: flathub
+        state: present
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        method: user
       become: no
 
-    - name: install/update boto python module for skylight
-      command: pip install boto --upgrade --user
+    - name: Install packages from flathub for current user
+      community.general.flatpak:
+        name: "{{item}}"
+        state: present
+        method: user
       become: no
+      with_items:
+        - https://dl.flathub.org/repo/appstream/org.signal.Signal.flatpakref
+        - https://dl.flathub.org/repo/appstream/com.tdameritrade.ThinkOrSwim.flatpakref
+        - https://dl.flathub.org/repo/appstream/com.bluejeans.BlueJeans.flatpakref
+        - https://dl.flathub.org/repo/appstream/org.telegram.desktop.flatpakref
+        - https://dl.flathub.org/repo/appstream/com.microsoft.Teams.flatpakref
+        - https://dl.flathub.org/repo/appstream/us.zoom.Zoom.flatpakref
+#        - https://dl.flathub.org/repo/appstream/com.google.chrome-table.flatpakref
 
-    - name: install/update boto3 python module for skylight
-      command: pip install boto3 --upgrade --user
-      become: no
-
+    - name: disable Wayland
+      ansible.builtin.lineinfile:
+        path: /etc/gdm/custom.conf
+        regexp: '^#WaylandEnable='
+        line: WaylandEnable=false
+...

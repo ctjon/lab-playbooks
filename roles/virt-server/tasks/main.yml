@@ -52,8 +52,13 @@
 
 - name: Install RHEL/CentOS Packages
   ansible.builtin.yum: 
-    name: qemu-kvm, virt-manager, virt-viewer, virt-install, libvirt, libvirt-client, virt-what, libguestfs, virtio-win, python3-lxml
+    name: qemu-kvm, virt-manager, virt-viewer, virt-install, libvirt, libvirt-client, virt-what, libguestfs, python3-lxml
     state: latest
+
+#- name: virtio-win
+#  ansible.builtin.yum: 
+#    name: virtio-win
+#    state: latest
 
 - name: start and enable libvirtd service
   ansible.builtin.service:
@@ -117,10 +122,5 @@
 
 - name: restore SELinux Context on /etc/yum.repos.d
   ansible.builtin.command: restorecon -RFv /etc/yum.repos.d
-
-- name: install virtio-win rpms
-  ansible.builtin.package:
-    name: virtio-win
-    state: latest
 
 ...
