@@ -115,14 +115,14 @@
         update_cache: yes
       with_items:
         - diffutils
-        - libblkid
+        - lsblk
         - block-mount
         - gdisk
         - e2fsprogs
         - kmod-fs-ext4
       tags: other-packages
+#        - libblkid
 
-      #community.general.opkg:
     - name: install packages for adguardhome
       community.general.opkg:
         name: "{{ item }}"
@@ -204,7 +204,7 @@
         state: restarted
         enabled: yes
 
-    - name: restart adguardhom
+    - name: restart adguardhome
       ansible.builtin.service:
         name: adguardhom
         state: restarted
