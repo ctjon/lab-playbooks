@@ -78,7 +78,7 @@ install_server_ip: 172.16.248.1
 install_dev: "{{install_dir_owner}}@{{install_server_hostname}}:/Volumes/Install"
 install_dir: /export/install
 install_vol_fstype: fuse.sshfs
-install_vol_opts: _netdev,user,idmap=user,follow_symlinks,IdentityFile=/root/.ssh/id_rsa,allow_other,default_permissions,uid=1000,gid=1000
+install_vol_opts: _netdev,user,idmap=user,IdentityFile=/root/.ssh/id_rsa,allow_other,default_permissions,uid=1000,gid=1000
 install_dir_owner: chris
 install_dir_group: chris
 
