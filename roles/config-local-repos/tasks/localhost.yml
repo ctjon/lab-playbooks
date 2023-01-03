@@ -41,7 +41,7 @@
     path: "{{ install_dir }}"
     src: "{{install_dev}}"
     fstype: "{{ install_vol_fstype }}"
-    opts: defaults
+    opts: "{{ install_vol_opts }}"
     state: mounted
 
 - name: set permissions on {{install_dir}} after mount
