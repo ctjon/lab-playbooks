@@ -321,9 +321,9 @@ fedora_secondary_architectures:
   - ppc64
 
 openbsd_versions:
-  - 7.1
+  - 7.2
 
-openbsd_prev_dot_release: 0
+openbsd_prev_dot_release: 1
 
 vmware_versions:
   - 6.7.0
