@@ -22,8 +22,8 @@
     - role: limit-kernels
       tags: ['limit-kernels']
 
-    - role: masquerade
-      tags: ['masquerade']
+#    - role: masquerade
+#      tags: ['masquerade']
 
     - role: dnsmasq
       tags: ['dnsmasq']

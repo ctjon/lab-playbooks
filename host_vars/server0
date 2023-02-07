@@ -42,7 +42,8 @@ trusted_network_search_domains:
  - internal.tjon.net
 trusted_network_dns_servers: 
  - 172.16.248.1
-trusted_network_firewall_zone: internal
+#trusted_network_firewall_zone: internal
+trusted_network_firewall_zone: FedoraServer
 
 #use_dhcp: 'false'
 
@@ -64,36 +65,38 @@ public_network_firewall_zone: external
 ################################################################################
 # Installation Source Parameters                                               #
 ################################################################################
-oinstall_dir: /export/oinstall
-oinstall_vol: installlv
-oinstall_vg: "{{datastore_vg}}"
-oinstall_dev: "/dev/{{install_vg}}/{{install_vol}}"
-oinstall_url: "http://oinstall.internal.tjon.net"
-oinstall_vol_fstype: xfs
-oinstall_dir_owner: chris
-oinstall_dir_group: chris
-
-install_server_hostname: macpro
-install_server_ip: 172.16.248.1
-install_dev: "{{install_dir_owner}}@{{install_server_hostname}}:/Volumes/Install"
 install_dir: /export/install
-install_vol_fstype: fuse.sshfs
-install_vol_opts: _netdev,user,idmap=user,IdentityFile=/root/.ssh/id_rsa,allow_other,default_permissions,uid=1000,gid=1000
+install_vol: installlv
+install_vg: "{{datastore_vg}}"
+install_dev: "/dev/{{install_vg}}/{{install_vol}}"
+install_vol_opts: defaults
+install_url: "http://install.internal.tjon.net"
+install_vol_fstype: xfs
 install_dir_owner: chris
 install_dir_group: chris
 
-archive_server_hostname: macpro
-archive_server_ip: 172.16.248.1
-archive_dev: "//{{archive_server_hostname}}/Archive"
-archive_dir: /export/archive
-archive_vol_fstype: cifs
-archive_vol_opts: uid=1000,gid=1000,nounix,sec=ntlmssp,credentials=/home/chris/.credentials
+#install_server_hostname: macpro
+#install_server_ip: 172.16.248.1
+#install_dev: "{{install_dir_owner}}@{{install_server_hostname}}:/Volumes/Install"
+#install_dir: /export/install
+#install_vol_fstype: fuse.sshfs
+#install_vol_opts: _netdev,user,idmap=user,IdentityFile=/root/.ssh/id_rsa,allow_other,default_permissions,uid=1000,gid=1000
+#install_dir_owner: chris
+#install_dir_group: chris
 
-#archive_vol: archivelv
-#archive_vg: "{{datastore_vg}}"
-#archive_dev: "/dev/{{archive_vg}}/{{archive_vol}}"
-#archive_vol_fstype: xfs
-#archive_vol_opts: defaults
+#archive_server_hostname: macpro
+#archive_server_ip: 172.16.248.1
+#archive_dev: "//{{archive_server_hostname}}/Archive"
+#archive_dir: /export/archive
+#archive_vol_fstype: cifs
+#archive_vol_opts: uid=1000,gid=1000,nounix,sec=ntlmssp,credentials=/home/chris/.credentials
+
+archive_dir: /export/archive
+archive_vol: archivelv
+archive_vg: rootvg
+archive_dev: "/dev/{{archive_vg}}/{{archive_vol}}"
+archive_vol_fstype: xfs
+archive_vol_opts: defaults
 
 archive_url: http://archive.internal.tjon.net
 
@@ -163,8 +166,8 @@ ks_configs_list:
   - x1carbon-rhel8-preserve-ks.cfg
   - test-centos7-ks.cfg
   - test-centos8-ks.cfg
-  - test-fedora35-ks.cfg
   - test-fedora36-ks.cfg
+  - test-fedora37-ks.cfg
   - test-rhel6-ks.cfg
   - test-rhel7-ks.cfg
   - test-rhel8-ks.cfg
@@ -177,8 +180,8 @@ ks_configs_list:
   - satclient1-ks.cfg
   - satclient2-ks.cfg
   - satclient3-ks.cfg
-  - server1-f35-ks.cfg
   - server1-f36-ks.cfg
+  - server1-f37-ks.cfg
   - synchost6-ks.cfg
   - synchost7-ks.cfg
   - synchost8-ks.cfg
@@ -252,7 +255,7 @@ scripts_list:
   - kvms/define-centos7-test.sh
   - kvms/define-centos8-test.sh
   - kvms/define-fedora36-test.sh
-  - kvms/define-fedora35-test.sh
+  - kvms/define-fedora37-test.sh
   - kvms/delete-testvms.sh
   - kvms/define-satellite6.sh
   - kvms/define-satclients.sh
@@ -299,15 +302,15 @@ centos_stream_architectures:
 
 fedora_versions:
   - 36
-  - 35
+  - 37
 
 # fedora versions that include upgrade.img
 fedora_upgrade_versions:
   - 36
-  - 35
+  - 37
 
-fedora_prev_release_ones_digit: 4
-fedora_prev_release: 34
+fedora_prev_release_ones_digit: 5
+fedora_prev_release: 35
 
 fedora_architectures:
   - x86_64

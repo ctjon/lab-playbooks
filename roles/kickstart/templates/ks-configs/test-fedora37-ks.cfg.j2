@@ -2,7 +2,7 @@
 # System authorization information
 auth --enableshadow --passalgo=sha512
 # Use network installation
-url --url="{{linux_install_server_url}}/fedora/releases/35/Server/x86_64/os/"
+url --url="{{linux_install_server_url}}/fedora/releases/37/Server/x86_64/os/"
 # Use graphical install
 graphical
 # Run the Setup Agent on first boot
@@ -16,7 +16,7 @@ keyboard --vckeymap=us --xlayouts='us'
 lang en_US.UTF-8
 
 # Network information
-network  --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.39 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --hostname=test-fedora35.{{trusted_network_domain_name}} --activate
+network  --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.39 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --hostname=test-fedora37.{{trusted_network_domain_name}} --activate
 
 # Root password
 rootpw --iscrypted $6$EWvRuPP7F8pRTFrm$749vEu5HoijsEhVWzw691ZquSDP.FmK2Qc56HGpgE03pHMgxIMlal4YPM/BrmwfA10q0nKUDxkC7D21H1q7xH/

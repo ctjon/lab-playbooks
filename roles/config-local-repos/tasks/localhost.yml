@@ -55,10 +55,10 @@
 
 - name: Special Configuration of {{archive_dir}} on server0 only
   block:
-    - name: create /etc/hosts entry for macpro
-      ansible.builtin.lineinfile:
-        path: /etc/hosts
-        line: "{{archive_server_ip}} {{archive_server_hostname}}"
+#    - name: create /etc/hosts entry for macpro
+#      ansible.builtin.lineinfile:
+#        path: /etc/hosts
+#        line: "{{archive_server_ip}} {{archive_server_hostname}}"
 
     - name: Create {{archive_dir}} mount point
       ansible.builtin.file:
