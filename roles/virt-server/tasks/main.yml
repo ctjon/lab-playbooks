@@ -4,22 +4,22 @@
 # role: config-virtio-win-repos
 # 
 ---
-- name: validate cpu architecture supports virtualization
-  ansible.builtin.shell: egrep '^flags.*(vmx|svm)' /proc/cpuinfo
-  register: cpuinfo
+#- name: validate cpu architecture supports virtualization
+#  ansible.builtin.shell: egrep '^flags.*(vmx|svm)' /proc/cpuinfo
+#  register: cpuinfo
 
-- name: show cpuinfo
-  ansible.builtin.debug:
-    var: cpuinfo.stdout_lines
-  failed_when: "'vmx' not in cpuinfo.stdout and 'svm' not in cpuinfo.stdout"
+#- name: show cpuinfo
+#  ansible.builtin.debug:
+#    var: cpuinfo.stdout_lines
+#  failed_when: "'vmx' not in cpuinfo.stdout and 'svm' not in cpuinfo.stdout"
 
-- name: create /etc/polkit-1/localauthority/50-local.d/ directory
-  ansible.builtin.file:
-    path: /etc/polkit-1/localauthority/50-local.d/
-    state: directory
-    owner: root
-    group: polkitd
-    mode: 0750
+#- name: create /etc/polkit-1/localauthority/50-local.d/ directory
+#  ansible.builtin.file:
+#    path: /etc/polkit-1/localauthority/50-local.d/
+#    state: directory
+#    owner: root
+#    group: polkitd
+#    mode: 0750
 
 # 
 # This breaks with luks dm-mapper
@@ -71,14 +71,14 @@
     - libvirtd
     - virtnetworkd
 
-- name: validate kvm modules loaded properly
-  ansible.builtin.shell: lsmod |grep kvm
-  register: lsmod_output
+# - name: validate kvm modules loaded properly
+#  ansible.builtin.shell: lsmod |grep kvm
+#  register: lsmod_output
 
-- name: show lsmod_output
-  ansible.builtin.debug:
-    var: lsmod_output.stdout_lines
-  failed_when: "'kvm_intel' not in lsmod_output.stdout and 'kvm_amd' not in cpuinfo.stdout"
+# - name: show lsmod_output
+#  ansible.builtin.debug:
+#    var: lsmod_output.stdout_lines
+#  failed_when: "'kvm_intel' not in lsmod_output.stdout and 'kvm_amd' not in cpuinfo.stdout"
 
 - name: Adding user {{ libvirt_users }} to {{libvirt_groups}}
   ansible.builtin.user:
@@ -88,42 +88,42 @@
   with_items:
     - "{{ libvirt_users }}"
 
-- name: setup virtual networks
-  block:
-    - name: define nets
-      community.libvirt.virt_net:
-        command: define
-        name: "{{item}}"
-        xml: '{{ lookup("template", "{{item}}.j2") }}'
-      ignore_errors: yes # set because module fails if network already exists
-      with_items:
-        - "{{virt_nets}}"
-
-    - name: create nets
-      community.libvirt.virt_net:
-        command: create
-        name: "{{item}}"
-      ignore_errors: yes #set because module fails if network already exists
-      with_items:
-        - "{{virt_nets}}"
-
-    - name: set nets for autostart
-      community.libvirt.virt_net:
-        name: "{{item}}"
-        autostart: yes
-      with_items:
-        - "{{virt_nets}}"
-
-    - name: add virt_nets to trusted firewall zone
-      ansible.builtin.firewalld: 
-        zone: "{{trusted_firewall_zone}}"
-        interface: "{{item}}"
-        permanent: yes
-        immediate: yes
-        state: enabled
-      with_items:
-        - "{{ virt_nets}}"
-  tags: config_virtual_networks
+# - name: setup virtual networks
+#  block:
+#    - name: define nets
+#      community.libvirt.virt_net:
+#        command: define
+#        name: "{{item}}"
+#        xml: '{{ lookup("template", "{{item}}.j2") }}'
+#      ignore_errors: yes # set because module fails if network already exists
+#      with_items:
+#        - "{{virt_nets}}"
+#
+#    - name: create nets
+#      community.libvirt.virt_net:
+#        command: create
+#        name: "{{item}}"
+#      ignore_errors: yes #set because module fails if network already exists
+#      with_items:
+#        - "{{virt_nets}}"
+#
+#    - name: set nets for autostart
+#      community.libvirt.virt_net:
+#        name: "{{item}}"
+#        autostart: yes
+#      with_items:
+#        - "{{virt_nets}}"
+#
+#    - name: add virt_nets to trusted firewall zone
+#      ansible.builtin.firewalld: 
+#        zone: "{{trusted_firewall_zone}}"
+#        interface: "{{item}}"
+#        permanent: yes
+#        immediate: yes
+#        state: enabled
+#      with_items:
+#        - "{{ virt_nets}}"
+#  tags: config_virtual_networks
 
 - name: restore SELinux Context on /etc/yum.repos.d
   ansible.builtin.command: restorecon -RFv /etc/yum.repos.d

@@ -1,6 +1,8 @@
 #
-# host_vars file for server1
+# host_vars file for server0
 #
+
+datastore_vg: datavg
 
 test_nmcli: false
 
@@ -26,62 +28,84 @@ time_servers:
 #  - 3.rhel.pool.ntp.org
 
 ################################################################################
-# Primary Network Interface Configuration Parameters                           #
+# Trusted Network Interface Configuration Parameters                           #
 ################################################################################
-primary_domain_name: internal.tjon.net
-primary_subnet: 172.16.1.0/24
-primary_ipaddr: 172.16.1.9
-primary_prefix: 24
-primary_short_net: 172.16.1
-primary_netmask: 255.255.255.0
-primary_gateway: 172.16.1.1
-search_domains: 
+trusted_network_interface: eth1
+trusted_network_ipaddr: 172.16.248.2
+trusted_network_subnet: 172.16.248.0/24
+trusted_network_prefix: 24
+trusted_network_short_net: 172.16.248
+trusted_network_netmask: 255.255.255.0
+trusted_network_gateway: 172.16.248.1
+trusted_network_domain_name: internal.tjon.net
+trusted_network_search_domains: 
  - internal.tjon.net
-primary_dns_servers: 
- - 172.16.1.1
-primary_bridge: br0
-primary_interface: eth0
-#public_firewall_interface: eth0
-public_firewall_interface: br0
-use_dhcp: 'false'
-bridge_wireless: 'false'
-#wireless_interface: 
+trusted_network_dns_servers: 
+ - 172.16.248.1
+#trusted_network_firewall_zone: internal
+trusted_network_firewall_zone: FedoraServer
+
+#use_dhcp: 'false'
 
 ################################################################################
 # Secondary Network Interface Configuration Parameters                         #
 ################################################################################
-secondary_domain_name: internal.tjon.net
-secondary_subnet: 192.168.168.0/24
-secondary_ipaddr: 192.168.168.2
-secondary_prefix: 24
-secondary_short_net: 192.168.168
-secondary_netmask: 255.255.255.0
-secondary_gateway: 192.168.168.2
-secondary_dns_servers: 
+public_network_interface: eth0
+public_network_subnet: 192.168.168.0/24
+public_network_ipaddr: 192.168.168.2
+public_network_prefix: 24
+public_network_short_net: 192.168.168
+public_network_netmask: 255.255.255.0
+public_network_gateway: 192.168.168.2
+public_network_search_domains: 
+public_network_dns_servers: 
  - 192.168.168.2
-secondary_interface: eth1
-secondary_bridge: br1
-trusted_firewall_interface: eth0
+public_network_firewall_zone: external
 
-datastore_vg: ssdvg
 ################################################################################
 # Installation Source Parameters                                               #
 ################################################################################
 install_dir: /export/install
 install_vol: installlv
-install_vg: "{{datastore_vg}}"
+install_vg: installvg
 install_dev: "/dev/{{install_vg}}/{{install_vol}}"
+install_vol_opts: defaults
 install_url: "http://install.internal.tjon.net"
 install_vol_fstype: xfs
+install_dir_owner: chris
+install_dir_group: chris
+
+#install_server_hostname: macpro
+#install_server_ip: 172.16.248.1
+#install_dev: "{{install_dir_owner}}@{{install_server_hostname}}:/Volumes/Install"
+#install_dir: /export/install
+#install_vol_fstype: fuse.sshfs
+#install_vol_opts: _netdev,user,idmap=user,IdentityFile=/root/.ssh/id_rsa,allow_other,default_permissions,uid=1000,gid=1000
+#install_dir_owner: chris
+#install_dir_group: chris
+
+#archive_server_hostname: macpro
+#archive_server_ip: 172.16.248.1
+#archive_dev: "//{{archive_server_hostname}}/Archive"
+#archive_dir: /export/archive
+#archive_vol_fstype: cifs
+#archive_vol_opts: uid=1000,gid=1000,nounix,sec=ntlmssp,credentials=/home/chris/.credentials
+
+#archive_dir: /export/archive
+#archive_vol: archivelv
+#archive_vg: rootvg
+#archive_dev: "/dev/{{archive_vg}}/{{archive_vol}}"
+#archive_vol_fstype: xfs
+#archive_vol_opts: defaults
 
 archive_dir: /export/archive
-archive_vol: archivelv
-archive_vg: "{{datastore_vg}}"
-archive_dev: "/dev/{{archive_vg}}/{{archive_vol}}"
-archive_url: http://archive.internal.tjon.net
-archive_vol_fstype: xfs
+archive_dev: UUID=2E2CD8242CD7E53D
+archive_vol_fstype: ntfs-3g
+archive_vol_opts: defaults,nls=utf8,umask=000,dmask=022,fmask=133,uid=1000,gid=1000,windows_names,hide_hid_files
 
-linux_install_server_hostname: server1
+archive_url: http://archive.internal.tjon.net
+
+linux_install_server_hostname: server0
 linux_install_server_url: "{{install_url}}/Linux"
 config_files_url: "{{install_url}}/ConfigFiles"
 
@@ -89,19 +113,11 @@ doc_files_url: "{{install_url}}/Documentation"
 doc_files_dir: "{{install_dir}}/Documentation"
 
 ################################################################################
-# Backup Server Parameters                                                     #
-################################################################################
-backup_dir: /export/backup
-backup_vol: backuplv
-backup_vg: backupvg
-backup_vol_fstype: xfs
-
-################################################################################
 # Time Server Configuration Parameters                                         #
 ################################################################################
 time_client_servers:
-  - "time.{{primary_domain_name}}"
-  - "time.{{secondary_domain_name}}"
+  - "time.{{trusted_network_domain_name}}"
+  - "time.{{public_network_domain_name}}"
 
 ################################################################################
 # TFTP Boot Server Parameters                                                  #
@@ -112,20 +128,9 @@ tftpbootdir: /var/lib/tftpboot
 # HTTP Server Parameters                                                       #
 ################################################################################
 vhosts: 
-  - {name: server1, document_root: /var/www/html, alias: server1, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
+  - {name: server0, document_root: /var/www/html, alias: server0, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
   - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: "/dev/{{install_vg}}/installlv"}
-  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: "/dev/{{archive_vg}}/archivelv"}
-  - {name: plex, document_root: /export/plex, alias: plex, fcontext: public_content_rw_t, lv_name: "/dev/{{datastore_vg}}/plexlv"}
-#  - {name: satcontent, document_root: /export/satcontent, alias: satcontent, fcontext: public_content_rw_t, lv_name: "/dev/{{datastore_vg}}/sat_content_lv}"
-
-################################################################################
-# Firewall Configuration Parameters                                            #
-################################################################################
-public_firewall_zone: FedoraServer
-trusted_firewall_zone: FedoraServer
-additional_fw_ports:
-  - 8443
-offer_public_services: true
+  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: "{{archive_dev}}"}
 
 ################################################################################
 # SSH Configuration Parameters                                                 #
@@ -139,84 +144,13 @@ allowed_ssh_users: chris ctjon
 # DNSMASQ Configuration Parameters                                             #
 ################################################################################
 dnsmasq_interfaces:
-  - "{{primary_bridge}}"
-#  - "{{secondary_interface}}"
+  - "{{trusted_network_interface}}"
  
 dhcp_enabled: false
 pxe_enabled: true
 dnsmasq_dhcp_interfaces:
   - "{{secondary_interface}}"
-
-################################################################################
-# Samba Configuration Parameters                                               #
-################################################################################
-samba_workgroup: PARANOID
-samba_netbios_name: SERVER1
-
-trusted_interfaces:
-  - "{{primary_bridge}}"
-
-trusted_subnets:
-  - 172.16.1.0/24
-  - 172.16.5.0/24
-  - 172.16.6.0/24
-  - 192.168.168.0/24
-
-samba_trusted_write_users:
-  - chris
-
-tm_trusted_write_users:
-  - chris
-#  - kelly
-
-backup_trusted_write_users:
-  - chris
-#  - kelly
-#  - james
-
-samba_shares:
-  - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
-  - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
-  - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
-  - {path: /export/backup, name: Backup, public: 'no', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{backup_trusted_write_users}}'}
-
-
-################################################################################
-# Netatalk Configuration Parameters                                            #
-################################################################################
-atalk_users:
-  - chris
-  - kelly
-
-################################################################################
-# Time Machine Specific Configuration Paramters (AFP & SMB)                    #
-################################################################################
-tm_users:
-  - {tm_username: 'chris', tm_vol_size_bytes: '2000000000000'}
-  - {tm_username: 'kelly', tm_vol_size_bytes: '1000000000000'}
-
-tm_storage_vg: backupvg
-tm_storage_lv: tmlv
-tm_storage_lv_size: 2t
-tm_storage_fs_type: xfs
-tm_storage_path: /export/time_machine
-
-################################################################################
-# KVM Virtualization Configuration Parameters                                  #
-################################################################################
-virt_nets:
-  - vnet_nat1
-  - vnet_nat2
-
-virt_users:
-  - chris
-
-vm_storage_vg: rootvg
-vm_storage_lv: imageslv
-vm_storage_lv_size: 768g
-vm_storage_path: /var/lib/libvirt/images
-vm_storage_fs_type: xfs
-vm_bridge_interface: "{{primary_bridge}}"
+upstream_dns_server: 192.168.169.2
 
 ################################################################################
 # SSH Keys to Install on Managed Hosts                                         #
@@ -237,8 +171,8 @@ ks_configs_list:
   - x1carbon-rhel8-preserve-ks.cfg
   - test-centos7-ks.cfg
   - test-centos8-ks.cfg
-  - test-fedora35-ks.cfg
   - test-fedora36-ks.cfg
+  - test-fedora37-ks.cfg
   - test-rhel6-ks.cfg
   - test-rhel7-ks.cfg
   - test-rhel8-ks.cfg
@@ -251,8 +185,6 @@ ks_configs_list:
   - satclient1-ks.cfg
   - satclient2-ks.cfg
   - satclient3-ks.cfg
-  - server1-f35-ks.cfg
-  - server1-f36-ks.cfg
   - synchost6-ks.cfg
   - synchost7-ks.cfg
   - synchost8-ks.cfg
@@ -280,6 +212,7 @@ pxewindows_files:
 # REPO Configuration Parameters - FROM HERE TO EOF                             #
 ################################################################################
 repo_owner: chris
+repo_group: chris
 repo_owner_homedir: /home/chris
 start_hour_offset: 0
 
@@ -325,7 +258,7 @@ scripts_list:
   - kvms/define-centos7-test.sh
   - kvms/define-centos8-test.sh
   - kvms/define-fedora36-test.sh
-  - kvms/define-fedora35-test.sh
+  - kvms/define-fedora37-test.sh
   - kvms/delete-testvms.sh
   - kvms/define-satellite6.sh
   - kvms/define-satclients.sh
@@ -372,15 +305,15 @@ centos_stream_architectures:
 
 fedora_versions:
   - 36
-  - 35
+  - 37
 
 # fedora versions that include upgrade.img
 fedora_upgrade_versions:
   - 36
-  - 35
+  - 37
 
-fedora_prev_release_ones_digit: 4
-fedora_prev_release: 34
+fedora_prev_release_ones_digit: 5
+fedora_prev_release: 35
 
 fedora_architectures:
   - x86_64
@@ -391,9 +324,9 @@ fedora_secondary_architectures:
   - ppc64
 
 openbsd_versions:
-  - 7.1
+  - 7.2
 
-openbsd_prev_dot_release: 0
+openbsd_prev_dot_release: 1
 
 vmware_versions:
   - 6.7.0

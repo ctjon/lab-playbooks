@@ -77,6 +77,6 @@
         opts: "{{archive_vol_opts}}"
         state: mounted
 
-  when: ((ansible_hostname == "server0") or (ansible_hostname == "server1"))
+  when: ((ansible_hostname == "server0") or (ansible_hostname == "ws0-linux"))
 
 ...

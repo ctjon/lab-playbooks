@@ -180,8 +180,6 @@ ks_configs_list:
   - satclient1-ks.cfg
   - satclient2-ks.cfg
   - satclient3-ks.cfg
-  - server1-f36-ks.cfg
-  - server1-f37-ks.cfg
   - synchost6-ks.cfg
   - synchost7-ks.cfg
   - synchost8-ks.cfg
