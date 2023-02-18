@@ -2,7 +2,7 @@
 [Global]
 ; Global Server Settings
 hostname = {{ansible_hostname}}
-afp interfaces = {{primary_bridge}}
+afp interfaces = {{trusted_network_bridge}}
 log file = /var/log/afpd.log
 mimic model = Xserve
 zeroconf = yes

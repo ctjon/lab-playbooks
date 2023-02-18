@@ -1,0 +1,142 @@
+---
+- name: install bridge-utils
+  package:
+    name: bridge-utils, firewalld
+    state: latest
+
+- name: NMCLI - create bridge the new way - using nmcli - BROKEN - NOT SURE WHY YET
+  block:
+    #
+    # "nmcli con add type bridge ifname br0"
+    #
+    - name: NMCLI - setup br0 with nmcli
+      community.general.nmcli:
+        conn_name: "{{ primary_bridge }}"
+        type: bridge
+        ip4: "{{ primary_ipaddr }}"
+        gw4: "{{ primary_gateway }}"
+        dns4: "{{ primary_dns_servers }}"
+        dns4_search: "{{ primary_domain_name }}"
+        method6: disabled
+        mtu: 1500
+        stp: no
+        state: present
+      notify: restart NetworkManager
+
+    #
+    # "nmcli con add type ethernet ifname eth0 master br0"
+    #
+    - name: NMCLI - setup eth0 as br0 bridge-slave
+      community.general.nmcli:
+        type: bridge-slave
+        conn_name: "bridge-slave-{{primary_interface}}"
+        hairpin: false
+        ifname: "{{ primary_interface }}"
+        master: "{{ primary_bridge }}"
+        mtu: 1500
+        state: present
+      notify: restart NetworkManager
+  when:
+    - ansible_distribution == "Fedora"
+    - ansible_distribution_major_version >= "36"  # 36,37...
+    - test_nmcli == "true" # BECAUSE THIS IS SOMEHOW BROKEN AND DON'T WANT RUN BY DEFAULT
+
+
+- name: IFCFG - create bridge the old way - using ifcfg files
+  block:
+    - name: IFCFG - install network-scripts package
+      ansible.builtin.package:
+        name: network-scripts
+        state: latest
+      when:
+        - ansible_distribution == "Fedora" 
+        - ansible_distribution_major_version >= "36"
+
+    - name: IFCFG - install /etc/sysconfig/network-scripts/ifcfg-{{primary_bridge}} Static IP template
+      ansible.builtin.template:
+        src: "ifcfg-{{primary_bridge}}.static.j2"
+        dest: "/etc/sysconfig/network-scripts/ifcfg-{{primary_bridge}}"
+        owner: root
+        group: root
+        mode: 0644
+      when:
+        use_dhcp == 'false'
+
+    - name: IFCFG - install /etc/sysconfig/network-scripts/ifcfg-{{primary_bridge}} DHCP template
+      ansible.builtin.template:
+        src: "ifcfg-{{primary_bridge}}.dhcp.j2"
+        dest: "/etc/sysconfig/network-scripts/ifcfg-{{primary_bridge}}"
+        owner: root
+        group: root
+        mode: 0644
+      when:
+        use_dhcp == 'true'
+
+    - name: IFCFG - install /etc/sysconfig/network-scripts/ifcfg-{{primary_interface}} template
+      ansible.builtin.template:
+        src: "ifcfg-{{primary_interface}}.j2"
+        dest: "/etc/sysconfig/network-scripts/ifcfg-{{primary_interface}}"
+        owner: root
+        group: root
+        mode: 0644
+
+    # BROKEN - NEVER BEEN ABLE TO MAKE THIS WORK YET?
+    - name: IFCFG - install /etc/sysconfig/network-scripts/ifcfg-wlan template
+      ansible.builtin.template:
+        src: "ifcfg-{{wireless_interface}}.j2"
+        dest: "/etc/sysconfig/network-scripts/ifcfg-{{wireless_interface}}"
+        owner: root
+        group: root
+        mode: 0644
+      when:
+        bridge_wireless == 'true'
+#  when:
+#    - test_nmcli == "false" 
+      # BECAUSE nmcli IS SOMEHOW BROKEN, WANT THIS BY DEFAULT
+#    - (((ansible_distribution == "Fedora") and ( ansible_distribution_major_version < "36")) or (ansible_distribution != "Fedora"))
+
+- name: restart network for RHEL/CentOS 6/7
+  ansible.builtin.service:
+    name: network
+    state: restarted
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "6" or ansible_distribution_major_version == "7"
+
+- name: restart NetworkManager for RHEL/CentOS 8
+  ansible.builtin.service:
+    name: NetworkManager
+    state: restarted
+  when:
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version >= "8"
+
+- name: restart NetworkManager for Fedora 28+
+  ansible.builtin.service:
+    name: NetworkManager
+    state: restarted
+  when:
+    - ansible_distribution == "Fedora" 
+    - ansible_distribution_major_version >= "28"
+
+- name: make sure firewalld is running and enabled
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: reconfigure firewall for bridge
+  ansible.builtin.firewalld:
+    zone: "{{public_firewall_zone}}"
+    interface: "{{primary_bridge}}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+- name: Set ip forwarding sysctl and reload if necessary
+  ansible.builtin.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes

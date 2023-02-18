@@ -61,22 +61,10 @@
     state: started
     enabled: yes
 
-- name: open trusted firewall zone for samba
+- name: open trusted network firewall zone for samba
   ansible.builtin.firewalld:
-    zone: "{{trusted_firewall_zone}}"
+    zone: "{{trusted_network_firewall_zone}}"
     service: samba
     immediate: yes
     state: enabled
     permanent: yes
-  when: trusted_firewall_zone is defined
-
-- name: open public firewall zone for samba
-  ansible.builtin.firewalld:
-    zone: "{{public_firewall_zone}}"
-    service: samba
-    immediate: yes
-    state: enabled
-    permanent: yes
-  when: offer_public_services == "true"
-
-

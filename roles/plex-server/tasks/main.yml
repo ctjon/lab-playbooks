@@ -29,23 +29,13 @@
     group: root
     mode: '0600'
 
-- name: open trusted firewall zone for plex server
+- name: open trusted network firewall zone for plex server
   ansible.builtin.firewalld:
-    zone: "{{trusted_firewall_zone}}"
+    zone: "{{trusted_network_firewall_zone}}"
     service: plex
     immediate: yes
     state: enabled
     permanent: yes
-  when: trusted_firewall_zone is defined
-
-- name: open public firewall zone for plex server
-  ansible.builtin.firewalld:
-    zone: "{{public_firewall_zone}}"
-    service: plex
-    immediate: yes
-    state: enabled
-    permanent: yes
-  when: offer_public_services == "true"
 
 - name: create plex storage in {{plex_storage_path}}
   ansible.builtin.lvol:

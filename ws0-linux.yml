@@ -13,6 +13,9 @@
     - role: config-local-rpmfusion-repos
       tags: ['config-local-rpmfusion-repos']
 
+    - role: setup-br0
+      tags: ['setup-br0']
+
     - role: disable-ipv6
       tags: ['disable-ipv6']
 
@@ -30,6 +33,12 @@
 
 #    - role: apply-updates
 #      tags: ['apply-updates']
+
+    - role: samba-server
+      tags: ['samba-server']
+
+    - role: appletalk-server
+      tags: ['appletalk-server']
 
     - role: time-server
       tags: ['time-server']
@@ -122,11 +131,11 @@
       become: no
       with_items:
         - https://dl.flathub.org/repo/appstream/org.signal.Signal.flatpakref
-        - https://dl.flathub.org/repo/appstream/com.tdameritrade.ThinkOrSwim.flatpakref
         - https://dl.flathub.org/repo/appstream/com.bluejeans.BlueJeans.flatpakref
         - https://dl.flathub.org/repo/appstream/org.telegram.desktop.flatpakref
         - https://dl.flathub.org/repo/appstream/com.microsoft.Teams.flatpakref
         - https://dl.flathub.org/repo/appstream/us.zoom.Zoom.flatpakref
+#        - https://dl.flathub.org/repo/appstream/com.tdameritrade.ThinkOrSwim.flatpakref
 #        - https://dl.flathub.org/repo/appstream/com.google.chrome-stable.flatpakref
 
     - name: disable Wayland

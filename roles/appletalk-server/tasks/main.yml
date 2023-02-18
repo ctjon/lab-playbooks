@@ -136,22 +136,12 @@
     mode: '0644'
 
 - ansible.posix.firewalld:
-    zone: "{{ public_firewall_zone }}"
+    zone: "{{ trusted_network_firewall_zone }}"
     port: "{{ item }}"
     permanent: yes
     state: enabled
   with_items:
     - "{{ tm_ports }}"
-  when: offer_public_services == "true"
-
-- ansible.posix.firewalld:
-    zone: "{{ trusted_firewall_zone }}"
-    port: "{{ item }}"
-    permanent: yes
-    state: enabled
-  with_items:
-    - "{{ tm_ports }}"
-  when: trusted_firewall_zone is defined
 
 #- name: configure /etc/resolv.conf for MDNS
 #  ansible.builtin.lineinfile:

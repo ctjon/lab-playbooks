@@ -114,9 +114,9 @@
 #      with_items:
 #        - "{{virt_nets}}"
 #
-#    - name: add virt_nets to trusted firewall zone
+#    - name: add virt_nets to trusted network firewall zone
 #      ansible.builtin.firewalld: 
-#        zone: "{{trusted_firewall_zone}}"
+#        zone: "{{trusted_network_firewall_zone}}"
 #        interface: "{{item}}"
 #        permanent: yes
 #        immediate: yes
