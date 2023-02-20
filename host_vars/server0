@@ -132,12 +132,12 @@ samba_workgroup: PARANOID
 samba_netbios_name: SERVER0
 
 trusted_interfaces:
-  - "{{trusted_network_interface}}"
+  - "{{trusted_network_bridge}}"
   - virbr0
   - vnet_nat1
   - vnet_nat2
 #  - "{{wireless_interface}}"
-#  - "{{trusted_network_bridge}}"
+#  - "{{trusted_network_interface}}"
 
 trusted_subnets:
   - 172.16.1.0/24

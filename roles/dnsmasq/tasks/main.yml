@@ -81,11 +81,13 @@
 - name: configure firewall for DNS
   ansible.builtin.firewalld:
     zone: "{{trusted_network_firewall_zone}}"
-    service: dns
+    port: "{{item}}"
     immediate: yes
     state: enabled
     permanent: yes
-  when: trusted_network_firewall_zone is defined
+  with_items:
+    - 53/tcp
+    - 53/udp
 
 - name: configure firewall for PXE
   ansible.builtin.firewalld:

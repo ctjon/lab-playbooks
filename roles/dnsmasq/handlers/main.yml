@@ -1,5 +1,5 @@
 ---
 - name: restart dnsmasq
-  include_tasks: roles/dnsmasq/tasks/recycle_dnsmasq.yml
+  include_tasks: roles/dnsmasq/handlers/recycle_dnsmasq.yml
 
 ...
