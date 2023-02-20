@@ -1,5 +1,7 @@
 ---
 # have to do this because I can't use a block in a handler
+# no longer using it but keeping it around as an example of how to do something
+# like this
 - name: stop systemd-resolved service
   ansible.builtin.service:
     name: systemd-resolved

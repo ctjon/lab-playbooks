@@ -1,4 +1,15 @@
 ---
+- name: stop systemd-resolved service
+  ansible.builtin.service:
+    name: systemd-resolved
+    state: stopped
+    enabled: false
+    masked: true
+
+- name: disable and mask systemd-resolved service
+  ansible.builtin.service:
+    name: systemd-resolved
+
 - name: install packages
   ansible.builtin.package:
     name: dnsmasq,tftp-server,tftp,httpd,firewalld
@@ -31,6 +42,11 @@
   notify: restart dnsmasq
   when: pxe_enabled == true
 
+- name: make sure dnsmasq is enabled
+  ansible.builtin.service:
+    name: dnsmasq
+    enabled: yes
+
 - name: make sure firewalld is running
   ansible.builtin.service:
     name: firewalld
@@ -59,15 +75,14 @@
   notify: restart dnsmasq
   when: 
     - dhcp_enabled == true
-    - trusted_network_firewall_zone is defined
 
 - name: install /etc/hosts file
   ansible.builtin.copy:
     src: etc.hosts
     dest: /etc/hosts
-    owner: dnsmasq
-    group: dnsmasq
-    mode: 0664
+    owner: root
+    group: root
+    mode: 0644
   notify: restart dnsmasq
 
 # This should be in the handler but handlers need to support blocks first
@@ -100,6 +115,5 @@
     - "69/tcp"
     - "69/udp"
     - "4011/udp"
-  when: trusted_network_firewall_zone is defined
   notify: restart dnsmasq
 ...
