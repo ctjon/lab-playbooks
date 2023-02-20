@@ -1,6 +1,5 @@
 ---
 - name: restart dnsmasq
-  ansible.builtin.service:
-    name: dnsmasq
-    state: restarted
+  include_tasks: roles/dnsmasq/tasks/recycle_dnsmasq.yml
 
+...

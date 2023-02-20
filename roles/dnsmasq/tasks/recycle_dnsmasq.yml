@@ -1,0 +1,16 @@
+---
+- name: stop systemd-resolved service
+  ansible.builtin.service:
+    name: systemd-resolved
+    state: stopped
+
+- name: restart dnsmasq service
+  ansible.builtin.service:
+    name: dnsmasq
+    state: restarted
+
+- name: start systemd-resolved service
+  ansible.builtin.service:
+    name: systemd-resolved
+    state: started
+...

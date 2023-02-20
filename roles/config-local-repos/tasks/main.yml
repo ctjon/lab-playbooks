@@ -33,8 +33,6 @@
     - ansible_distribution == "Fedora"
     - ansible_distribution_major_version >= "28"  # 28,29...
     - ansible_hostname != "server0"
-    - ansible_hostname != "ws0-linux"
-#    - ansible_hostname != linux_install_server_hostname
 
 - name: main.yml - Configure to get Fedora updates and packages from localhost
   ansible.builtin.include_tasks: localhost.yml
@@ -45,6 +43,5 @@
   when:
     - ansible_distribution == "Fedora"
     - ansible_distribution_major_version >= "28"  # 28,29...
-    - ((ansible_hostname == "server0")) or ((ansible_hostname == "ws0-linux"))
-#    - ansible_hostname == linux_install_server_hostname
+    - ansible_hostname == "server0"
 ...

@@ -31,6 +31,9 @@
     - role: apply-updates
       tags: ['apply-updates']
 
+    - role: samba-server
+      tags: ['samba-server']
+
     - role: time-server
       tags: ['time-server']
 

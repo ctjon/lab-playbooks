@@ -55,19 +55,14 @@
 
 - name: Special Configuration of {{archive_dir}} on server0 only
   block:
-#    - name: create /etc/hosts entry for macpro
-#      ansible.builtin.lineinfile:
-#        path: /etc/hosts
-#        line: "{{archive_server_ip}} {{archive_server_hostname}}"
-
     - name: Create {{archive_dir}} mount point
       ansible.builtin.file:
         path: "{{archive_dir}}"
         state: directory
         recurse: no
-        owner: root
-        group: root
-        mode: 0700
+        owner: "{{archive_dir_owner}}"
+        group: "{{archive_dir_group}}"
+        mode: 0755
 
     - name: mount {{archive_dir}}
       ansible.builtin.mount:
@@ -77,6 +72,6 @@
         opts: "{{archive_vol_opts}}"
         state: mounted
 
-  when: ((ansible_hostname == "server0") or (ansible_hostname == "ws0-linux"))
+  when: ansible_hostname == "server0"
 
 ...

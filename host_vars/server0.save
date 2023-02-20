@@ -30,36 +30,44 @@ time_servers:
 ################################################################################
 # Trusted Network Interface Configuration Parameters                           #
 ################################################################################
-trusted_network_interface: eth0
-trusted_network_ipaddr: 172.16.1.2
-trusted_network_subnet: 172.16.1.0/24
+trusted_network_interface: eth1
+trusted_network_ipaddr: 172.16.248.2
+trusted_network_subnet: 172.16.248.0/24
 trusted_network_prefix: 24
-trusted_network_short_net: 172.16.1
+trusted_network_short_net: 172.16.248
 trusted_network_netmask: 255.255.255.0
-trusted_network_gateway: 172.16.1.1
+trusted_network_gateway: 172.16.248.1
 trusted_network_domain_name: internal.tjon.net
 trusted_network_search_domains: 
  - internal.tjon.net
 trusted_network_dns_servers: 
- - 172.16.1.1
-#use_dhcp: 'false'
-trusted_network_bridge: br0
-
-################################################################################
-# Firewall Configuration Parameters                                            #
-################################################################################
+ - 172.16.248.1
+#trusted_network_firewall_zone: internal
 trusted_network_firewall_zone: FedoraServer
-additional_fw_ports:
-  - 8443
-offer_public_services: true
 
+#use_dhcp: 'false'
+
+################################################################################
+# Secondary Network Interface Configuration Parameters                         #
+################################################################################
+public_network_interface: eth0
+public_network_subnet: 192.168.168.0/24
+public_network_ipaddr: 192.168.168.2
+public_network_prefix: 24
+public_network_short_net: 192.168.168
+public_network_netmask: 255.255.255.0
+public_network_gateway: 192.168.168.2
+public_network_search_domains: 
+public_network_dns_servers: 
+ - 192.168.168.2
+public_network_firewall_zone: external
 
 ################################################################################
 # Installation Source Parameters                                               #
 ################################################################################
 install_dir: /export/install
 install_vol: installlv
-install_vg: installvg
+install_vg: "{{datastore_vg}}"
 install_dev: "/dev/{{install_vg}}/{{install_vol}}"
 install_vol_opts: defaults
 install_url: "http://install.internal.tjon.net"
@@ -67,14 +75,28 @@ install_vol_fstype: xfs
 install_dir_owner: chris
 install_dir_group: chris
 
+#install_server_hostname: macpro
+#install_server_ip: 172.16.248.1
+#install_dev: "{{install_dir_owner}}@{{install_server_hostname}}:/Volumes/Install"
+#install_dir: /export/install
+#install_vol_fstype: fuse.sshfs
+#install_vol_opts: _netdev,user,idmap=user,IdentityFile=/root/.ssh/id_rsa,allow_other,default_permissions,uid=1000,gid=1000
+#install_dir_owner: chris
+#install_dir_group: chris
+
+#archive_server_hostname: macpro
+#archive_server_ip: 172.16.248.1
+#archive_dev: "//{{archive_server_hostname}}/Archive"
+#archive_dir: /export/archive
+#archive_vol_fstype: cifs
+#archive_vol_opts: uid=1000,gid=1000,nounix,sec=ntlmssp,credentials=/home/chris/.credentials
+
 archive_dir: /export/archive
 archive_vol: archivelv
 archive_vg: rootvg
 archive_dev: "/dev/{{archive_vg}}/{{archive_vol}}"
 archive_vol_fstype: xfs
 archive_vol_opts: defaults
-archive_dir_owner: chris
-archive_dir_group: chris
 
 archive_url: http://archive.internal.tjon.net
 
@@ -90,7 +112,7 @@ doc_files_dir: "{{install_dir}}/Documentation"
 ################################################################################
 time_client_servers:
   - "time.{{trusted_network_domain_name}}"
-#  - "time.{{public_network_domain_name}}"
+  - "time.{{public_network_domain_name}}"
 
 ################################################################################
 # TFTP Boot Server Parameters                                                  #
@@ -117,73 +139,14 @@ allowed_ssh_users: chris ctjon
 # DNSMASQ Configuration Parameters                                             #
 ################################################################################
 dnsmasq_interfaces:
-  - "{{trusted_network_bridge}}"
+  - "{{trusted_network_interface}}"
  
 dhcp_enabled: false
 pxe_enabled: true
 dnsmasq_dhcp_interfaces:
   - "{{secondary_interface}}"
-upstream_dns_server: 172.16.1.1
+upstream_dns_server: 192.168.169.2
 
-################################################################################
-# Samba Configuration Parameters                                               #
-################################################################################
-samba_workgroup: PARANOID
-samba_netbios_name: SERVER0
-
-trusted_interfaces:
-  - "{{trusted_network_interface}}"
-  - virbr0
-  - vnet_nat1
-  - vnet_nat2
-#  - "{{wireless_interface}}"
-#  - "{{trusted_network_bridge}}"
-
-trusted_subnets:
-  - 172.16.1.0/24
-  - 172.16.5.0/24
-  - 172.16.6.0/24
-  - 192.168.122.0/24
-
-samba_trusted_write_users:
-  - chris
-  - kelly
-
-tm_trusted_write_users:
-  - chris
-  - kelly
-
-backup_trusted_write_users:
-  - chris
-#  - kelly
-
-samba_shares:
-  - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
-  - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
-  - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
-  - {path: /export/backup, name: Backup, public: 'no', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{backup_trusted_write_users}}'}
-  - {path: /export/time_machine, name: TimeMachineSMB, public: 'no', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{tm_trusted_write_users}}'}
-
-################################################################################
-# Netatalk Configuration Parameters                                            #
-################################################################################
-atalk_users:
-  - chris
-  - kelly
-
-################################################################################
-# Time Machine Specific Configuration Paramters (AFP & SMB)                    #
-################################################################################
-tm_users:
-  - {tm_username: 'chris', tm_vol_size_bytes: '2000000000000'}
-  - {tm_username: 'kelly', tm_vol_size_bytes: '1000000000000'}
-  
-tm_storage_vg: "{{datastore_vg}}"
-tm_storage_lv: tmlv
-tm_storage_lv_size: 2t
-tm_storage_fs_type: xfs
-tm_storage_path: /export/time_machine
-  
 ################################################################################
 # SSH Keys to Install on Managed Hosts                                         #
 ################################################################################
