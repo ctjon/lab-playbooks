@@ -59,7 +59,7 @@ offer_public_services: true
 ################################################################################
 install_dir: /export/install
 install_vol: installlv
-install_vg: installvg
+install_vg: datavg
 install_dev: "/dev/{{install_vg}}/{{install_vol}}"
 install_vol_opts: defaults
 install_url: "http://install.internal.tjon.net"
@@ -69,7 +69,7 @@ install_dir_group: chris
 
 archive_dir: /export/archive
 archive_vol: archivelv
-archive_vg: rootvg
+archive_vg: datavg
 archive_dev: "/dev/{{archive_vg}}/{{archive_vol}}"
 archive_vol_fstype: xfs
 archive_vol_opts: defaults
@@ -162,7 +162,6 @@ samba_shares:
   - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
   - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
   - {path: /export/backup, name: Backup, public: 'no', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{backup_trusted_write_users}}'}
-  - {path: /export/time_machine, name: TimeMachineSMB, public: 'no', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{tm_trusted_write_users}}'}
 
 ################################################################################
 # Netatalk Configuration Parameters                                            #
@@ -175,7 +174,7 @@ atalk_users:
 # Time Machine Specific Configuration Paramters (AFP & SMB)                    #
 ################################################################################
 tm_users:
-  - {tm_username: 'chris', tm_vol_size_bytes: '2000000000000'}
+  - {tm_username: 'chris', tm_vol_size_bytes: '4000000000000'}
   - {tm_username: 'kelly', tm_vol_size_bytes: '1000000000000'}
   
 tm_storage_vg: "{{datastore_vg}}"
