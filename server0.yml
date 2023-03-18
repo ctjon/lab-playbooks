@@ -49,6 +49,9 @@
     - role: apcupsd
       tags: ['apcupsd']
 
+    - role: appletalk-server
+      tags: ['appletalk-server']
+
     - role: samba-server
       tags: ['samba-server']
 
