@@ -39,7 +39,7 @@
 
 #    - role: masquerade
 #      tags: ['masquerade']
-
+#
     - role: dnsmasq
       tags: ['dnsmasq']
 
@@ -49,9 +49,9 @@
     - role: apcupsd
       tags: ['apcupsd']
 
-    - role: appletalk-server
-      tags: ['appletalk-server']
-
+#    - role: appletalk-server
+#      tags: ['appletalk-server']
+#
     - role: samba-server
       tags: ['samba-server']
 
