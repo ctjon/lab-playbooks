@@ -3,7 +3,7 @@
 # Configure x1carbon workstation
 #
 
-# CentOS 8 Prerequisites: 
+# CentOS 8 Prerequisites:
 #	python3
 #	policycoreutils-python3
 #	rsync
@@ -51,29 +51,29 @@
 
     - role: protonvpn-client
       tags: ['protonvpn-client']
-        
+
 #    - role: reboot-if-required
 #      tags: ['reboot-if-required']
 
 
   tasks:
-    - name: install other packages 
+    - name: install other packages
       ansible.builtin.package:
-        name: nmap, lftp, ftp, openscap, openscap-scanner, openscap-utils, openscap-python3, python3-botocore, python3-boto3, python3-pyvmomi, ansible, screen, virt-install, virt-manager, virt-viewer, flatpak, remmina, vlc
+        name: nmap, lftp, ftp, openscap, openscap-scanner, openscap-utils, openscap-python3, python3-botocore, python3-boto3, python3-pyvmomi, ansible, screen, virt-install, virt-manager, virt-viewer, flatpak, remmina, vlc, python3-pip, xrandr
         state: latest
       tags:
         - localpkgs
 
-    - name: install other fedora packages 
+    - name: install other fedora packages
       ansible.builtin.package:
         name: openscap-containers, openscap-daemon, python3-boto, openwsman-winrs.x86_64, vnstat, nmon
         state: latest
-      when: 
+      when:
         - ansible_distribution == "Fedora"
       tags:
         - localpkgs
 
-    - name: install gstreamer packages 
+    - name: install gstreamer packages
       ansible.builtin.package:
         name: gstreamer1-devel,gstreamer1-plugins-base-tools,gstreamer1-doc,gstreamer1-plugins-base-devel,gstreamer1-plugins-good,gstreamer1-plugins-good-extras,gstreamer1-plugins-ugly,gstreamer1-plugins-bad-free,gstreamer1-plugins-bad-free-devel,gstreamer1-plugins-bad-free-extras,gstreamer1-plugin-openh264.x86_64
         state: latest
@@ -85,7 +85,7 @@
         name: vnstat
         state: started
         enabled: yes
-        
+
     - name: Add the flathub flatpak repository for current user
       community.general.flatpak_remote:
         name: flathub
