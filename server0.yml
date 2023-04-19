@@ -1,4 +1,4 @@
----
+#---
 #
 # Configure Server0
 #
@@ -13,8 +13,8 @@
     - role: config-local-rpmfusion-repos
       tags: ['config-local-rpmfusion-repos']
 
-    - role: setup-br0
-      tags: ['setup-br0']
+#    - role: setup-br0
+#      tags: ['setup-br0']
 
     - role: disable-ipv6
       tags: ['disable-ipv6']
@@ -64,8 +64,8 @@
     - role: config-local-virtio-win-repos
       tags: ['config-local-virtio-win-repos']
 
-    - role: virt-server
-      tags: ['virt-server']
+#    - role: virt-server
+#      tags: ['virt-server']
 
     - role: kickstart
       tags: ['kickstart']
