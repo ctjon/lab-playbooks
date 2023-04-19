@@ -95,14 +95,17 @@
     state: yes
     persistent: yes
 
+- name: create {{doc_files_dir}}
+  ansible.builtin.file:
+    path: "{{ doc_files_dir }}"
+    state: directory
+    owner: "{{ repo_owner }}"
+    group: "{{ repo_owner }}"
+    mode: '0755'
+
 - name: Apply new SELinux file context to vhosts directories
   ansible.builtin.command: restorecon -FR {{item.document_root}}
   with_items: "{{ vhosts }}"
   tags: restorecon
 
-# not doing this anymore after switch to xfs
-#- name: set reserve_block_percentage to 1%
-#  ansible.builtin.command: tune2fs -m {{reserve_block_percentage}} {{item.lv_name}}
-#  with_items: "{{ vhosts }}"
-#  tags: tune2fs
 ...  

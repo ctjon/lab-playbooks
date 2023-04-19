@@ -376,30 +376,12 @@
 
 {% endfor %}
 
-[ mp61-TM ]
-        vfs objects = acl_xattr catia fruit streams_xattr
-        fruit: nfs_access = no
-	valid users = chris
-	comment = Chris' mp61 TM SMB Share
-	path = {{ tm_storage_path }}/chris/mp61
-	public = no
-	guest ok = no
-	browseable = yes
-	writable =  yes
-	printable = no
-        create mask = 0600
-        directory mask = 0700
-        spotlight = no
-        fruit:appl = yes
-        fruit:time machine = yes
-        fruit:time machine max size = 2048000000000
-
-[ mp51-mojave-TM ]
+[ mp51-Mojave-TM ]
         vfs objects = acl_xattr catia fruit streams_xattr
         fruit: nfs_access = no
 	valid users = chris
 	comment = Chris' mp51 Mojave TM SMB Share
-	path = {{ tm_storage_path }}/chris/mp51-mojave
+	path = {{ tm_storage_path }}/mp51-Mojave
 	public = no
 	guest ok = no
 	browseable = yes
@@ -412,12 +394,12 @@
         fruit:time machine = yes
         fruit:time machine max size = 250000000000
 
-[ mp51-test-TM ]
+[ mp51-Catalina-TM ]
         vfs objects = acl_xattr catia fruit streams_xattr
         fruit: nfs_access = no
 	valid users = chris
-	comment = Chris' mp51-test TM SMB Share
-	path = {{ tm_storage_path }}/chris/mp51-test
+	comment = Chris' mp51 Catalina TM SMB Share
+	path = {{ tm_storage_path }}/mp51-Catalina
 	public = no
 	guest ok = no
 	browseable = yes
@@ -430,12 +412,12 @@
         fruit:time machine = yes
         fruit:time machine max size = 250000000000
 
-[ mp51-HighSierra-TM ]
+[ mp51-BigSur-TM ]
         vfs objects = acl_xattr catia fruit streams_xattr
         fruit: nfs_access = no
 	valid users = chris
-	comment = Chris' mp51-HighSierra TM SMB Share
-	path = {{ tm_storage_path }}/chris/mp51-HighSierra
+	comment = Chris' mp51 BigSur TM SMB Share
+	path = {{ tm_storage_path }}/mp51-BigSur
 	public = no
 	guest ok = no
 	browseable = yes
@@ -446,14 +428,32 @@
         spotlight = no
         fruit:appl = yes
         fruit:time machine = yes
-        fruit:time machine max size = 160000000000
+        fruit:time machine max size = 250000000000
 
 [ mp51-Monterey-TM ]
         vfs objects = acl_xattr catia fruit streams_xattr
         fruit: nfs_access = no
 	valid users = chris
 	comment = Chris' mp51-Monterey TM SMB Share
-	path = {{ tm_storage_path }}/chris/mp51-Monterey
+	path = {{ tm_storage_path }}/mp51-Monterey
+	public = no
+	guest ok = no
+	browseable = yes
+	writable =  yes
+	printable = no
+        create mask = 0600
+        directory mask = 0700
+        spotlight = no
+        fruit:appl = yes
+        fruit:time machine = yes
+        fruit:time machine max size = 250000000000
+
+[ mp51-Ventura-TM ]
+        vfs objects = acl_xattr catia fruit streams_xattr
+        fruit: nfs_access = no
+	valid users = chris
+	comment = Chris' mp51-Ventura TM SMB Share
+	path = {{ tm_storage_path }}/mp51-Ventura
 	public = no
 	guest ok = no
 	browseable = yes
