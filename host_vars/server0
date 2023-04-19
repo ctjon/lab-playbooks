@@ -203,8 +203,8 @@ ks_configs_list:
   - x1carbon-rhel8-preserve-ks.cfg
   - test-centos7-ks.cfg
   - test-centos8-ks.cfg
-  - test-fedora36-ks.cfg
   - test-fedora37-ks.cfg
+  - test-fedora38-ks.cfg
   - test-rhel6-ks.cfg
   - test-rhel7-ks.cfg
   - test-rhel8-ks.cfg
@@ -289,8 +289,8 @@ scripts_list:
   - kvms/define-centos6-test.sh
   - kvms/define-centos7-test.sh
   - kvms/define-centos8-test.sh
-  - kvms/define-fedora36-test.sh
   - kvms/define-fedora37-test.sh
+  - kvms/define-fedora38-test.sh
   - kvms/delete-testvms.sh
   - kvms/define-satellite6.sh
   - kvms/define-satclients.sh
