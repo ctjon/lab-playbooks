@@ -14,10 +14,10 @@ fedora_rpmfusion_version_includes_list:
   - 37
   - 38
 
+rpmfusion_previous_release_ones_digit: 6
 fedora_rpmfusion_version_excludes_list:
-  - '3[1-{{rpmfusion_previous_release}}]'
+  - '3[1-{{rpmfusion_previous_release_ones_digit}}]'
 
-rpmfusion_previous_release: 36
 
 rpmfusion_repo_includes_list:
   - 'aarch64'
