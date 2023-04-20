@@ -20,26 +20,18 @@ do
 	date
 {% endif %}
 	rsync -aHKvz --keep-dirlinks --delete --delete-during --delete-excluded --progress \
-{% for item in linux_repo_includes_list %}
+{% for item in epel_version_includes_list %}
         --include '{{item}}' \
 {% endfor %}
-{% for item in linux_repo_excludes_list %}
+{% for item in epel_repo_includes_list %}
+        --include '{{item}}' \
+{% endfor %}
+{% for item in epel_version_excludes_list %}
         --exclude '{{item}}' \
 {% endfor %}
-	--exclude='4' \
-	--exclude='4AS' \
-	--exclude='4ES' \
-	--exclude='4WS' \
-	--exclude='RPM-GPG-KEY-EPEL-4' \
-	--exclude='5' \
-	--exclude='5Client' \
-	--exclude='5Server' \
-	--exclude='RPM-GPG-KEY-EPEL-5' \
-	--exclude='6' \
-	--exclude='6Server' \
-	--exclude='RPM-GPG-KEY-EPEL-6' \
-	--exclude='RPM-GPG-KEY-EPEL-6Server' \
-	--exclude='playground' \
+{% for item in epel_repo_excludes_list %}
+        --exclude '{{item}}' \
+{% endfor %}
  	$SRCDIR $TGTDIR
 {% if sync_script_retries == true %}
 done

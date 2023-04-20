@@ -29,18 +29,13 @@ do
         --exclude='releases/packages-*/{{item}}' \
         --exclude='releases/faillogs-*/{{item}}' \
 {% endfor %}
-	--exclude='releases/19.*' \
-	--exclude='releases/18.*' \
-	--exclude='releases/17.*' \
+{% for item in openwrt_version_excludes %}
+	--exclude='releases/{{item}}' \
 	--exclude='*-SNAPSHOT*' \
 	--exclude='snapshots/' \
 	--exclude='*-rc?' \
-	--exclude='releases/packages-19.*' \
-	--exclude='releases/packages-18.*' \
-	--exclude='releases/packages-17.*' \
-	--exclude='releases/faillogs-19.*' \
-	--exclude='releases/faillogs-18.*' \
-	--exclude='releases/faillogs-17.*' \
+	--exclude='releases/packages-{{item}}' \
+{% endfor %}
  	$SRCDIR $TGTDIR
 {% if sync_script_retries == true %}
 done

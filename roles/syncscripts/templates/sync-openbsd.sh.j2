@@ -22,22 +22,15 @@ do
 {% for item in openbsd_arch_includes %}
         --include={{item}} \
 {% endfor %}
+{% for item in openbsd_version_includes %}
+        --include={{item}} \
+{% endfor %}
 {% for item in openbsd_arch_excludes %}
         --exclude={{item}} \
 {% endfor %}
-	--exclude='2.*' \
-	--exclude='3.*' \
-	--exclude='4.*' \
-	--exclude='5.*' \
-	--exclude='6.*' \
-	--exclude='7.[0-{{openbsd_prev_dot_release}}]*' \
-	--exclude='snapshots' \
-	--exclude='debug-*' \
-	--exclude='patches/2.*' \
-	--exclude='patches/3.*' \
-	--exclude='patches/4.*' \
-	--exclude='patches/5.*' \
-	--exclude='patches/7.[0-{{openbsd_prev_dot_release}}]*' \
+{% for item in openbsd_version_excludes %}
+        --exclude={{item}} \
+{% endfor %}
  	$SRCDIR $TGTDIR
 {% if sync_script_retries == true %}
 done

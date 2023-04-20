@@ -1,0 +1,35 @@
+#
+# RPMFUSION includes/excludes
+#
+
+el_rpmfusion_version_includes_list:
+  - 7
+  - 8
+  - 9
+
+el_rpmfusion_version_excludes_list:
+  - 6
+
+fedora_rpmfusion_version_includes_list:
+  - 37
+  - 38
+
+fedora_rpmfusion_version_excludes_list:
+  - '3[1-{{rpmfusion_previous_release}}]'
+
+rpmfusion_previous_release: 36
+
+rpmfusion_repo_includes_list:
+  - 'aarch64'
+  - 'x86_64'
+  - 'source'
+
+rpmfusion_repo_excludes_list:
+  - 'i386'
+  - 'ppc64le'
+  - 's390x'
+  - 'development'
+  - 'testing'
+  - 'rawhide'
+  - 'debug'
+  - 'fedora-secondary'

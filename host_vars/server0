@@ -241,27 +241,15 @@ pxewindows_files:
     - windows
 
 ################################################################################
-# REPO Configuration Parameters - FROM HERE TO EOF                             #
+# syncscripts variables override                                               #
 ################################################################################
 repo_owner: chris
 repo_group: chris
 repo_owner_homedir: /home/chris
-start_hour_offset: 0
 
-syncscripts_dir: "{{repo_owner_homedir}}/syncscripts/scripts"
-syncscripts_logs_dir: "{{repo_owner_homedir}}/syncscripts/logs"
-
-sync_scripts_list:
-  - sync-fedora.sh
-  - sync-rpmfusion.sh
-  - sync-centos.sh
-  - sync-epel.sh
-  - sync-openbsd.sh
-  - sync-openwrt.sh
-  - sync-virtio-win.sh
-
-sync_script_retries: true
-
+################################################################################
+# for scripts role , not implemented yet                                       #
+################################################################################
 scripts_list:
   - backup-archive.sh
   - backup-install.sh
@@ -321,42 +309,20 @@ rhel_upgrade_versions:
 rhel_architectures:
   - x86_64
 
-centos_versions:
-  - 7
+#centos_architectures:
+  #- x86_64
 
-centos_architectures:
-  - x86_64
-
-centos_stream_versions:
-  - 8-stream
-#  - 9-stream
-
-centos_stream_architectures:
-  - x86_64
+#centos_stream_architectures:
+#  - x86_64
 #  - aarch64 <<<< breaks shit, need to create a hash table instead
 
-fedora_versions:
-  - 37
-  - 38
 
-# fedora versions that include upgrade.img
-fedora_upgrade_versions:
-  - 37
-  - 38
-
-fedora_prev_release_ones_digit: 6
-fedora_prev_release: 36
-
-fedora_architectures:
-  - x86_64
-  - aarch64
-  - ppc64le
-  - s390x
-
-openbsd_versions:
-  - 7.3
-
-openbsd_prev_dot_release: 1
+# DON'T THINK I NEED THIS, WAITING TO DELETE TO BE SURE
+#fedora_architectures:
+#  - x86_64
+#  - aarch64
+#  - ppc64le
+#  - s390x
 
 vmware_versions:
   - 6.7.0

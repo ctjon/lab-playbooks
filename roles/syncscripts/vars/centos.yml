@@ -1,0 +1,53 @@
+#
+# CentOS includes/excludes
+#
+
+centos_version_includes_list:
+  - 7
+  - 8-Stream
+#  - 9-Stream
+
+centos_repo_includes_list:
+  - aarch64
+  - source
+  - x86_64
+  - "*.iso"
+  - "*.qcow2"
+  - "*.raw.xz"
+
+centos_repo_excludes_list:
+  - ppc64le
+  - s390x
+  - development
+  - releases/test
+  - debug
+  - beta
+  - debug
+  - testing
+  - updates/testing
+  - "*.torrent"
+  - "*.box"
+  - 'RPM-GPG-KEY-beta'
+  - 'RPM-GPG-KEY-CentOS-3'
+  - 'RPM-GPG-KEY-CentOS-4'
+  - 'RPM-GPG-KEY-centos4'
+  - 'RPM-GPG-KEY-CentOS-5'
+  - 'RPM-GPG-KEY-CentOS-6'
+  - 'RPM-GPG-KEY-CentOS-Debug-6'
+  - 'RPM-GPG-KEY-CentOS-Security-6'
+  - 'RPM-GPG-KEY-CentOS-Testing-6'
+  - 'HEADER.html'
+  - 'HEADER_AD.html'
+  - 'HEADER.images/'
+
+centos_version_excludes_list:
+  - '2'
+  - '2.?'
+  - '3'
+  - '3.*'
+  - '4'
+  - '4.*'
+  - '5'
+  - '5.*'
+  - '6'
+  - '6.*'

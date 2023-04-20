@@ -1,0 +1,54 @@
+fedora_version_includes_list:
+  - 37
+  - 38
+
+# fedora versions that include upgrade.img
+#fedora_upgrade_versions:
+#  - 37
+#  - 38
+
+fedora_prev_release_ones_digit: 6
+fedora_prev_release: 36
+
+fedora_version_excludes_list:
+  - core
+  - 'releases/7/'
+  - 'releases/8/'
+  - 'releases/9/'
+  - 'releases/[1-2][0-9]/'
+  - 'releases/3[0-{{fedora_prev_release_ones_digit}}]*/'
+  - 'updates/7/'
+  - 'updates/8/'
+  - 'updates/9/'
+  - 'updates/[1-2][0-9]/'
+  - 'updates/3[0-{{fedora_prev_release_ones_digit}}]*/'
+  - 'releases/testing/[1-2][0-9]/'
+  - 'releases/testing/3[0-{{fedora_prev_release_ones_digit}}]*/'
+  - 'updates/testing/[1-2][0-9]/'
+  - 'updates/testing/3[0-{{fedora_prev_release_ones_digit}}]*/'
+
+#
+# Fedora includes/excludes
+#
+fedora_repo_includes_list:
+  - aarch64
+  - source
+  - x86_64
+  - "*.iso"
+  - "*.qcow2"
+  - "*.raw.xz"
+
+fedora_repo_excludes_list:
+  - armhfp
+  - ppc64le
+  - s390x
+  - development
+  - releases/test
+  - debug
+  - beta
+  - debug
+  - testing
+  - updates/testing
+  - "*.torrent"
+  - "*.box"
+

@@ -1,17 +1,3 @@
-start_hour_offset: 0
-syncscripts_dir: "{{repo_owner_homedir}}/syncscripts/scripts"
-syncscripts_logs_dir: "{{repo_owner_homedir}}/syncscripts/logs"
-sync_script_retries: true
-
-sync_scripts_list:
-  - sync-fedora.sh
-  - sync-rpmfusion.sh
-  - sync-centos.sh
-  - sync-epel.sh
-  - sync-openbsd.sh
-  - sync-openwrt.sh
-  - sync-virtio-win.sh
-
 #
 # Linux includes/excludes
 #

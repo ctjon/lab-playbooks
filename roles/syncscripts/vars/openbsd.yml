@@ -1,0 +1,59 @@
+#
+# OpenBSD includes/excludes
+#
+openbsd_prev_dot_release: 2
+
+openbsd_version_includes:
+  - 7.3
+
+openbsd_version_excludes:
+  - '2.*'
+  - '3.*'
+  - '4.*'
+  - '5.*'
+  - '6.*'
+  - '7.[0-{{openbsd_prev_dot_release}}]*'
+  - 'snapshots'
+  - 'debug-*'
+  - 'patches/2.*'
+  - 'patches/3.*'
+  - 'patches/4.*'
+  - 'patches/5.*'
+  - 'patches/6.*'
+  - 'patches/7.[0-{{openbsd_prev_dot_release}}]*'
+
+openbsd_arch_includes:
+  - amd64
+  - arm64
+
+openbsd_arch_excludes:
+  - powerpc
+  - powerpc64
+  - i386
+  - arm
+  - armish
+  - armv7
+  - alpha
+  - aviion
+  - beagle
+  - hp300
+  - hppa
+  - landisk
+  - loongson
+  - luna88k
+  - macppc
+  - mips64
+  - mips64el
+  - m68k
+  - m88k
+  - mvme68k
+  - mvme88k
+  - octeon
+  - riscv64
+  - sgi
+  - socppc
+  - sparc
+  - sparc64
+  - vax
+  - zaurus
+

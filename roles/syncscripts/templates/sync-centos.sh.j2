@@ -20,27 +20,18 @@ do
 {% endif %}
 	date
 	rsync -aHKvz --keep-dirlinks --delete --delete-during --delete-excluded --progress \
-{% for item in linux_repo_includes_list %}
+{% for item in centos_version_includes_list %}
         --include '{{item}}' \
 {% endfor %}
-{% for item in linux_repo_excludes_list %}
+{% for item in centos_repo_includes_list %}
+        --include '{{item}}' \
+{% endfor %}
+{% for item in centos_version_excludes_list %}
         --exclude '{{item}}' \
 {% endfor %}
-	--exclude='2' \
-	--exclude='2.?' \
-	--exclude='3' \
-	--exclude='3.*' \
-	--exclude='4' \
-	--exclude='4.*' \
-	--exclude='5' \
-	--exclude='5.*' \
-	--exclude='RPM-GPG-KEY-beta' \
-	--exclude='RPM-GPG-KEY-CentOS-3' \
-	--exclude='RPM-GPG-KEY-CentOS-4' \
-	--exclude='RPM-GPG-KEY-centos4' \
-	--exclude='HEADER.html' \
-	--exclude='HEADER_AD.html' \
-	--exclude='HEADER.images/' \
+{% for item in centos_repo_excludes_list %}
+        --exclude '{{item}}' \
+{% endfor %}
  	$SRCDIR $TGTDIR
 {% if sync_script_retries == true %}
 done

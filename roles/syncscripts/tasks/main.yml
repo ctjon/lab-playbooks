@@ -1,4 +1,17 @@
 ---
+- name: include vars file
+  ansible.builtin.include_vars: "{{item}}"
+  with_items:
+    - fedora.yml
+    - centos.yml
+    - epel.yml
+    - rpmfusion.yml
+    - openbsd.yml
+    - openwrt.yml
+
+#- name: Include EPEL vars file
+#  ansible.builtin.include_vars: epel.yml
+
 - name: create scripts and logs directories in {{repo_owner_homedir}}
   ansible.builtin.file:
     path: "{{item}}"

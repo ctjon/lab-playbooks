@@ -21,15 +21,34 @@ do
 {% endif %}
 	date
 	rsync -aHKvz --keep-dirlinks --delete --delete-during --delete-excluded --progress \
-        --exclude='31' \
-        --exclude='32' \
-        --exclude='33' \
-        --exclude='34' \
-        --exclude='fedora-secondary' \
-        --exclude='debug' \
-        --exclude='i386' \
-        --exclude='testing' \
-        --exclude='development' \
+{% for item in rpmfusion_repo_includes_list %}
+        --include='{{item}}' \
+{% endfor %}
+{% for item in el_rpmfusion_version_includes_list %}
+        --include='free/el/releases/{{item}}' \
+        --include='free/el/updates/{{item}}' \
+        --include='free/el/tainted/{{item}}' \
+        --include='nonfree/el/releases/{{item}}' \
+        --include='nonfree/el/updates/{{item}}' \
+        --include='nonfree/el/tainted/{{item}}' \
+{% endfor %}
+{% for item in fedora_rpmfusion_version_includes_list %}
+        --include='free/fedora/releases/{{item}}' \
+        --include='free/fedora/updates/{{item}}' \
+        --include='free/fedora/tainted/{{item}}' \
+        --include='nonfree/fedora/releases/{{item}}' \
+        --include='nonfree/fedora/updates/{{item}}' \
+        --include='nonfree/fedora/tainted/{{item}}' \
+{% endfor %}
+{% for item in rpmfusion_repo_excludes_list %}
+        --exclude='{{item}}' \
+{% endfor %}
+{% for item in el_rpmfusion_version_excludes_list %}
+        --exclude='{{item}}' \
+{% endfor %}
+{% for item in fedora_rpmfusion_version_excludes_list %}
+        --exclude='{{item}}' \
+{% endfor %}
  	$SRCDIR $TGTDIR
 {% if sync_script_retries == true %}
 done

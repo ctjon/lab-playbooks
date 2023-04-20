@@ -1,0 +1,42 @@
+#
+# EPEL includes/excludes
+#
+epel_version_includes_list:
+  - 7
+  - 8
+  - 9
+
+epel_version_excludes_list:
+  - 4
+  - 4AS
+  - 4ES
+  - 4WS
+  - RPM-GPG-KEY-EPEL-4
+  - 5
+  - 5Client
+  - 5Server
+  - RPM-GPG-KEY-EPEL-5
+  - 6
+  - 6Server
+  - RPM-GPG-KEY-EPEL-6
+  - RPM-GPG-KEY-EPEL-6Server
+  - playground
+
+epel_repo_includes_list:
+  - aarch64
+  - source
+  - x86_64
+
+epel_repo_excludes_list:
+  - ppc64
+  - ppc64le
+  - s390x
+  - development
+  - releases/test
+  - debug
+  - beta
+  - debug
+  - testing
+  - updates/testing
+  - "*.box"
+
