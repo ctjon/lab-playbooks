@@ -309,20 +309,32 @@ rhel_upgrade_versions:
 rhel_architectures:
   - x86_64
 
-#centos_architectures:
-  #- x86_64
+centos_architectures:
+  - x86_64
 
-#centos_stream_architectures:
-#  - x86_64
+centos_stream_architectures:
+  - x86_64
 #  - aarch64 <<<< breaks shit, need to create a hash table instead
 
+centos_versions:
+  - 7
+
+centos_stream_versions:
+  - 8-stream
 
 # DON'T THINK I NEED THIS, WAITING TO DELETE TO BE SURE
-#fedora_architectures:
-#  - x86_64
-#  - aarch64
+fedora_architectures:
+  - x86_64
+  - aarch64
 #  - ppc64le
 #  - s390x
+
+fedora_versions:
+  - 37
+  - 38
+
+openbsd_versions:
+  - 7.3
 
 vmware_versions:
   - 6.7.0
