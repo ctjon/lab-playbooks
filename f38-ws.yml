@@ -3,12 +3,7 @@
 # Configure x1carbon workstation
 #
 
-# CentOS 8 Prerequisites:
-#	python3
-#	policycoreutils-python3
-#	rsync
-
-- hosts: x1carbon
+- hosts: f38-ws
   become: yes
 
   roles:
@@ -36,21 +31,21 @@
     - role: apply-updates
       tags: ['apply-updates']
 
-    - role: config-virtio-win-repos
-      tags: ['config-virtio-win-repos']
+#    - role: config-virtio-win-repos
+#      tags: ['config-virtio-win-repos']
 
-    - role: setup-epel
-      tags: ['setup-epel']
+#    - role: setup-epel
+#      tags: ['setup-epel']
 
-    - role: fail2ban
-      tags: ['fail2ban']
+#    - role: fail2ban
+#      tags: ['fail2ban']
 
-    - role: virt-server
-      tags: ['virt-server']
-      become: true
+#    - role: virt-server
+#      tags: ['virt-server']
+#      become: true
 
-    - role: protonvpn-client
-      tags: ['protonvpn-client']
+#    - role: protonvpn-client
+#      tags: ['protonvpn-client']
 
 #    - role: reboot-if-required
 #      tags: ['reboot-if-required']
@@ -101,17 +96,17 @@
         method: user
       become: no
       with_items:
-        - https://dl.flathub.org/repo/appstream/org.signal.Signal.flatpakref
         - https://dl.flathub.org/repo/appstream/com.tdameritrade.ThinkOrSwim.flatpakref
-        - https://dl.flathub.org/repo/appstream/com.bluejeans.BlueJeans.flatpakref
         - https://dl.flathub.org/repo/appstream/org.telegram.desktop.flatpakref
-        - https://dl.flathub.org/repo/appstream/com.microsoft.Teams.flatpakref
-        - https://dl.flathub.org/repo/appstream/us.zoom.Zoom.flatpakref
+#        - https://dl.flathub.org/repo/appstream/com.microsoft.Teams.flatpakref
+#        - https://dl.flathub.org/repo/appstream/com.bluejeans.BlueJeans.flatpakref
+#        - https://dl.flathub.org/repo/appstream/us.zoom.Zoom.flatpakref
+#        - https://dl.flathub.org/repo/appstream/org.signal.Signal.flatpakref
 #        - https://dl.flathub.org/repo/appstream/com.google.chrome-table.flatpakref
 
-    - name: disable Wayland
-      ansible.builtin.lineinfile:
-        path: /etc/gdm/custom.conf
-        regexp: '^#WaylandEnable='
-        line: WaylandEnable=false
+#    - name: disable Wayland
+#      ansible.builtin.lineinfile:
+#        path: /etc/gdm/custom.conf
+#        regexp: '^#WaylandEnable='
+#        line: WaylandEnable=false
 ...
