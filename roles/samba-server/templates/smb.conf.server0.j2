@@ -376,12 +376,30 @@
 
 {% endfor %}
 
+[ mbp-Ventura-TM ]
+        vfs objects = acl_xattr catia fruit streams_xattr
+        fruit: nfs_access = no
+	valid users = chris
+	comment = Chris' mbp M2 Ventura TM SMB Share
+	path = {{ tm_storage_path }}/chris/mbp-Ventura
+	public = no
+	guest ok = no
+	browseable = yes
+	writable =  yes
+	printable = no
+        create mask = 0600
+        directory mask = 0700
+        spotlight = no
+        fruit:appl = yes
+        fruit:time machine = yes
+        fruit:time machine max size = 250000000000
+
 [ mp51-Mojave-TM ]
         vfs objects = acl_xattr catia fruit streams_xattr
         fruit: nfs_access = no
 	valid users = chris
 	comment = Chris' mp51 Mojave TM SMB Share
-	path = {{ tm_storage_path }}/mp51-Mojave
+	path = {{ tm_storage_path }}/chris/mp51-Mojave
 	public = no
 	guest ok = no
 	browseable = yes
@@ -399,7 +417,7 @@
         fruit: nfs_access = no
 	valid users = chris
 	comment = Chris' mp51 Catalina TM SMB Share
-	path = {{ tm_storage_path }}/mp51-Catalina
+	path = {{ tm_storage_path }}/chris/mp51-Catalina
 	public = no
 	guest ok = no
 	browseable = yes
@@ -417,7 +435,7 @@
         fruit: nfs_access = no
 	valid users = chris
 	comment = Chris' mp51 BigSur TM SMB Share
-	path = {{ tm_storage_path }}/mp51-BigSur
+	path = {{ tm_storage_path }}/chris/mp51-BigSur
 	public = no
 	guest ok = no
 	browseable = yes
@@ -435,7 +453,7 @@
         fruit: nfs_access = no
 	valid users = chris
 	comment = Chris' mp51-Monterey TM SMB Share
-	path = {{ tm_storage_path }}/mp51-Monterey
+	path = {{ tm_storage_path }}/chris/mp51-Monterey
 	public = no
 	guest ok = no
 	browseable = yes
@@ -453,7 +471,7 @@
         fruit: nfs_access = no
 	valid users = chris
 	comment = Chris' mp51-Ventura TM SMB Share
-	path = {{ tm_storage_path }}/mp51-Ventura
+	path = {{ tm_storage_path }}/chris/mp51-Ventura
 	public = no
 	guest ok = no
 	browseable = yes
