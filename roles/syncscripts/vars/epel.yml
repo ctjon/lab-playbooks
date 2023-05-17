@@ -1,6 +1,9 @@
 #
 # EPEL includes/excludes
 #
+
+epel_linux_rsync_server: mirrors.kernel.org
+
 epel_version_includes_list:
   - 7
   - 8

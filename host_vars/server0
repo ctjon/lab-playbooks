@@ -174,8 +174,8 @@ atalk_users:
 # Time Machine Specific Configuration Paramters (AFP & SMB)                    #
 ################################################################################
 tm_users:
-  - {tm_username: 'chris', tm_vol_size_bytes: '2500000000000'}
-  - {tm_username: 'kelly', tm_vol_size_bytes: '1200000000000'}
+  - {tm_username: 'chris', tm_vol_size_bytes: '1250000000000'}
+  - {tm_username: 'kelly', tm_vol_size_bytes: '1250000000000'}
   
 tm_storage_vg: backupvg
 tm_group: tm_users

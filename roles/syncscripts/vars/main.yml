@@ -7,6 +7,8 @@ sync_scripts_list:
   - sync-fedora.sh
   - sync-rpmfusion.sh
   - sync-centos.sh
+  - sync-rocky.sh
+  - sync-alma.sh
   - sync-epel.sh
   - sync-openbsd.sh
   - sync-openwrt.sh

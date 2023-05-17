@@ -4,7 +4,7 @@
 # {{ ansible_managed }}
 #
 
-export SRCDIR=rsync://{{linux_rsync_server}}/fedora-epel/
+export SRCDIR=rsync://{{epel_linux_rsync_server}}/fedora-epel/
 export TGTDIR={{linux_install_server_path}}/epel
 echo "********************************************************************************"
 echo "* UPDATING EPEL BINARIES                                                       *"

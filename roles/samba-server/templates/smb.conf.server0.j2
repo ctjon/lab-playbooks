@@ -376,24 +376,6 @@
 
 {% endfor %}
 
-[ mbp-Ventura-TM ]
-        vfs objects = acl_xattr catia fruit streams_xattr
-        fruit: nfs_access = no
-	valid users = chris
-	comment = Chris' mbp M2 Ventura TM SMB Share
-	path = {{ tm_storage_path }}/chris/mbp-Ventura
-	public = no
-	guest ok = no
-	browseable = yes
-	writable =  yes
-	printable = no
-        create mask = 0600
-        directory mask = 0700
-        spotlight = no
-        fruit:appl = yes
-        fruit:time machine = yes
-        fruit:time machine max size = 250000000000
-
 [ mp51-Mojave-TM ]
         vfs objects = acl_xattr catia fruit streams_xattr
         fruit: nfs_access = no

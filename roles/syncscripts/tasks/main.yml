@@ -1,16 +1,15 @@
 ---
-- name: include vars file
+- name: include vars files
   ansible.builtin.include_vars: "{{item}}"
   with_items:
     - fedora.yml
     - centos.yml
+    - rocky.yml
+    - alma.yml
     - epel.yml
     - rpmfusion.yml
     - openbsd.yml
     - openwrt.yml
-
-#- name: Include EPEL vars file
-#  ansible.builtin.include_vars: epel.yml
 
 - name: create scripts and logs directories in {{repo_owner_homedir}}
   ansible.builtin.file:
@@ -56,12 +55,30 @@
     hour: "{{1 + start_hour_offset}}"
     job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-centos.lock {{syncscripts_dir}}/sync-centos.sh > {{syncscripts_logs_dir}}/sync-centos.log 2>&1"
 
+- name: create crontab entries for {{repo_owner}} to run sync-rocky.sh
+  ansible.builtin.cron:
+    name: "sync-rocky.sh"
+    user: "{{repo_owner}}"
+    weekday: "2,5"
+    minute: "15"
+    hour: "{{3 + start_hour_offset}}"
+    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-rocky.lock {{syncscripts_dir}}/sync-rocky.sh > {{syncscripts_logs_dir}}/sync-rocky.log 2>&1"
+
+- name: create crontab entries for {{repo_owner}} to run sync-alma.sh
+  ansible.builtin.cron:
+    name: "sync-alma.sh"
+    user: "{{repo_owner}}"
+    weekday: "3,6"
+    minute: "15"
+    hour: "{{2 + start_hour_offset}}"
+    job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-alma.lock {{syncscripts_dir}}/sync-alma.sh > {{syncscripts_logs_dir}}/sync-alma.log 2>&1"
+
 - name: create crontab entries for {{repo_owner}} to run sync-epel.sh
   ansible.builtin.cron:
     name: "sync-epel.sh"
     user: "{{repo_owner}}"
     weekday: "2,5"
-    minute: "30"
+    minute: "45"
     hour: "{{2 + start_hour_offset}}"
     job: "/usr/bin/flock --verbose --nonblock /var/tmp/sync-epel.lock {{syncscripts_dir}}/sync-epel.sh > {{syncscripts_logs_dir}}/sync-epel.log 2>&1"
 

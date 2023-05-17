@@ -2,6 +2,8 @@
 # CentOS includes/excludes
 #
 
+centos_linux_rsync_server: mirrors.kernel.org
+
 centos_version_includes_list:
   - 7
   - 8-Stream

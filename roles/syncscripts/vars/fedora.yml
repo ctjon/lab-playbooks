@@ -1,3 +1,5 @@
+fedora_linux_rsync_server: mirrors.kernel.org
+
 fedora_version_includes_list:
   - 37
   - 38

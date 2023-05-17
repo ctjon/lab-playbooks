@@ -44,7 +44,6 @@ linux_install_server_path: /export/install/Linux
 config_files_url: "http://install.internal.tjon.net/ConfigFiles"
 config_files_dir: "/export/install/ConfigFiles"
 ks_config_dir: "{{linux_install_server_path}}/ks-configs"
-linux_rsync_server: mirrors.kernel.org
 rpmfusion_rsync_server: download1.rpmfusion.org
 ubuntu_rsync_server: us.archive.ubuntu.com
 openbsd_install_server_path: /export/install/OpenBSD

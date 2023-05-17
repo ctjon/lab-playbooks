@@ -1,14 +1,16 @@
 #!/bin/sh
 #
-# rsync of CentOS Binary Distribution
+# rsync of Rocky Linux Binary Distribution
 # {{ ansible_managed }}
 #
 
 echo "********************************************************************************"
-echo "* UPDATING CENTOS BINARIES                                                     *"
+echo "* UPDATING ROCKY LINUX BINARIES                                                *"
 echo "********************************************************************************"
-export SRCDIR=rsync://{{centos_linux_rsync_server}}/centos/
-export TGTDIR={{linux_install_server_path}}/centos/
+export SRCDIR=rsync://{{rocky_linux_rsync_server}}/
+export TGTDIR={{linux_install_server_path}}/rocky/
+
+mkdir -p $TGTDIR
 
 {% if sync_script_retries == true %}
 # set return code to be false to force first iteration of while loop ironically this give error because it is an error:-)
@@ -20,16 +22,16 @@ do
 {% endif %}
 	date
 	rsync -aHKvz --keep-dirlinks --delete --delete-during --delete-excluded --progress \
-{% for item in centos_version_includes_list %}
+{% for item in rocky_version_includes_list %}
         --include '{{item}}' \
 {% endfor %}
-{% for item in centos_repo_includes_list %}
+{% for item in rocky_repo_includes_list %}
         --include '{{item}}' \
 {% endfor %}
-{% for item in centos_version_excludes_list %}
+{% for item in rocky_version_excludes_list %}
         --exclude '{{item}}' \
 {% endfor %}
-{% for item in centos_repo_excludes_list %}
+{% for item in rocky_repo_excludes_list %}
         --exclude '{{item}}' \
 {% endfor %}
  	$SRCDIR $TGTDIR
