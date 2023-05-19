@@ -2,14 +2,7 @@
 - name: include vars files
   ansible.builtin.include_vars: "{{item}}"
   with_items:
-    - fedora.yml
-    - centos.yml
-    - rocky.yml
-    - alma.yml
-    - epel.yml
-    - rpmfusion.yml
-    - openbsd.yml
-    - openwrt.yml
+    - "{{syncscripts_vars_files_list}}"
 
 - name: create scripts and logs directories in {{repo_owner_homedir}}
   ansible.builtin.file:

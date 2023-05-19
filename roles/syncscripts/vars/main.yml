@@ -3,6 +3,16 @@ syncscripts_dir: "{{repo_owner_homedir}}/syncscripts/scripts"
 syncscripts_logs_dir: "{{repo_owner_homedir}}/syncscripts/logs"
 sync_script_retries: true
 
+syncscripts_vars_files_list:
+    - fedora.yml
+    - centos.yml
+    - rocky.yml
+    - alma.yml
+    - epel.yml
+    - rpmfusion.yml
+    - openbsd.yml
+    - openwrt.yml
+
 sync_scripts_list:
   - sync-fedora.sh
   - sync-rpmfusion.sh
