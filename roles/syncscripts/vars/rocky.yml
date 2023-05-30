@@ -22,6 +22,7 @@ rocky_repo_excludes_list:
   - debug
   - "*.torrent"
   - "*.box"
+  - ".~tmp~"
 
 rocky_version_excludes_list:
   - 7
