@@ -59,7 +59,7 @@ offer_public_services: true
 ################################################################################
 install_dir: /export/install
 install_vol: installlv
-install_vg: installvg
+install_vg: datavg
 install_dev: "/dev/{{install_vg}}/{{install_vol}}"
 install_vol_opts: defaults
 install_url: "http://install.internal.tjon.net"
