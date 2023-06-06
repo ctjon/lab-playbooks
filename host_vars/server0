@@ -2,7 +2,7 @@
 # host_vars file for server0
 #
 
-datastore_vg: datavg
+#datastore_vg: datavg
 
 test_nmcli: false
 
@@ -59,7 +59,7 @@ offer_public_services: true
 ################################################################################
 install_dir: /export/install
 install_vol: installlv
-install_vg: datavg
+install_vg: rootvg
 install_dev: "/dev/{{install_vg}}/{{install_vol}}"
 install_vol_opts: defaults
 install_url: "http://install.internal.tjon.net"
@@ -69,7 +69,7 @@ install_dir_group: chris
 
 archive_dir: /export/archive
 archive_vol: archivelv
-archive_vg: datavg
+archive_vg: rootvg
 archive_dev: "/dev/{{archive_vg}}/{{archive_vol}}"
 archive_vol_fstype: xfs
 archive_vol_opts: defaults

@@ -1,3 +1,6 @@
+vm_storage_vg: imagesvg
+vm_storage_lv: imageslv
+
 virt_packages_list_rhel7:
   - python3-libvirt
   - python3-lxml
