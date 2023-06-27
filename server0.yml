@@ -25,6 +25,9 @@
     - role: limit-kernels
       tags: ['limit-kernels']
 
+    - role: sshd-config
+      tags: ['sshd-config']
+
     - role: ssh-config
       tags: ['ssh-config']
 
