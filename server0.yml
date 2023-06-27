@@ -64,8 +64,8 @@
     - role: config-local-virtio-win-repos
       tags: ['config-local-virtio-win-repos']
 
-#    - role: virt-server
-#      tags: ['virt-server']
+    - role: virt-server
+      tags: ['virt-server']
 
     - role: kickstart
       tags: ['kickstart']
