@@ -36,12 +36,12 @@
 
 - name: main.yml - Configure to get Fedora updates and packages from localhost
   ansible.builtin.include_tasks: localhost.yml
-  vars:
-    - repoName: "{{item}}"
-  with_items:
-    - "{{fedora_repos_list}}"
-  when:
-    - ansible_distribution == "Fedora"
-    - ansible_distribution_major_version >= "28"  # 28,29...
-    - ansible_hostname == "server0"
+vars:
+  - repoName: "{{item}}"
+with_items:
+  - "{{fedora_repos_list}}"
+when:
+  - ansible_distribution == "Fedora"
+  - ansible_distribution_major_version >= "28"  # 28,29...
+  - ansible_hostname == "server0"
 ...
