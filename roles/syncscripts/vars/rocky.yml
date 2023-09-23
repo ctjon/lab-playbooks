@@ -2,7 +2,7 @@
 # Rocky includes/excludes
 #
 #
-rocky_linux_rsync_server: mirror.phx1.us.spryservers.net/rockylinux
+rocky_linux_rsync_server: mirror.usi.edu/rocky
 
 rocky_version_includes_list:
   - 8
