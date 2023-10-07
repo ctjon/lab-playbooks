@@ -45,22 +45,6 @@ label satellite6-rhel8
   append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 inst.repo={{linux_install_server_url}}/rhel/8/x86_64 inst.ks={{linux_install_server_url}}/ks-configs/satellite6-rhel8-ks.cfg
 
 #
-# Satellite 6 on RHEL7
-#
-label satellite6-rhel7
-  menu label satellite6 on RHEL7
-  kernel images/rhel/7/x86_64/vmlinuz
-  append initrd=images/rhel/7/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 inst.repo={{linux_install_server_url}}/rhel/7/x86_64 inst.ks={{linux_install_server_url}}/ks-configs/satellite6-rhel7-ks.cfg
-
-#
-# KVMHOST
-#
-label kvmhost
-  menu label Install rhel8 kvmhost
-  kernel images/rhel/8/x86_64/vmlinuz
-append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/kvmhost-ks.cfg inst.stage2={{linux_install_server_url}}/rhel/8/x86_64
-
-#
 # Ansible Tower Standalone Install
 #
 label tower
@@ -68,36 +52,10 @@ label tower
   kernel images/rhel/8/x86_64/vmlinuz
   append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/tower-ks.cfg inst.stage2={{linux_install_server_url}}/rhel/8/x86_64
 
-label gatekeeper
-  menu label gatekeeper
-  kernel images/rhel/8/x86_64/vmlinuz
-  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 ipv6.disable=1 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/gatekeeper-ks.cfg
-
-label gatekeeper-fips
-  menu label gatekeeper-fips
-  kernel images/rhel/8/x86_64/vmlinuz
-  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 fips=1 ipv6.disable=1 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/gatekeeper-fips-ks.cfg
-
 label fipstest
   menu label fipstest
   kernel images/rhel/8/x86_64/vmlinuz
   append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 fips=1 ipv6.disable=1 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/fipstest-ks.cfg
-
-#
-# Ansible Tower Cluster Installs
-#
-LABEL tower_cluster
-        MENU Install Ansible Tower Cluster Nodes
-        KERNEL menu.c32
-        APPEND pxelinux.cfg/Linux/tower_cluster
-
-#
-# p51s
-#
-label p51s
-  menu label Install p51s Laptop
-  kernel images/fedora/29/x86_64/vmlinuz
-  append initrd=images/fedora/29/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/p51s-ks.cfg
 
 #
 # gitlab
