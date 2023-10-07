@@ -40,8 +40,7 @@ trusted_network_gateway: 172.16.1.1
 trusted_network_domain_name: internal.tjon.net
 trusted_network_search_domains: 
  - internal.tjon.net
-trusted_network_dns_servers: 
- - 172.16.1.1
+trusted_network_dns_server: 172.16.1.2
 #use_dhcp: 'false'
 trusted_network_bridge: br0
 

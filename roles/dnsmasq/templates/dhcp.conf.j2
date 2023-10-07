@@ -27,6 +27,6 @@ dhcp-lease-max=155
 # server={{ansible_default_ipv4.address}}
 server={{ansible_default_ipv4.address}}
 server={{ansible_default_ipv4.gateway}}
-server=8.8.8.8
+server={{trusted_network_dns_server}}
 #dhcp-host=d0:50:99:82:e7:2b,192.168.10.46
 #dhcp-host=turnip,192.168.10.45

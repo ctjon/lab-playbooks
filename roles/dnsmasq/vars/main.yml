@@ -1,0 +1,9 @@
+efi_bootfiles_src_path: "/boot/efi/EFI/{{ansible_distribution|lower}}"
+
+efi_bootfiles:
+  - grubx64.efi
+  - mmx64.efi
+  - shim.efi
+  - shimx64.efi
+  
+

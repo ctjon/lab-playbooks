@@ -12,13 +12,13 @@
 
 - name: install packages
   ansible.builtin.package:
-    name: dnsmasq,tftp-server,tftp,httpd,firewalld
+    name: dnsmasq,tftp-server,tftp,httpd,firewalld,ipxe-bootimgs-aarch64.noarch,ipxe-bootimgs-x86.noarch
     state: latest
   notify: restart dnsmasq
 
 - name: install dnsmasq.conf file
   ansible.builtin.template:
-    src: dnsmasq.conf.{{ansible_hostname}}.j2
+    src: dnsmasq.conf.j2
     dest: /etc/dnsmasq.conf
     owner: dnsmasq
     group: dnsmasq
@@ -32,15 +32,64 @@
     group: dnsmasq
     mode: 0770
     state: directory
+
 - name: install dnsmasq.d/pxe.conf file
   ansible.builtin.template:
-    src: pxe.conf.{{ansible_hostname}}.j2
+    src: pxe.conf.j2
     dest: /etc/dnsmasq.d/pxe.conf
     owner: dnsmasq
     group: dnsmasq
     mode: 0660
   notify: restart dnsmasq
   when: pxe_enabled == true
+
+- name: create directories for EFI boot files
+  ansible.builtin.file:
+    path: "/var/lib/tftpboot/{{item}}"
+    owner: root
+    group: root
+    mode: 0644
+    state: directory
+  with_items: 
+    - arm64-efi
+    - x86-efi
+    - x86_64-efi
+
+- name: install x86 EFI boot files
+  ansible.builtin.copy:
+    src: "/usr/share/ipxe/{{item}}"
+    dest: "/var/lib/tftpboot/x86-efi/{{item}}"
+    owner: root
+    group: root
+    mode: 0644
+    remote_src: true
+  with_items:
+    - ipxe-i386.efi
+
+- name: install x86_64 EFI boot files
+  ansible.builtin.copy:
+    src: "/usr/share/ipxe/{{item}}"
+    dest: "/var/lib/tftpboot/x86_64-efi/{{item}}"
+    owner: root
+    group: root
+    mode: 0644
+    remote_src: true
+  with_items:
+    - ipxe-x86_64.efi
+    - undionly.kpxe
+    - ipxe-snponly-x86_64.efi
+
+- name: install arm64 EFI boot files
+  ansible.builtin.copy:
+    src: "/usr/share/ipxe/arm64-efi/{{item}}"
+    dest: "/var/lib/tftpboot/arm64-efi/{{item}}"
+    owner: root
+    group: root
+    mode: 0644
+    remote_src: true
+  with_items:
+    - ipxe.efi
+    - snponly.efi
 
 - name: make sure dnsmasq is enabled
   ansible.builtin.service:
@@ -57,7 +106,19 @@
   block: 
     - name: install dnsmasq.d/dhcp.conf file
       ansible.builtin.template:
-        src: dhcp.conf.{{ansible_hostname}}.j2
+        src: dhcp.conf.j2
+        dest: /etc/dnsmasq.d/dhcp.conf
+        owner: dnsmasq
+        group: dnsmasq
+        mode: 0660
+      notify: restart dnsmasq
+  when: dhcp_enabled == true
+
+- name: configure dnsmasq for DHCP
+  block: 
+    - name: install dnsmasq.d/dhcp.conf file
+      ansible.builtin.template:
+        src: dhcp.conf.j2
         dest: /etc/dnsmasq.d/dhcp.conf
         owner: dnsmasq
         group: dnsmasq
@@ -93,18 +154,20 @@
     - /etc/dnsmasq.conf 
     - /etc/dnsmasq.d
 
-- name: configure firewall for DNS
+- name: configure firewall services for PXE Boot
   ansible.builtin.firewalld:
     zone: "{{trusted_network_firewall_zone}}"
-    port: "{{item}}"
+    service: "{{item}}"
     immediate: yes
     state: enabled
     permanent: yes
   with_items:
-    - 53/tcp
-    - 53/udp
+    - dhcp
+    - tftp
+    - dns
+  notify: restart dnsmasq
 
-- name: configure firewall for PXE
+- name: configure firewall ports for PXE Boot
   ansible.builtin.firewalld:
     zone: "{{trusted_network_firewall_zone}}"
     port: "{{item}}"
@@ -112,8 +175,8 @@
     state: enabled
     permanent: yes
   with_items:
-    - "69/tcp"
-    - "69/udp"
+    - "68/tcp"
+    - "68/udp"
     - "4011/udp"
   notify: restart dnsmasq
 ...

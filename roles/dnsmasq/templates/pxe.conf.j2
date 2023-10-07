@@ -1,0 +1,33 @@
+# {{ansible_managed}}
+
+tftp-root=/var/lib/tftpboot
+log-dhcp
+enable-tftp
+#dhcp-boot:undionly.kpxe,,{{trusted_network_ipaddr}}
+dhcp-no-override
+
+# inspect the vendor class string and match the text to set the tag
+dhcp-vendorclass=BIOS,PXEClient:Arch:00000
+dhcp-vendorclass=UEFI32,PXEClient:Arch:00006
+dhcp-vendorclass=UEFI,PXEClient:Arch:00007
+dhcp-vendorclass=UEFI64,PXEClient:Arch:00009
+
+# Set the boot file name based on the matching tag from the vendor class (above)
+dhcp-boot=net:BIOS,pxelinux.0,,{{trusted_network_ipaddr}}
+dhcp-boot=net:UEFI32,x86-efi/ipxe-i386.efi,,{{trusted_network_ipaddr}}
+dhcp-boot=net:UEFI,x86_64-efi/ipxe-x86_64.efi,,{{trusted_network_ipaddr}}
+dhcp-boot=net:UEFI64,x86_64-efi/ipxe-x86_64.efi,,{{trusted_network_ipaddr}}
+
+
+# PXE menu.  The first part is the text displayed to the user.  The second is the timeout, in seconds.
+#
+pxe-prompt="Press F8 for boot menu", 3
+# The known types are x86PC, PC98, IA64_EFI, Alpha, Arc_x86,
+# Intel_Lean_Client, IA32_EFI, BC_EFI, Xscale_EFI and X86-64_EFI
+# This option is first and will be the default if there is no input from the user.
+pxe-service=X86PC, "Boot from network", pxelinux
+pxe-service=X86PC, "Boot from local hard disk", 0
+#pxe-service=X86-64_EFI, "Boot to x86_64 UEFI", shimx64.efi
+#pxe-service=BC_EFI, "Boot to UEFI PXE-BC", shimx64.efi
+
+dhcp-range={{trusted_network_ipaddr}},proxy,{{trusted_network_netmask}}
