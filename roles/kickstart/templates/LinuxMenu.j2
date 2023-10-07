@@ -44,14 +44,6 @@ label satellite6-rhel8
   kernel images/rhel/8/x86_64/vmlinuz
   append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 inst.repo={{linux_install_server_url}}/rhel/8/x86_64 inst.ks={{linux_install_server_url}}/ks-configs/satellite6-rhel8-ks.cfg
 
-#
-# Ansible Tower Standalone Install
-#
-label tower
-  menu label tower
-  kernel images/rhel/8/x86_64/vmlinuz
-  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/tower-ks.cfg inst.stage2={{linux_install_server_url}}/rhel/8/x86_64
-
 label fipstest
   menu label fipstest
   kernel images/rhel/8/x86_64/vmlinuz

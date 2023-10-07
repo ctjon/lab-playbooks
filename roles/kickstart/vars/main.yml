@@ -1,0 +1,49 @@
+################################################################################
+# Kickstart Config Parameters                                                  #
+################################################################################
+ks_configs_list:
+  - fipstest-ks.cfg
+  - test-centos7-ks.cfg
+  - test-centos8-ks.cfg
+  - test-fedora37-ks.cfg
+  - test-fedora38-ks.cfg
+  - test-rhel6-ks.cfg
+  - test-rhel7-ks.cfg
+  - test-rhel8-ks.cfg
+  - test-rhel9-ks.cfg
+  - gitlab-ks.cfg
+  - satellite6-rhel8-ks.cfg
+  - satclient0-ks.cfg
+  - satclient1-ks.cfg
+  - satclient2-ks.cfg
+  - satclient3-ks.cfg
+#  - synchost6-ks.cfg
+#  - synchost7-ks.cfg
+#  - synchost8-ks.cfg
+#  - synchost9-ks.cfg
+#  - eagle-preserve-ks.cfg
+#  - kvmhost-ks.cfg
+#  - x1carbon-fedora-initial-ks.cfg
+#  - x1carbon-fedora-preserve-ks.cfg
+#  - x1carbon-rhel8-initial-ks.cfg
+#  - x1carbon-rhel8-preserve-ks.cfg
+#  - fetcher-ks.cfg
+#  - satellite6-rhel7-ks.cfg
+#  - tower-ks.cfg
+#  - tower-nodeA-ks.cfg
+
+pxelinux_files:
+    - LinuxMenu
+    - fedora
+    - rhel-satclients
+    - rhel
+    - rhel-synchosts
+    - rhel-testvms
+    - tower-cluster
+    - x1carbon
+    - OpenBSD
+    - vmware
+#    - centos
+
+pxewindows_files:
+    - windows
