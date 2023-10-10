@@ -7,7 +7,7 @@ url --url="{{linux_install_server_url}}/fedora/releases/37/Server/x86_64/os/"
 graphical
 # Run the Setup Agent on first boot
 firstboot --enable
-ignoredisk --only-use=vda
+ignoredisk --only-use=sda
 # Keyboard layouts
 # old format: keyboard us
 # new format:
@@ -27,12 +27,12 @@ timezone America/Phoenix --isUtc
 reboot
 user --groups=wheel --name=chris --uid=1000 --password=$6$Cn2vwW.vUq0qFXYG$P6ogDQM8pvhpGk/InzJ4Lh9eiO/lnsJiF6rb3jYAKA4jreq5hGCXg2Gu.v6zIW1bNeSCLix0k0Pq2MXn8OLAu/ --iscrypted --gecos="Chris Tjon"
 # System bootloader configuration
-bootloader --location=mbr --boot-drive=vda
+bootloader --location=mbr --boot-drive=sda
 # Partition clearing information
 clearpart --all --initlabel
 # Disk partitioning information
-part /boot --fstype="ext4" --ondisk=vda --size=256
-part pv.409 --fstype="lvmpv" --ondisk=vda --grow
+part /boot --fstype="ext4" --ondisk=sda --size=256
+part pv.409 --fstype="lvmpv" --ondisk=sda --grow
 volgroup rootvg --pesize=4096 pv.409 
 logvol /  --fstype="ext4" --size=1024 --label="root" --name=rootlv --vgname=rootvg
 logvol /usr  --fstype="ext4" --size=4096 --label="usr" --name=usrlv --vgname=rootvg

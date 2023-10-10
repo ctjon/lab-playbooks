@@ -1,4 +1,4 @@
-#version=RHEL7
+sversion=RHEL7
 # System authorization information
 authconfig --enableshadow --passalgo=sha512
 # Use network installation
@@ -8,7 +8,7 @@ url --url="{{linux_install_server_url}}/rhel/7/x86_64/"
 graphical
 # Run the Setup Agent on first boot
 firstboot --enable
-ignoredisk --only-use=vda
+ignoredisk --only-use=sda
 # Keyboard layouts
 # old format: keyboard us
 # new format:
@@ -32,13 +32,13 @@ services --enabled="chronyd rsyslog" ### BROKEN
 timezone America/Phoenix --isUtc --ntpservers=gatekeeper.internal.tjon.net
 user --groups=wheel --name=chris --password=$6$OU1WFAy6UrhSBCDv$0mcg4YPZiZOvbLUUIP7neohCYTbzNNBaRgIqp/NAJDuNeI2nD.Br1LItDoFfZp/aWs8ZnEeGvTopVixzD0rlh. --iscrypted --gecos="Chris Tjon"
 # System bootloader configuration
-bootloader --location=mbr --boot-drive=vda
+bootloader --location=mbr --boot-drive=sda
 # Partition clearing information
 zerombr
 clearpart --all --initlabel
 # Disk partitioning information
-part /boot --fstype="xfs" --ondisk=vda --size=512
-part pv.182 --fstype="lvmpv" --ondisk=vda --grow
+part /boot --fstype="xfs" --ondisk=sda --size=512
+part pv.182 --fstype="lvmpv" --ondisk=sda --grow
 volgroup sat6vg --pesize=4096 pv.182
 logvol /usr  --fstype="xfs" --size=4096 --name=usrlv --vgname=sat6vg
 logvol /var/lib/pulp  --fstype="xfs" --size=307200 --name=var_lib_pulplv --vgname=sat6vg

@@ -25,12 +25,12 @@ rootpw --iscrypted $6$EWvRuPP7F8pRTFrm$749vEu5HoijsEhVWzw691ZquSDP.FmK2Qc56HGpgE
 firstboot --enable
 
 # Generated using Blivet version 3.4.2
-ignoredisk --only-use=vda
+ignoredisk --only-use=sda
 # Partition clearing information
 clearpart --all --initlabel
 # Disk partitioning information
-part /boot --fstype="xfs" --ondisk=vda --size=512 --label=boot
-part pv.218 --fstype="lvmpv" --ondisk=vda --size=19967
+part /boot --fstype="xfs" --ondisk=sda --size=512 --label=boot
+part pv.218 --fstype="lvmpv" --ondisk=sda --size=19967
 volgroup rootvg --pesize=4096 pv.218
 logvol /usr --fstype="xfs" --size=4096 --label="usr" --name=usrlv --vgname=rootvg
 logvol /tmp --fstype="xfs" --size=1024 --label="tmp" --name=tmplv --vgname=rootvg
