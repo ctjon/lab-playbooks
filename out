@@ -1,0 +1,62 @@
+    dns4: "{{ trusted_network_dns_servers }}"
+./roles/setup-br0/tasks/main.yml
+network  --hostname=test-rhel8.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.30 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
+./roles/kickstart/templates/ks-configs/test-rhel8-ks.cfg.j2
+network  --hostname=satclient1.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.41 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
+./roles/kickstart/templates/ks-configs/satclient1-ks.cfg.j2
+network  --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.38 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --hostname=test-fedora38.{{trusted_network_domain_name}} --activate
+./roles/kickstart/templates/ks-configs/test-fedora38-ks.cfg.j2
+network  --hostname=test-rhel9.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.33 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
+./roles/kickstart/templates/ks-configs/test-rhel9-ks.cfg.j2
+network  --hostname=satclient0.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.40 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
+./roles/kickstart/templates/ks-configs/satclient0-ks.cfg.j2
+network  --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.35 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate --hostname=test-centos7.{{trusted_network_domain_name}}
+./roles/kickstart/templates/ks-configs/test-centos7-ks.cfg.j2
+network  --hostname=vpnserver.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.4 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
+./roles/kickstart/templates/ks-configs/vpnserver-ks.cfg.j2
+network --hostname=synchost9.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.13 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate 
+./roles/kickstart/templates/ks-configs/OLD/synchost9-ks.cfg.j2
+network  --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.8 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --hostname=fetcher.{{trusted_network_domain_name}} --activate
+./roles/kickstart/templates/ks-configs/OLD/fetcher-ks.cfg.j2
+network  --hostname=kvmhost.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.8 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
+./roles/kickstart/templates/ks-configs/OLD/kvmhost-ks.cfg.j2
+network --hostname=synchost8.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.14 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate 
+./roles/kickstart/templates/ks-configs/OLD/synchost8-ks.cfg.j2
+network  --hostname=satellite6.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.7 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --noipv6 --activate
+./roles/kickstart/templates/ks-configs/OLD/satellite6-rhel7-ks.cfg.j2
+network  --hostname=tower.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.4 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
+./roles/kickstart/templates/ks-configs/OLD/tower-ks.cfg.j2
+network  --hostname=tower-nodeA.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.23 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
+./roles/kickstart/templates/ks-configs/OLD/tower-nodeA-ks.cfg.j2
+network --onboot yes --device eth0 --bootproto static --ip {{trusted_network_short_net}}.11 --netmask {{trusted_network_netmask}} --gateway {{trusted_network_gateway}} --nameserver {{trusted_network_dns_servers|join(",")}} --hostname synchost6.{{trusted_network_domain_name}} --domain {{trusted_network_domain_name}}
+./roles/kickstart/templates/ks-configs/OLD/synchost6-ks.cfg.j2
+network --hostname=synchost7.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.12 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate 
+./roles/kickstart/templates/ks-configs/OLD/synchost7-ks.cfg.j2
+network  --hostname=satellite6.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.7 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --noipv6 --activate
+./roles/kickstart/templates/ks-configs/OLD/satellite6-ks.cfg.j2
+network  --hostname=gitlabvm.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.9 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
+./roles/kickstart/templates/ks-configs/gitlab-ks.cfg.j2
+network  --hostname=satclient3.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.43 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
+./roles/kickstart/templates/ks-configs/satclient3-ks.cfg.j2
+network  --hostname=test-rhel7.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.31 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
+./roles/kickstart/templates/ks-configs/test-rhel7-ks.cfg.j2
+network  --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.39 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --hostname=test-fedora37.{{trusted_network_domain_name}} --activate
+./roles/kickstart/templates/ks-configs/test-fedora37-ks.cfg.j2
+network  --hostname=fipstest.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --ip={{trusted_network_short_net}}.15 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --noipv6 --activate
+./roles/kickstart/templates/ks-configs/fipstest-ks.cfg.j2
+network  --hostname=test-centos8.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.34 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
+./roles/kickstart/templates/ks-configs/test-centos8-ks.cfg.j2
+network  --hostname=satellite6.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.7 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --noipv6 --activate
+./roles/kickstart/templates/ks-configs/satellite6-rhel8-ks.cfg.j2
+network  --hostname=satclient2.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.42 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
+./roles/kickstart/templates/ks-configs/satclient2-ks.cfg.j2
+network --onboot yes --device eth0 --bootproto static --ip {{trusted_network_short_net}}.32 --netmask {{trusted_network_netmask}} --gateway {{trusted_network_gateway}} --nameserver {{trusted_network_dns_servers|join(",")}} --hostname test-rhel6.{{trusted_network_domain_name}} --domain {{trusted_network_domain_name}}
+./roles/kickstart/templates/ks-configs/test-rhel6-ks.cfg.j2
+dhcp-option=6,{{trusted_network_dns_servers|join(",")}}
+./roles/dnsmasq/templates/pxe.conf.j2
+trusted_network_dns_servers: 
+./host_vars/server0.save
+Binary file ./host_vars/.server0.swp matches
+./host_vars/.server0.swp
+trusted_network_dns_servers: 
+./host_vars/server0

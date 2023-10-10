@@ -1,0 +1,104 @@
+#version=DEVEL
+
+# System authorization information
+#auth --enableshadow --passalgo=sha512
+
+# Use network installation
+url --url="{{linux_install_server_url}}/fedora/releases/35/Server/x86_64/os/"
+
+# Use graphical install
+graphical
+
+# Keyboard layouts
+keyboard --vckeymap=us --xlayouts='us'
+# System language
+lang en_US.UTF-8
+
+# Root password
+rootpw --iscrypted $6$9vrA/lrxWT8.nHLB$zacDVevdnsOAfMNaysD.1sJz83LKfXOUiE3WZ9SszluLyEBlX7cDbuKzgjv0sQw.xhsXjwH0xIpuX4uIXLkph/
+
+user --groups=wheel --name=chris --password=$6$oWM3S2AK4zS.jyDy$716RhjySp6ncIMig2UggFWY5z98sfkmLQLqyWwlw1N4jogYBdjqSRlRjoJd.nr59z7iI68rzP4Y3WLj6Ssr5M. --iscrypted --gecos="Chris Tjon"
+
+
+# Generated using Blivet version 3.4.2
+ignoredisk --only-use=nvme0n1
+
+# Partition clearing information
+clearpart --none --initlabel
+
+# Disk partitioning information
+part pv.92 --fstype="lvmpv" --noformat
+part /boot --fstype="xfs" --label=boot
+part /boot/efi --fstype="efi" --noformat --fsoptions="umask=0077,shortname=winnt"
+volgroup rootvg --noformat --useexisting
+logvol /usr --fstype="xfs" --useexisting --encrypted --label="usr" --luks-version=luks2 --name=usrlv --vgname=rootvg
+logvol /var --fstype="xfs" --useexisting --encrypted --label="var" --luks-version=luks2 --name=varlv --vgname=rootvg
+logvol /tmp --fstype="xfs" --useexisting --encrypted --label="tmp" --luks-version=luks2 --name=tmplv --vgname=rootvg
+logvol swap --fstype="swap" --useexisting --encrypted --luks-version=luks2 --name=swaplv --vgname=rootvg
+logvol / --fstype="xfs" --useexisting --encrypted --label="root" --luks-version=luks2 --name=rootlv --vgname=rootvg
+logvol /var/lib/tftpboot --fstype="xfs" --noformat --useexisting --encrypted --label="tftpboot" --luks-version=luks2 --name=tftpbootlv --vgname=rootvg
+logvol /var/cache --fstype="xfs" --useexisting --encrypted --label="cache" --luks-version=luks2 --name=cachelv --vgname=rootvg
+logvol /opt --fstype="xfs" --useexisting --encrypted --label="opt" --luks-version=luks2 --name=optlv --vgname=rootvg
+logvol /export --fstype="xfs" --useexisting --encrypted --label="export" --luks-version=luks2 --name=exportlv --vgname=rootvg
+logvol /var/lib/libvirt/images --fstype="xfs" --noformat --useexisting --encrypted --label="images" --luks-version=luks2 --name=imageslv --vgname=rootvg
+logvol /var/log --fstype="xfs" --useexisting --encrypted --label="log" --luks-version=luks2 --name=loglv --vgname=rootvg
+logvol /home --fstype="xfs" --noformat --useexisting --encrypted --label="home" --luks-version=luks2 --name=homelv --vgname=rootvg
+
+# System timezone
+timezone America/Phoenix
+
+#Root password
+rootpw --iscrypted $6$EWvRuPP7F8pRTFrm$749vEu5HoijsEhVWzw691ZquSDP.FmK2Qc56HGpgE03pHMgxIMlal4YPM/BrmwfA10q0nKUDxkC7D21H1q7xH/ --lock
+
+%post --log=/root/post-install.log
+
+# backup repo config files
+mkdir /etc/yum.repos.d/save
+mv /etc/yum.repos.d/fedora-modular.repo /etc/yum.repos.d/save/fedora-modular.repo
+mv /etc/yum.repos.d/fedora.repo /etc/yum.repos.d/save/fedora.repo
+mv /etc/yum.repos.d/fedora-updates-modular.repo /etc/yum.repos.d/save/fedora-updates-modular.repo
+mv /etc/yum.repos.d/fedora-updates.repo /etc/yum.repos.d/save/fedora-updates.repo
+
+# setup system to get rpms/updates from server0
+wget http://install.internal.tjon.net/ConfigFiles/Linux/etc/yum.repos.d/fedora-modular-server0.repo -O /etc/yum.repos.d/fedora-modular-server0.repo
+wget http://install.internal.tjon.net/ConfigFiles/Linux/etc/yum.repos.d/fedora-server0.repo -O /etc/yum.repos.d/fedora-server0.repo
+wget http://install.internal.tjon.net/ConfigFiles/Linux/etc/yum.repos.d/fedora-updates-modular.server0.repo -O /etc/yum.repos.d/fedora-updates-modular.server0.repo
+wget http://install.internal.tjon.net/ConfigFiles/Linux/etc/yum.repos.d/fedora-updates-server0.repo -O /etc/yum.repos.d/fedora-updates-server0.repo
+wget http://install.internal.tjon.net/ConfigFiles/Linux/etc/yum.repos.d/virtio-win-server0.repo -O /etc/yum.repos.d/virtio-win-server0.repo
+
+# turn off Weyland by replacing /etc/gdm/custom.conf
+cp /etc/gdm/custom.conf /etc/gdm/custom.conf.save
+wget http://install.internal.tjon.net/ConfigFiles/Linux/etc/gdm/custom.conf -O /etc/gdm/custom.conf
+
+# apply all updates
+dnf -y update
+
+# install various packages
+dnf -y install virt-viewer \
+  virt-install \
+  virt-manager \
+  gscan2pdf \
+  pdfarranger \
+  virtio-win \
+  kernel-devel \
+  kernel-doc \
+  ansible 
+
+# move the internet virtio-win.repo out of the path into the back dir to for use of local repo
+mv /etc/yum.repos.d/virtio-win.repo /etc/yum.repos.d/save/virtio-win.repo
+
+# install google chrome
+dnf -y install http://archive.internal.tjon.net/Linux/RPMS/google-chrome-stable_current_x86_64.rpm
+
+# install printer software
+dnf -y install http://archive.internal.tjon.net/Linux/RPMS/Epson/epson-inkjet-printer-escpr-1.7.18-1lsb3.2.x86_64.rpm http://archive.internal.tjon.net/Linux/RPMS/Epson/epson-printer-utility-1.1.1-1lsb3.2.x86_64.rpm
+
+# setup flatpak and install useful apps (to me)
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak install -y flathub org.signal.Signal
+flatpak install -y flathub com.tdameritrade.ThinkOrSwim
+flatpak install -y flathub com.bluejeans.BlueJeans
+flatpak install -y flathub org.telegram.desktop
+
+%end
+

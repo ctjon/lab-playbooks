@@ -1,9 +1,6 @@
 #
 # host_vars file for server0
 #
-
-#datastore_vg: datavg
-
 test_nmcli: false
 
 use_ssh_agent: yes
@@ -31,7 +28,7 @@ time_servers:
 # Trusted Network Interface Configuration Parameters                           #
 ################################################################################
 trusted_network_interface: eth0
-trusted_network_ipaddr: 172.16.1.2
+trusted_network_ipaddr: 172.16.1.3
 trusted_network_subnet: 172.16.1.0/24
 trusted_network_prefix: 24
 trusted_network_short_net: 172.16.1
@@ -41,15 +38,18 @@ trusted_network_domain_name: internal.tjon.net
 trusted_network_search_domains: 
  - internal.tjon.net
 trusted_network_dns_servers: 
-  - 172.16.1.2
-  - 172.16.1.1
+  - 172.16.1.3
+#  - 172.16.1.1
+#
 #use_dhcp: 'false'
-trusted_network_bridge: br0
+#trusted_network_bridge: br0
+trusted_network_bridge: eth0
 
 ################################################################################
 # Firewall Configuration Parameters                                            #
 ################################################################################
-trusted_network_firewall_zone: FedoraServer
+#trusted_network_firewall_zone: FedoraServer
+trusted_network_firewall_zone: public
 additional_fw_ports:
   - 8443
 offer_public_services: true
@@ -60,24 +60,26 @@ offer_public_services: true
 ################################################################################
 install_dir: /export/install
 install_vol: installlv
-install_vg: rootvg
+install_vg: datavg
 install_dev: "/dev/{{install_vg}}/{{install_vol}}"
 install_vol_opts: defaults
-install_url: "http://install.internal.tjon.net"
+#install_url: "http://install.internal.tjon.net"
+install_url: "http://{{trusted_network_ipaddr}}/install"
 install_vol_fstype: xfs
 install_dir_owner: chris
 install_dir_group: chris
 
 archive_dir: /export/archive
 archive_vol: archivelv
-archive_vg: rootvg
+archive_vg: datavg
 archive_dev: "/dev/{{archive_vg}}/{{archive_vol}}"
 archive_vol_fstype: xfs
 archive_vol_opts: defaults
 archive_dir_owner: chris
 archive_dir_group: chris
 
-archive_url: http://archive.internal.tjon.net
+#archive_url: http://archive.internal.tjon.net
+archive_url: "http://{{trusted_network_ipaddr}}/archive"
 
 linux_install_server_hostname: server0
 linux_install_server_url: "{{install_url}}/Linux"
@@ -162,7 +164,7 @@ samba_shares:
   - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
   - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
 #  - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
-  - {path: /export/backup, name: Backup, public: 'no', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{backup_trusted_write_users}}'}
+#  - {path: /export/backup, name: Backup, public: 'no', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{backup_trusted_write_users}}'}
 
 ################################################################################
 # Netatalk Configuration Parameters                                            #

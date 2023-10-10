@@ -5,6 +5,8 @@
     state: stopped
     enabled: false
     masked: true
+  when:
+    - ansible_facts['distribution'] == "Fedora"
 
 - name: disable and mask systemd-resolved service
   ansible.builtin.service:
@@ -12,7 +14,7 @@
 
 - name: install packages
   ansible.builtin.package:
-    name: dnsmasq,tftp-server,tftp,httpd,firewalld,ipxe-bootimgs-aarch64.noarch,ipxe-bootimgs-x86.noarch
+    name: dnsmasq,tftp-server,tftp,httpd,firewalld,ipxe-bootimgs-aarch64.noarch,ipxe-bootimgs-x86.noarch, bind-utils
     state: latest
   notify: restart dnsmasq
 
@@ -90,6 +92,8 @@
   with_items:
     - ipxe.efi
     - snponly.efi
+  when:
+    - ansible_facts['distribution'] == "Fedora"
 
 - name: make sure dnsmasq is enabled
   ansible.builtin.service:
@@ -179,4 +183,19 @@
     - "68/udp"
     - "4011/udp"
   notify: restart dnsmasq
+
+- name: configure dns to point at local server
+  community.general.nmcli:
+    conn_name: "{{trusted_network_interface}}"
+    type: ethernet
+    ip4: "{{trusted_network_ipaddr}}/{{trusted_network_prefix}}"
+    gw4: "{{trusted_network_gateway}}"
+    dns4: "{{trusted_network_dns_servers}}"
+    state: present
+      #  notify: restart NetworkManager # handler does not work here?
+
+- name: restart NetworkManager # I wanted to reload but restart required
+  ansible.builtin.service:
+    name: NetworkManager
+    state: restarted
 ...

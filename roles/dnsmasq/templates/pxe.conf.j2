@@ -5,6 +5,7 @@ log-dhcp
 enable-tftp
 #dhcp-boot:undionly.kpxe,,{{trusted_network_ipaddr}}
 dhcp-no-override
+dhcp-option=6,{{trusted_network_dns_servers|join(",")}}
 
 # inspect the vendor class string and match the text to set the tag
 dhcp-vendorclass=BIOS,PXEClient:Arch:00000

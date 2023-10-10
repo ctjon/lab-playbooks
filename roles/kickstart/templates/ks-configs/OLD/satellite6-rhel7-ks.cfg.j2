@@ -1,0 +1,102 @@
+#version=RHEL7
+# System authorization information
+authconfig --enableshadow --passalgo=sha512
+# Use network installation
+url --url="{{linux_install_server_url}}/rhel/7/x86_64/"
+
+# Use graphical install
+graphical
+# Run the Setup Agent on first boot
+firstboot --enable
+ignoredisk --only-use=vda
+# Keyboard layouts
+# old format: keyboard us
+# new format:
+keyboard --vckeymap=us --xlayouts='us'
+# System language
+lang en_US.UTF-8
+
+# Reboot after install
+reboot
+
+# Network information
+network  --hostname=satellite6.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.7 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --noipv6 --activate
+
+# Root password
+rootpw --iscrypted $6$KY6TFtdCk7.SV2G5$fb02sjorNVYVi6SAiFLswjDMBzWx7zzKgKmnw9fHR8rR6lsQIL7GP1wVvJn3WoVPCj6hWohW.0aBgAaDBsGux/
+
+# System services
+services --enabled="chronyd rsyslog" ### BROKEN
+
+# System timezone
+timezone America/Phoenix --isUtc --ntpservers=gatekeeper.internal.tjon.net
+user --groups=wheel --name=chris --password=$6$OU1WFAy6UrhSBCDv$0mcg4YPZiZOvbLUUIP7neohCYTbzNNBaRgIqp/NAJDuNeI2nD.Br1LItDoFfZp/aWs8ZnEeGvTopVixzD0rlh. --iscrypted --gecos="Chris Tjon"
+# System bootloader configuration
+bootloader --location=mbr --boot-drive=vda
+# Partition clearing information
+zerombr
+clearpart --all --initlabel
+# Disk partitioning information
+part /boot --fstype="xfs" --ondisk=vda --size=512
+part pv.182 --fstype="lvmpv" --ondisk=vda --grow
+volgroup sat6vg --pesize=4096 pv.182
+logvol /  --fstype="xfs" --size=1024 --name=rootlv --vgname=sat6vg
+logvol /home  --fstype="xfs" --size=1024 --name=homelv --vgname=sat6vg
+logvol /opt  --fstype="xfs" --size=3072 --name=optlv --vgname=sat6vg
+logvol /usr  --fstype="xfs" --size=4096 --name=usrlv --vgname=sat6vg
+logvol /var  --fstype="xfs" --size=1024 --name=varlv --vgname=sat6vg
+logvol /var/cache  --fstype="xfs" --size=4096 --name=cachelv --vgname=sat6vg
+logvol /var/lib/tftpboot  --fstype="xfs" --size=1024 --name=tftpbootlv --vgname=sat6vg
+logvol swap  --fstype="swap" --size=8192 --name=swaplv --vgname=sat6vg
+logvol /var/log  --fstype="xfs" --size=10240 --name=loglv --vgname=sat6vg
+logvol /var/opt/rh/rh-postgresql12/lib/pgsql  --fstype="xfs" --size=20480 --name=pgsqllv --vgname=sat6vg
+logvol /var/lib/pulp  --fstype="xfs" --size=307200 --name=pulplv --vgname=sat6vg
+logvol /var/lib/qpidd  --fstype="xfs" --size=25 --name=qpiddlv --vgname=sat6vg
+logvol /var/cache/pulp  --fstype="xfs" --size=20480 --name=var_cache_pulplv --vgname=sat6vg
+logvol /var/lib/mongodb  --fstype="xfs" --size=51200 --name=var_lib_mongodblv --vgname=sat6vg
+logvol /var/spool/squid  --fstype="xfs" --size=10240 --name=squidlv --vgname=sat6vg
+
+%packages
+@^minimal
+@core
+python3
+chrony
+rsyslog
+net-tools
+bind-utils
+insights-client
+
+%end
+
+%addon com_redhat_kdump --disable --reserve-mb='auto'
+
+%end
+
+%anaconda
+pwpolicy root --minlen=6 --minquality=50 --notstrict --nochanges --notempty
+pwpolicy user --minlen=6 --minquality=50 --notstrict --nochanges --notempty
+pwpolicy luks --minlen=6 --minquality=50 --notstrict --nochanges --notempty
+%end
+
+%post
+# install ssh key for chris
+curl {{config_files_url}}/chris-server0-id_rsa.pub -o /home/chris/.ssh/authorized_keys  --create-dirs
+curl  {{config_files_url}}/chris-x1carbon-id_rsa.pub >> /home/chris/.ssh/authorized_keys
+curl  {{config_files_url}}/chris-mbp-id_rsa.pub >> /home/chris/.ssh/authorized_keys
+chown -R chris:chris /home/chris/.ssh
+chmod 700 /home/chris/.ssh
+chmod 600 /home/chris/.ssh/authorized_keys
+restorecon -RFv /home/chris/.ssh/authorized_keys
+
+/usr/bin/curl {{config_files_url}}/bash_profile -o /home/chris/.bash_profile
+/usr/bin/chmod 600 /home/chris/.bash_profile
+
+/usr/bin/mkdir /root/.ssh
+/usr/bin/chmod 700 /root/.ssh
+/usr/bin/curl {{config_files_url}}/public-keys/root-server0-public-key.txt -o ~root/.ssh/root-server0-public-key.txt
+/usr/bin/mv /root/.ssh/root-server0-public-key.txt /root/.ssh/authorized_keys
+/usr/bin/chmod 600 /root/.ssh/authorized_keys
+/usr/bin/curl {{config_files_url}}/bash_profile -o /root/.bash_profile
+/usr/bin/chmod 600 /root/.bash_profile
+
+%end

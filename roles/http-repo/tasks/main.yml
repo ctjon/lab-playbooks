@@ -11,14 +11,23 @@
   when:
       - ansible_distribution == "Fedora"
 
-- name: deploy vhosts.conf for installation server
+- name: deploy httpd.conf for installation server
   ansible.builtin.template:
-    src: vhosts.conf.j2
-    dest: /etc/httpd/conf.d/vhosts.conf
+    src: httpd.conf.j2
+    dest: /etc/httpd/conf/httpd.conf
     owner: root
     group: root
     mode: 0644
   notify: restart httpd
+
+# - name: deploy vhosts.conf for installation server
+#  ansible.builtin.template:
+#    src: vhosts.conf.j2
+#    dest: /etc/httpd/conf.d/vhosts.conf
+#    owner: root
+#    group: root
+#    mode: 0644
+#  notify: restart httpd
 
 - name: start and enable httpd
   ansible.builtin.service:

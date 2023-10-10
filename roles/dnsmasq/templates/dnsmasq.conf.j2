@@ -10,6 +10,7 @@
 # (53). Setting this to zero completely disables DNS function,
 # leaving only DHCP and/or TFTP.
 #port=5353
+port=53
 
 # The following two options make you a better netizen, since they
 # tell dnsmasq to filter out queries which the public DNS cannot
@@ -61,7 +62,7 @@ no-resolv
 
 # If you don't want dnsmasq to poll /etc/resolv.conf or other resolv
 # files for changes and re-read them then uncomment this.
-#no-poll
+no-poll
 
 # Add other name servers here, with domain specs if they are for
 # non-public domains.
@@ -110,6 +111,7 @@ group=dnsmasq
 {% for item in dnsmasq_interfaces %}
 interface={{item}}
 {% endfor %}
+interface=lo
 
 # Or you can specify which interface _not_ to listen on
 #except-interface=
@@ -563,6 +565,7 @@ domain={{trusted_network_domain_name}}
 
 # Set the cachesize here.
 #cache-size=150
+cache-size=1000
 
 # If you want to disable negative caching, uncomment this.
 #no-negcache

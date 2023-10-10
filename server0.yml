@@ -7,14 +7,20 @@
   become: yes
 
   roles:
-    - role: config-local-repos
-      tags: ['config-local-repos']
+    - role: sm-register
+      tags: ['sm-register']
+
+    - role: insights-register
+      tags: ['insights-register']
+
+#    - role: config-local-repos
+#      tags: ['config-local-repos']
 
     - role: config-local-rpmfusion-repos
       tags: ['config-local-rpmfusion-repos']
 
-    - role: setup-br0
-      tags: ['setup-br0']
+#    - role: setup-br0
+#      tags: ['setup-br0']
 
     - role: disable-ipv6
       tags: ['disable-ipv6']
@@ -49,8 +55,8 @@
     - role: apply-updates
       tags: ['apply-updates']
 
-    - role: apcupsd
-      tags: ['apcupsd']
+#    - role: apcupsd
+#      tags: ['apcupsd']
 
 #    - role: appletalk-server
 #      tags: ['appletalk-server']
@@ -64,11 +70,11 @@
     - role: tftp-server
       tags: ['tftp-server']
 
-    - role: config-local-virtio-win-repos
-      tags: ['config-local-virtio-win-repos']
+#    - role: config-local-virtio-win-repos
+#      tags: ['config-local-virtio-win-repos']
 
-    - role: virt-server
-      tags: ['virt-server']
+#    - role: virt-server
+#      tags: ['virt-server']
 
     - role: kickstart
       tags: ['kickstart']
@@ -85,23 +91,20 @@
     - role: http-repo
       tags: ['http-repo']
 
-## DON'T AUTO REBOOT IF RUNNING KVM VMs
-## At least not until the role is modified to accomodate it
-#    - role: reboot-if-required
-#      tags: ['reboot-if-required']
-
+    - role: reboot-if-required
+      tags: ['reboot-if-required']
 
   tasks:
     - name: install other packages 
       ansible.builtin.package:
-        name: nmap, lftp, ftp, openscap, openscap-scanner, openscap-utils, openscap-python3, python3-botocore, python3-boto3, python3-pyvmomi, ansible, screen, virtio-win, xar, fuse-sshfs, git, unrar
+        name: nmap, lftp, ftp, openscap, openscap-scanner, openscap-utils, openscap-python3, python3-botocore, python3-boto3, python3-pyvmomi, ansible, screen, virtio-win, xar, fuse-sshfs, git, unrar, vnstat, nmon, open-vm-tools
         state: latest
       tags:
         - localpkgs
 
     - name: install other fedora packages 
       ansible.builtin.package:
-        name: openscap-containers, python3-boto, openwsman-winrs.x86_64, vnstat, nmon
+        name: openscap-containers, python3-boto, openwsman-winrs.x86_64
         state: latest
       when: 
         - ansible_distribution == "Fedora"

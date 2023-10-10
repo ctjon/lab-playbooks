@@ -1,10 +1,10 @@
 #!/bin/bash
 export default_interface=eth0
 export bridge_name=br0
-export ip_address=172.16.1.2
-export netmask=24
-export default_gateway=172.16.1.1
-export nameserver=172.16.1.1
+export ip_address="{{trusted_default_ipaddr}}"
+export netmask="{{trusted_network_prefix}}"
+export default_gateway="{{trusted_network_gateway}}"
+export nameserver="{{trusted_network_dns_server}}"
 export pinghost=www.google.com
 
 sudo nmcli connection show

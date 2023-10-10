@@ -25,9 +25,9 @@
   with_items:
     - "{{sync_scripts_list}}"
 
-- name: install cronie
+- name: install packages
   ansible.builtin.package:
-    name: cronie
+    name: cronie, rsync
     state: latest
 
 - name: create crontab entries for {{repo_owner}} to run sync-fedora.sh
