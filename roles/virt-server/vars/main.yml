@@ -25,6 +25,7 @@ virt_packages_list_rhel7:
   - efibootmgr
   - syslinux
   - syslinux-extlinux
+  - virt-customize
 
 virt_packages_list_rhel8:
   - python3-libvirt
@@ -43,4 +44,5 @@ virt_packages_list_rhel8:
   - efibootmgr
   - syslinux
   - syslinux-extlinux
+  - virt-customize
 
