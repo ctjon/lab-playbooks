@@ -4,8 +4,7 @@
 ::1             localhost localhost.localdomain localhost6 localhost6.localdomain6
 
 172.16.1.1	gatekeeper.internal.tjon.net gatekeeper
-172.16.1.2	vmserver.internal.tjon.net vmserver
-172.16.1.3	server0.internal.tjon.net server0 install.internal.tjon.net install archive.internal.tjon.net archive plex.internal.tjon.net plex
+172.16.1.2	server0.internal.tjon.net server0 install.internal.tjon.net install archive.internal.tjon.net archive plex.internal.tjon.net plex
 172.16.1.4	virtualpc.internal.tjon.net virtualpc
 172.16.1.5	wf7610.internal.tjon.net wf7610
 172.16.1.7	satellite6.internal.tjon.net satellite6

@@ -13,6 +13,9 @@
     - role: insights-register
       tags: ['insights-register']
 
+    - role: create-raid-arrays
+      tags: ['create-raid-arrays']
+
 #    - role: config-local-repos
 #      tags: ['config-local-repos']
 
@@ -70,11 +73,11 @@
     - role: tftp-server
       tags: ['tftp-server']
 
-#    - role: config-local-virtio-win-repos
-#      tags: ['config-local-virtio-win-repos']
+    - role: config-local-virtio-win-repos
+      tags: ['config-local-virtio-win-repos']
 
-#    - role: virt-server
-#      tags: ['virt-server']
+    - role: virt-server
+      tags: ['virt-server']
 
     - role: kickstart
       tags: ['kickstart']
@@ -97,7 +100,7 @@
   tasks:
     - name: install other packages 
       ansible.builtin.package:
-        name: nmap, lftp, ftp, openscap, openscap-scanner, openscap-utils, openscap-python3, python3-botocore, python3-boto3, python3-pyvmomi, ansible, screen, virtio-win, xar, fuse-sshfs, git, unrar, vnstat, nmon, open-vm-tools, net-tools
+        name: nmap, lftp, ftp, openscap, openscap-scanner, openscap-utils, openscap-python3, python3-botocore, python3-boto3, python3-pyvmomi, ansible, screen, virtio-win, xar, fuse-sshfs, git, unrar, vnstat, nmon, net-tools, wireshark, tcpdump
         state: latest
       tags:
         - localpkgs

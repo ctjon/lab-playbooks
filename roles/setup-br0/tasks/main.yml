@@ -1,9 +1,18 @@
 ---
-- name: install bridge-utils
+- name: install packages for Fedora Systems
   package:
     name: bridge-utils, firewalld
     state: latest
+  when:
+    - ansible_facts['distribution'] == "fedora"
 
+- name: install packages for RHEL9 Systems
+  package:
+    name: firewalld
+    state: latest
+  when:
+    - ansible_facts['distribution'] == "RedHat"
+    - ansible_facts['distribution_major_version'] == "9"
 #
 # "nmcli con add type bridge ifname br0"
 #

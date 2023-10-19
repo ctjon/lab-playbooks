@@ -28,7 +28,7 @@ time_servers:
 # Trusted Network Interface Configuration Parameters                           #
 ################################################################################
 trusted_network_interface: eth0
-trusted_network_ipaddr: 172.16.1.3
+trusted_network_ipaddr: 172.16.1.2
 trusted_network_subnet: 172.16.1.0/24
 trusted_network_prefix: 24
 trusted_network_short_net: 172.16.1
@@ -38,8 +38,8 @@ trusted_network_domain_name: internal.tjon.net
 trusted_network_search_domains: 
  - internal.tjon.net
 trusted_network_dns_servers: 
-  - 172.16.1.3
-#  - 172.16.1.1
+  - 172.16.1.2
+  - 172.16.1.1
 #
 #use_dhcp: 'false'
 #trusted_network_bridge: br0
@@ -135,12 +135,10 @@ samba_workgroup: PARANOID
 samba_netbios_name: SERVER0
 
 trusted_interfaces:
-  - "{{trusted_network_bridge}}"
   - virbr0
-  - vnet_nat1
-  - vnet_nat2
+  - "{{trusted_network_interface}}"
+#  - "{{trusted_network_bridge}}"
 #  - "{{wireless_interface}}"
-#  - "{{trusted_network_interface}}"
 
 trusted_subnets:
   - 172.16.1.0/24

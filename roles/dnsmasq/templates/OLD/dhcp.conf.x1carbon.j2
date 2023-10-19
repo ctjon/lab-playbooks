@@ -25,8 +25,6 @@ dhcp-option={{item.name}},option:router,{{item.router}}
 dhcp-lease-max=155
 # NEED LOCAL DNS SETUP HERE
 # server={{primary_gateway}}
-server={{primary_gateway}}
-server=172.16.1.3
-server=8.8.8.8
+server={{trusted_network_ipaddr}}
 #dhcp-host=d0:50:99:82:e7:2b,192.168.10.46
 #dhcp-host=turnip,192.168.10.45

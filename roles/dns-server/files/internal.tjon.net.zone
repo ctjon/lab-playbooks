@@ -14,8 +14,7 @@ ns               IN  A      172.16.1.1
 mail             IN  CNAME  gatekeeper.internal.tjon.net.
 vpnserver        IN  CNAME  gatekeeper.internal.tjon.net.
 time             IN  CNAME  gatekeeper.internal.tjon.net.
-vmserver         IN  A      172.16.1.2
-server0          IN  A      172.16.1.3
+server0          IN  A      172.16.1.2
 install          IN  CNAME  server0.internal.tjon.net.
 archive          IN  CNAME  server0.internal.tjon.net.
 wireless         IN  A      172.16.1.5

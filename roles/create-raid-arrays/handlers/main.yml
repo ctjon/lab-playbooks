@@ -1,0 +1,6 @@
+---
+
+- name: restart mdadm
+  ansible.builtin.command: mdadm --auto-detect
+  become: true
+

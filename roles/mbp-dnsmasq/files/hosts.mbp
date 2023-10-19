@@ -6,8 +6,7 @@
 192.168.242.2	gateway.mbp.tjon.net gateway
 192.168.242.4	towervm.mbp.tjon.net towervm
 172.16.1.1	gatekeeper.internal.tjon.net gatekeeper
-172.16.1.2	vmserver.internal.tjon.net vmserver
-172.16.1.3	server0.internal.tjon.net server0 install.internal.tjon.net install archive.internal.tjon.net archive
+172.16.1.2	server0.internal.tjon.net server0 install.internal.tjon.net install archive.internal.tjon.net archive
 172.16.1.4	tower.internal.tjon.net tower
 172.16.1.5	virtualpc.internal.tjon.net virtualpc
 172.16.1.6	itunesserver.internal.tjon.net itunesserver

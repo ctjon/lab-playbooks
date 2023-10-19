@@ -1,5 +1,13 @@
-vm_storage_vg: imagesvg
+vm_storage_vg: datavg
+vm_storage_path: /var/lib/libvirt/images
 vm_storage_lv: imageslv
+vm_storage_lv_size: 2T
+vm_storage_fs_type: xfs
+
+virt_nets:
+  - macvtap-bridge
+  - vnet_nat1
+  - vnet_nat2
 
 virt_packages_list_rhel7:
   - python3-libvirt

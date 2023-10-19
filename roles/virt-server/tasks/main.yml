@@ -23,34 +23,34 @@
 
 # 
 # This breaks with luks dm-mapper
-# #
-#- name: create vm storage in {{vm_storage_path}}
-#  ansible.builtin.lvol:
-#    vg: "{{ vm_storage_vg }}"
-#    lv: "{{ vm_storage_lv }}"
-#    size: "{{ vm_storage_lv_size }}"
-#    shrink: no
-#    force: no
-#    state: present
-#    resizefs: yes
+#
+- name: create vm storage in {{vm_storage_path}}
+  ansible.builtin.lvol:
+    vg: "{{ vm_storage_vg }}"
+    lv: "{{ vm_storage_lv }}"
+    size: "{{ vm_storage_lv_size }}"
+    shrink: no
+    force: no
+    state: present
+    resizefs: yes
 #
 # this is a problem when using luks encryption because ansible sees fs as 
 # "cryptoLuks" and wants to reformat it even though it is actually xfs 
 # hence ignore_errors=yes
-#- name: Create a {{vm_storage_fs_type}}  filesystem on {{ vm_storage_lv }}
-#  ansible.builtin.filesystem:
-#    fstype: "{{ vm_storage_fs_type }}"
-#    dev: "/dev/{{vm_storage_vg}}/{{vm_storage_lv}}"
-#    force: no
-#  ignore_errors: yes 
-#
-#- name: mount {{vm_storage_path}}
-#  ansible.builtin.mount:
-#    path: "{{ vm_storage_path }}"
-#    src: "/dev/{{vm_storage_vg}}/{{vm_storage_lv}}"
-#    fstype: "{{ vm_storage_fs_type }}"
-#    opts: defaults
-##    state: mounted
+- name: Create a {{vm_storage_fs_type}}  filesystem on {{ vm_storage_lv }}
+  ansible.builtin.filesystem:
+    fstype: "{{ vm_storage_fs_type }}"
+    dev: "/dev/{{vm_storage_vg}}/{{vm_storage_lv}}"
+    force: no
+  ignore_errors: yes 
+
+- name: mount {{vm_storage_path}}
+  ansible.builtin.mount:
+    path: "{{ vm_storage_path }}"
+    src: "/dev/{{vm_storage_vg}}/{{vm_storage_lv}}"
+    fstype: "{{ vm_storage_fs_type }}"
+    opts: defaults
+    state: mounted
 
 - name: Install RHEL/CentOS Packages
   ansible.builtin.yum: 
@@ -88,42 +88,52 @@
   with_items:
     - "{{ libvirt_users }}"
 
-# - name: setup virtual networks
-#  block:
-#    - name: define nets
-#      community.libvirt.virt_net:
-#        command: define
-#        name: "{{item}}"
-#        xml: '{{ lookup("template", "{{item}}.j2") }}'
-#      ignore_errors: yes # set because module fails if network already exists
-#      with_items:
-#        - "{{virt_nets}}"
-#
-#    - name: create nets
-#      community.libvirt.virt_net:
-#        command: create
-#        name: "{{item}}"
-#      ignore_errors: yes #set because module fails if network already exists
-#      with_items:
-#        - "{{virt_nets}}"
-#
-#    - name: set nets for autostart
-#      community.libvirt.virt_net:
-#        name: "{{item}}"
-#        autostart: yes
-#      with_items:
-#        - "{{virt_nets}}"
-#
-#    - name: add virt_nets to trusted network firewall zone
-#      ansible.builtin.firewalld: 
-#        zone: "{{trusted_network_firewall_zone}}"
-#        interface: "{{item}}"
-#        permanent: yes
-#        immediate: yes
-#        state: enabled
-#      with_items:
-#        - "{{ virt_nets}}"
-#  tags: config_virtual_networks
+- name: setup virtual networks
+  block:
+    - name: define nets
+      community.libvirt.virt_net:
+        command: define
+        name: "{{item}}"
+        xml: '{{ lookup("template", "{{item}}.xml.j2") }}'
+      ignore_errors: yes # set because module fails if network already exists
+      with_items:
+        - "{{virt_nets}}"
+
+    - name: create nets
+      community.libvirt.virt_net:
+        command: create
+        name: "{{item}}"
+      ignore_errors: yes #set because module fails if network already exists
+      with_items:
+        - "{{virt_nets}}"
+
+    - name: set nets for autostart
+      community.libvirt.virt_net:
+        name: "{{item}}"
+        autostart: yes
+      with_items:
+        - "{{virt_nets}}"
+
+    - name: add virt_nets to trusted network firewall zone
+      ansible.builtin.firewalld: 
+        zone: "{{trusted_network_firewall_zone}}"
+        interface: "{{item}}"
+        permanent: yes
+        immediate: yes
+        state: enabled
+      with_items:
+        - "{{ virt_nets}}"
+
+    - name: stop default net
+      community.libvirt.virt_net:
+        command: stop
+        name: default
+
+    - name: set default for no autostart
+      community.libvirt.virt_net:
+        name: default
+        autostart: no
+  tags: config_virtual_networks
 
 - name: restore SELinux Context on /etc/yum.repos.d
   ansible.builtin.command: restorecon -RFv /etc/yum.repos.d
