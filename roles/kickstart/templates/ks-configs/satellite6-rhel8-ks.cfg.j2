@@ -7,7 +7,7 @@ repo --name="AppStream" --baseurl="{{linux_install_server_url}}/rhel/8/x86_64/Ap
 graphical
 # Run the Setup Agent on first boot
 firstboot --enable
-ignoredisk --only-use=sda
+ignoredisk --only-use=vda
 # Keyboard layouts
 # old format: keyboard us
 # new format:
@@ -28,13 +28,13 @@ rootpw --iscrypted $6$KY6TFtdCk7.SV2G5$fb02sjorNVYVi6SAiFLswjDMBzWx7zzKgKmnw9fHR
 timezone America/Phoenix --isUtc --ntpservers=gatekeeper.internal.tjon.net
 user --groups=wheel --name=chris --password=$6$OU1WFAy6UrhSBCDv$0mcg4YPZiZOvbLUUIP7neohCYTbzNNBaRgIqp/NAJDuNeI2nD.Br1LItDoFfZp/aWs8ZnEeGvTopVixzD0rlh. --iscrypted --gecos="Chris Tjon"
 # System bootloader configuration
-bootloader --location=mbr --boot-drive=sda
+bootloader --location=mbr --boot-drive=vda
 # Partition clearing information
 zerombr
 clearpart --all --initlabel
 # Disk partitioning information
-part /boot --fstype="xfs" --ondisk=sda --size=512
-part pv.182 --fstype="lvmpv" --ondisk=sda --grow
+part /boot --fstype="xfs" --ondisk=vda --size=512
+part pv.182 --fstype="lvmpv" --ondisk=vda --grow
 volgroup sat6vg --pesize=4096 pv.182
 logvol /  --fstype="xfs" --size=1024 --name=rootlv --vgname=sat6vg
 logvol /home  --fstype="xfs" --size=1024 --name=homelv --vgname=sat6vg

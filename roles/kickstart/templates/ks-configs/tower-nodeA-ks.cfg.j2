@@ -7,7 +7,7 @@ url --url="{{linux_install_server_url}}/rhel/7/x86_64"
 graphical
 # Run the Setup Agent on first boot
 firstboot --enable
-ignoredisk --only-use=sda
+ignoredisk --only-use=vda
 # Keyboard layouts
 # old format: keyboard us
 # new format:
@@ -27,13 +27,13 @@ timezone America/Phoenix --isUtc --ntpservers=time.internal.tjon.net
 reboot
 user --groups=wheel --name=chris --uid=1000 --password=$6$i1f1OpEJjZLPJsMt$9lnkjugGqnfX1ICR8et0Nur34/w4ff4/rCEt0M0/6gcjZgW0C5h/GeUbvhjWCscd2H2.WmRH/ni/Libp6bGG/0 --iscrypted --gecos="Chris Tjon"
 # System bootloader configuration
-bootloader --location=mbr --boot-drive=sda
+bootloader --location=mbr --boot-drive=vda
 # Partition clearing information
-clearpart --all --initlabel --drives=sda
+clearpart --all --initlabel --drives=vda
 
 # Disk partitioning information
-part /boot --fstype="ext4" --ondisk=sda --size=256
-part pv.1 --fstype="lvmpv" --ondisk=sda --grow
+part /boot --fstype="ext4" --ondisk=vda --size=256
+part pv.1 --fstype="lvmpv" --ondisk=vda --grow
 volgroup rootvg --pesize=4096 pv.1
 logvol /  --fstype="ext4" --size=1024 --label="root" --name=rootlv --vgname=rootvg
 logvol /usr  --fstype="ext4" --size=4096 --label="usr" --name=usrlv --vgname=rootvg

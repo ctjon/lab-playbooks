@@ -1,5 +1,5 @@
 #version=RHEL8
-ignoredisk --only-use=sda
+ignoredisk --only-use=vda
 # Partition clearing information
 clearpart --all --initlabel
 # Use graphical install
@@ -30,8 +30,8 @@ timezone America/Phoenix --isUtc
 reboot
 user --groups=wheel --name=chris --password=$6$Mcw9nP3uls0APJhP$iGcIRQ14HIv.vMOQDepnvDIFIwpLWKlkqi3ZNlyJ386Xt/Kedx64MDMN8e1pW0lMPrJbRHo8yDwD6kHFkxHpl1 --iscrypted --gecos="Chris Tjon"
 # Disk partitioning information
-part /boot --fstype="ext4" --ondisk=sda --size=512 --fsoptions="defaults,nodev,nosuid"
-part pv.821 --fstype="lvmpv" --ondisk=sda --size=17416
+part /boot --fstype="ext4" --ondisk=vda --size=512 --fsoptions="defaults,nodev,nosuid"
+part pv.821 --fstype="lvmpv" --ondisk=vda --size=17416
 volgroup rootvg --pesize=4096 pv.821
 logvol swap --fstype="swap" --size=4096 --name=swaplv --vgname=rootvg
 logvol /home --fstype="ext4" --size=1024 --fsoptions="defaults,nosuid,nodev" --label="home" --name=homelv --vgname=rootvg
