@@ -1,9 +1,14 @@
+---
 #
 # make sure you have virtio-win repo installed by using either of the following:
 # role: config-local-virtio-win-repos
 # role: config-virtio-win-repos
 # 
----
+- name: install packages for virt-server
+  package: 
+    name: "{{virt_packages_list}}"
+    state: latest
+
 - name: validate cpu architecture supports virtualization
   ansible.builtin.shell: egrep '^flags.*(vmx|svm)' /proc/cpuinfo
   register: cpuinfo
