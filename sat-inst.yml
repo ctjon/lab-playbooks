@@ -31,7 +31,7 @@
     - role: reboot-if-required
       tags: ['reboot-if-required']
 
-#    - role: insights-register
-#      tags: ['insights']
+    - role: insights-register
+      tags: ['insights']
 
 

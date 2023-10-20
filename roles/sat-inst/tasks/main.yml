@@ -9,25 +9,12 @@
     - sat-inst
     - sat-config
 
-- name: Enable Required Repos for RHEL7
-  ansible.builtin.command: subscription-manager repos \
-             --enable rhel-7-server-rpms \
-             --enable rhel-server-rhscl-7-rpms \
-             --enable rhel-7-server-ansible-{{ansible_repo_version}}-rpms \
-             --enable rhel-7-server-optional-rpms \
-             --enable rhel-7-server-satellite-{{sat_version}}-rpms \
-             --enable rhel-7-server-satellite-maintenance-6-rpms
-  when: ansible_distribution_major_version == "7"
-  tags: sat-inst
-    - sat-inst
-    - sat-config
-
 - name: Enable Required Repos for RHEL8
   ansible.builtin.command: subscription-manager repos \
       --enable=rhel-8-for-x86_64-baseos-rpms \
       --enable=rhel-8-for-x86_64-appstream-rpms \
-      --enable=satellite-6.11-for-rhel-8-x86_64-rpms \
-      --enable=satellite-maintenance-6.11-for-rhel-8-x86_64-rpms
+      --enable=satellite-6.13-for-rhel-8-x86_64-rpms \
+      --enable=satellite-maintenance-6.13-for-rhel-8-x86_64-rpms
   when: ansible_distribution_major_version == "8"
   tags:
     - sat-inst
@@ -52,7 +39,7 @@
     - sat-inst
     - sat-config
     
-- name: install sos
+- name: install packages
   ansible.builtin.package:
     name: sos
     state: latest
@@ -99,17 +86,10 @@
     - "69/udp"
     - "80/tcp"
     - "443/tcp"
-    - "5646/tcp"
-    - "8000/tcp"
-    - "8140/tcp"
-    - "8443/tcp"
     - "9090/tcp"
   tags: 
     - sat-inst
     - sat-config
-      
-#    - "5910-5930/tcp"
-
 
 - name: Install satellite
   ansible.builtin.package:

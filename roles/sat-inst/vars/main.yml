@@ -1,6 +1,6 @@
-sat_version: 6.5
+sat_version: 6.13
 ansible_repo_version: 2.7
-rhel_release: 7
+rhel_release: 8
 TIMEZONE: "America/Phoenix"
 user: chris
 user_home_dir: "/home/{{user}}"

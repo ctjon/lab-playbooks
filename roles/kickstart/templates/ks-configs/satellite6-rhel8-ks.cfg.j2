@@ -39,7 +39,7 @@ volgroup sat6vg --pesize=4096 pv.182
 logvol /  --fstype="xfs" --size=1024 --name=rootlv --vgname=sat6vg
 logvol /home  --fstype="xfs" --size=1024 --name=homelv --vgname=sat6vg
 logvol /opt  --fstype="xfs" --size=1024 --name=optlv --vgname=sat6vg
-logvol /usr  --fstype="xfs" --size=4096 --name=usrlv --vgname=sat6vg
+logvol /usr  --fstype="xfs" --size=5120 --name=usrlv --vgname=sat6vg
 logvol /var  --fstype="xfs" --size=1024 --name=varlv --vgname=sat6vg
 logvol /var/cache  --fstype="xfs" --size=4096 --name=cachelv --vgname=sat6vg
 logvol /var/lib/tftpboot  --fstype="xfs" --size=1024 --name=tftpbootlv --vgname=sat6vg
@@ -48,7 +48,7 @@ logvol /var/log  --fstype="xfs" --size=10240 --name=loglv --vgname=sat6vg
 logvol /var/lib/pgsql  --fstype="xfs" --size=20480 --name=pgsqllv --vgname=sat6vg
 logvol /opt/puppetlabs  --fstype="xfs" --size=512 --name=puppetlabslv --vgname=sat6vg
 logvol /var/lib/pulp  --fstype="xfs" --size=307200 --name=pulplv --vgname=sat6vg
-logvol /var/lib/qpidd  --fstype="xfs" --size=25 --name=qpiddlv --vgname=sat6vg
+logvol /var/lib/qpidd  --fstype="xfs" --size=1024 --name=qpiddlv --vgname=sat6vg
 logvol /var/cache/pulp  --fstype="xfs" --size=20480 --name=var_cache_pulplv --vgname=sat6vg
 logvol /var/lib/mongodb  --fstype="xfs" --size=51200 --name=var_lib_mongodblv --vgname=sat6vg
 logvol /var/spool/squid  --fstype="xfs" --size=10240 --name=squidlv --vgname=sat6vg
