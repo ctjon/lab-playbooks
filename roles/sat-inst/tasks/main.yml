@@ -86,6 +86,9 @@
     - "69/udp"
     - "80/tcp"
     - "443/tcp"
+    - "5647/tcp"
+    - "8000/tcp"
+    - "8140/tcp"
     - "9090/tcp"
   tags: 
     - sat-inst
@@ -105,6 +108,7 @@
     --foreman-initial-location "{{ foreman_initial_location }}" \
     --foreman-initial-admin-username "{{ foreman_admin_username }}" \
     --foreman-initial-admin-password "{{ foreman_admin_password }}" \
+    --enable-foreman-proxy-plugin-ansible \
     --foreman-proxy-dns-managed=false \
     --foreman-proxy-dhcp-managed=false
   tags: 
@@ -149,7 +153,7 @@
     - sat-config
 
 - name: Install RedHat Insights on Satellite Server
-  ansible.builtin.command: satellite-maintain packages install insights-client
+  ansible.builtin.command: satellite-maintain packages install -y insights-client
   tags:
     - sat-inst
     - sat-config

@@ -31,7 +31,8 @@
     - role: reboot-if-required
       tags: ['reboot-if-required']
 
-    - role: insights-register
-      tags: ['insights']
+# Insights is being done as part of satellite install
+#    - role: insights-register
+#      tags: ['insights']
 
 
