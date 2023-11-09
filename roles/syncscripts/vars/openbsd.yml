@@ -1,10 +1,10 @@
 #
 # OpenBSD includes/excludes
 #
-openbsd_prev_dot_release: 2
+openbsd_prev_dot_release: 3
 
 openbsd_version_includes:
-  - 7.3
+  - 7.4
 
 openbsd_version_excludes:
   - '2.*'

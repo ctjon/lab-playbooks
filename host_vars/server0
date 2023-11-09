@@ -285,7 +285,7 @@ fedora_versions:
   - 39
 
 openbsd_versions:
-  - 7.3
+  - 7.4
 
 vmware_versions:
   - 6.7.0
