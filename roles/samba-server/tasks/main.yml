@@ -59,22 +59,22 @@
   with_items:
     - "{{ tm_users }}"
 
-- name: create {{ tm_storage_lv }}
-  ansible.builtin.lvol:
-    vg: "{{ tm_storage_vg }}"
-    lv: "{{ tm_storage_lv }}"
-    size: "{{ tm_storage_lv_size }}"
-    shrink: no
-    state: present
-    resizefs: yes
-
-- name: Create an xfs filesystem on {{ tm_storage_lv }}
-  community.general.filesystem:
-    fstype: "{{ tm_storage_fs_type }}"
-    dev: "/dev/{{tm_storage_vg}}/{{tm_storage_lv}}"
-    force: no
-    state: present
-
+#- name: create {{ tm_storage_lv }}
+#  ansible.builtin.lvol:
+#    vg: "{{ tm_storage_vg }}"
+#    lv: "{{ tm_storage_lv }}"
+#    size: "{{ tm_storage_lv_size }}"
+#    shrink: no
+#    state: present
+#    resizefs: yes
+#
+#- name: Create an xfs filesystem on {{ tm_storage_lv }}
+#  community.general.filesystem:
+#    fstype: "{{ tm_storage_fs_type }}"
+#    dev: "/dev/{{tm_storage_vg}}/{{tm_storage_lv}}"
+#    force: no
+#    state: present
+#
 - name: mount {{tm_storage_path}}
   ansible.builtin.mount:
     path: "{{ tm_storage_path }}"

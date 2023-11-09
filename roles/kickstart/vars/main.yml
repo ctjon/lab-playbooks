@@ -5,8 +5,8 @@ ks_configs_list:
   - fipstest-ks.cfg
   - test-centos7-ks.cfg
   - test-centos8-ks.cfg
-  - test-fedora37-ks.cfg
   - test-fedora38-ks.cfg
+  - test-fedora39-ks.cfg
   - test-rhel6-ks.cfg
   - test-rhel7-ks.cfg
   - test-rhel8-ks.cfg

@@ -162,7 +162,7 @@ samba_shares:
   - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
   - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
 #  - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
-  - {path: /export/backup, name: Backup, public: 'no', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{backup_trusted_write_users}}'}
+#  - {path: /export/backup, name: Backup, public: 'no', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{backup_trusted_write_users}}'}
 
 ################################################################################
 # Netatalk Configuration Parameters                                            #
@@ -228,8 +228,8 @@ scripts_list:
   - kvms/define-centos6-test.sh
   - kvms/define-centos7-test.sh
   - kvms/define-centos8-test.sh
-  - kvms/define-fedora37-test.sh
   - kvms/define-fedora38-test.sh
+  - kvms/define-fedora39-test.sh
   - kvms/delete-testvms.sh
   - kvms/define-satellite6.sh
   - kvms/define-satclients.sh
@@ -281,8 +281,8 @@ fedora_architectures:
 #  - s390x
 
 fedora_versions:
-  - 37
   - 38
+  - 39
 
 openbsd_versions:
   - 7.3

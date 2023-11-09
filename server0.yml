@@ -58,8 +58,8 @@
     - role: apply-updates
       tags: ['apply-updates']
 
-#    - role: apcupsd
-#      tags: ['apcupsd']
+    - role: apcupsd
+      tags: ['apcupsd']
 
 #    - role: appletalk-server
 #      tags: ['appletalk-server']

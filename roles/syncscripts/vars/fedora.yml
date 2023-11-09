@@ -1,16 +1,16 @@
 fedora_linux_rsync_server: mirrors.kernel.org
 
 fedora_version_includes_list:
-  - 37
   - 38
+  - 39
 
 # fedora versions that include upgrade.img
 #fedora_upgrade_versions:
-#  - 37
 #  - 38
+#  - 39
 
-fedora_prev_release_ones_digit: 6
-fedora_prev_release: 36
+fedora_prev_release_ones_digit: 7
+fedora_prev_release: 37
 
 fedora_version_excludes_list:
   - core
