@@ -1,7 +1,11 @@
 ---
 - name: Install ProtonVPN Repo
   ansible.builtin.package:
+<<<<<<< HEAD
     name: "https://repo.protonvpn.com/fedora-{{ansible_distribution_major_version}}-stable/protonvpn-stable-release-1.0.1-2.noarch.rpm"
+=======
+    name: "https://repo.protonvpn.com/fedora-39-stable/protonvpn-stable-release/protonvpn-stable-release-1.0.1-2.noarch.rpm"
+>>>>>>> c555f7f (Latest Commits)
     state: latest
     disable_gpg_check: yes
 
