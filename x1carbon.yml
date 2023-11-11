@@ -42,12 +42,12 @@
     - role: setup-epel
       tags: ['setup-epel']
 
-    - role: fail2ban
-      tags: ['fail2ban']
+#    - role: fail2ban
+#      tags: ['fail2ban']
 
-    - role: virt-server
-      tags: ['virt-server']
-      become: true
+#    - role: virt-server
+#      tags: ['virt-server']
+#      become: true
 
     - role: protonvpn-client
       tags: ['protonvpn-client']
