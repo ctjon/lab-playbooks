@@ -1,0 +1,73 @@
+#---
+#
+# Configure gatekeeper
+#
+
+- hosts: gatekeeper
+  become: yes
+
+  roles:
+    - role: sm-register
+      tags: ['sm-register']
+
+    - role: insights-register
+      tags: ['insights-register']
+
+#    - role: config-local-repos
+#      tags: ['config-local-repos']
+
+    - role: disable-ipv6
+      tags: ['disable-ipv6']
+
+    - role: selinux
+      tags: ['selinux']
+
+    - role: limit-kernels
+      tags: ['limit-kernels']
+
+    - role: sshd-config
+      tags: ['sshd-config']
+
+    - role: ssh-config
+      tags: ['ssh-config']
+
+    - role: shell-env #including both ssh-keys on server and p51s ??
+      tags: ['shell-env']
+
+    - role: set-default-editor
+      tags: ['set-default-editor']
+
+    - role: masquerade
+      tags: ['masquerade']
+
+    - role: dnsmasq
+      tags: ['dnsmasq']
+
+    - role: apply-updates
+      tags: ['apply-updates']
+
+    - role: setup-epel
+      tags: ['setup-epel']
+      
+    - role: apcupsd
+      tags: ['apcupsd']
+
+    - role: time-server
+      tags: ['time-server']
+
+    - role: reboot-if-required
+      tags: ['reboot-if-required']
+
+  tasks:
+    - name: install other packages 
+      ansible.builtin.package:
+        name: nmap, openscap, openscap-scanner, openscap-utils, openscap-python3, screen, vnstat, nmon, net-tools, wireshark, tcpdump
+        state: latest
+      tags:
+        - localpkgs
+
+    - name: start and enable vnstat
+      ansible.builtin.service:
+        name: vnstat
+        state: started
+        enabled: yes

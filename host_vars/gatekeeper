@@ -1,0 +1,100 @@
+#
+# host_vars file for gatekeeper
+#
+
+personal_server: true
+work_server: false
+test_nmcli: false
+
+use_ssh_agent: yes
+copy_ssh_keys: yes
+
+ssh_private_key_list:  
+  - ctjon.pem
+  - ctjon-github_rsa
+
+ssh_public_key_list:
+  - ctjon-github_rsa
+
+enable_public_sshd: true
+
+TIMEZONE: "America/Phoenix"
+time_servers:
+  - time.internal.tjon.net
+#  - 0.rhel.pool.ntp.org
+#  - 1.rhel.pool.ntp.org
+#  - 2.rhel.pool.ntp.org
+#  - 3.rhel.pool.ntp.org
+
+################################################################################
+# Trusted Network Interface Configuration Parameters                           #
+################################################################################
+trusted_network_interface: eth0
+trusted_network_ipaddr: 172.16.1.41
+trusted_network_subnet: 172.16.1.0/24
+trusted_network_prefix: 24
+trusted_network_short_net: 172.16.1
+trusted_network_netmask: 255.255.255.0
+trusted_network_gateway: 
+trusted_network_domain_name: internal.tjon.net
+trusted_network_search_domains: 
+ - internal.tjon.net
+trusted_network_dns_servers: 
+  - 172.16.1.2
+  - 172.16.1.1
+  - 68.1.16.107
+
+trusted_network_firewall_zone: internal
+public_network_firewall_zone: public
+public_network_interface: eth1
+
+################################################################################
+# Time Server Configuration Parameters                                         #
+################################################################################
+time_client_servers:
+  - "time.{{trusted_network_domain_name}}"
+#  - "time.{{public_network_domain_name}}"
+
+################################################################################
+# TFTP Boot Server Parameters                                                  #
+################################################################################
+tftpbootdir: /var/lib/tftpboot
+
+################################################################################
+# HTTP Server Parameters                                                       #
+################################################################################
+vhosts: 
+  - {name: server0, document_root: /var/www/html, alias: server0, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
+  - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: "/dev/{{install_vg}}/installlv"}
+  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: "{{archive_dev}}"}
+
+################################################################################
+# SSH Configuration Parameters                                                 #
+################################################################################
+#ssh_root_login_permited: "yes"
+#allowed_ssh_users: chris root
+ssh_root_login_permited: "no"
+allowed_ssh_users: chris
+
+################################################################################
+# DNSMASQ Configuration Parameters                                             #
+################################################################################
+dnsmasq_interfaces:
+  - "{{trusted_network_interface}}"
+ 
+dns_enabled: true
+dhcp_enabled: true
+pxe_enabled: false
+
+dhcp_range_start: 100
+dhcp_range_end: 199
+dhcp_lease_time: 4h
+dhcp_ntp_server: 172.16.1.1
+dhcp_router: 172.16.1.1
+
+dnsmasq_dhcp_interfaces:
+  - {name: "{{trusted_network_interface}}", dhcp_start: "{{trusted_network_short_net}}.{{dhcp_range_start}}", dhcp_end: "{{trusted_network_short_net}}.{{dhcp_range_end}}", lease: "{{dhcp_lease_time}}", ntp_server: "{{dhcp_ntp_server}}", router: "{{dhcp_router}}" }
+
+upstream_dns_server: 68.1.16.107 
+# Cox Servers: 68.1.16.107, 68.111.106.68, 68.1.16.108
+
