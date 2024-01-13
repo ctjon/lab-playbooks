@@ -55,8 +55,11 @@
     - role: time-server
       tags: ['time-server']
 
-    - role: reboot-if-required
-      tags: ['reboot-if-required']
+    - role: fail2ban
+      tags: ['fail2ban']
+
+#    - role: reboot-if-required
+#      tags: ['reboot-if-required']
 
   tasks:
     - name: install other packages 

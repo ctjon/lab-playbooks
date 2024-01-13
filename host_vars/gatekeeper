@@ -30,7 +30,8 @@ time_servers:
 # Trusted Network Interface Configuration Parameters                           #
 ################################################################################
 trusted_network_interface: eth0
-trusted_network_ipaddr: 172.16.1.41
+trusted_network_firewall_zone: internal
+trusted_network_ipaddr: 172.16.1.1
 trusted_network_subnet: 172.16.1.0/24
 trusted_network_prefix: 24
 trusted_network_short_net: 172.16.1
@@ -40,12 +41,9 @@ trusted_network_domain_name: internal.tjon.net
 trusted_network_search_domains: 
  - internal.tjon.net
 trusted_network_dns_servers: 
-  - 172.16.1.2
   - 172.16.1.1
-  - 68.1.16.107
 
-trusted_network_firewall_zone: internal
-public_network_firewall_zone: public
+public_network_firewall_zone: external
 public_network_interface: eth1
 
 ################################################################################
@@ -95,6 +93,8 @@ dhcp_router: 172.16.1.1
 dnsmasq_dhcp_interfaces:
   - {name: "{{trusted_network_interface}}", dhcp_start: "{{trusted_network_short_net}}.{{dhcp_range_start}}", dhcp_end: "{{trusted_network_short_net}}.{{dhcp_range_end}}", lease: "{{dhcp_lease_time}}", ntp_server: "{{dhcp_ntp_server}}", router: "{{dhcp_router}}" }
 
-upstream_dns_server: 68.1.16.107 
-# Cox Servers: 68.1.16.107, 68.111.106.68, 68.1.16.108
+upstream_dns_servers:
+  - 68.105.28.11
+  - 68.105.29.11
+# Cox Servers: 68.105.28.11,68.105.29.11
 

@@ -43,11 +43,22 @@
     state: present
     reload: yes
 
-- name: setup masquerade 
+- name: enable masquerade 
   ansible.builtin.firewalld:
-    masquerade: "yes"
+    masquerade: yes
     state: enabled
     permanent: yes
     immediate: yes
     zone: "{{ public_network_firewall_zone }}"
 
+- name: deploy interal-external.xml policy template
+  ansible.builtin.template:
+    src: internal-external.xml.j2
+    dest: /etc/firewalld/policies/internal-external.xml
+    owner: root
+    group: root
+    mode: 0644
+    setype: firewalld_etc_rw_t
+  notify: restart firewalld
+    
+...
