@@ -124,7 +124,7 @@ allowed_ssh_users: chris ctjon
 dnsmasq_interfaces:
   - "{{trusted_network_interface}}"
  
-dns_enabled: false
+dns_enabled: true
 dhcp_enabled: false
 pxe_enabled: true
 dnsmasq_dhcp_interfaces:

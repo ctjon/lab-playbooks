@@ -36,6 +36,11 @@
 ################################################################################
 - name: Confgure dnsmasq as PXE Server
   block:
+    - name: bind-utils install package
+      ansible.builtin.package:
+        name: ipxe-bootimgs-aarch64.noarch, ipxe-bootimgs-x86.noarch, ipxe-roms.noarch, ipxe-roms-qemu.noarch
+        state: latest
+
     - name: install dnsmasq.d/pxe.conf file
       ansible.builtin.template:
         src: pxe.conf.j2
