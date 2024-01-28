@@ -1,6 +1,10 @@
 #
 # host_vars file for server0
 #
+
+
+personal_server: true
+work_server: false
 test_nmcli: false
 
 use_ssh_agent: yes
@@ -42,8 +46,6 @@ trusted_network_dns_servers:
   - 172.16.1.1
 #
 #use_dhcp: 'false'
-#trusted_network_bridge: br0
-trusted_network_bridge: eth0
 
 ################################################################################
 # Firewall Configuration Parameters                                            #
@@ -120,13 +122,17 @@ allowed_ssh_users: chris ctjon
 # DNSMASQ Configuration Parameters                                             #
 ################################################################################
 dnsmasq_interfaces:
-  - "{{trusted_network_bridge}}"
+  - "{{trusted_network_interface}}"
  
+dns_enabled: false
 dhcp_enabled: false
 pxe_enabled: true
 dnsmasq_dhcp_interfaces:
   - "{{secondary_interface}}"
-upstream_dns_server: 172.16.1.1
+upstream_dns_servers:
+  - 68.105.28.11
+  - 68.105.29.11
+# Cox Servers: 68.105.28.11,68.105.29.11
 
 ################################################################################
 # Samba Configuration Parameters                                               #
@@ -137,7 +143,6 @@ samba_netbios_name: SERVER0
 trusted_interfaces:
   - virbr0
   - "{{trusted_network_interface}}"
-#  - "{{trusted_network_bridge}}"
 #  - "{{wireless_interface}}"
 
 trusted_subnets:
