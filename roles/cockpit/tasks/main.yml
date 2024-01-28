@@ -1,0 +1,25 @@
+---
+- name: install packages
+  ansible.builtin.package:
+    name: firewalld, cockpit
+    state: latest
+
+- name: enable and start cockpit service
+  ansible.builtin.service:
+    name: cockpit
+    state: started
+    enabled: yes
+
+- name: enable and start firewalld service
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: open trusted network firewall zone for cockpit server
+  ansible.builtin.firewalld:
+    zone: "{{trusted_network_firewall_zone}}"
+    service: cockpit
+    immediate: yes
+    state: enabled
+    permanent: yes

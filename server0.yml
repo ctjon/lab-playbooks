@@ -40,6 +40,9 @@
     - role: ssh-config
       tags: ['ssh-config']
 
+    - role: cockpit
+      tags: ['cockpit']
+
     - role: shell-env #including both ssh-keys on server and p51s ??
       tags: ['shell-env']
 
@@ -57,9 +60,6 @@
 
     - role: apply-updates
       tags: ['apply-updates']
-
-    - role: apcupsd
-      tags: ['apcupsd']
 
 #    - role: appletalk-server
 #      tags: ['appletalk-server']
@@ -87,6 +87,9 @@
 
     - role: setup-epel
       tags: ['setup-epel']
+
+    - role: apcupsd
+      tags: ['apcupsd']
 
     - role: rsyslog-server
       tags: ['rsyslog-server']
