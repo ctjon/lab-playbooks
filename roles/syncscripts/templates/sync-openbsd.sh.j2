@@ -25,7 +25,7 @@ do
 {% for item in openbsd_version_includes %}
         --include={{item}} \
 {% endfor %}
-        --exclude="~.tmp~" \
+        --exclude=".~tmp~" \
 {% for item in openbsd_arch_excludes %}
         --exclude={{item}} \
 {% endfor %}
