@@ -9,9 +9,9 @@ syncscripts_vars_files_list:
     - rocky.yml
     - alma.yml
     - epel.yml
-    - openwrt.yml
     - openbsd.yml
     - rpmfusion.yml
+#    - openwrt.yml
 
 sync_scripts_list:
   - sync-fedora.sh
@@ -20,7 +20,7 @@ sync_scripts_list:
   - sync-rocky.sh
   - sync-alma.sh
   - sync-epel.sh
-  - sync-openwrt.sh
   - sync-openbsd.sh
   - sync-virtio-win.sh
+#  - sync-openwrt.sh
 

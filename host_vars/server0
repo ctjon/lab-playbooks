@@ -180,13 +180,13 @@ atalk_users:
 # Time Machine Specific Configuration Paramters (AFP & SMB)                    #
 ################################################################################
 tm_users:
-  - {tm_username: 'chris', tm_vol_size_bytes: '1500000000000'}
+  - {tm_username: 'chris', tm_vol_size_bytes: '4000000000000'}
   - {tm_username: 'kelly', tm_vol_size_bytes: '1500000000000'}
   
 tm_storage_vg: backupvg
 tm_group: tm_users
 tm_storage_lv: tmlv
-tm_storage_lv_size: 2t
+tm_storage_lv_size: 5t
 tm_storage_fs_type: xfs
 tm_storage_path: /export/time_machine
   
