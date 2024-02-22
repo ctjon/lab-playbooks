@@ -26,11 +26,11 @@ epel_version_excludes_list:
   - playground
 
 epel_repo_includes_list:
-  - aarch64
   - source
   - x86_64
 
 epel_repo_excludes_list:
+  - aarch64
   - ppc64
   - ppc64le
   - s390x

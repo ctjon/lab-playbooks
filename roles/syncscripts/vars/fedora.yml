@@ -33,7 +33,6 @@ fedora_version_excludes_list:
 # Fedora includes/excludes
 #
 fedora_repo_includes_list:
-  - aarch64
   - source
   - x86_64
   - "*.iso"
@@ -41,6 +40,7 @@ fedora_repo_includes_list:
   - "*.raw.xz"
 
 fedora_repo_excludes_list:
+  - aarch64
   - armhfp
   - ppc64le
   - s390x

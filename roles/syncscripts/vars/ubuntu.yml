@@ -5,11 +5,11 @@ linux_repo_includes_list:
   - x86_64
   - source
   - SRPMS
-  - aarch64
   - "*.iso"
   - "*.qcow2"
 
 linux_repo_excludes_list:
+  - aarch64
   - development
   - releases/test
   - debug

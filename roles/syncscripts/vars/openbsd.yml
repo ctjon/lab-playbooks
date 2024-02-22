@@ -24,9 +24,9 @@ openbsd_version_excludes:
 
 openbsd_arch_includes:
   - amd64
-  - arm64
 
 openbsd_arch_excludes:
+  - arm64
   - powerpc
   - powerpc64
   - i386

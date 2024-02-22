@@ -9,7 +9,6 @@ rocky_version_includes_list:
   - 9
 
 rocky_repo_includes_list:
-  - aarch64
   - source
   - x86_64
   - "*.iso"
@@ -17,6 +16,7 @@ rocky_repo_includes_list:
   - "*.raw.xz"
 
 rocky_repo_excludes_list:
+  - aarch64
   - ppc64le
   - s390x
   - debug

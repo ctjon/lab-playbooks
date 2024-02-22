@@ -20,11 +20,11 @@ fedora_rpmfusion_version_excludes_list:
 
 
 rpmfusion_repo_includes_list:
-  - 'aarch64'
   - 'x86_64'
   - 'source'
 
 rpmfusion_repo_excludes_list:
+  - 'aarch64'
   - 'i386'
   - 'ppc64le'
   - 's390x'
