@@ -1,0 +1,104 @@
+#---
+#
+# Configure OptiPlex Workstation
+#
+
+- hosts: optiplex7040
+  become: yes
+
+  roles:
+
+#    - role: config-local-repos
+#      tags: ['config-local-repos']
+
+#    - role: config-local-rpmfusion-repos
+#      tags: ['config-local-rpmfusion-repos']
+
+    - role: disable-ipv6
+      tags: ['disable-ipv6']
+
+    - role: selinux
+      tags: ['selinux']
+
+    - role: limit-kernels
+      tags: ['limit-kernels']
+
+#    - role: sshd-config
+#      tags: ['sshd-config']
+
+    - role: ssh-config
+      tags: ['ssh-config']
+
+    - role: shell-env #including both ssh-keys on server and p51s ??
+      tags: ['shell-env']
+
+    - role: set-default-editor
+      tags: ['set-default-editor']
+
+    - role: syncscripts
+      tags: ['syncscripts']
+
+#    - role: dnsmasq
+#      tags: ['dnsmasq']
+
+#    - role: apply-updates
+#      tags: ['apply-updates']
+
+#    - role: samba-server
+#      tags: ['samba-server']
+
+#    - role: time-server
+#      tags: ['time-server']
+
+#    - role: tftp-server
+#      tags: ['tftp-server']
+
+    - role: config-local-virtio-win-repos
+      tags: ['config-local-virtio-win-repos']
+
+#    - role: virt-server
+#      tags: ['virt-server']
+
+#    - role: kickstart
+#      tags: ['kickstart']
+
+#    - role: rsync-server
+#      tags: ['rsync-server']
+
+    - role: setup-epel
+      tags: ['setup-epel']
+
+#    - role: apcupsd
+#      tags: ['apcupsd']
+
+    - role: rsyslog-server
+      tags: ['rsyslog-server']
+
+#    - role: http-repo
+#      tags: ['http-repo']
+
+#    - role: reboot-if-required
+#      tags: ['reboot-if-required']
+
+  tasks:
+    - name: install other packages 
+      ansible.builtin.package:
+        name: nmap, lftp, ftp, openscap, openscap-scanner, openscap-utils, openscap-python3, python3-botocore, python3-boto3, python3-pyvmomi, ansible, screen, virtio-win, xar, fuse-sshfs, git, unrar, vnstat, nmon, net-tools, wireshark, tcpdump
+        state: latest
+      tags:
+        - localpkgs
+
+    - name: install other fedora packages 
+      ansible.builtin.package:
+        name: openscap-containers, python3-boto, openwsman-winrs.x86_64
+        state: latest
+      when: 
+        - ansible_distribution == "Fedora"
+      tags:
+        - localpkgs
+
+    - name: start and enable vnstat
+      ansible.builtin.service:
+        name: vnstat
+        state: started
+        enabled: yes
