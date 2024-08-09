@@ -8,37 +8,10 @@
 # setup log copy back to server
 # reboot
 
-- name: Install yum-utils/createrepo
+- name: Install yum-utils/createrepo/nfs-utils
   ansible.builtin.package:
-    name: yum-utils, createrepo
+    name: yum-utils, createrepo, nfs-utils
     state: latest
-  
-- name: Install fuse-sshfs on EVERYTHING BUT RHEL8
-  ansible.builtin.package:
-    name: fuse-sshfs
-    state: latest
-  when: 
-    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
-    - ansible_distribution_major_version != "8"
-  
-#
-# fuse-sshfs is missing from EPEL8 Repository... thus requiring next 2 setps
-#
-- name: Import CentOS8 GPG Key
-  ansible.builtin.rpm_key:
-    state: present
-    key: http://install.internal.tjon.net/Linux/centos/RPM-GPG-KEY-CentOS-Official
-  when: 
-    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
-    - ansible_distribution_major_version == "8"
-
-- name: Install sshfs/yum-utils/createrepo on RHEL8 ONLY
-  ansible.builtin.package:
-    name: http://install.internal.tjon.net/Linux/centos/8-stream/PowerTools/x86_64/os/Packages/fuse-sshfs-2.8-7.el8.x86_64.rpm
-    state: latest
-  when: 
-    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
-    - ansible_distribution_major_version == "8"
   
 - name: Deploy /etc/hosts
   ansible.builtin.copy:
@@ -48,23 +21,23 @@
     group: root
     mode: '0644'
 
-- name: Create {{ sshfs_mount }} mountpoint
+- name: Create {{ nfs_mount }} mountpoint
   ansible.builtin.file:
-    path: "{{ sshfs_mount }}"
+    path: "{{ nfs_mount }}"
     owner: root
     group: root
     mode: 0755
     state: directory
 
-#- name: Configure "{{ sshfs_mount }}" fstab entry to auto mount SSHFS filesystem
-#  ansible.builtin.mount: 
-#    name: "{{ sshfs_mount }}"
-#    src: "{{ sshfs_server }}"
-#    fstype: sshfs
-#    opts: hard,intr
-#    dump: "0"
-#    passno: "2"
-#    state: mounted
+- name: Configure "{{ nfs_mount }}" fstab entry to auto mount NFS filesystem
+  ansible.builtin.mount: 
+    name: "{{ nfs_mount }}"
+    src: "{{ nfs_server }}"
+    fstype: nfs
+    opts: hard,intr
+    dump: "0"
+    passno: "2"
+    state: mounted
 
 - name: Create {{ scripts_dir }}
   ansible.builtin.file:

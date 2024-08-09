@@ -1,0 +1,12 @@
+#---
+#
+# Configure ds224
+#
+
+- hosts: ds224
+  become: yes
+
+  roles:
+    - role: syncscripts
+      tags: ['syncscripts']
+

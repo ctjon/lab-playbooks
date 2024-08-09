@@ -7,6 +7,6 @@ scripts_src: /home/chris/scripts
 logs_dir: /home/chris/logs
 logs_owner: chris
 logs_group: chris
-sshfs_server: install.internal.tjon.net:/export/install
-sshfs_mount: /mnt/install
+nfs_server: install.internal.tjon.net:/volume1/Install
+nfs_mount: /mnt/install
 

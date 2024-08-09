@@ -1,0 +1,88 @@
+#
+# host_vars file for ds224.local
+#
+
+
+################################################################################
+# Installation Source Parameters                                               #
+################################################################################
+install_dir: /export/install
+install_vol: installlv
+install_vg: datavg
+install_dev: "/dev/{{install_vg}}/{{install_vol}}"
+install_vol_opts: defaults
+#install_url: "http://install.internal.tjon.net"
+install_url: "http://{{trusted_network_ipaddr}}/install"
+install_vol_fstype: xfs
+install_dir_owner: chris
+install_dir_group: chris
+
+archive_dir: /export/archive
+archive_vol: archivelv
+archive_vg: datavg
+archive_dev: "/dev/{{archive_vg}}/{{archive_vol}}"
+archive_vol_fstype: xfs
+archive_vol_opts: defaults
+archive_dir_owner: chris
+archive_dir_group: chris
+
+#archive_url: http://archive.internal.tjon.net
+archive_url: "http://{{trusted_network_ipaddr}}/archive"
+
+linux_install_server_hostname: server0
+linux_install_server_url: "{{install_url}}/Linux"
+config_files_url: "{{install_url}}/ConfigFiles"
+
+doc_files_url: "{{install_url}}/Documentation"
+doc_files_dir: "{{install_dir}}/Documentation"
+
+################################################################################
+# syncscripts variables override                                               #
+################################################################################
+repo_owner: chris
+repo_group: chris
+repo_owner_homedir: /home/chris
+
+linux_distros:
+  - fedora
+  - rhel
+
+rhel_versions:
+  - 6
+  - 7
+  - 8
+  - 9
+
+# rhel versions that include upgrade.img
+rhel_upgrade_versions:
+  - 7
+
+rhel_architectures:
+  - x86_64
+
+centos_stream_architectures:
+  - x86_64
+#  - aarch64 <<<< breaks shit, need to create a hash table instead
+
+# DON'T THINK I NEED THIS, WAITING TO DELETE TO BE SURE
+fedora_architectures:
+  - x86_64
+  - aarch64
+#  - ppc64le
+#  - s390x
+
+fedora_versions:
+  - 39
+  - 40
+
+openbsd_versions:
+  - 7.5
+
+vmware_architectures:
+  - x86_64
+
+windows_versions:
+  - 10
+
+windows_architectures:
+  - amd64

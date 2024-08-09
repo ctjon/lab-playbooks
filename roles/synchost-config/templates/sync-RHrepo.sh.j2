@@ -9,29 +9,27 @@
 VERSION="{{ansible_distribution_major_version}}"
 ARCH=`uname -i`
 
-HOST=server0
-HOST_USER=chris
-HOST_DIR=/export/install
+HOST={{linux_install_server_hostname}}
+HOST_USER={{repo_owner}}
+HOST_DIR={{linux_install_server_path}}
 MNTDIR=/mnt/install
 TARGETDIR=/mnt/install/Linux/rhel-reposyncs/$VERSION/$ARCH
 
 TMPFILE=/tmp/repolist
-HOST_LOG_DIR=/home/chris/logs
-GUEST_LOG_DIR=/home/chris/logs
+HOST_LOG_DIR="/home/{{repo_owner}}/logs"
+GUEST_LOG_DIR="/home/{{repo_owner}}/logs"
 
-sshfs $HOST_USER@$HOST:$HOST_DIR $MNTDIR
 df -h $MNTDIR
 
-#if [ ! -d $MNTDIR ]
-#then
-#	#mount $MNTDIR
-#        sshfs $HOST_USER@HOST:$HOST_DIR $MNTDIR
-#	if [ $? != 0 ]
-#	then
-#		echo "reposync.sh failed to mount $MNTDIR - exiting"
-#		exit -1
-#	fi
-#fi
+if [ ! -d $MNTDIR ]
+then
+	mount $MNTDIR
+	if [ $? != 0 ]
+	then
+		echo "reposync.sh failed to mount $MNTDIR - exiting"
+		exit -1
+	fi
+fi
 
 echo "********************************************************************************"
 echo "* Starting RepoSync for RHEL$VERSION"
