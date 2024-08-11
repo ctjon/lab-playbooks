@@ -249,13 +249,13 @@
       tags: rhel_image_files
 
     - name: Install grub.cfg file
-      ansible.builtin.copy:
-        src: files/grub.cfg
-        dest: "{{tftpbootdir}}"
+      ansible.builtin.template:
+        src: grub.cfg.j2
+        dest: "{{tftpbootdir}}/grub.cfg"
         owner: root
         group: root
         mode: 0644
-      tags: rhel_image_files
+      tags: rhel_image_files_last
 
     - name: restore selinux context on {{tftpbootdir}}
       ansible.builtin.command: "restorecon -RFv {{tftpbootdir}}"
