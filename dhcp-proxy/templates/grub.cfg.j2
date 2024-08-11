@@ -2,12 +2,12 @@ set default=0
 set timeout=60
 
 menuentry  'Install RHEL-9-x86_64-Latest' --class fedora --class gnu-linux --class gnu --class os {
-   linuxefi images/rhel/9/x86_64/vmlinuz net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/9/x86_64
+   linuxefi images/rhel/9/x86_64/vmlinuz net.ifnames=0 biosdevname=0 noipv6 inst.keymap=us inst.lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/9/x86_64
    initrdefi images/rhel/9/x86_64/initrd.img
 }
 
 menuentry  'Rescue RHEL-9-x86_64-Latest' --class fedora --class gnu-linux --class gnu --class os {
-   linuxefi images/rhel/9/x86_64/vmlinuz net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/9/x86_64 rescue
+   linuxefi images/rhel/9/x86_64/vmlinuz net.ifnames=0 biosdevname=0 noipv6 inst.keymap=us inst.lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/9/x86_64 rescue
    initrdefi images/rhel/9/x86_64/initrd.img
 }
 
