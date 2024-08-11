@@ -31,12 +31,12 @@ LABEL rhel-satclients
 label RHEL-9-x86_64-Latest
   menu label Install RHEL-9-x86_64-Latest Server
   kernel images/rhel/9/x86_64/vmlinuz
-  append initrd=images/rhel/9/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/9/x86_64
+  append initrd=images/rhel/9/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 inst.keymap=us inst.lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/9/x86_64
 
 label RHEL-9-x86_64-rescue
   menu label Rescue RHEL-9-x86_64 system
   kernel images/rhel/9/x86_64/vmlinuz
-  append initrd=images/rhel/9/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/9/x86_64 rescue
+  append initrd=images/rhel/9/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 inst.keymap=us inst.lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/9/x86_64 systemd.unit=rescue.target
 
 #
 # RHEL 8
@@ -50,30 +50,4 @@ label RHEL-8-x86_64-rescue
   menu label Rescue RHEL-8-x86_64 system
   kernel images/rhel/8/x86_64/vmlinuz
   append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/8/x86_64 rescue
-
-#
-# RHEL 7
-#
-label RHEL-7-x86_64-Latest
-  menu label Install RHEL-7-x86_64-Latest Server
-  kernel images/rhel/7/x86_64/vmlinuz
-  append initrd=images/rhel/7/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/7/x86_64
-
-label RHEL-7-x86_64-rescue
-  menu label Rescue RHEL-7-x86_64 system
-  kernel images/rhel/7/x86_64/vmlinuz
-  append initrd=images/rhel/7/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/7/x86_64 rescue
-
-#
-# RHEL 6
-#
-label RHEL-6-x86_64-Latest
-  menu label Install RHEL-6-x86_64-Latest Server
-  kernel images/rhel/6/x86_64/vmlinuz
-  append initrd=images/rhel/6/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp repo={{linux_install_server_url}}/rhel/6/x86_64
-
-label RHEL-6-x86_64-rescue
-  menu label Rescue RHEL-6-x86_64 System
-  kernel images/rhel/6/x86_64/vmlinuz
-  append initrd=images/rhel/6/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp repo={{linux_install_server_url}}/rhel/6/x86_64 rescue
 

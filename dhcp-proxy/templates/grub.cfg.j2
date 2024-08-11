@@ -7,7 +7,17 @@ menuentry  'Install RHEL-9-x86_64-Latest' --class fedora --class gnu-linux --cla
 }
 
 menuentry  'Rescue RHEL-9-x86_64-Latest' --class fedora --class gnu-linux --class gnu --class os {
-   linuxefi images/rhel/9/x86_64/vmlinuz net.ifnames=0 biosdevname=0 noipv6 inst.keymap=us inst.lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/9/x86_64 rescue
+   linuxefi images/rhel/9/x86_64/vmlinuz net.ifnames=0 biosdevname=0 noipv6 inst.keymap=us inst.lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/9/x86_64 systemd.unit=rescue.target
    initrdefi images/rhel/9/x86_64/initrd.img
+}
+
+menuentry  'Install RHEL-8-x86_64-Latest' --class fedora --class gnu-linux --class gnu --class os {
+   linuxefi images/rhel/8/x86_64/vmlinuz net.ifnames=0 biosdevname=0 noipv6 inst.keymap=us inst.lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/8/x86_64
+   initrdefi images/rhel/8/x86_64/initrd.img
+}
+
+menuentry  'Rescue RHEL-8-x86_64-Latest' --class fedora --class gnu-linux --class gnu --class os {
+   linuxefi images/rhel/8/x86_64/vmlinuz net.ifnames=0 biosdevname=0 noipv6 inst.keymap=us inst.lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/8/x86_64 systemd.unit=rescue.target
+   initrdefi images/rhel/8/x86_64/initrd.img
 }
 
