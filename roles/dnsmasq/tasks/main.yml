@@ -36,10 +36,10 @@
 ################################################################################
 - name: Confgure dnsmasq as PXE Server
   block:
-    - name: bind-utils install package
-      ansible.builtin.package:
-        name: ipxe-bootimgs-aarch64.noarch, ipxe-bootimgs-x86.noarch, ipxe-roms.noarch, ipxe-roms-qemu.noarch
-        state: latest
+#    - name: install ipxe packages
+#      ansible.builtin.package:
+#        name: ipxe-bootimgs-aarch64.noarch, ipxe-bootimgs-x86.noarch, ipxe-roms.noarch, ipxe-roms-qemu.noarch
+#        state: latest
 
     - name: install dnsmasq.d/pxe.conf file
       ansible.builtin.template:
@@ -200,8 +200,8 @@
     enabled: yes
     state: started
 
-#- name: restart NetworkManager # I wanted to reload but restart required
-#  ansible.builtin.service:
-#    name: NetworkManager
-#    state: restarted
+- name: restart NetworkManager # I wanted to reload but restart required
+  ansible.builtin.service:
+    name: NetworkManager
+    state: restarted
 ...

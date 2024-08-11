@@ -1,3 +1,17 @@
+################################################################################
+# DNSMASQ Configuration Parameters                                             #
+################################################################################
+dnsmasq_interfaces:
+  - "{{trusted_network_interface}}"
+  
+dns_enabled: false
+dhcp_enabled: false
+pxe_enabled: true
+dnsmasq_dhcp_interfaces:
+  - "{{secondary_interface}}"
+upstream_dns_servers:
+  - 172.16.1.2
+
 efi_bootfiles_src_path: "/boot/efi/EFI/{{ansible_distribution|lower}}"
 
 efi_bootfiles:

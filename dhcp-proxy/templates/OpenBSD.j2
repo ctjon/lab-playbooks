@@ -1,0 +1,20 @@
+# {{ ansible_managed }}
+
+LABEL Main Menu
+        MENU LABEL Main Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/default
+
+#
+# OpenBSD-7.1
+#
+label OpenBSD-7.1-amd64
+  menu label Install OpenBSD-7.1-amd64
+  kernel pxechain.com
+  append ::images/openbsd/7.1/amd64/pxeboot
+
+label OpenBSD-7.1-macppc
+  menu label Install OpenBSD-7.1-macppc
+  kernel bsd
+  append ::images/openbsd/7.1/macppc/ofwboot
+

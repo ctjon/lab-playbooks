@@ -2,23 +2,14 @@
 # enable and configure selinux
 #
 
-- name: Install Fedora 28+ dnf/python3 Packages
+- name: Install Fedora dnf-utils & selinux python3 Packages
   ansible.builtin.package:
     name: dnf-utils, libselinux-python3, libsemanage-python3
     state: latest
   when:
     - ansible_distribution == "Fedora" 
-    - ansible_distribution_major_version >= "28"
 
-- name: Install RHEL/CentOS 6/7 python2 Packages
-  ansible.builtin.package:
-    name: yum-utils, libselinux-python, libsemanage-python
-    state: latest
-  when:
-    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
-    - ansible_distribution_major_version == "6" or ansible_distribution_major_version == "7"
-
-- name: Install RHEL8/python3 Packages
+- name: Install RHEL selinux python3 Packages
   ansible.builtin.package:
     name: libselinux-python3, libsemanage-python3
     state: latest
@@ -32,6 +23,5 @@
     state: enforcing
   when:
     - ansible_os_family == "RedHat"
-    - ansible_distribution_major_version > "5"
 
 ...

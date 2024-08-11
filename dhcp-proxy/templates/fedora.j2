@@ -1,0 +1,70 @@
+# {{ ansible_managed }}
+
+LABEL Main Menu
+        MENU LABEL Main Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/default
+
+LABEL Linux Menu
+        MENU LABEL Linux Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/LinuxMenu
+
+#
+# eagle
+#
+label eagle-preserve
+  menu label Preservation ReInstall of eagle
+  kernel images/fedora/35/x86_64/vmlinuz
+  append initrd=images/fedora/35/x86_64/initrd.img inst.stage2={{linux_install_server_url}}/fedora/releases/35/Server/x86_64/os net.ifnames=0 biosdevname=0 noipv6 bootdev=eth0 ip=dhcp inst.ks={{linux_install_server_url}}/ks-configs/eagle-preserve-ks.cfg 
+
+#
+# Fedora 38
+#
+label Fedora-38-x86_64
+  menu label Install Fedora-38-x86_64
+  kernel images/fedora/38/x86_64/vmlinuz
+  append initrd=images/fedora/38/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US bootdev=eth0 ip=dhcp inst.stage2={{linux_install_server_url}}/fedora/releases/38/Server/x86_64/os inst.repo={{linux_install_server_url}}/fedora/releases/38/Server/x86_64/os
+
+label Fedora-38-x86_64-rescue
+  menu label Rescue Fedora-38-x86_64 system
+  kernel images/fedora/38/x86_64/vmlinuz
+  append initrd=images/fedora/38/x86_64/initrd.img net.ifnames=0 biosdevname=0 rescue
+
+#
+# test-fedora38 server
+#
+label test-fedora38
+  menu label Install Fedora 38 Test Server
+  kernel images/fedora/38/x86_64/vmlinuz
+  append initrd=images/fedora/38/x86_64/initrd.img inst.stage2={{linux_install_server_url}}/fedora/releases/38/Server/x86_64/os net.ifnames=0 biosdevname=0 noipv6 bootdev=eth0 ip=dhcp inst.ks={{linux_install_server_url}}/ks-configs/test-fedora38-ks.cfg 
+
+#
+# Fedora 39
+#
+label Fedora-39-x86_64
+  menu label Install Fedora-39-x86_64
+  kernel images/fedora/39/x86_64/vmlinuz
+  append initrd=images/fedora/39/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US bootdev=eth0 ip=dhcp inst.stage2={{linux_install_server_url}}/fedora/releases/39/Server/x86_64/os inst.repo={{linux_install_server_url}}/fedora/releases/39/Server/x86_64/os
+
+label Fedora-39-x86_64-rescue
+  menu label Rescue Fedora-39-x86_64 system
+  kernel images/fedora/39/x86_64/vmlinuz
+  append initrd=images/fedora/39/x86_64/initrd.img net.ifnames=0 biosdevname=0 rescue
+
+#
+# fetcher
+#
+label fetcher
+  menu label Install Fetcher
+  kernel images/fedora/35/x86_64/vmlinuz
+  append initrd=images/fedora/35/x86_64/initrd.img inst.stage2={{linux_install_server_url}}/fedora/releases/35/Server/x86_64/os net.ifnames=0 biosdevname=0 noipv6 bootdev=eth0 ip=dhcp inst.ks={{linux_install_server_url}}/ks-configs/fetcher-ks.cfg 
+
+#
+# test-fedora35 server
+#
+label test-fedora35
+  menu label Install Fedora 35 Test Server
+  kernel images/fedora/35/x86_64/vmlinuz
+  append initrd=images/fedora/35/x86_64/initrd.img inst.stage2={{linux_install_server_url}}/fedora/releases/35/Server/x86_64/os net.ifnames=0 biosdevname=0 noipv6 bootdev=eth0 ip=dhcp inst.ks={{linux_install_server_url}}/ks-configs/test-fedora35-ks.cfg 
+

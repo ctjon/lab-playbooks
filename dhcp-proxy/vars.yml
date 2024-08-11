@@ -1,0 +1,6 @@
+pxelinux_files:
+    - LinuxMenu
+    - fedora
+    - rhel
+    - rhel-satclients
+    - rhel-testvms

@@ -1,0 +1,45 @@
+# {{ ansible_managed }}
+
+LABEL Main Menu
+        MENU LABEL Main Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/default
+
+LABEL Linux Menu
+        MENU LABEL Linux Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/LinuxMenu
+
+#
+# x1carbon - Fedora Initial Install
+#
+label Chris' x1carbon - Fedora Initial Install
+  menu label Fedora - Fresh Install of Chris' x1carbon
+  kernel images/fedora/29/x86_64/vmlinuz
+  append initrd=images/fedora/29/x86_64/initrd.img inst.repo={{linux_install_server_url}}/fedora/releases/29/Everything/x86_64/os inst.stage2={{linux_install_server_url}}/fedora/releases/29/Everything/x86_64/os net.ifnames=0 biosdevname=0 noipv6 bootdev=eth0 ip=dhcp inst.ks={{linux_install_server_url}}/ks-configs/x1carbon-fedora-initial-ks.cfg
+
+#
+# x1carbon - Fedora Preservation Install
+#
+label Chris' x1carbon - Fedora Preservation Install
+  menu label Fedora - Preservation Install of Chris' x1carbon - BROKEN
+  kernel images/fedora/29/x86_64/vmlinuz
+  append initrd=images/fedora/29/x86_64/initrd.img inst.repo={{linux_install_server_url}}/fedora/releases/29/Everything/x86_64/os inst.stage2={{linux_install_server_url}}/fedora/releases/29/Everything/x86_64/os net.ifnames=0 biosdevname=0 noipv6 bootdev=eth0 ip=dhcp inst.ks={{linux_install_server_url}}/ks-configs/x1carbon-fedora-preserve-ks.cfg
+
+#
+# x1carbon - RHEL8 Initial Install
+#
+label Chris' x1carbon - RHEL8 Initial Install
+  menu label RHEL8 - Fresh Install of Chris' x1carbon
+  kernel images/fedora/29/x86_64/vmlinuz
+  append initrd=images/fedora/29/x86_64/initrd.img inst.repo={{linux_install_server_url}}/fedora/releases/29/Everything/x86_64/os inst.stage2={{linux_install_server_url}}/fedora/releases/29/Everything/x86_64/os net.ifnames=0 biosdevname=0 noipv6 bootdev=eth0 ip=dhcp inst.ks={{linux_install_server_url}}/ks-configs/x1carbon-rhel8-initial-ks.cfg
+
+#
+# x1carbon - RHEL8 Preservation Install
+#
+label Chris' x1carbon - RHEL8 Preservation Install
+  menu label RHEL8 - Preservation Install of Chris' x1carbon - BROKEN
+  kernel images/fedora/29/x86_64/vmlinuz
+  append initrd=images/fedora/29/x86_64/initrd.img inst.repo={{linux_install_server_url}}/fedora/releases/29/Everything/x86_64/os inst.stage2={{linux_install_server_url}}/fedora/releases/29/Everything/x86_64/os net.ifnames=0 biosdevname=0 noipv6 bootdev=eth0 ip=dhcp inst.ks={{linux_install_server_url}}/ks-configs/x1carbon-rhel8-preserve-ks.cfg
+
+#

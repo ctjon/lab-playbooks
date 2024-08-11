@@ -4,25 +4,6 @@
 ::1             localhost localhost.localdomain localhost6 localhost6.localdomain6
 
 172.16.1.1	gatekeeper.internal.tjon.net gatekeeper
-172.16.1.2	server0.internal.tjon.net server0 install.internal.tjon.net install archive.internal.tjon.net archive plex.internal.tjon.net plex
-172.16.1.3	wireless.internal.tjon.net wireless
-172.16.1.4	virtualpc.internal.tjon.net virtualpc
-172.16.1.5	itunesserver.internal.tjon.net itunesserver
-172.16.1.6	winserver22.internal.tjon.net winserver22
-172.16.1.7	satellite6.internal.tjon.net satellite6
-172.16.1.8	fetcher.internal.tjon.net fetcher
-172.16.1.11	synchost6.internal.tjon.net synchost6
-172.16.1.12	synchost7.internal.tjon.net synchost7
-172.16.1.13	synchost9.internal.tjon.net synchost9
-172.16.1.14	synchost8.internal.tjon.net synchost8
-
-172.16.1.30	test-rhel8.internal.tjon.net test-rhel8
-172.16.1.31	test-rhel7.internal.tjon.net test-rhel7
-172.16.1.32	test-rhel6.internal.tjon.net test-rhel6
-172.16.1.33	test-rhel9.internal.tjon.net test-rhel9
-172.16.1.34	test-centos8.internal.tjon.net test-centos8
-172.16.1.35	test-centos7.internal.tjon.net test-centos7
-172.16.1.36	test-centos6.internal.tjon.net test-centos6
-172.16.1.37	test-fedora39.internal.tjon.net test-fedora39
-172.16.1.38	test-fedora38.internal.tjon.net test-fedora38
+172.16.1.2	ds224.internal.tjon.net ds224 install.internal.tjon.net install archive.internal.tjon.net archive 
+172.16.1.3	dhcp-proxy.internal.tjon.net dhcp-proxy
 

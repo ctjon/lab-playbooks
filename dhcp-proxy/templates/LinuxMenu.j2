@@ -1,0 +1,60 @@
+# {{ ansible_managed }}
+
+default vesamenu.c32
+default menu.c32
+prompt 0
+
+MENU TITLE Linux Install Main Menu
+
+LABEL Main Menu
+        MENU LABEL Main Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/default
+
+LABEL rhel
+        MENU RHEL Installs
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/rhel
+
+LABEL fedora
+        MENU Fedora Installs
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/fedora
+
+#
+# Satellite 6 on RHEL8
+#
+label satellite6-rhel8
+  menu label satellite6 on RHEL8
+  kernel images/rhel/8/x86_64/vmlinuz
+  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 inst.repo={{linux_install_server_url}}/rhel/8/x86_64 inst.ks={{linux_install_server_url}}/ks-configs/satellite6-rhel8-ks.cfg
+
+label fipstest
+  menu label fipstest
+  kernel images/rhel/8/x86_64/vmlinuz
+  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 fips=1 ipv6.disable=1 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/fipstest-ks.cfg
+
+#
+# gitlab
+#
+label gitlab
+  menu label Install GitLab Server
+  kernel images/centos/7/x86_64/vmlinuz
+  append initrd=images/centos/7/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/gitlab-ks.cfg
+
+#
+# plex server
+#
+label plex
+  menu label Install plex Server
+  kernel images/centos/7/x86_64/vmlinuz
+  append initrd=images/centos/7/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/plex-ks.cfg
+
+#
+# vpnServer
+#
+label vpnserver
+  menu label Install VPN Server
+  kernel images/rhel/8/x86_64/vmlinuz
+  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/vpnserver-ks.cfg
+
