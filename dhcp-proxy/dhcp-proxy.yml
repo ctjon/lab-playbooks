@@ -255,7 +255,7 @@
         owner: root
         group: root
         mode: 0644
-      tags: rhel_image_files_last
+      tags: rhel_image_files
 
     - name: restore selinux context on {{tftpbootdir}}
       ansible.builtin.command: "restorecon -RFv {{tftpbootdir}}"
