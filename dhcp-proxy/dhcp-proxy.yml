@@ -13,12 +13,14 @@
     install_server_url: http://install.internal.tjon.net/
     install_server_dir: install.internal.tjon.net:/Install
     tftpbootdir: /var/lib/tftpboot
-    pxelinux_files:
+    linux_pxe_files:
       - LinuxMenu
       - fedora
       - rhel
       - rhel-satclients
       - rhel-testvms
+    ocp_pxe_files:
+      - OCPMenu
     rhel_versions:
       - 8
       - 9
@@ -156,7 +158,7 @@
 
     - name: deploy {{tftpbootdir}}/pxelinux.cfg/default
       ansible.builtin.copy:
-        src: default
+        src: files/default
         dest: "{{tftpbootdir}}/pxelinux.cfg/default"
         owner: root
         group: root
@@ -169,6 +171,7 @@
         group: root
         mode: 0755
         state: directory
+      tags: rhel_pxe_files
 
     - name: deploy {{tftpbootdir}}/pxelinux.cfg/Linux Files
       ansible.builtin.template:
@@ -178,8 +181,28 @@
         group: root
         mode: 0644
       with_items:
-        - "{{pxelinux_files}}"
-      tags: rhel_image_files
+        - "{{linux_pxe_files}}"
+      tags: rhel_pxe_files
+
+    - name: create {{tftpbootdir}}/pxelinux.cfg/OpenShift directory
+      ansible.builtin.file:
+        path: "{{tftpbootdir}}/pxelinux.cfg/OpenShift"
+        owner: root
+        group: root
+        mode: 0755
+        state: directory
+      tags: ocp_pxe_files
+
+    - name: deploy {{tftpbootdir}}/pxelinux.cfg/OpenShift Files
+      ansible.builtin.template:
+        src: "{{item}}.j2"
+        dest: "{{tftpbootdir}}/pxelinux.cfg/OpenShift/{{item}}"
+        owner: root
+        group: root
+        mode: 0644
+      with_items:
+        - "{{ocp_pxe_files}}"
+      tags: ocp_image_files
 
 ################################################################################
 # RHEL image Files copies                                                      #

@@ -126,8 +126,8 @@ X11UseLocalhost no
 UsePrivilegeSeparation sandbox		# Default for new installations.
 #PermitUserEnvironment no
 #Compression delayed
-ClientAliveInterval 30
-ClientAliveCountMax 99999
+ClientAliveInterval 300
+ClientAliveCountMax 3
 #ShowPatchLevel no
 #UseDNS yes
 #PidFile /var/run/sshd.pid
@@ -154,3 +154,5 @@ Subsystem	sftp	/usr/libexec/openssh/sftp-server
 #	AllowTcpForwarding no
 #	PermitTTY no
 #	ForceCommand cvs server
+
+Include /etc/ssh/sshd_config.d/*.conf

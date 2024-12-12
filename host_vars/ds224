@@ -6,38 +6,23 @@
 ################################################################################
 # Installation Source Parameters                                               #
 ################################################################################
-install_dir: /export/install
-install_vol: installlv
-install_vg: datavg
-install_dev: "/dev/{{install_vg}}/{{install_vol}}"
-install_vol_opts: defaults
-#install_url: "http://install.internal.tjon.net"
-install_url: "http://{{trusted_network_ipaddr}}/install"
-install_vol_fstype: xfs
+install_dir: /volume1/Install
+install_url: "http://install.internal.tjon.net"
 install_dir_owner: chris
 install_dir_group: chris
 
-archive_dir: /export/archive
-archive_vol: archivelv
-archive_vg: datavg
-archive_dev: "/dev/{{archive_vg}}/{{archive_vol}}"
-archive_vol_fstype: xfs
-archive_vol_opts: defaults
+archive_dir: /volume1/Archive
+archive_url: http://archive.internal.tjon.net
 archive_dir_owner: chris
 archive_dir_group: chris
 
-#archive_url: http://archive.internal.tjon.net
-archive_url: "http://{{trusted_network_ipaddr}}/archive"
-
-linux_install_server_hostname: server0
+linux_install_server_hostname: ds224
 linux_install_server_url: "{{install_url}}/Linux"
 config_files_url: "{{install_url}}/ConfigFiles"
 
 doc_files_url: "{{install_url}}/Documentation"
 doc_files_dir: "{{install_dir}}/Documentation"
 
-################################################################################
-# syncscripts variables override                                               #
 ################################################################################
 repo_owner: chris
 repo_group: chris
@@ -48,14 +33,8 @@ linux_distros:
   - rhel
 
 rhel_versions:
-  - 6
-  - 7
   - 8
   - 9
-
-# rhel versions that include upgrade.img
-rhel_upgrade_versions:
-  - 7
 
 rhel_architectures:
   - x86_64

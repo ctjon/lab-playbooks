@@ -18,6 +18,11 @@ LABEL Linux
         KERNEL menu.c32
         APPEND pxelinux.cfg/Linux/LinuxMenu
 
+LABEL OpenShift
+        MENU OpenShift Installs
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/OpenShift/OCPMenu
+
 LABEL vmware
         MENU LABEL VMware ESXi
         KERNEL menu.c32

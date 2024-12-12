@@ -3,13 +3,13 @@
 # Configure OptiPlex Workstation
 #
 
-- hosts: optiplex7040
+- hosts: op7040
   become: yes
 
   roles:
 
-#    - role: config-local-repos
-#      tags: ['config-local-repos']
+    - role: config-local-repos
+      tags: ['config-local-repos']
 
 #    - role: config-local-rpmfusion-repos
 #      tags: ['config-local-rpmfusion-repos']
@@ -23,8 +23,8 @@
     - role: limit-kernels
       tags: ['limit-kernels']
 
-#    - role: sshd-config
-#      tags: ['sshd-config']
+    - role: sshd-config
+      tags: ['sshd-config']
 
     - role: ssh-config
       tags: ['ssh-config']
@@ -35,35 +35,8 @@
     - role: set-default-editor
       tags: ['set-default-editor']
 
-    - role: syncscripts
-      tags: ['syncscripts']
-
-#    - role: dnsmasq
-#      tags: ['dnsmasq']
-
 #    - role: apply-updates
 #      tags: ['apply-updates']
-
-#    - role: samba-server
-#      tags: ['samba-server']
-
-#    - role: time-server
-#      tags: ['time-server']
-
-#    - role: tftp-server
-#      tags: ['tftp-server']
-
-#    - role: config-local-virtio-win-repos
-#      tags: ['config-local-virtio-win-repos']
-
-#    - role: virt-server
-#      tags: ['virt-server']
-
-#    - role: kickstart
-#      tags: ['kickstart']
-
-#    - role: rsync-server
-#      tags: ['rsync-server']
 
     - role: setup-epel
       tags: ['setup-epel']
@@ -73,9 +46,6 @@
 
     - role: rsyslog-server
       tags: ['rsyslog-server']
-
-#    - role: http-repo
-#      tags: ['http-repo']
 
 #    - role: reboot-if-required
 #      tags: ['reboot-if-required']

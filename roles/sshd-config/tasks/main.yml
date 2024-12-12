@@ -57,4 +57,21 @@
     group: root
   notify: restart sshd service
 
+# Disable HMAC-SHA1 as it is insecure
+# See: https://access.redhat.com/articles/7041246
+- name: disable HMAC-SHA1
+  ansible.builtin.lineinfile: 
+    path: /etc/crypto-policies/policies/modules/DISABLE-INSECURE-HMAC-SHA1.pmod
+    line: "mac@ssh = -HMAC-SHA1"
+    create: true
+    mode: 0600
+    owner: root
+    group: root
+  notify: restart sshd service
+    
+
+# Update crypto policy
+- name: update crypto policy
+  ansible.builtin.command: update-crypto-policies --set DEFAULT:DISABLE-INSECURE-HMAC-SHA1
+  become: yes
 

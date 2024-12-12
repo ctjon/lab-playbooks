@@ -1,0 +1,32 @@
+# {{ ansible_managed }}
+
+default vesamenu.c32
+default menu.c32
+prompt 0
+
+MENU TITLE Linux Install Main Menu
+
+LABEL Main Menu
+        MENU LABEL Main Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/default
+
+LABEL rhel
+        MENU RHEL Installs
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/rhel
+
+LABEL fedora
+        MENU Fedora Installs
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/fedora
+
+#
+# Single Node Openshift w/Virt
+#
+LABEL SNO
+  menu label Single Node Openshfit with Virt
+  iinitrd --name initrd http://api.openshift.com/api/assisted-images/images/29db6579-902b-48d0-98c2-91a4c290e53d/pxe-initrd?arch=x86_64&image_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzQwMzU4OTgsInN1YiI6IjI5ZGI2NTc5LTkwMmItNDhkMC05OGMyLTkxYTRjMjkwZTUzZCJ9.T5YVHctY4DncWfzg2drR-md2tKAUSqI3h62CtI3_9_s&version=4.17
+  kernel http://api.openshift.com/api/assisted-images/boot-artifacts/kernel?arch=x86_64&version=4.17 initrd=initrd coreos.live.rootfs_url=http://api.openshift.com/api/assisted-images/boot-artifacts/rootfs?arch=x86_64&version=4.17 random.trust_cpu=on rd.luks.options=discard ignition.firstboot ignition.platform.id=metal console=tty1 console=ttyS1,115200n8 coreos.inst.persistent-kargs="console=tty1 console=ttyS1,115200n8"
+  boot
+
