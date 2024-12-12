@@ -69,7 +69,6 @@
     group: root
   notify: restart sshd service
     
-
 # Update crypto policy
 - name: update crypto policy
   ansible.builtin.command: update-crypto-policies --set DEFAULT:DISABLE-INSECURE-HMAC-SHA1
