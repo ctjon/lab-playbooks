@@ -1,0 +1,45 @@
+#---
+#
+# Configure rhel9vm-arm64
+#
+
+- hosts: rhel9vm-arm64
+  become: yes
+
+  roles:
+    - role: sm-register
+      tags: ['sm-register']
+
+    - role: insights-register
+      tags: ['insights-register']
+
+    - role: disable-ipv6
+      tags: ['disable-ipv6']
+
+    - role: selinux
+      tags: ['selinux']
+
+    - role: limit-kernels
+      tags: ['limit-kernels']
+
+    - role: sshd-config
+      tags: ['sshd-config']
+
+    - role: shell-env #including both ssh-keys on server and p51s ??
+      tags: ['shell-env']
+
+    - role: set-default-editor
+      tags: ['set-default-editor']
+
+    - role: apply-updates
+      tags: ['apply-updates']
+
+    - role: reboot-if-required
+      tags: ['reboot-if-required']
+
+  tasks:
+    - name: Enable snd Start irqbalance
+      ansible.builtin.service:
+        name: irqbalance
+        enabled: yes
+        state: started

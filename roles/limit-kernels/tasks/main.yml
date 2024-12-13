@@ -7,7 +7,6 @@
     owner: root
     group: root
     mode: '0644'
-  when:
-    - ansible_distribution == "Fedora"
-    - ansible_distribution_major_version >= "28"  # 28,29...
+  when: (ansible_facts['distribution'] == "Fedora" and ansible_facts['distribution_major_version'] >= "28") or
+        (ansible_facts['distribution'] == "RedHat" and ansible_facts['distribution_major_version'] >= "8")
 
