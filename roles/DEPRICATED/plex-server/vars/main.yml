@@ -1,5 +1,5 @@
 ---
-plex_owner: chris
+plex_owner: {{user_name}}
 plex_group: plex
 plex_storage_vg: plexvg
 plex_storage_lv: plexlv

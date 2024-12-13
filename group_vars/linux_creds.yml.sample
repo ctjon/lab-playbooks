@@ -1,0 +1,6 @@
+user_name: <user_name>
+group_name: <group_name>
+gecos_name: <gecos_name>
+user_pw_hash: <user_pw_hash>
+root_pw_hash: <root_pw_hash>
+

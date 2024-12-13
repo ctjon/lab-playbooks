@@ -1,3 +1,3 @@
 ---
-yubikey_owner: chris
+yubikey_owner: {{user_name}}
 yubikey_id: ccccccejlhlf

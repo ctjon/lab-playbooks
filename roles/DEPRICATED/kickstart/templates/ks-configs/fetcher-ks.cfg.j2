@@ -14,7 +14,9 @@ url --url="{{linux_install_server_url}}/fedora/releases/35/Server/x86_64/os/"
 network  --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.8 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --hostname=fetcher.{{trusted_network_domain_name}} --activate
 
 # Root password
-rootpw --iscrypted $6$EWvRuPP7F8pRTFrm$749vEu5HoijsEhVWzw691ZquSDP.FmK2Qc56HGpgE03pHMgxIMlal4YPM/BrmwfA10q0nKUDxkC7D21H1q7xH/
+rootpw --iscrypted {{root_pw_hash}}
+
+user --groups=wheel --name={{user_name}} --password={{user_pw_hash}} --iscrypted --gecos={{gecos_name}}
 
 %packages
 @^server-product-environment
@@ -46,16 +48,13 @@ timezone America/Phoenix --utc
 
 reboot
 
-#Root password
-user --groups=wheel --name=chris --password=$y$j9T$s2cZspvGgRXYF7H8NKPJVpDy$13Hpy78Hra5F2Mg5xEjv3vwnyO7XX2IIdNWLse.2q.5 --iscrypted --gecos="Chris Tjon"
-
 %post
-# install ssh key for chris
-curl {{config_files_url}}/chris-server0-id_rsa.pub -o /home/chris/.ssh/authorized_keys  --create-dirs
-curl  {{config_files_url}}/chris-x1carbon-id_rsa.pub >> /home/chris/.ssh/authorized_keys
-curl  {{config_files_url}}/chris-eagle-id_rsa.pub >> /home/chris/.ssh/authorized_keys
-chown -R chris:chris /home/chris/.ssh
-chmod 700 /home/chris/.ssh
-chmod 600 /home/chris/.ssh/authorized_keys
-restorecon -RFv /home/chris/.ssh/authorized_keys
+# install ssh key for {{user_name}}
+curl {{config_files_url}}/{{user_name}}-server0-id_rsa.pub -o /home/{{user_name}}/.ssh/authorized_keys  --create-dirs
+curl  {{config_files_url}}/{{user_name}}-x1carbon-id_rsa.pub >> /home/{{user_name}}/.ssh/authorized_keys
+curl  {{config_files_url}}/{{user_name}}-eagle-id_rsa.pub >> /home/{{user_name}}/.ssh/authorized_keys
+chown -R {{user_name}}:{{group_name}} /home/{{user_name}}/.ssh
+chmod 700 /home/{{user_name}}/.ssh
+chmod 600 /home/{{user_name}}/.ssh/authorized_keys
+restorecon -RFv /home/{{user_name}}/.ssh/authorized_keys
 %end

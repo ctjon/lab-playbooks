@@ -15,9 +15,9 @@ keyboard --vckeymap=us --xlayouts='us'
 lang en_US.UTF-8
 
 # Root password
-rootpw --iscrypted $6$9vrA/lrxWT8.nHLB$zacDVevdnsOAfMNaysD.1sJz83LKfXOUiE3WZ9SszluLyEBlX7cDbuKzgjv0sQw.xhsXjwH0xIpuX4uIXLkph/
+rootpw --iscrypted {{root_pw_hash}}
 
-user --groups=wheel --name=chris --password=$6$oWM3S2AK4zS.jyDy$716RhjySp6ncIMig2UggFWY5z98sfkmLQLqyWwlw1N4jogYBdjqSRlRjoJd.nr59z7iI68rzP4Y3WLj6Ssr5M. --iscrypted --gecos="Chris Tjon"
+user --groups=wheel --name={{user_name}} --password={{user_pw_hash}} --iscrypted --gecos={{gecos_name}}
 
 
 # Generated using Blivet version 3.4.2
@@ -47,9 +47,6 @@ logvol /home --fstype="xfs" --noformat --useexisting --encrypted --label="home" 
 # System timezone
 timezone America/Phoenix
 
-#Root password
-rootpw --iscrypted $6$EWvRuPP7F8pRTFrm$749vEu5HoijsEhVWzw691ZquSDP.FmK2Qc56HGpgE03pHMgxIMlal4YPM/BrmwfA10q0nKUDxkC7D21H1q7xH/ --lock
-
 %post --log=/root/post-install.log
 
 # backup repo config files
@@ -60,15 +57,15 @@ mv /etc/yum.repos.d/fedora-updates-modular.repo /etc/yum.repos.d/save/fedora-upd
 mv /etc/yum.repos.d/fedora-updates.repo /etc/yum.repos.d/save/fedora-updates.repo
 
 # setup system to get rpms/updates from server0
-wget http://install.internal.tjon.net/ConfigFiles/Linux/etc/yum.repos.d/fedora-modular-server0.repo -O /etc/yum.repos.d/fedora-modular-server0.repo
-wget http://install.internal.tjon.net/ConfigFiles/Linux/etc/yum.repos.d/fedora-server0.repo -O /etc/yum.repos.d/fedora-server0.repo
-wget http://install.internal.tjon.net/ConfigFiles/Linux/etc/yum.repos.d/fedora-updates-modular.server0.repo -O /etc/yum.repos.d/fedora-updates-modular.server0.repo
-wget http://install.internal.tjon.net/ConfigFiles/Linux/etc/yum.repos.d/fedora-updates-server0.repo -O /etc/yum.repos.d/fedora-updates-server0.repo
-wget http://install.internal.tjon.net/ConfigFiles/Linux/etc/yum.repos.d/virtio-win-server0.repo -O /etc/yum.repos.d/virtio-win-server0.repo
+wget {{install_url}}/ConfigFiles/Linux/etc/yum.repos.d/fedora-modular-server0.repo -O /etc/yum.repos.d/fedora-modular-server0.repo
+wget {{install_url}}/ConfigFiles/Linux/etc/yum.repos.d/fedora-server0.repo -O /etc/yum.repos.d/fedora-server0.repo
+wget {{install_url}}net/ConfigFiles/Linux/etc/yum.repos.d/fedora-updates-modular.server0.repo -O /etc/yum.repos.d/fedora-updates-modular.server0.repo
+wget {{install_url}}net/ConfigFiles/Linux/etc/yum.repos.d/fedora-updates-server0.repo -O /etc/yum.repos.d/fedora-updates-server0.repo
+wget {{install_url}}net/ConfigFiles/Linux/etc/yum.repos.d/virtio-win-server0.repo -O /etc/yum.repos.d/virtio-win-server0.repo
 
 # turn off Weyland by replacing /etc/gdm/custom.conf
 cp /etc/gdm/custom.conf /etc/gdm/custom.conf.save
-wget http://install.internal.tjon.net/ConfigFiles/Linux/etc/gdm/custom.conf -O /etc/gdm/custom.conf
+wget {{install_url}}net/ConfigFiles/Linux/etc/gdm/custom.conf -O /etc/gdm/custom.conf
 
 # apply all updates
 dnf -y update
@@ -88,10 +85,10 @@ dnf -y install virt-viewer \
 mv /etc/yum.repos.d/virtio-win.repo /etc/yum.repos.d/save/virtio-win.repo
 
 # install google chrome
-dnf -y install http://archive.internal.tjon.net/Linux/RPMS/google-chrome-stable_current_x86_64.rpm
+dnf -y install {{archive_url}}/Linux/RPMS/google-chrome-stable_current_x86_64.rpm
 
 # install printer software
-dnf -y install http://archive.internal.tjon.net/Linux/RPMS/Epson/epson-inkjet-printer-escpr-1.7.18-1lsb3.2.x86_64.rpm http://archive.internal.tjon.net/Linux/RPMS/Epson/epson-printer-utility-1.1.1-1lsb3.2.x86_64.rpm
+dnf -y install {{archive_url}}/Linux/RPMS/Epson/epson-inkjet-printer-escpr-1.7.18-1lsb3.2.x86_64.rpm {{archive_url}}/Linux/RPMS/Epson/epson-printer-utility-1.1.1-1lsb3.2.x86_64.rpm
 
 # setup flatpak and install useful apps (to me)
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo

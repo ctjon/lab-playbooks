@@ -19,7 +19,10 @@ lang en_US.UTF-8
 network  --hostname=kvmhost.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.4 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
 
 # Root password
-rootpw --iscrypted $6$Mpqrkg2HFvlND9bA$MWkZ03ZuyJ5m97r03QPRMVgMtPCJBj7bHwpB/s07DHAeEjnd8LbVSRTkHPv3m7FFzYWXSFeY3sjFv3zA9A6cx0
+rootpw --iscrypted {{root_pw_hash}}
+
+# Define user
+user --groups=wheel --name={{user_name}} --password={{user_pw_hash}} --iscrypted --gecos={{gecos_name}}
 
 # Don't run the Setup Agent on first boot
 firstboot --disable
@@ -59,9 +62,6 @@ services --enabled="chronyd"
 # System timezone
 timezone America/Phoenix --isUtc
 
-# Define User
-user --groups=wheel --name=chris --password=$6$X5wRW4PP3yP09xwp$0fRza7Q1C2/pnFttu7Pxgwo.M.na66sovRj6LpnkyXuz91yVwetghFZ9QxlLh1Xd.DzX3jZoqibuSJbBgcB/d1 --iscrypted --gecos="Chris Tjon"
-
 # System bootloader configuration
 bootloader --location=mbr --boot-drive=nvme0n1
 
@@ -87,12 +87,12 @@ pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 
 %post
 
-# install ssh key for chris
-curl {{config_files_url}}/chris-server0-id_rsa.pub -o /home/chris/.ssh/authorized_keys  --create-dirs
-curl  {{config_files_url}}/chris-x1carbon-id_rsa.pub >> /home/chris/.ssh/authorized_keys
-chown -R chris:chris /home/chris/.ssh
-chmod 700 /home/chris/.ssh
-chmod 600 /home/chris/.ssh/authorized_keys
-restorecon -RFv /home/chris/.ssh/authorized_keys
+# install ssh key for {{user_name}}
+curl {{config_files_url}}/{{user_name}}-server0-id_rsa.pub -o /home/{{user_name}}/.ssh/authorized_keys  --create-dirs
+curl  {{config_files_url}}/{{user_name}}-x1carbon-id_rsa.pub >> /home/{{user_name}}/.ssh/authorized_keys
+chown -R {{user_name}}:{{group_name}} /home/{{user_name}}/.ssh
+chmod 700 /home/{{user_name}}/.ssh
+chmod 600 /home/{{user_name}}/.ssh/authorized_keys
+restorecon -RFv /home/{{user_name}}/.ssh/authorized_keys
 %end
 

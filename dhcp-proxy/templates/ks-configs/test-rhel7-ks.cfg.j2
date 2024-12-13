@@ -19,13 +19,16 @@ lang en_US.UTF-8
 network  --hostname=test-rhel7.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.31 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
 
 # Root password
-rootpw --iscrypted $6$EWvRuPP7F8pRTFrm$749vEu5HoijsEhVWzw691ZquSDP.FmK2Qc56HGpgE03pHMgxIMlal4YPM/BrmwfA10q0nKUDxkC7D21H1q7xH/
+rootpw --iscrypted {{root_pw_hash}}
+
+# Define user
+user --groups=wheel --name={{user_name}} --password={{user_pw_hash}} --iscrypted --gecos={{gecos_name}}
+
 # System services
 services --enabled="chronyd"
 # System timezone
 timezone America/Phoenix --isUtc
 reboot
-user --groups=wheel --name=chris --uid=1000 --password=$6$Cn2vwW.vUq0qFXYG$P6ogDQM8pvhpGk/InzJ4Lh9eiO/lnsJiF6rb3jYAKA4jreq5hGCXg2Gu.v6zIW1bNeSCLix0k0Pq2MXn8OLAu/ --iscrypted --gecos="Chris Tjon"
 # System bootloader configuration
 bootloader --location=mbr --boot-drive=vda
 # Partition clearing information
@@ -60,12 +63,12 @@ pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 %end
 
 %post
-# install ssh key for chris
-curl {{config_files_url}}/chris-server0-id_rsa.pub -o /home/chris/.ssh/authorized_keys  --create-dirs
-curl  {{config_files_url}}/chris-x1carbon-id_rsa.pub >> /home/chris/.ssh/authorized_keys
-curl  {{config_files_url}}/chris-mbp-id_rsa.pub >> /home/chris/.ssh/authorized_keys
-chown -R chris:chris /home/chris/.ssh
-chmod 700 /home/chris/.ssh
-chmod 600 /home/chris/.ssh/authorized_keys
-restorecon -RFv /home/chris/.ssh/authorized_keys
+# install ssh key for {{user_name}}
+curl {{config_files_url}}/{{user_name}}-server0-id_rsa.pub -o /home/{{user_name}}/.ssh/authorized_keys  --create-dirs
+curl  {{config_files_url}}/{{user_name}}-x1carbon-id_rsa.pub >> /home/{{user_name}}/.ssh/authorized_keys
+curl  {{config_files_url}}/{{user_name}}-mbp-id_rsa.pub >> /home/{{user_name}}/.ssh/authorized_keys
+chown -R {{user_name}}:{{group_name}} /home/{{user_name}}/.ssh
+chmod 700 /home/{{user_name}}/.ssh
+chmod 600 /home/{{user_name}}/.ssh/authorized_keys
+restorecon -RFv /home/{{user_name}}/.ssh/authorized_keys
 %end

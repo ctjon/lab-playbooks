@@ -4,13 +4,18 @@ url --url={{linux_install_server_url}}/rhel/6/x86_64
 lang en_US.UTF-8
 keyboard us
 network --onboot yes --device eth0 --bootproto static --ip {{trusted_network_short_net}}.32 --netmask {{trusted_network_netmask}} --gateway {{trusted_network_gateway}} --nameserver {{trusted_network_dns_servers|join(",")}} --hostname test-rhel6.{{trusted_network_domain_name}} --domain {{trusted_network_domain_name}}
-rootpw  --iscrypted $6$nVsdpkRk7J4y2SkE$5y9qq3w2ydPTN6o3gDFk2DRzrl8HNfMfVfVJ8ZgIcyHe6UAGl8aB5i/RXrmSqrmh942KsWMg0nearqEzom8Kn0
+
+# Root password
+rootpw --iscrypted {{root_pw_hash}}
+
+# Define user
+user --groups=wheel --name={{user_name}} --password={{user_pw_hash}} --iscrypted --gecos={{gecos_name}}
+
 firewall --service=ssh
 authconfig --enableshadow --passalgo=sha512
 selinux --enforcing
 timezone --utc America/Phoenix
 reboot
-user --groups=wheel --name=chris --uid=1000 --password=$6$Cn2vwW.vUq0qFXYG$P6ogDQM8pvhpGk/InzJ4Lh9eiO/lnsJiF6rb3jYAKA4jreq5hGCXg2Gu.v6zIW1bNeSCLix0k0Pq2MXn8OLAu/ --iscrypted --gecos="Chris Tjon"
 
 bootloader --location=mbr --driveorder=vda --append="crashkernel=auto rhgb quiet"
 # The following is the partition information you requested
@@ -40,14 +45,14 @@ libselinux-python
 
 %post
 
-# install ssh key for chris
-curl {{config_files_url}}/chris-server0-id_rsa.pub -o /home/chris/.ssh/authorized_keys  --create-dirs
-curl  {{config_files_url}}/chris-x1carbon-id_rsa.pub >> /home/chris/.ssh/authorized_keys
-curl  {{config_files_url}}/chris-mbp-id_rsa.pub >> /home/chris/.ssh/authorized_keys
-chown -R chris:chris /home/chris/.ssh
-chmod 700 /home/chris/.ssh
-chmod 600 /home/chris/.ssh/authorized_keys
-restorecon -RFv /home/chris/.ssh/authorized_keys
+# install ssh key for {{user_name}}
+curl {{config_files_url}}/{{user_name}}-server0-id_rsa.pub -o /home/{{user_name}}/.ssh/authorized_keys  --create-dirs
+curl  {{config_files_url}}/{{user_name}}-x1carbon-id_rsa.pub >> /home/{{user_name}}/.ssh/authorized_keys
+curl  {{config_files_url}}/{{user_name}}-mbp-id_rsa.pub >> /home/{{user_name}}/.ssh/authorized_keys
+chown -R {{user_name}}:{{group_name}} /home/{{user_name}}/.ssh
+chmod 700 /home/{{user_name}}/.ssh
+chmod 600 /home/{{user_name}}/.ssh/authorized_keys
+restorecon -RFv /home/{{user_name}}/.ssh/authorized_keys
 
 curl {{config_files_url}}/sudoers -o /etc/sudoers
 chown -R root:root /etc/sudoers

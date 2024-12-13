@@ -15,8 +15,13 @@ lang en_US.UTF-8
 
 # Network information
 network  --bootproto=dhcp --device=eth0 --activate --hostname=x1carbon.internal.tjon.net
+
 # Root password
-rootpw --iscrypted $6$ze1RxlCcaxrJt7Qe$eofK0Dm7oYVBlWIOxmVhml2DS47UqgzrIc.HZwpFfTWouW6KpP2LXKAj3F2nOlYCaBojPORbe1RKI1spsnGvu0
+rootpw --iscrypted {{root_pw_hash}}
+
+# Define user
+user --groups=wheel --name={{user_name}} --password={{user_pw_hash}} --iscrypted --gecos={{gecos_name}}
+
 # X Window System configuration information
 xconfig  --startxonboot
 # Run the Setup Agent on first boot
@@ -25,7 +30,6 @@ firstboot --enable
 services --enabled="chronyd"
 # System timezone
 timezone America/Phoenix --isUtc
-user --groups=wheel --name=chris --password=$6$anVNO9ARl50lsRxC$GMfO5l5a9qc61ikljaD5Zv9ujETV5.VzZ248vWNPcG0mksFjEAsSG7VzgwkuDXIMwm6dJDiUWKrEg939sv4DK/ --iscrypted --gecos="Chris Tjon"
 # Disk partitioning information
 part /boot/efi --fstype="efi" --ondisk=nvme0n1 --size=64 --fsoptions="umask=0077,shortname=winnt" --label=bootefi
 part /boot --fstype="ext4" --ondisk=nvme0n1 --size=256 --label=boot
