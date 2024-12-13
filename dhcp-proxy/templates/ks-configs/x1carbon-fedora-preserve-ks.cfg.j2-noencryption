@@ -1,0 +1,57 @@
+#version=DEVEL
+ignoredisk --only-use=nvme0n1
+# Partition clearing information
+clearpart --none --initlabel
+# Use graphical install
+graphical
+# Use network installation
+url --url="{{linux_install_server_url}}/fedora/releases/29/Workstation/x86_64/os/"
+# Keyboard layouts
+# old format: keyboard us
+# new format:
+keyboard --vckeymap=us --xlayouts='us'
+# System language
+lang en_US.UTF-8
+
+# Network information
+network  --bootproto=dhcp --device=eth0 --activate
+network  --hostname=x1carbon.internal.tjon.net
+# Root password
+rootpw --iscrypted $6$Gj1K6HHByzPR3WLZ$MzD6AspvxQSBqTvx5glAqFO/z7g9KiuH540YrCWPgggDU7rRLokHuPuiUgaI8/VWmJYtM9D3qJ/8E1M83/g7g.
+# X Window System configuration information
+xconfig  --startxonboot
+# Run the Setup Agent on first boot
+firstboot --enable
+# System services
+services --enabled="chronyd"
+# System timezone
+timezone America/Phoenix --isUtc
+user --groups=wheel --name=chris --password=$6$Gs/ocZ7zi6QT3g9t$o1w96AgcN0qmq5XZIhpqUhheu0ywYyz9bN/pHdiDqk1Wzh5ltzTv4crW7tCLJDYNi51MIDcLfPTitem6SGbiC/ --iscrypted --gecos="Chris Tjon"
+# Disk partitioning information
+part /boot --fstype="ext4" --label=boot --onpart nvme0n1p1
+part /boot/efi --fstype="efi" --fsoptions="umask=0077,shortname=winnt" --label=bootef1 --onpart nvme0n1p2
+part pv.37 --fstype="lvmpv" --noformat --onpart nvme0n1p3 
+volgroup rootvg --noformat --useexisting
+logvol /home --fstype="ext4" --noformat --useexisting --label="home" --name=homelv --vgname=rootvg
+logvol /var --fstype="ext4" --useexisting --label="var" --name=varlv --vgname=rootvg
+logvol /var/cache --fstype="ext4" --useexisting --label="cache" --name=cachelv --vgname=rootvg
+logvol swap --fstype="swap" --useexisting --name=swaplv --vgname=rootvg
+logvol /usr --fstype="ext4" --useexisting --label="usr" --name=usrlv --vgname=rootvg
+logvol / --fstype="ext4" --useexisting --label="root" --name=rootlv --vgname=rootvg
+logvol /tmp --fstype="ext4" --useexisting --label="tmp" --name=tmplv --vgname=rootvg
+logvol /var/log --fstype="ext4" --useexisting --label="log" --name=loglv --vgname=rootvg
+
+%packages
+@^workstation-product-environment
+
+%end
+
+%addon com_redhat_kdump --disable --reserve-mb='128'
+
+%end
+
+%anaconda
+pwpolicy root --minlen=6 --minquality=1 --notstrict --nochanges --notempty
+pwpolicy user --minlen=6 --minquality=1 --notstrict --nochanges --emptyok
+pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
+%end

@@ -1,0 +1,81 @@
+
+#version=RHEL9
+ignoredisk --only-use=vda
+# Partition clearing information
+clearpart --none --initlabel
+# Use graphical install
+
+graphical
+# Define AppStream Repo
+repo --name="AppStream" --baseurl="{{linux_install_server_url}}/rhel/9/x86_64/AppStream"
+
+# Use network installation
+url --url="{{linux_install_server_url}}/rhel/9/x86_64/BaseOS"
+
+# Keyboard layouts
+# old format: keyboard us
+# new format:
+keyboard --vckeymap=us --xlayouts='us'
+# System language
+lang en_US.UTF-8
+
+# Network information
+network --hostname=synchost9.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.13 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate 
+# Root password
+rootpw --iscrypted $6$9vrA/lrxWT8.nHLB$zacDVevdnsOAfMNaysD.1sJz83LKfXOUiE3WZ9SszluLyEBlX7cDbuKzgjv0sQw.xhsXjwH0xIpuX4uIXLkph/
+# X Window System configuration information
+xconfig  --startxonboot
+# Run the Setup Agent on first boot
+firstboot --enable
+# System services
+services --enabled="chronyd"
+# System timezone
+timezone America/Phoenix --isUtc
+reboot
+user --groups=wheel --name=chris --password=$6$oWM3S2AK4zS.jyDy$716RhjySp6ncIMig2UggFWY5z98sfkmLQLqyWwlw1N4jogYBdjqSRlRjoJd.nr59z7iI68rzP4Y3WLj6Ssr5M. --iscrypted --gecos="Chris Tjon"
+
+# System bootloader configuration
+bootloader --location=mbr --boot-drive=vda
+# Partition clearing information
+clearpart --all --initlabel
+# Disk partitioning information
+part /boot --fstype="ext4" --ondisk=vda --size=512
+part pv.409 --fstype="lvmpv" --ondisk=vda --grow
+volgroup rootvg --pesize=4096 pv.409 
+logvol /  --fstype="ext4" --size=1536 --label="root" --name=rootlv --vgname=rootvg
+logvol /usr  --fstype="ext4" --size=4096 --label="usr" --name=usrlv --vgname=rootvg
+logvol /home  --fstype="ext4" --size=512 --label="home" --name=homelv --vgname=rootvg
+logvol swap  --fstype="swap" --size=2048 --name=swaplv --vgname=rootvg
+logvol /opt  --fstype="ext4" --size=32 --label="opt" --name=optlv --vgname=rootvg
+logvol /var  --fstype="ext4" --size=5120 --label="var" --name=varlv --vgname=rootvg
+logvol /tmp  --fstype="ext4" --size=1024 --label="tmp" --name=tmplv --vgname=rootvg
+
+%packages
+@^minimal-environment
+@core
+python3
+insights-client
+open-vm-tools
+
+%end
+
+%addon com_redhat_kdump --enable --reserve-mb='auto'
+
+%end
+
+%anaconda
+pwpolicy root --minlen=6 --minquality=1 --notstrict --nochanges --notempty
+pwpolicy user --minlen=6 --minquality=1 --notstrict --nochanges --emptyok
+pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
+%end
+
+
+%post
+# install ssh key for chris
+curl {{config_files_url}}/chris-server0-id_rsa.pub -o /home/chris/.ssh/authorized_keys  --create-dirs
+curl  {{config_files_url}}/chris-x1carbon-id_rsa.pub >> /home/chris/.ssh/authorized_keys
+chown -R chris:chris /home/chris/.ssh
+chmod 700 /home/chris/.ssh
+chmod 600 /home/chris/.ssh/authorized_keys
+restorecon -RFv /home/chris/.ssh/authorized_keys
+%end

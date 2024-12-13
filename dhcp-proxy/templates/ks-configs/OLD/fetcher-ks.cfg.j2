@@ -1,0 +1,61 @@
+#version=DEVEL
+# Use graphical install
+graphical
+
+# Keyboard layouts
+keyboard --vckeymap=us --xlayouts='us'
+# System language
+lang en_US.UTF-8
+
+# Use network installation
+url --url="{{linux_install_server_url}}/fedora/releases/35/Server/x86_64/os/"
+
+# Network information
+network  --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.8 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --hostname=fetcher.{{trusted_network_domain_name}} --activate
+
+# Root password
+rootpw --iscrypted $6$EWvRuPP7F8pRTFrm$749vEu5HoijsEhVWzw691ZquSDP.FmK2Qc56HGpgE03pHMgxIMlal4YPM/BrmwfA10q0nKUDxkC7D21H1q7xH/
+
+%packages
+@^server-product-environment
+
+%end
+
+# Run the Setup Agent on first boot
+firstboot --enable
+
+# Generated using Blivet version 3.4.2
+ignoredisk --only-use=vda
+# Partition clearing information
+clearpart --all --initlabel
+# Disk partitioning information
+part /boot --fstype="xfs" --ondisk=vda --size=512 --label=boot
+part pv.218 --fstype="lvmpv" --ondisk=vda --size=19967
+volgroup rootvg --pesize=4096 pv.218
+logvol /usr --fstype="xfs" --size=4096 --label="usr" --name=usrlv --vgname=rootvg
+logvol /tmp --fstype="xfs" --size=1024 --label="tmp" --name=tmplv --vgname=rootvg
+logvol /var --fstype="xfs" --size=2048 --label="var" --name=varlv --vgname=rootvg
+logvol /home --fstype="xfs" --size=512 --label="home" --name=homelv --vgname=rootvg
+logvol swap --fstype="swap" --size=1024 --name=swaplv --vgname=rootvg
+logvol /opt --fstype="xfs" --size=32 --label="opt" --name=optlv --vgname=rootvg
+logvol /scratch --fstype="xfs" --size=10204 --label="scratch" --name=scratchlv --vgname=rootvg
+logvol / --fstype="xfs" --size=1024 --label="root" --name=rootlv --vgname=rootvg
+
+# System timezone
+timezone America/Phoenix --utc
+
+reboot
+
+#Root password
+user --groups=wheel --name=chris --password=$y$j9T$s2cZspvGgRXYF7H8NKPJVpDy$13Hpy78Hra5F2Mg5xEjv3vwnyO7XX2IIdNWLse.2q.5 --iscrypted --gecos="Chris Tjon"
+
+%post
+# install ssh key for chris
+curl {{config_files_url}}/chris-server0-id_rsa.pub -o /home/chris/.ssh/authorized_keys  --create-dirs
+curl  {{config_files_url}}/chris-x1carbon-id_rsa.pub >> /home/chris/.ssh/authorized_keys
+curl  {{config_files_url}}/chris-eagle-id_rsa.pub >> /home/chris/.ssh/authorized_keys
+chown -R chris:chris /home/chris/.ssh
+chmod 700 /home/chris/.ssh
+chmod 600 /home/chris/.ssh/authorized_keys
+restorecon -RFv /home/chris/.ssh/authorized_keys
+%end

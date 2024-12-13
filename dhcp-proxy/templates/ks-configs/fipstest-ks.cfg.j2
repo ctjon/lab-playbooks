@@ -1,0 +1,118 @@
+#version=RHEL8
+ignoredisk --only-use=vda
+# Partition clearing information
+clearpart --all --initlabel
+# Use graphical install
+graphical
+# Keyboard layouts
+# old format: keyboard us
+# new format:
+keyboard --vckeymap=us --xlayouts='us'
+# System language
+lang en_US.UTF-8
+
+# Network information
+network  --hostname=fipstest.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --ip={{trusted_network_short_net}}.15 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --noipv6 --activate
+network  --bootproto=dhcp --device=eth1 --onboot=on --noipv6 --activate
+repo --name="AppStream" --baseurl=http://install.internal.tjon.net/Linux/rhel/8/x86_64/AppStream
+# Use network installation
+url --url="http://install.internal.tjon.net/Linux/rhel/8/x86_64"
+# Root password
+rootpw --iscrypted $6$9vrA/lrxWT8.nHLB$zacDVevdnsOAfMNaysD.1sJz83LKfXOUiE3WZ9SszluLyEBlX7cDbuKzgjv0sQw.xhsXjwH0xIpuX4uIXLkph/
+# Run the Setup Agent on first boot
+firstboot --enable
+# Do not configure the X Window System
+skipx
+# System services
+services --enabled="chronyd"
+# System timezone
+timezone America/Phoenix --isUtc
+reboot
+user --groups=wheel --name=chris --password=$6$Mcw9nP3uls0APJhP$iGcIRQ14HIv.vMOQDepnvDIFIwpLWKlkqi3ZNlyJ386Xt/Kedx64MDMN8e1pW0lMPrJbRHo8yDwD6kHFkxHpl1 --iscrypted --gecos="Chris Tjon"
+# Disk partitioning information
+part /boot --fstype="ext4" --ondisk=vda --size=512 --fsoptions="defaults,nodev,nosuid"
+part pv.821 --fstype="lvmpv" --ondisk=vda --size=17416
+volgroup rootvg --pesize=4096 pv.821
+logvol swap --fstype="swap" --size=4096 --name=swaplv --vgname=rootvg
+logvol /home --fstype="ext4" --size=1024 --fsoptions="defaults,nosuid,nodev" --label="home" --name=homelv --vgname=rootvg
+logvol /var/tmp --fstype="ext4" --size=1024 --fsoptions="defaults,nodev,nosuid,noexec" --label="vartmp" --name=vartmplv --vgname=rootvg
+logvol /var/log --fstype="ext4" --size=2048 --fsoptions="defaults,nosuid,nodev,noexec" --label="log" --name=loglv --vgname=rootvg
+logvol /usr --fstype="ext4" --size=3072 --label="usr" --name=usrlv --vgname=rootvg
+logvol /var/cache --fstype="ext4" --size=1024 --label="cache" --name=cachelv --vgname=rootvg
+logvol /tmp --fstype="ext4" --size=1024 --label="tmp" --name=tmplv --vgname=rootvg
+logvol /var --fstype="ext4" --size=1024 --fsoptions="defaults,nodev" --label="var" --name=varlv --vgname=rootvg
+logvol /var/log/audit --fstype="ext4" --size=2048 --fsoptions="defaults,nodev,nosuid,noexec" --label="audit" --name=auditlv --vgname=rootvg
+logvol / --fstype="ext4" --size=1024 --label="root" --name=rootlv --vgname=rootvg
+
+%packages
+@^minimal-environment
+python3
+net-tools
+bind-utils
+open-vm-tools
+nmap
+sysstat
+aide
+audispd-plugins
+audit
+dnf-automatic
+fapolicyd
+firewalld
+iptables
+libcap-ng-utils
+libreswan
+openscap
+openscap-scanner
+policycoreutils
+python3-subscription-manager-rhsm
+rng-tools
+rsyslog
+rsyslog-gnutls
+scap-security-guide
+sssd-ipa
+sudo
+tmux
+usbguard
+-abrt
+-abrt-addon-ccpp
+-abrt-addon-kerneloops
+-abrt-addon-python
+-abrt-cli
+-abrt-plugin-logger
+-abrt-plugin-rhtsupport
+-abrt-plugin-sosreport
+-gssproxy
+-iprutils
+-krb5-workstation
+-nfs-utils
+-sendmail
+-tuned
+
+%end
+
+%addon org_fedora_oscap
+    content-type = scap-security-guide
+    profile = xccdf_org.ssgproject.content_profile_ospp
+%end
+
+%addon com_redhat_kdump --disable --reserve-mb='auto'
+
+%end
+
+%anaconda
+pwpolicy root --minlen=6 --minquality=1 --notstrict --nochanges --notempty
+pwpolicy user --minlen=6 --minquality=1 --notstrict --nochanges --emptyok
+pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
+%end
+
+%post
+# install ssh key for chris
+mkdir /home/chris/.ssh
+chmod 700 /home/chris/.ssh
+curl {{config_files_url}}/chris-server0-id_rsa.pub -o /home/chris/.ssh/authorized_keys
+curl {{config_files_url}}/chris-x1carbon-id_rsa.pub >> /home/chris/.ssh/authorized_keys
+curl {{config_files_url}}/chris-mbp-id_rsa.pub >> /home/chris/.ssh/authorized_keys
+chown -R chris:chris /home/chris/.ssh
+chmod 600 /home/chris/.ssh/authorized_keys
+restorecon -RFv /home/chris/.ssh/authorized_keys
+%end

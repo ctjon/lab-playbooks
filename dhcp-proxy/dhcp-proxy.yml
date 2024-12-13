@@ -10,7 +10,7 @@
     work_server: false
     personal_server: true
     trusted_network_firewall_zone: public
-    install_server_url: http://install.internal.tjon.net/
+    install_server_url: http://install.internal.tjon.net
     install_server_dir: install.internal.tjon.net:/Install
     tftpbootdir: /var/lib/tftpboot
     linux_pxe_files:
@@ -155,6 +155,7 @@
         group: root
         mode: 0755
         state: directory
+      tags: rhel_pxe_files
 
     - name: deploy {{tftpbootdir}}/pxelinux.cfg/default
       ansible.builtin.copy:
@@ -163,6 +164,7 @@
         owner: root
         group: root
         mode: 0644
+      tags: rhel_pxe_files
 
     - name: create {{tftpbootdir}}/pxelinux.cfg/Linux directory
       ansible.builtin.file:
@@ -279,12 +281,46 @@
         owner: root
         group: root
         mode: 0644
-      tags: rhel_image_files
+      tags: 
+        - rhel_image_files
+        - rhel_pxe_files
 
     - name: restore selinux context on {{tftpbootdir}}
       ansible.builtin.command: "restorecon -RFv {{tftpbootdir}}"
       tags: rhel_image_files
     
+
+- hosts: ds224
+  become: yes
+
+  vars:
+    ksconfig_dir: /volume1/Install/Linux/ks-configs
+    domain_name: internal.tjon.net
+    network_gateway: 172.16.1.1
+    short_net: 172.16.1
+    dns_servers: 172.16.1.2
+    netmask: 255.255.255.0
+
+  tasks:
+    - name: Create KS Config Directory
+      ansible.builtin.file:
+        path: "{{ksconfig_dir}}"
+        owner: chris
+        group: users
+        mode: 0755
+        state: directory
+      tags: ksconfigs
+
+    - name: Deploy KS Config Files
+      ansible.builtin.template:
+        src: "ks-configs/{{item}}.j2"
+        dest: "{{ksconfig_dir}}/{{item}}"
+        owner: chris
+        group: users
+        mode: 0644
+      tags: ksconfigs
+      with_items:
+        - kvmhost1-ks.cfg
 
 ...
 
