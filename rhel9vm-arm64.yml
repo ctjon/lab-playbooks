@@ -6,6 +6,12 @@
 - hosts: rhel9vm-arm64
   become: yes
 
+  vars:
+    ocp_version: latest-4.17
+    #ocp_arch: x86_64
+    ocp_arch: arm64
+    ocp_arm_ver: 4.17.8
+
   roles:
     - role: sm-register
       tags: ['sm-register']
@@ -43,3 +49,73 @@
         name: irqbalance
         enabled: yes
         state: started
+
+    - name: install podman
+      ansible.builtin.package:
+        name: podman
+        state: latest
+
+    - name: Insert/Update environment variables in profile
+      ansible.builtin.blockinfile:
+        path: "/home/{{ansible_user}}/.bash_profile"
+        append_newline: true
+        prepend_newline: true
+        block: |
+          export OCP_VERSION={{ocp_version}}
+          export OCP_ARCH={{ocp_arch}}
+          export PATH=$PATH:/home/{{ansible_user}}/openshift/bin
+          export ISO_URL=$(~/openshift/bin/openshift-install coreos print-stream-json | grep location | grep $OCP_ARCH | grep iso | cut -d\" -f4)
+      tags: current_task_test
+
+    - name: create openshift directories
+      ansible.builtin.file:
+        name: "/home/{{ansible_user}}/{{item}}"
+        state: directory
+        recurse: yes
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+        mode: 0755
+      with_items:
+        - openshift
+        - openshift/downloads
+        - openshift/bin
+      tags: current_task_test
+
+    - name: Download and Unpack x86_64 openshift-client packages
+      ansible.builtin.unarchive:
+        src: "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ocp_version}}/{{item}}"
+        dest: "/home/{{ansible_user}}/openshift/bin"
+        remote_src: yes
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+      with_items:
+        - openshift-client-linux.tar.gz
+        - openshift-install-linux.tar.gz
+      when: ocp_arch == "x86_64"
+      tags: current_task_test
+
+    - name: Download and Unpack arm64 openshift-client packages
+      ansible.builtin.unarchive:
+        src: "{{item}}"
+        dest: "/home/{{ansible_user}}/openshift/bin"
+        remote_src: yes
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+      with_items:
+        - https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/4.17.8/openshift-client-linux-arm64.tar.gz
+        - https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/4.17.8/openshift-install-linux-arm64.tar.gz
+      when: ocp_arch == "arm64"
+      tags: current_task_test
+
+#    - name: Download and Unpack arm64 openshift-client packages
+#      ansible.builtin.unarchive:
+#        src: "https://mirror.openshift.com/pub/openshift-v4/{{ocp_arch}}/clients/ocp/{{ocp_version}}/{{item}}"
+#        dest: "/home/{{ansible_user}}/openshift/bin"
+#        remote_src: yes
+#        owner: "{{ansible_user}}"
+#        group: "{{ansible_user}}"
+#      with_items:
+#        - "openshift-client-linux-{{ocp_arch}}-{{ocp_arm_ver}}.tar.gz"
+#        - "openshift-install-linux-{{ocp_arch}}-{{ocp_arm_ver}}.tar.gz"
+#      when: ocp_arch == "arm64"
+#      tags: current_task_test
