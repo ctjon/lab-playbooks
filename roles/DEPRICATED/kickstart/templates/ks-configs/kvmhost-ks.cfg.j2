@@ -1,13 +1,13 @@
-#version=RHEL8
+#version=RHEL9
 
 # Use graphical install
 graphical
 
 # Define AppStream Repo
-repo --name="AppStream" --baseurl="{{linux_install_server_url}}/rhel/8/x86_64/AppStream" 
+repo --name="AppStream" --baseurl="{{linux_install_server_url}}/rhel/9/x86_64/AppStream" 
 
 # Use network installation
-url --url="{{linux_install_server_url}}/rhel/8/x86_64/BaseOS" 
+url --url="{{linux_install_server_url}}/rhel/9/x86_64/BaseOS" 
 
 # Keyboard layouts
 keyboard --vckeymap=us --xlayouts='us'
@@ -16,7 +16,7 @@ keyboard --vckeymap=us --xlayouts='us'
 lang en_US.UTF-8
 
 # Network information
-network  --hostname=kvmhost.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.8 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
+network  --hostname=kvmhost.{{trusted_network_domain_name}} --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.4 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --activate
 
 # Root password
 rootpw --iscrypted $6$Mpqrkg2HFvlND9bA$MWkZ03ZuyJ5m97r03QPRMVgMtPCJBj7bHwpB/s07DHAeEjnd8LbVSRTkHPv3m7FFzYWXSFeY3sjFv3zA9A6cx0
