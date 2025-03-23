@@ -1,0 +1,1 @@
+export PLEX_MEDIA_SERVER_USE_SYSLOG=false

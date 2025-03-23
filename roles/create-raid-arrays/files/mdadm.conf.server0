@@ -1,0 +1,5 @@
+DEVICE /dev/nvme[0123]n1p1
+ARRAY /dev/md0 devices=/dev/nvme0n1p1,/dev/nvme1n1p1,/dev/nvme2n1p1,/dev/nvme3n1p1
+
+DEVICE /dev/sd[ab]1
+ARRAY /dev/md1 devices=/dev/sda1,/dev/sdb1

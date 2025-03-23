@@ -1,0 +1,10 @@
+---
+# See Details: https://www.redhat.com/en/blog/openssh-scp-deprecation-rhel-9-what-you-need-know
+- name: disable scp per CVE-2020-15778 
+  ansible.builtin.file:
+    path: /etc/ssh/disable_scp
+    state: present
+    mode: 0600
+    owner: root
+    group: root
+

@@ -1,0 +1,44 @@
+---
+- name: Configure fail2ban to block failed access attempts
+  hosts: localhost
+  become: yes
+  vars:
+    bantime: 6h
+    findtime: 5m
+
+  tasks:
+  - name: Install and/or Update fail2ban
+    package:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+      - fail2ban-server
+      - fail2ban-firewalld
+  
+  - name: Start and Enable fail2ban
+    service:
+      name: fail2ban
+      state: started
+      enabled: yes
+
+  - name: configure fail2ban to log to syslog
+    lineinfile: 
+      path: /etc/fail2ban/fail2ban.conf
+      regexp: "^logtarget =" 
+      line: "logtarget = SYSLOG"
+      state: present
+    notify: restart fail2ban
+
+  - name: configure jail.conf to enable httpd
+    lineinfile:
+      path: /etc/fail2ban/jail.conf
+      regexp: "^# [sshd]\n# enabled = true"
+      line: "[sshd]\nenabled = true"
+      state: present
+    notify: restart fail2ban
+
+  handlers:
+  - name: restart fail2ban
+    service: 
+      name: fail2ban
+      state: restarted

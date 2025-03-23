@@ -1,0 +1,8 @@
+---
+log_level: INFO
+#log_target: /var/log/fail2ban.log
+log_target: SYSLOG
+ban_time: 6h
+find_time: 5m
+ssh_enabled: true
+

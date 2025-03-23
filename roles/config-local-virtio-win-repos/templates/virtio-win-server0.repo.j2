@@ -1,0 +1,23 @@
+# virtio-win yum repo
+# Details: https://fedoraproject.org/wiki/Windows_Virtio_Drivers
+
+[virtio-win-stable-{{linux_install_server_hostname}}]
+name=virtio-win-{{linux_install_server_hostname}} builds roughly matching what was shipped in latest RHEL
+baseurl={{linux_install_server_url}}/virtio-win/virtio-win/repo/stable
+enabled=1
+skip_if_unavailable=1
+gpgcheck=0
+
+[virtio-win-latest-{{linux_install_server_hostname}}]
+name=Latest virtio-win-{{linux_install_server_hostname}} builds
+baseurl={{linux_install_server_url}}/virtio-win/virtio-win/repo/latest
+enabled=0
+skip_if_unavailable=1
+gpgcheck=0
+
+[virtio-win-source-{{linux_install_server_hostname}}]
+name=virtio-win-{{linux_install_server_hostname}} source RPMs
+baseurl={{linux_install_server_url}}/virtio-win/virtio-win/repo/srpms
+enabled=0
+skip_if_unavailable=1
+gpgcheck=0

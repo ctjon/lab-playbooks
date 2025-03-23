@@ -1,0 +1,47 @@
+---
+#
+# Configure Ansible Tower Stand Alone
+#
+
+- hosts: towers
+  become: yes
+
+  roles:
+    - role: sm-register
+      tags: ['sm-register']
+
+    - role: setup-azure
+      tags: ['setup-azure']
+
+    - role: setup-awscli
+      tags: ['setup-awscli']
+
+    - role: setup-pyvmomi
+      tags: ['setup-pyvmomi']
+
+    - role: shell-env
+      tags: ['shell-env']
+
+    - role: ssh-config
+      tags: ['ssh-config']
+
+    - role: selinux
+      tags: ['selinux']
+
+    - role: tower-standalone
+      tags: ['tower-standalone']
+
+    - role: insights-register
+      tags: ['insights']
+
+    - role: apply-updates
+      tags: ['apply-updates']
+
+    - role: reboot-if-required
+      tags: ['reboot-if-required']
+
+  tasks:
+    - name: install bind-utils
+      yum:
+        name: bind-utils
+        state: latest

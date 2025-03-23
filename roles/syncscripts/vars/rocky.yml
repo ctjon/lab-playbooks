@@ -1,0 +1,28 @@
+#
+# Rocky includes/excludes
+#
+#
+rocky_linux_rsync_server: mirror.usi.edu/rocky
+
+rocky_version_includes_list:
+  - 8
+  - 9
+
+rocky_repo_includes_list:
+  - source
+  - x86_64
+  - aarch64
+  - "*.iso"
+  - "*.qcow2"
+  - "*.raw.xz"
+
+rocky_repo_excludes_list:
+  - ppc64le
+  - s390x
+  - debug
+  - "*.torrent"
+  - "*.box"
+  - ".~tmp~"
+
+rocky_version_excludes_list:
+  - 7

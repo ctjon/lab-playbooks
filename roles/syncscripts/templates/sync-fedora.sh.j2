@@ -1,0 +1,40 @@
+#!/bin/sh
+#
+# rsync of Fedora Distribution
+# {{ ansible_managed }}
+#
+
+export SRCDIR=rsync://{{fedora_linux_rsync_server}}/fedora/
+export TGTDIR={{linux_install_server_path}}/fedora/
+echo "********************************************************************************"
+echo "* Syncing Fedora Repos                                                         *"
+echo "********************************************************************************"
+mkdir -p $TGTDIR
+
+{% if sync_script_retries == true %}
+# set return code to be false to force first iteration of while loop ironically this give error cause it is an error:-)
+$? = 1
+
+while [ "$?" -ne "0" ]
+do
+	sleep 10
+{% endif %}
+	date
+	rsync -aHKvz --keep-dirlinks --delete --delete-during --delete-excluded --progress \
+{% for item in fedora_repo_includes_list %}
+	--include='{{item}}' \
+{% endfor %}
+{% for item in fedora_version_includes_list %}
+	--include='{{item}}' \
+{% endfor %}
+{% for item in fedora_repo_excludes_list %}
+	--exclude='{{item}}' \
+{% endfor %}
+{% for item in fedora_version_excludes_list %}
+	--exclude='{{item}}' \
+{% endfor %}
+ 	$SRCDIR $TGTDIR
+{% if sync_script_retries == true %}
+done
+{% endif %}
+

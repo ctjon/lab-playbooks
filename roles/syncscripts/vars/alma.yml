@@ -1,0 +1,27 @@
+#
+# Alma Linux includes/excludes
+#
+#
+alma_linux_rsync_server: rsync.repo.almalinux.org/almalinux
+
+alma_version_includes_list:
+  - 8
+  - 9
+
+alma_repo_includes_list:
+  - source
+  - x86_64
+  - aarch64
+  - "*.iso"
+  - "*.qcow2"
+  - "*.raw.xz"
+
+alma_repo_excludes_list:
+  - ppc64le
+  - s390x
+  - debug
+  - "*.torrent"
+  - "*.box"
+
+alma_version_excludes_list:
+  - 7

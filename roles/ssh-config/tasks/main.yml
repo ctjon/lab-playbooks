@@ -1,0 +1,90 @@
+#
+# peform user ssh configuration
+# ssh_keygen_users variable defined in ansible_global_vars/secret_vars/secrets.yml
+#
+
+---
+- name: include secrets.yml
+  include_vars:
+    file: ../../../ansible_global_vars/secret_vars/secrets.yml
+
+- name: create .ssh directories
+  ansible.builtin.file:
+    path: "~{{item}}/.ssh"
+    state: directory
+    mode: 0700
+    owner: "{{item}}"
+    group: "{{item}}"
+    seuser: unconfined_u
+    serole: object_r
+    setype: ssh_home_t
+    selevel: s0
+  with_items:
+    - "{{ssh_keygen_users}}"
+
+- name: generate RSA ssh keys
+  ansible.builtin.command: "ssh-keygen -q -f ~{{item}}/.ssh/id_rsa -t rsa -N ''"
+  args:
+    creates: "~{{item}}/.ssh/id_rsa"
+  with_items:
+    - "{{ssh_keygen_users}}"
+  tags: generate_keys
+
+- name: set permission on ssh private keys
+  ansible.builtin.file:
+    path: "~{{item}}/.ssh/id_rsa"
+    state: file
+    mode: 0600
+    owner: "{{item}}"
+    group: "{{item}}"
+    seuser: unconfined_u
+    serole: object_r
+    setype: ssh_home_t
+    selevel: s0
+  with_items:
+    - "{{ssh_keygen_users}}"
+
+- name: set permission on ssh public keys
+  ansible.builtin.file:
+    path: "~{{item}}/.ssh/id_rsa.pub"
+    state: file
+    mode: 0644
+    owner: "{{item}}"
+    group: "{{item}}"
+    seuser: unconfined_u
+    serole: object_r
+    setype: ssh_home_t
+    selevel: s0
+  with_items:
+    - "{{ssh_keygen_users}}"
+
+- name: configure local ssh key for "{{ansible_user}}" 
+  ansible.builtin.authorized_key:
+    user: "{{ansible_user}}"
+    state: present
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+#- name: configure my server0 key for "{{ansible_user}}" 
+#  ansible.builtin.authorized_key:
+#    user: "{{ansible_user}}"
+#    state: present
+#    key: "{{ lookup('file', '~/.ssh/chris-server0-id_rsa.pub') }}"
+
+- name: lockdown "{{ansible_user}}" authorized_keys
+  ansible.builtin.file:
+    path: "~{{ansible_user}}/.ssh/authorized_keys"
+    state: file
+    mode: 0600
+    owner: "{{ansible_user}}"
+    group: "{{ansible_user}}"
+    seuser: unconfined_u
+    serole: object_r
+    setype: ssh_home_t
+    selevel: s0
+
+- name: remove root's authorized_keys 
+  ansible.builtin.file:
+    path: "~root/.ssh/authorized_keys"
+    state: absent
+...
+

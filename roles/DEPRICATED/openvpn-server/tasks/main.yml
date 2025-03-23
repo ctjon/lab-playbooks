@@ -1,0 +1,278 @@
+# Playbook to install and configure openvpn server as well as client config
+#
+---
+- name: include secrets.yml
+  include_vars:
+    file: secrets.yml
+
+- name: install required packages
+  ansible.builtin.package:
+    name: openvpn, openssl, git, expect, automake, libtool, pam-devel, firewalld, easy-rsa
+    state: latest
+
+- name: install google-authenticator
+  ansible.builtin.package:
+    name: google-authenticator
+    state: latest
+  when: use_2fa == true
+
+- name: Ensure that firewalld is started
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: Set ip forwarding and reload if necessary
+  ansible.builtin.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: create openvpn user
+  ansible.builtin.user:
+    name: "{{openvpn_user}}"
+    group: "{{openvpn_group}}"
+    comment: "OpenVPN"
+    shell: /bin/false
+    system: yes
+    state: present
+    createhome: no
+    uid: 451
+
+- name: create {{easyrsa_dir}}
+  ansible.builtin.file:
+    path: "{{easyrsa_dir}}"
+    owner: "{{openvpn_user}}"
+    group: "{{openvpn_group}}"
+    mode: 0700
+    state: directory
+
+- name: deploy vars file
+  ansible.builtin.template:
+    src: vars.j2
+    dest: "{{easyrsa_dir}}/vars"
+    owner: "{{openvpn_user}}"
+    group: "{{openvpn_group}}"
+    mode: 600
+
+- name: deploy build-ca script
+  ansible.builtin.template:
+    src: build-ca-script.exp.j2
+    dest: "{{easyrsa_dir}}/build-ca-script.exp"
+    owner: "{{openvpn_user}}"
+    group: "{{openvpn_group}}"
+    mode: 750
+
+- name: initialize PKI
+  ansible.builtin.shell: "{{easyrsa3_dir}}/easyrsa init-pki"
+  args: 
+    creates: "{{easyrsa_dir}}/pki"
+    chdir: "{{easyrsa_dir}}"
+  notify: Restart OpenVPN 
+
+- name: Create CA Cert
+  ansible.builtin.shell: "{{easyrsa_dir}}/build-ca-script.exp"
+  #ansible.builtin.shell: "source ./vars;{{easyrsa3_dir}}/easyrsa build-ca nopass"
+  args:
+    creates: "{{easyrsa_dir}}/pki/ca.crt"
+    chdir: "{{easyrsa_dir}}"
+  notify: Restart OpenVPN 
+
+- name: "Stat dh.pem"
+  ansible.builtin.stat: 
+    path: "{{easyrsa_dir}}/pki/dh.pem"
+  register: dh_stat
+
+- name: "Build Diffie Hellman"
+  ansible.builtin.shell: "{{easyrsa3_dir}}/easyrsa gen-dh"
+  args:
+    chdir: "{{easyrsa_dir}}"
+    creates: "{{easyrsa_dir}}pki/dh.pem"
+  async: 45
+  poll: 0
+  when: dh_stat.stat.exists == False
+  notify: Restart OpenVPN 
+
+- name: Setup Main Certificate
+  ansible.builtin.shell: "{{easyrsa3_dir}}/easyrsa build-server-full main nopass"
+  args:
+    creates: "{{easyrsa_dir}}/pki/issued/main.crt"
+    chdir: "{{easyrsa_dir}}"
+  notify: Restart OpenVPN 
+
+- name: Setup Client Certificate
+  ansible.builtin.shell: "{{easyrsa3_dir}}/easyrsa build-client-full {{item}} nopass"
+  args:
+    creates: "{{easyrsa_dir}}/pki/issued/{{item}}.crt"
+    chdir: "{{easyrsa_dir}}"
+  with_items:
+    - "{{client_list}}"
+  notify: Restart OpenVPN 
+
+- name: "Stat ta.key"
+  ansible.builtin.stat: 
+    path: "{{easyrsa_dir}}/pki/private/ta.key"
+  register: ta_stat
+
+- name: Setup TA Key
+  ansible.builtin.shell: openvpn --genkey --secret "{{easyrsa_dir}}/pki/private/ta.key"
+  args:
+    creates: "{{easyrsa_dir}}pki/private/ta.key"
+    chdir: "{{easyrsa_dir}}/pki/private"
+  async: 45
+  poll: 0
+  when: ta_stat.stat.exists == False
+  notify: Restart OpenVPN 
+
+- name: Create OpenVPN TCP Server Config
+  ansible.builtin.template: 
+    src: 443tcp.conf.j2
+    dest: "{{openvpn_server_dir}}/443tcp.conf"
+    owner: "{{openvpn_user}}"
+    group: "{{openvpn_group}}"
+    mode: 600
+  when: use_tcp_also == true
+  notify: Restart OpenVPN 
+
+- name: "Create OpenVPN UDP Server Config"
+  ansible.builtin.template: 
+    src: 1194udp.conf.j2
+    dest: "{{openvpn_server_dir}}/1194udp.conf"
+    owner: "{{openvpn_user}}"
+    group: "{{openvpn_group}}"
+    mode: 600
+  notify: Restart OpenVPN 
+
+- name: "Create /var/log/openvpn directory"
+  ansible.builtin.file:
+    path: /var/log/openvpn
+    owner: "{{openvpn_user}}"
+    group: "{{openvpn_group}}"
+    mode: 0750
+    state: directory
+    recurse: yes
+
+- name: "Create /etc/openvpn/ccd Directory"
+  ansible.builtin.file:
+    path: /etc/openvpn/ccd
+    owner: "{{openvpn_user}}"
+    group: "{{openvpn_group}}"
+    mode: 0750
+    state: directory
+
+- name: Deploy OpenVPN Server Config
+  ansible.builtin.template:
+    src: openvpn.pam.j2
+    dest: /etc/pam.d/openvpn
+    owner: root
+    group: root
+    mode: 0644 
+  when: use_2fa == true
+  notify: Restart OpenVPN 
+
+- name: create "{{openvpn_dir}}/clients"
+  ansible.builtin.file:
+    path: "{{openvpn_dir}}/clients"
+    state: directory
+    mode: 0700
+
+- name: Create Client Config
+  ansible.builtin.template:
+    src: "client_configs/{{item}}.ovpn.j2"
+    dest: "{{openvpn_dir}}/clients/{{item}}.ovpn"
+    owner: "{{openvpn_user}}"
+    group: "{{openvpn_group}}"
+    mode: 0644
+  with_items:
+    - "{{client_list}}"
+
+- name: Create Client Config Archive
+  ansible.builtin.archive:
+    path: 
+      - "{{easyrsa_dir}}/pki/ca.crt"
+      - "{{easyrsa_dir}}/pki/issued/{{item}}.crt"
+      - "{{easyrsa_dir}}/pki/private/{{item}}.key"
+      - "{{easyrsa_dir}}/pki/private/ta.key"
+    dest: "{{openvpn_dir}}/clients/{{item}}.tar.gz"
+  with_items:
+    - "{{client_list}}"
+
+- name: create ~/Downloads/openvpn_clients
+  ansible.builtin.file:
+    path: "~/Downloads/openvpn_clients"
+    state: directory
+    mode: 700
+  delegate_to: localhost
+
+- name: Download the client configs to local system
+  ansible.builtin.fetch:
+    src: "{{openvpn_dir}}/clients/{{item}}.tar.gz"
+    dest: ~/Downloads/openvpn_clients
+    flat: no
+    checksum: yes
+  with_items:
+    - "{{client_list}}"
+ 
+- name: Configure OpenVPN Service Firewall Access
+  ansible.builtin.firewalld:
+    immediate: yes
+    service: openvpn
+    state: enabled
+    permanent: yes
+    zone: "{{openvpn_fw_zone}}"
+  notify: restart firewalld
+
+- name: Open OpenVPN Port {{ openvpn_internal_udp_port }}/udp
+  ansible.builtin.firewalld:
+    immediate: yes
+    port: "{{ openvpn_internal_udp_port }}/udp"
+    state: enabled
+    permanent: yes
+    zone: "{{openvpn_fw_zone}}"
+  notify: restart firewalld
+
+- name: Open OpenVPN Port "{{ openvpn_internal_tcp_port }}/tcp"
+  ansible.builtin.firewalld:
+    immediate: yes
+    port: "{{ openvpn_internal_tcp_port }}/tcp"
+    state: enabled
+    permanent: yes
+    zone: "{{openvpn_fw_zone}}"
+  when: use_tcp_also == true
+  notify: restart firewalld
+
+- name: add tun devices to {{openvpn_fw_zone}}
+  ansible.builtin.firewalld:
+    zone: "{{openvpn_fw_zone}}"
+    interface: "{{item}}"
+    permanent: yes
+    state: enabled
+  with_items:
+    - "{{openvpn_interface_list}}"
+  notify: restart firewalld
+
+- name: add masquerading to {{openvpn_fw_zone}}
+  ansible.builtin.firewalld:
+    masquerade: 'yes'
+    state: enabled
+    permanent: yes
+    zone: "{{openvpn_fw_zone}}"
+  notify: restart firewalld
+
+- name: reset selinux permissions on {{openvpn_dir}}
+  ansible.builtin.command: "restorecon -RFv {{openvpn_dir}}"
+
+- name: reset selinux permissions on /etc/pam.d
+  ansible.builtin.command: "restorecon -RFv /etc/pam.d"
+
+- name: Enable and Start OpenVPN Server
+  ansible.builtin.service:
+    name: "{{item}}"
+    enabled: yes
+    state: started
+  with_items:
+    - openvpn-server@1194udp
+    - openvpn-server@443tcp
+

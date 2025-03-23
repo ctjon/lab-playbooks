@@ -1,0 +1,141 @@
+#
+# group_vars/all file for linux_common
+#
+
+vars_files:
+  - environment.yml
+
+################################################################################
+# Time Server/Timezone Configuration Parameters                                #
+################################################################################
+TIMEZONE: "America/Phoenix"
+public_time_servers:
+  - 0.rhel.pool.ntp.org
+  - 1.rhel.pool.ntp.org
+  - 2.rhel.pool.ntp.org
+  - 3.rhel.pool.ntp.org
+
+ansible_user: chris
+use_ssh_agent: no
+copy_ssh_keys: no
+setup_ansible_config: no
+setup_git_update: no
+
+ssh_private_key_list: 
+
+################################################################################
+# Linux Operating System Default Parameters                                    #
+################################################################################
+mtu_size: 9000  
+ipv6_enabled: 'no'
+installed_kernel_limit: 2
+
+################################################################################
+# SSH Configuration Parameters                                                 #
+################################################################################
+ssh_root_login_permited: "no"
+ansible_XAuthLocation: /usr/bin/xauth
+
+#
+# RHEL 8 Specifics
+#
+rhel8_repo_base_path: "{{linux_install_server_url}}/rhel-reposyncs/{{ansible_distribution_major_version}}/{{ansible_architecture}}/BaseOS"
+
+rhel8_gpg_key_url: "{{ linux_install_server_url }}/rhel/{{ansible_distribution_major_version}}/{{ ansible_architecture }}/RPM-GPG-KEY-redhat-release"
+
+rhel8_gpg_key_file: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+
+rhel8_repos_list:
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-appstream-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-baseos-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-highavailability-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-resilient-storage-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-supplementary-rpms
+  - ansible-2-for-rhel-{{ansible_distribution_major_version}}-{{ansible_architecture}}-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-appstream-source-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-baseos-source-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-highavailability-source-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-resilient-storage-source-rpms
+  - rhel-{{ansible_distribution_major_version}}-for-{{ansible_architecture}}-supplementary-source-rpms
+  - ansible-2-for-rhel-{{ansible_distribution_major_version}}-{{ansible_architecture}}-source-rpms
+
+#
+# CentOS 8 Specifics
+#
+centos8_gpg_key_url: /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+centos8_repo_files_list:
+  - CentOS-AppStream.repo
+  - CentOS-Base.repo
+  - CentOS-centosplus.repo
+  - CentOS-CR.repo
+  - CentOS-Debuginfo.repo
+  - CentOS-Devel.repo
+  - CentOS-Extras.repo
+  - CentOS-fasttrack.repo
+  - CentOS-HA.repo
+  - CentOS-Media.repo
+  - CentOS-PowerTools.repo
+  - CentOS-Sources.repo
+  - CentOS-Vault.repo
+  - CentOS-Linux-AppStream.repo
+  - CentOS-Linux-BaseOS.repo
+  - CentOS-Linux-ContinuousRelease.repo
+  - CentOS-Linux-Debuginfo.repo
+  - CentOS-Linux-Devel.repo
+  - CentOS-Linux-Extras.repo
+  - CentOS-Linux-FastTrack.repo
+  - CentOS-Linux-HighAvailability.repo
+  - CentOS-Linux-Media.repo
+  - CentOS-Linux-Plus.repo
+  - CentOS-Linux-PowerTools.repo
+  - CentOS-Linux-Sources.repo
+
+
+centos8_repos_list:
+  - "CentOS-8 - AppStream"
+  - "CentOS-8 - AppStream Sources"
+  - "CentOS-8 - Base"
+  - "CentOS-8 - BaseOS Sources"
+  - "CentOS-8 - Devel WARNING! FOR BUILDROOT USE ONLY!"
+  - "CentOS-8 - HA"
+  - "CentOS-8 - PowerTools"
+  - "CentOS-8 - Debuginfo"
+  - "CentOS-AppStream-8 - Media"
+  - "CentOS-BaseOS-8 - Media"
+  - "CentOS-8 - Plus"
+  - "CentOS-8 - Plus Sources"
+  - "CentOS-8 - cr"
+  - "CentOS-8 - Extras"
+  - "CentOS-8 - Extras Sources"
+  - "CentOS-8 - fasttrack"
+
+epel8_repo_files_list:
+  - epel-modular.repo
+  - epel-playground.repo
+  - epel.repo
+  - epel-testing-modular.repo
+  - epel-testing.repo
+
+#
+# Fedora Specifics
+#
+fedora_repo_base_path: "{{ linux_install_server_url }}/fedora"
+#fedora_gpg_key_url: "{{ linux_install_server_url }}/fedora/RPM-GPG-KEY-CentOS-{{ ansible_distribution_major_version }}"
+fedora_gpg_key_file: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}"
+fedora_repos_list:
+  - fedora
+  - fedora-modular
+  - fedora-updates
+  - fedora-updates-modular
+
+virtio_win_repos_list:
+  - virtio-win
+
+rpmfusion_repos_list:
+  - rpmfusion-free
+  - rpmfusion-free-updates
+  - rpmfusion-nonfree-nvidia-driver
+  - rpmfusion-nonfree
+  - rpmfusion-nonfree-steam
+  - rpmfusion-nonfree-updates
+

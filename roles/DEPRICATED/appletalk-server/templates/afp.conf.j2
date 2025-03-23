@@ -1,0 +1,52 @@
+# {{ ansible_managed }}
+[Global]
+; Global Server Settings
+hostname = {{ansible_hostname}}
+afp interfaces = {{trusted_network_bridge}}
+log file = /var/log/afpd.log
+mimic model = Xserve
+zeroconf = yes
+
+
+[Homes]
+basedir regex = /home
+
+[Archive]
+time machine = no
+path={{archive_dir}}
+valid_users = {{ atalk_users|join(" ") }}
+
+{% for item in tm_users %}
+[{{item.tm_username}}-TM]
+time machine = yes
+path = {{tm_storage_path}}/{{item.tm_username}}
+valid_users = {{item.tm_username}}
+vol size limit = {{ item.tm_vol_size_bytes }}
+
+{% endfor %}
+
+[mp51-mojave-TM] 
+time machine = yes
+path = {{ tm_storage_path }}/{{user_name}}/mp51-mojave
+valid_users = {{user_name}}
+vol size limit = 250000000000
+
+[mp51-test-TM] 
+time machine = yes
+path = {{ tm_storage_path }}/{{user_name}}/mp51-test
+valid_users = {{user_name}}
+vol size limit = 250000000000
+
+[mp51-Monterey-TM] 
+time machine = yes
+path = {{ tm_storage_path }}/{{user_name}}/mp51-Monterey
+valid_users = {{user_name}}
+vol size limit = 250000000000
+
+[mp51-HightSierra-TM] 
+time machine = yes
+path = {{ tm_storage_path }}/{{user_name}}/mp51-HighSierra
+valid_users = {{user_name}}
+vol size limit = 160000000000
+
+

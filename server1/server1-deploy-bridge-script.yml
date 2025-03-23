@@ -1,0 +1,28 @@
+---
+#
+# Deploy bridge creation script to server1.  Sadly, this will have to be run
+# locally on the node as I have been unable to figure out how to rebuild a 
+# network connection from a remote node without losing the connections and 
+# subsequently disabling the target server.  Console access is necessary to
+# run the script which is placed in /tmp
+#
+# do this prior to running the server0.yml playbook
+#
+
+- hosts: server1
+  become: yes
+
+  vars_files: 
+    - ../ansible_global_vars/group_vars/all
+    - ../ansible_global_vars/secret_vars/secrets.yml
+
+  roles:
+    - role: sm-register
+      tags: ['sm-register']
+
+    - role: insights-register
+      tags: ['insights-register']
+
+    - role: build-br0-script
+      tags: ['build-br0-script']
+

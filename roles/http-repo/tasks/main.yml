@@ -1,0 +1,120 @@
+---
+- name: install httpd and firewalld
+  ansible.builtin.package:
+    name: httpd,firewalld
+    state: latest
+
+- name: install cronie on Fedora
+  ansible.builtin.package:
+    name: cronie
+    state: latest
+  when:
+      - ansible_distribution == "Fedora"
+
+- name: deploy httpd.conf for installation server
+  ansible.builtin.template:
+    src: httpd.conf.j2
+    dest: /etc/httpd/conf/httpd.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart httpd
+
+- name: deploy vhosts.conf for installation server
+  ansible.builtin.template:
+    src: vhosts.conf.j2
+    dest: /etc/httpd/conf.d/vhosts.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart httpd
+
+- name: start and enable httpd
+  ansible.builtin.service:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name: deploy welcome.conf for installation server
+  ansible.builtin.copy:
+    src: welcome.conf
+    dest: /etc/httpd/conf.d/welcome.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart httpd
+
+- name: deploy /var/www/html/index.html for installation server
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644
+
+- name: make sure firewalld is running and enabled
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: open {{my_network_firewall_zone}} firewall zone for http
+  ansible.builtin.firewalld:
+    zone: "{{my_network_firewall_zone}}"
+    service: http
+    immediate: yes
+    state: enabled
+    permanent: yes
+  when: my_network_firewall_zone is defined
+
+- name: set permissions on vhost directories
+  ansible.builtin.file:
+    path: "{{item.document_root}}"
+    owner: chris
+    group: chris
+    mode: '0755'
+  with_items: "{{ vhosts }}"
+    
+- name: set selinux context for vhosts
+  ansible.builtin.sefcontext:
+    target: "'{{item.document_root}}(/.*)?'"
+    setype: "{{item.fcontext}}"
+    state: present
+  with_items: "{{ vhosts }}"
+
+- name: create logs directory
+  ansible.builtin.file:
+    path: "/{{ansible_user_id}}/logs"
+    owner: root
+    group: root
+    mode: 0700
+    state: directory
+    
+- name: create crontab entries to set selinux context on repos
+  ansible.builtin.cron:
+    name: "repos restorecon"
+    user: "root"
+    minute: "30"
+    hour: "5"
+    job: "/usr/sbin/restorecon -RFv /export > /{{ansible_user_id}}/logs/restorecon.log 2>&1"
+
+- name: Enable ablity to service content from CIFS shares
+  ansible.posix.seboolean:
+    name: httpd_use_cifs
+    state: yes
+    persistent: yes
+
+- name: create {{doc_files_dir}}
+  ansible.builtin.file:
+    path: "{{ doc_files_dir }}"
+    state: directory
+    owner: "{{ repo_owner }}"
+    group: "{{ repo_owner }}"
+    mode: '0755'
+
+- name: Apply new SELinux file context to vhosts directories
+  ansible.builtin.command: restorecon -FR {{item.document_root}}
+  with_items: "{{ vhosts }}"
+  tags: restorecon
+
+...  

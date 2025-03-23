@@ -1,0 +1,25 @@
+---
+- name: include rh_sm_creds
+  include_vars:
+    file: ../../../ansible_global_vars/secret_vars/rh_sm_creds.yml
+  when: 
+    work_server == true
+
+- name: include ct_sm_creds
+  include_vars:
+    file: ../../../ansible_global_vars/secret_vars/ct_sm_creds.yml
+  when: 
+    personal_server == true
+
+
+- name: Use subscription-manager to Register System RHEL 6/7/8/9
+  ansible.builtin.redhat_subscription:
+    state: present
+    username: "{{ redhat_portal_username }}"
+    password: "{{ redhat_portal_password }}"
+    force_register: yes
+  when:
+    - ansible_distribution == "RedHat"
+    - ansible_distribution_major_version >= "6"
+
+#    pool_ids: "{{my_pool_ids}}"

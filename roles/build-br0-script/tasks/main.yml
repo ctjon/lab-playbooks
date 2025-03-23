@@ -1,0 +1,21 @@
+---
+- name: Ensure NetworkManager is installed
+  ansible.builtin.dnf:
+    name: NetworkManager
+    state: latest
+
+- name: start and enable NetworkManager
+  ansible.builtin.service:
+    name: NetworkManager
+    state: started
+    enabled: yes
+
+- name: deploy bridge setup script
+  ansible.builtin.template:
+    src: bridge-br0.sh.j2
+    dest: /tmp/bridge-br0.sh
+    owner: root
+    group: root
+    mode: 0755
+
+

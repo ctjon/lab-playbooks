@@ -1,0 +1,226 @@
+---
+#
+# Configure gatekeeper with openwrt
+#
+# To do before running this playbook:
+#
+# set root password vi luci interface
+# user@localhost> ssh-copy-id <ssh-key>.pub root@openwrt
+# root@openwrt> opkg update
+# root@openwrt> opkg install python3 openssh-sftp-server
+#
+
+- name: configure gatekeeper with openwrt
+  hosts: gatekeeper
+  become: yes
+
+  tasks:
+    - name: include vars/main.yml
+      ansible.builtin.include_vars:
+        file: vars/main.yml
+      tags: always
+
+    - name: include vars/secrets.yml
+      ansible.builtin.include_vars:
+        file: vars/secrets.yml
+      tags: always
+
+    - name: install /etc/config/system template
+      ansible.builtin.template:
+        src: etc.config.system.j2
+        dest: /etc/config/system
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+      notify: restart system
+      tags: system
+
+    - name: install /etc/config/network template
+      ansible.builtin.template:
+        src: etc.config.network.j2
+        dest: /etc/config/network
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+      notify: restart network
+      tags: network
+
+    - name: install dnsmasq.conf template
+      ansible.builtin.template:
+        src: etc.dnsmasq.conf.j2
+        dest: /etc/dnsmasq.conf
+        owner: root
+        group: dnsmasq
+        mode: 0644
+        backup: yes
+      notify: restart dnsmasq
+      tags: dnsmasq
+
+    - name: install /etc/hosts file
+      ansible.builtin.copy:
+        src: "etc.hosts"
+        dest: /etc/hosts
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+      notify: restart dnsmasq
+      tags: dnsmasq
+
+    - name: modify dhcp config
+      ansible.builtin.template:
+        src: etc.config.dhcp.j2
+        dest: /etc/config/dhcp
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+      notify: restart dhcp
+      tags: dhcp
+
+    - name: install /etc/config/wireless template
+      ansible.builtin.template:
+        src: etc.config.wireless.j2
+        dest: /etc/config/wireless
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+      notify: restart wireless
+      tags: wireless
+
+      #community.general.opkg:
+    - name: install ddns packages for {{ddns_service_name}}
+      community.general.opkg:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - ddns-scripts
+        - ddns-scripts-services
+        - ca-certificates
+        - curl
+        - ca-bundle
+        - luci-app-ddns
+      notify: restart luci
+      tags: ddns-packages
+
+      #community.general.opkg:
+    - name: install other packages
+      community.general.opkg:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - diffutils
+        - lsblk
+        - block-mount
+        - gdisk
+        - e2fsprogs
+        - kmod-fs-ext4
+      tags: other-packages
+#        - libblkid
+
+    - name: install packages for adguardhome
+      community.general.opkg:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - adguardhome
+      notify: restart adguardhome
+      tags: ddns-packages
+
+    - name: install /etc/config/ddns template
+      ansible.builtin.template:
+        src: etc.config.ddns.j2
+        dest: /etc/config/ddns
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+      notify: restart ddns
+      tags: ddns
+
+    - name: install /etc/config/firewall template
+      ansible.builtin.template:
+        src: etc.config.firewall.j2
+        dest: /etc/config/firewall
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+      notify: restart firewall
+      tags: firewall
+
+      #community.general.opkg:
+    - name: install vnstat
+      opkg:
+        name: vnstat
+        state: present
+        update_cache: yes
+      notify: restart vnstat
+      tags: vnstat-packages
+
+  handlers:
+    - name: restart vnstat
+      ansible.builtin.service:
+        name: vnstat
+        state: restarted
+        enabled: yes
+
+    - name: restart system
+      ansible.builtin.service:
+        name: system
+        state: restarted
+        enabled: yes
+
+    - name: restart network
+      ansible.builtin.service:
+        name: network
+        state: reloaded
+        enabled: yes
+
+    - name: restart wireless
+      ansible.builtin.command: wifi reload
+
+    - name: restart dnsmasq
+      ansible.builtin.service:
+        name: dnsmasq
+        state: restarted
+        enabled: yes
+
+    - name: restart dhcp # provided by dnsmasq
+      ansible.builtin.service:
+        name: dnsmasq
+        state: restarted
+        enabled: yes
+
+    - name: restart ddns
+      ansible.builtin.service:
+        name: ddns
+        state: restarted
+        enabled: yes
+
+    - name: restart adguardhome
+      ansible.builtin.service:
+        name: adguardhom
+        state: restarted
+        enabled: yes
+
+    - name: restart firewall
+      ansible.builtin.service:
+        name: firewall
+        state: restarted
+        enabled: yes
+
+    - name: restart luci
+      ansible.builtin.service:
+        name: uhttpd
+        state: restarted
+        enabled: yes
+      #ansible.builtin.command: reboot -f
+...
+

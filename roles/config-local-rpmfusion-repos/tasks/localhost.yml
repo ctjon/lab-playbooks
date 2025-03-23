@@ -1,0 +1,29 @@
+---
+- name: localhost.yml - Check to see if {{reponame}}.repo requires backup
+  ansible.builtin.stat:
+    path: "/etc/yum.repos.d/{{repoName}}.repo"
+  register: result
+
+- name: localhost.yml - Backup original {{reponame}}.repo to /etc/yum.repos.d/save directory
+  ansible.builtin.copy:
+    src: "/etc/yum.repos.d/{{repoName}}.repo"
+    dest: "/etc/yum.repos.d/save/{{repoName}}.repo"
+    owner: root
+    group: root
+    mode: '0644'
+    remote_src: true
+  when: result.stat.exists
+    
+- name: localhost.yml - Remove original {{reponame}}.repo from /etc/yum.repos.d
+  ansible.builtin.file:
+    path: "/etc/yum.repos.d/{{repoName}}.repo"
+    state: absent
+
+- name: localhost.yml - Configure {{reponame}}.repo to install/update from local server filesystem
+  template: 
+    src: "localhost/{{repoName}}-local.repo.j2"
+    dest: "/etc/yum.repos.d/{{repoName}}-local.repo"
+    owner: root
+    group: root
+    mode: '0644'
+...

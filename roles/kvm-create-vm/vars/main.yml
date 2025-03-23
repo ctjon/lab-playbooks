@@ -1,0 +1,10 @@
+---
+# vars file for kvm-create
+vm_name: "fedora_vm"
+vm_memory: 2048  # Memory in MB
+vm_vcpus: 2  # Number of virtual CPUs
+vm_disk_size: 20G
+vm_image: "/var/lib/libvirt/images/fedora41.qcow2"
+vm_network: "ovs-br0"
+vm_os_variant: "fedora41"
+vm_cdrom: /export/archive/Linux/Fedora/41/x86_64/Fedora-Workstation-Live-x86_64-41-1.4.iso

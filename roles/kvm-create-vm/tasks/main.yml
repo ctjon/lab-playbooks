@@ -1,0 +1,56 @@
+---
+# This role assumes that virt-server has been run first in order to install and
+# configure kvm
+
+- name: Create VM disk image
+  command: qemu-img create -f qcow2 "{{ vm_disk_path }}" "{{ vm_disk_size }}"
+  args:
+    creates: "{{ vm_disk_path }}"
+
+- name: Define and start KVM virtual machine
+  community.libvirt.virt:
+    name: "{{ vm_name }}"
+    state: running
+    command: define
+    memory: "{{ vm_memory }}"
+    vcpu: "{{ vm_vcpus }}"
+    disk:
+      - name: "{{ vm_disk_path }}"
+        size: "{{ vm_disk_size | regex_replace('G$', '') | int }}"
+        device: disk
+        type: file
+      - device: cdrom  # <--- Empty CD-ROM device
+        type: file
+        readonly: true
+    network:
+      - network: "{{ vm_network }}"
+        model: virtio
+    graphics:
+      type: vnc
+      listen: 0.0.0.0
+      autoport: yes
+#    cdrom:
+#      - "{{ vm_iso_path }}"
+    os_variant: "{{ vm_os_variant }}"
+    loader: "/usr/share/OVMF/OVMF_CODE.fd"  # Path to OVMF UEFI firmware
+    nvram: "/var/lib/libvirt/qemu/nvram/{{ vm_name }}_VARS.fd"  # Persistent NVRAM for UEFI
+
+- name: Start the VM
+  community.libvirt.virt:
+    command: start
+    name: "{{ vm_name }}"
+    state: running
+
+- name: Check VM status
+  community.libvirt.virt:
+    command: list_vms
+
+- name: Gather VM info
+  community.libvirt.virt:
+    command: info
+    name: "{{ vm_name }}"
+
+- name: Display VM creation summary
+  debug:
+    msg: "VM {{ vm_name }} created and running with {{ vm_memory }} MB RAM, {{ vm_vcpus }} vCPUs, and a {{ vm_disk_size }} disk."
+

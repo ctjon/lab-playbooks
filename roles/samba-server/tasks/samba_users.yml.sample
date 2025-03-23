@@ -1,0 +1,8 @@
+samba_users:
+  - name: "username1"
+    passwd: "password1"
+  - name: "username2"
+    passwd: "password2"
+  - name: "username3"
+    passwd: "password3"
+

@@ -1,0 +1,76 @@
+log file = /var/log/rsync.log
+pid file = /var/run/rsyncd.pid
+lock file = /var/run/rsync.lock
+
+[archive]
+        path = /export/archive
+        comment = Server0 Archive Repo
+        read only = yes
+        hosts allow = {{my_network_subnet}}
+        hosts deny = *
+
+#[rhel-reposyncs]
+#        path = /export/install/Linux/rhel-reposyncs
+#        comment = Server0 RHEL RepoSyncs Installation Repos
+#        read only = yes
+#        hosts allow = {{my_network_subnet}}
+#        hosts deny = *
+#        list = true
+
+[fedora]
+        path = /export/install/Linux/fedora
+        comment = Server0 Fedora Installation Repo
+        read only = yes
+        hosts allow = {{my_network_subnet}}
+        hosts deny = *
+        list = true
+
+[epel]
+        path = /export/install/Linux/epel
+        comment = Server0 EPEL Installation Repo
+        read only = yes
+        hosts allow = {{my_network_subnet}}
+        hosts deny = *
+        list = true
+
+[rocky]
+        path = /export/install/Linux/rocky
+        comment = Server0 Rocky Linux Installation Repo
+        read only = yes
+        hosts allow = {{my_network_subnet}}
+        hosts deny = *
+        list = true
+
+[alma]
+        path = /export/install/Linux/alma
+        comment = Server0 Alma Linux Installation Repo
+        read only = yes
+        hosts allow = {{my_network_subnet}}
+        hosts deny = *
+        list = true
+
+[openbsd]
+        path = /export/install/OpenBSD
+        comment = Server0 OpenBSD Installation Repo
+        read only = yes
+        hosts allow = {{my_network_subnet}}
+        hosts deny = *
+        list = true
+
+[virtio-win]
+        path = /export/install/Linux/virtio-win
+        comment = Server0 Windows KVM VirtIO Drivers Installation Repo
+        read only = yes
+        hosts allow = {{my_network_subnet}}
+        hosts deny = *
+        list = true
+
+[openwrt]
+        path = /export/install/OpenWRT
+        comment = Server0 OpenWRT Installation Repo
+        read only = yes
+        hosts allow = {{my_network_subnet}}
+        hosts deny = *
+        list = true
+
+

@@ -1,0 +1,12 @@
+interface=eth0
+port=0
+
+log-dhcp
+dhcp-range={{my_network_full_net}},proxy
+
+enable-tftp
+tftp-root={{tftpbootdir}}
+
+pxe-prompt="PXE Booting from dhcp-proxy",5
+pxe-service=x86PC,'PXE Boot (x86 BIOS)',pxelinux.0
+pxe-service=X86-64_EFI, "Boot x86-64_EFI grubx64.efi", grubx64.efi

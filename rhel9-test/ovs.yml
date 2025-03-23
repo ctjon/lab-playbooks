@@ -1,0 +1,71 @@
+---
+- name: Configure Open vSwitch Bridge
+  hosts: rhel9-test
+  become: true
+  tasks:
+
+    - name: Install Open vSwitch
+      dnf:
+        name: openvswitch3.4
+        state: present
+        enablerepo: "fast-datapath-for-rhel-9-{{ansible_architecture}}-rpms"
+
+    - name: Enable and Start Open vSwitch
+      systemd:
+        name: openvswitch
+        state: started
+        enabled: true
+
+    - name: Create OVS Bridge (ovs-br0)
+      command: ovs-vsctl add-br ovs-br0
+      args:
+        creates: /etc/openvswitch/conf.db
+
+    - name: Add Physical Interface to OVS Bridge (eth0)
+      command: ovs-vsctl add-port ovs-br0 eth0
+      when: "'eth0' in ansible_facts['interfaces']"
+
+    - name: Configure OVS Bridge with NetworkManager
+      copy:
+        dest: "/etc/NetworkManager/system-connections/ovs-br0.nmconnection"
+        content: |
+          [connection]
+          id=ovs-br0
+          type=ovs-bridge
+          interface-name=ovs-br0
+          autoconnect=true
+
+          [ovs-bridge]
+          stp=false
+          fail-mode=standalone
+
+          [ipv4]
+          method=auto
+
+          [ipv6]
+          method=ignore
+      notify: Restart NetworkManager
+
+    - name: Configure Physical Interface for OVS
+      copy:
+        dest: "/etc/NetworkManager/system-connections/eth0.nmconnection"
+        content: |
+          [connection]
+          id=eth0
+          type=ethernet
+          interface-name=eth0
+          autoconnect=true
+
+          [ethernet]
+          mac-address-blacklist=
+
+          [ovs-port]
+          ovs-bridge=ovs-br0
+#      when: "'eth0' in ansible_facts['interfaces']"
+      notify: Restart NetworkManager
+
+  handlers:
+    - name: Restart NetworkManager
+      systemd:
+        name: NetworkManager
+        state: restarted

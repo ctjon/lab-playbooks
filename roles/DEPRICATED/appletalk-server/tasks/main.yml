@@ -1,0 +1,147 @@
+---
+- name: install netatalk packages
+  ansible.builtin.package:
+    name: netatalk, netatalk-devel, avahi, nss-mdns
+    state: latest
+  notify: restart atalk
+
+- name: create {{tm_group}} group
+  ansible.builtin.group:
+    name: "{{ tm_group }}"
+    state: present
+
+- name: add Time Machine users to {{tm_group }}
+  ansible.builtin.user:
+    name: "{{ item.tm_username }}"
+    groups: "{{ tm_group }}"
+    append: yes
+  with_items:
+    - "{{ tm_users }}"
+
+- name: create {{ tm_storage_lv }}
+  ansible.builtin.lvol:
+    vg: "{{ tm_storage_vg }}"
+    lv: "{{ tm_storage_lv }}"
+    size: "{{ tm_storage_lv_size }}"
+    shrink: no
+    state: present
+    resizefs: yes
+
+- name: Create an xfs filesystem on {{ tm_storage_lv }}
+  community.general.filesystem:
+    fstype: "{{ tm_storage_fs_type }}"
+    dev: "/dev/{{tm_storage_vg}}/{{tm_storage_lv}}"
+    force: no
+    state: present
+
+- name: mount {{tm_storage_path}}
+  ansible.builtin.mount:
+    path: "{{ tm_storage_path }}"
+    src: "/dev/{{tm_storage_vg}}/{{tm_storage_lv}}"
+    fstype: "{{ tm_storage_fs_type }}"
+    opts: defaults
+    state: mounted
+
+# No longer needed with move to XFS
+#- name: set reserve_block_percentage on {{tm_storage_path}} to 1%
+#  ansible.builtin.command: tune2fs -m {{reserve_block_percentage}} /dev/{{tm_storage_vg}}/{{tm_storage_lv}}
+#  tags: tune2fs
+
+
+- name: set permissions on {{ tm_storage_path }}
+  ansible.builtin.file:
+    path: "{{ tm_storage_path }}"
+    state: directory
+    owner: root
+    group: "{{ tm_group }}"
+    mode: '0770'
+
+- name: create {{tm_storage_path}}/user directories
+  ansible.builtin.file:
+    path: '{{tm_storage_path}}/{{item.tm_username }}'
+    state: directory
+    owner: "{{ item.tm_username }}"
+    group: "{{ item.tm_username }}"
+    mode: '0700'
+  with_items:
+    - "{{ tm_users }}"
+
+- name: deploy afp.conf
+  ansible.builtin.template:
+    src: afp.conf.j2
+    dest: /etc/netatalk/afp.conf
+    owner: bin
+    group: wheel
+    mode: '0644'
+  notify: restart atalk
+
+- name: deploy afpd.conf
+  ansible.builtin.template:
+    src: afpd.conf.j2
+    dest: /etc/netatalk/afpd.conf
+    owner: bin
+    group: wheel
+    mode: '0644'
+  notify: restart atalk
+
+- name: deploy AppleVolumes.default
+  ansible.builtin.template:
+    src: AppleVolumes.default.j2
+    dest: /etc/netatalk/AppleVolumes.default
+    owner: bin
+    group: wheel
+    mode: '0644'
+  notify: restart atalk
+
+- name: deploy avahi-daemon.conf
+  ansible.builtin.template:
+    src: avahi-daemon.conf.j2
+    dest: /etc/avahi/avahi-daemon.conf
+    owner: bin
+    group: wheel
+    mode: '0644'
+  notify: restart avahi-daemon
+
+- name: deploy afp.service
+  ansible.builtin.template:
+    src: afp.service.j2
+    dest: /etc/avahi/services/afp.service
+    owner: bin
+    group: wheel
+    mode: '0644'
+  notify: restart avahi-daemon
+
+- name: create {{doc_files_dir}}
+  ansible.builtin.file:
+    path: "{{ doc_files_dir }}"
+    state: directory
+    owner: "{{ repo_owner }}"
+    group: "{{ repo_owner }}"
+    mode: '0755'
+
+- name: deploy unsupp_tm_cmd.txt to {{doc_files_url}}
+  ansible.builtin.copy:
+    src: unsupp_tm_cmd.txt
+    dest: "{{ doc_files_dir}}/unsupp_tm_cmd.txt"
+    owner: "{{ repo_owner }}"
+    group: "{{ repo_owner }}"
+    mode: '0644'
+
+- ansible.posix.firewalld:
+    zone: "{{ trusted_network_firewall_zone }}"
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+  with_items:
+    - "{{ tm_ports }}"
+
+#- name: configure /etc/resolv.conf for MDNS
+#  ansible.builtin.lineinfile:
+#    path: /etc/authselect/user-nsswitch.conf
+#    regexp: 'hosts:'
+#    line: 'hosts:      files myhostname resolve [!UNAVAIL=return] mdns4_minimal dns mdns mdns4'
+#    owner: root
+#    group: root
+#    mode: '0644'
+#    backup: no
+#  notify: reconfig authselect

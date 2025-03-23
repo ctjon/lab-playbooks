@@ -1,0 +1,29 @@
+[ DEFAULT ]
+bantime  = {{ban_time}}
+findtime  = {{find_time}}
+maxretry = 5
+
+[sshd]
+enabled = {{ssh_enabled}}
+
+#[openvpn]
+#enabled  = true
+#port     = {{openvpn_udp_port}}
+#protocol = udp
+#filter   = openvpn
+#logpath  = /var/log/openvpn.log
+#maxretry = 5
+
+#[openvpn]
+#enabled  = true
+#port     = {{openvpn_tcp_port}}
+#protocol = tcp
+#filter   = openvpn
+#logpath  = /var/log/openvpn.log
+#maxretry = 5
+
+#[plexmediaserver]
+#enabled = true
+#logpath = /var/log/plexmediaserver/Plex_Media_Server.log
+#maxretry = 5
+#bantime  = {{ban_time}}

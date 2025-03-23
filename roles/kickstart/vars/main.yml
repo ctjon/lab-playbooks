@@ -1,0 +1,61 @@
+################################################################################
+# Kickstart Config Parameters                                                  #
+################################################################################
+ks_config_dir: /export/install/Linux/ks-configs
+
+ks_configs_list:
+  - server1-fedora41-bios-ks.cfg
+  - server1-fedora41-uefi-ks.cfg
+  - server1-rhel8-bios-ks.cfg
+  - server1-rhel8-uefi-ks.cfg
+  - server1-rhel9-bios-ks.cfg
+  - server1-rhel9-uefi-ks.cfg
+  - kvmhost1-ks.cfg
+  - kvmhost2-ks.cfg
+#  - fipstest-ks.cfg
+#  - test-centos7-ks.cfg
+#  - test-centos8-ks.cfg
+#  - test-fedora38-ks.cfg
+#  - test-fedora39-ks.cfg
+#  - test-rhel6-ks.cfg
+#  - test-rhel7-ks.cfg
+#  - test-rhel8-ks.cfg
+#  - test-rhel9-ks.cfg
+#  - gitlab-ks.cfg
+#  - satellite6-rhel8-ks.cfg
+#  - satclient0-ks.cfg
+#  - satclient1-ks.cfg
+#  - satclient2-ks.cfg
+#  - satclient3-ks.cfg
+#  - synchost6-ks.cfg
+#  - synchost7-ks.cfg
+#  - synchost8-ks.cfg
+#  - synchost9-ks.cfg
+#  - eagle-preserve-ks.cfg
+#  - x1carbon-fedora-initial-ks.cfg
+#  - x1carbon-fedora-preserve-ks.cfg
+#  - x1carbon-rhel8-initial-ks.cfg
+#  - x1carbon-rhel8-preserve-ks.cfg
+#  - fetcher-ks.cfg
+#  - satellite6-rhel7-ks.cfg
+#  - tower-ks.cfg
+#  - tower-nodeA-ks.cfg
+
+pxelinux_files:
+    - LinuxMenu
+    - fedora
+    - rhel-satclients
+    - rhel
+    - rhel-synchosts
+    - rhel-testvms
+    - tower-cluster
+    - x1carbon
+    - OpenBSD
+    - vmware
+
+rhel_boot_files:
+  - vmlinuz
+  - initrd.img
+
+pxewindows_files:
+    - windows

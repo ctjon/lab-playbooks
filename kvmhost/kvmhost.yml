@@ -1,0 +1,70 @@
+---
+#
+# Configure kvmhost
+#
+
+# CentOS 8 Prerequisites: 
+#	python3
+#	policycoreutils-python3
+#	rsync
+
+- hosts: kvmhost
+  become: yes
+
+  roles:
+    - role: sm-register
+      tags: ['sm-register']
+
+    - role: selinux
+      tags: ['selinux']
+
+    - role: setup-br0
+      tags: ['setup-br0']
+
+    - role: apply-updates
+      tags: ['apply-updates']
+
+    - role: ssh-config
+      tags: ['ssh-config']
+
+    - role: shell-env
+      tags: ['shell-env']
+
+    - role: setup-epel
+      tags: ['setup-epel']
+
+#    - role: fail2ban
+#      tags: ['fail2ban']
+
+    - role: rsyslog-client
+      tags: ['rsyslog-client']
+
+#    - role: config-local-repos
+#      tags: ['config-local-repos']
+
+    - role: virt-server
+      tags: ['virt-server']
+
+#    - role: backup
+#      tags: ['backup']
+
+    - role: insights-register
+      tags: ['insights']
+
+    - role: reboot-if-required
+      tags: ['reboot-if-required']
+
+  tasks:
+    - name: install other packages
+      package:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - nmap
+        - git
+        - ntfs-3g
+        - ntfsprogs
+        - nmon
+      tags:
+        - localpkgs
+

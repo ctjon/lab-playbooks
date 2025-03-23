@@ -1,0 +1,10 @@
+# from galaxy
+- src: redhatinsights.insights-client
+
+# from GitHub
+#- src: https://github.com/RedHatInsights/insights-client-role
+
+# from GitHub, overriding the name and specifying a specific tag
+#- src: https://github.com/RedHatInsights/insights-client-role
+#  version: master
+#  name: insights-client

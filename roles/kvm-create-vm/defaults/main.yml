@@ -1,0 +1,9 @@
+---
+vm_name: kvm_default_name 
+vm_memory: 2048
+vm_vcpus: 2
+vm_disk_size: 20G
+vm_disk_path: "/var/lib/libvirt/images/{{ vm_name }}.qcow2"
+vm_network: default
+vm_os_variant: unknown
+vm_iso_path: "/var/lib/libvirt/boot/rhel-9.iso"

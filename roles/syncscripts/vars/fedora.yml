@@ -1,0 +1,56 @@
+fedora_linux_rsync_server: mirrors.kernel.org
+
+fedora_version_includes_list:
+  - 40
+  - 41
+
+# fedora versions that include upgrade.img
+#fedora_upgrade_versions:
+  - 40
+  - 41
+
+fedora_prev_release_ones_digit: 9
+fedora_prev_release: 39
+
+fedora_version_excludes_list:
+  - core
+  - 'releases/7/'
+  - 'releases/8/'
+  - 'releases/9/'
+  - 'releases/[1-2][0-9]/'
+  - 'releases/3[0-{{fedora_prev_release_ones_digit}}]*/'
+  - 'updates/7/'
+  - 'updates/8/'
+  - 'updates/9/'
+  - 'updates/[1-2][0-9]/'
+  - 'updates/3[0-{{fedora_prev_release_ones_digit}}]*/'
+  - 'releases/testing/[1-2][0-9]/'
+  - 'releases/testing/3[0-{{fedora_prev_release_ones_digit}}]*/'
+  - 'updates/testing/[1-2][0-9]/'
+  - 'updates/testing/3[0-{{fedora_prev_release_ones_digit}}]*/'
+
+#
+# Fedora includes/excludes
+#
+fedora_repo_includes_list:
+  - source
+  - x86_64
+  - aarch64
+  - "*.iso"
+  - "*.qcow2"
+  - "*.raw.xz"
+
+fedora_repo_excludes_list:
+  - armhfp
+  - ppc64le
+  - s390x
+  - development
+  - releases/test
+  - debug
+  - beta
+  - debug
+  - testing
+  - updates/testing
+  - "*.torrent"
+  - "*.box"
+

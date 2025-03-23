@@ -1,0 +1,5 @@
+- name: restart rsync-daemon
+  ansible.builtin.service:
+    name: rsyncd
+    state: restarted
+

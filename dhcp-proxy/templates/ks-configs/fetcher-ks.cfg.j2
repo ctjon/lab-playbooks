@@ -1,0 +1,60 @@
+#version=DEVEL
+# Use graphical install
+graphical
+
+# Keyboard layouts
+keyboard --vckeymap=us --xlayouts='us'
+# System language
+lang en_US.UTF-8
+
+# Use network installation
+url --url="{{linux_install_server_url}}/fedora/releases/35/Server/x86_64/os/"
+
+# Network information
+network  --bootproto=static --device=eth0 --gateway={{trusted_network_gateway}} --ip={{trusted_network_short_net}}.8 --nameserver={{trusted_network_dns_servers|join(",")}} --netmask={{trusted_network_netmask}} --hostname=fetcher.{{trusted_network_domain_name}} --activate
+
+# Root password
+rootpw --iscrypted {{root_pw_hash}}
+
+user --groups=wheel --name={{user_name}} --password={{user_pw_hash}} --iscrypted --gecos={{gecos_name}}
+
+%packages
+@^server-product-environment
+
+%end
+
+# Run the Setup Agent on first boot
+firstboot --enable
+
+# Generated using Blivet version 3.4.2
+ignoredisk --only-use=vda
+# Partition clearing information
+clearpart --all --initlabel
+# Disk partitioning information
+part /boot --fstype="xfs" --ondisk=vda --size=512 --label=boot
+part pv.218 --fstype="lvmpv" --ondisk=vda --size=19967
+volgroup rootvg --pesize=4096 pv.218
+logvol /usr --fstype="xfs" --size=4096 --label="usr" --name=usrlv --vgname=rootvg
+logvol /tmp --fstype="xfs" --size=1024 --label="tmp" --name=tmplv --vgname=rootvg
+logvol /var --fstype="xfs" --size=2048 --label="var" --name=varlv --vgname=rootvg
+logvol /home --fstype="xfs" --size=512 --label="home" --name=homelv --vgname=rootvg
+logvol swap --fstype="swap" --size=1024 --name=swaplv --vgname=rootvg
+logvol /opt --fstype="xfs" --size=32 --label="opt" --name=optlv --vgname=rootvg
+logvol /scratch --fstype="xfs" --size=10204 --label="scratch" --name=scratchlv --vgname=rootvg
+logvol / --fstype="xfs" --size=1024 --label="root" --name=rootlv --vgname=rootvg
+
+# System timezone
+timezone America/Phoenix --utc
+
+reboot
+
+%post
+# install ssh key for {{user_name}}
+curl {{config_files_url}}/{{user_name}}-server0-id_rsa.pub -o /home/{{user_name}}/.ssh/authorized_keys  --create-dirs
+curl  {{config_files_url}}/{{user_name}}-x1carbon-id_rsa.pub >> /home/{{user_name}}/.ssh/authorized_keys
+curl  {{config_files_url}}/{{user_name}}-eagle-id_rsa.pub >> /home/{{user_name}}/.ssh/authorized_keys
+chown -R {{user_name}}:{{group_name}} /home/{{user_name}}/.ssh
+chmod 700 /home/{{user_name}}/.ssh
+chmod 600 /home/{{user_name}}/.ssh/authorized_keys
+restorecon -RFv /home/{{user_name}}/.ssh/authorized_keys
+%end

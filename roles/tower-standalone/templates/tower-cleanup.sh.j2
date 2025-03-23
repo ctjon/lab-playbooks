@@ -1,0 +1,2 @@
+#!/bin/bash
+find /home/{{ansible_user_id}}/ansible-tower-setup-{{my_tower_version}}/tower-backup-* -mtime +7 -print -exec rm -f {} \;

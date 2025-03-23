@@ -1,0 +1,37 @@
+- stop storing binary boot images in git! 
+  - get them from local repos, issue is repos must be synced before playbook can be run first time so maybe get off net if local repo unavailable?
+
+- scripts role not working right... 
+new code, buggy/broken, goal is to consolidate all the main scripts into templates and stop the proliferation of one off copies
+
+- improve kickstart role to properly setup pxe boot for UEFI systems
+May require modifications to gatekeeper(firewall) code as well to complete
+
+- openvpn install/config
+also requires firewall/forwarding changes on gatekeeper(firewall)
+
+- TimeMachine support, appletalk or samba, or both?  
+need to properly backup/restore our macs
+
+- samba-server role
+  - need to support multiple trusted write users from variables rather than hard code into smb.conf.j
+  - deal with passwords in logs when setting up users initially with smbpasswd
+
+
+- config-local-repos needs to work for all system types
+need to prevent systems from going to public internet since bandwidth so slow.  comtemplating even pointing server0 at itself. Issue is what to do if server0 repos become broken or not properly synced.  Considering keeping a backup copy of default repo files in case there are problems.  Files could be manually copied (or a playbook written) to temporarily solve the issue.  for server0, it cannot be installed/run untl after the server's version of linux has been fully synced the first time
+
+- figure out syncing of fedora-secondary IBM Power repo?
+
+- figure out network boot/kickstart of IBM Power
+
+- figure out network boot/install of Macs
+
+- improve winpe/network boot for windows
+include windows 11 support(10 working, 11 requires UEFI)
+
+- build/config Active Directory server from network boot/playbook
+
+- build/config IDS server (snort) from kickstart/playbook
+
+- automate build/install of satellite server

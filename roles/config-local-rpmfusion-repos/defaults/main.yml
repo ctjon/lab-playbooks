@@ -1,0 +1,2 @@
+---
+rpmfusion_repos_list: "{{linux_install_server_url}}/rpm-fusion"

@@ -1,0 +1,74 @@
+---
+- name: Configure Linux Bridge (br0) for KVM/QEMU VMs on RHEL 9
+  hosts: server0
+  become: true
+  collections:
+    - community.general  # Ensures nmcli module is available
+
+  vars:
+    bridge_name: br0
+    bridge_ip: 172.16.1.2/24
+    bridge_gateway: 172.16.1.1
+    bridge_dns: "172.16.1.1,172.16.1.2"
+    physical_interface: eth0
+
+  tasks:
+
+    - name: Install Required Packages for Bridge and KVM
+      dnf:
+        name:
+          - qemu-kvm
+          - libvirt
+          - virt-install
+          - libvirt-daemon-kvm
+          - libguestfs-tools
+          - iproute
+        state: present
+
+    - name: Ensure libvirtd is enabled and running
+      systemd:
+        name: libvirtd
+        state: started
+        enabled: true
+
+    - name: Create Linux Bridge ({{ bridge_name }})
+      community.general.nmcli:
+        conn_name: "{{ bridge_name }}"
+        type: bridge
+        ifname: "{{ bridge_name }}"
+        autoconnect: yes
+        state: present
+
+    - name: Assign Static IP to Linux Bridge ({{ bridge_name }})
+      community.general.nmcli:
+        conn_name: "{{ bridge_name }}"
+        type: bridge
+        ifname: "{{ bridge_name }}"
+        ip4: "{{ bridge_ip }}"
+        gw4: "{{ bridge_gateway }}"
+        dns4: "{{ bridge_dns }}"
+        method4: manual
+        state: present
+
+    - name: Attach Physical Interface ({{ physical_interface }}) to Bridge
+      community.general.nmcli:
+        conn_name: "bridge-port-{{ physical_interface }}"
+        type: ovs-port
+        ifname: "{{ physical_interface }}"
+        master: "{{ bridge_name }}"
+        autoconnect: yes
+        state: present
+      when: physical_interface in ansible_facts['interfaces']
+
+    - name: Restart NetworkManager to Apply Changes
+      systemd:
+        name: NetworkManager
+        state: restarted
+
+    - name: Verify Bridge Configuration
+      command: nmcli connection show --active
+      register: bridge_status
+
+    - name: Debug Bridge Configuration
+      debug:
+        msg: "{{ bridge_status.stdout_lines }}"

@@ -1,0 +1,3 @@
+---
+- name: restart systemd-resolved
+  ansible.builtin.shell: /usr/bin/systemctl daemon-reload; /usr/bin/systemctl restart systemd-networkd; /usr/bin/systemctl restart systemd-resolved

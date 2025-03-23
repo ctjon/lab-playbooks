@@ -1,0 +1,25 @@
+---
+- name: install mdadm
+  ansible.builtin.package:
+    name: mdadm
+    state: latest
+
+- name: setup mdadm.conf file for /dev/md*
+  ansible.builtin.copy:
+    src: "mdadm.conf.{{ansible_hostname}}"
+    dest: /etc/mdadm.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: restart mdadm
+  ansible.builtin.command: mdadm --auto-detect
+  become: true
+
+- name: add arrays to /etc/lvm/devices/system.devices
+  ansible.builtin.command: lvmdevices --adddev {{item}}
+  become: true
+  with_items:
+    - /dev/md0
+    - /dev/md1
+

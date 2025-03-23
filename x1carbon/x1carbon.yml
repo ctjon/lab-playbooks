@@ -1,0 +1,117 @@
+---
+#
+# Configure x1carbon workstation
+#
+
+# CentOS 8 Prerequisites:
+#	python3
+#	policycoreutils-python3
+#	rsync
+
+- hosts: x1carbon
+  become: yes
+
+  roles:
+    - role: config-rpmfusion-repos
+      tags: ['config-rpmfusion-repos']
+
+    - role: disable-ipv6
+      tags: ['disable-ipv6']
+
+    - role: selinux
+      tags: ['selinux']
+
+    - role: limit-kernels
+      tags: ['limit-kernels']
+
+    - role: ssh-config
+      tags: ['ssh-config']
+
+    - role: shell-env #including both ssh-keys on server and p51s ??
+      tags: ['shell-env']
+
+    - role: set-default-editor
+      tags: ['set-default-editor']
+
+    - role: apply-updates
+      tags: ['apply-updates']
+
+    - role: config-virtio-win-repos
+      tags: ['config-virtio-win-repos']
+
+    - role: setup-epel
+      tags: ['setup-epel']
+
+#    - role: fail2ban
+#      tags: ['fail2ban']
+
+#    - role: virt-server
+#      tags: ['virt-server']
+#      become: true
+
+    - role: protonvpn-client
+      tags: ['protonvpn-client']
+
+#    - role: reboot-if-required
+#      tags: ['reboot-if-required']
+
+
+  tasks:
+    - name: install other packages
+      ansible.builtin.package:
+        name: nmap, lftp, ftp, openscap, openscap-scanner, openscap-utils, openscap-python3, python3-botocore, python3-boto3, python3-pyvmomi, ansible, screen, virt-install, virt-manager, virt-viewer, flatpak, remmina, vlc, python3-pip, xrandr
+        state: latest
+      tags:
+        - localpkgs
+
+    - name: install other fedora packages
+      ansible.builtin.package:
+        name: openscap-containers, python3-boto, vnstat, nmon
+        state: latest
+      when:
+        - ansible_distribution == "Fedora"
+      tags:
+        - localpkgs
+
+    - name: install gstreamer packages
+      ansible.builtin.package:
+        name: gstreamer1-devel,gstreamer1-plugins-base-tools,gstreamer1-doc,gstreamer1-plugins-base-devel,gstreamer1-plugins-good,gstreamer1-plugins-good-extras,gstreamer1-plugins-ugly,gstreamer1-plugins-bad-free,gstreamer1-plugins-bad-free-devel,gstreamer1-plugins-bad-free-extras,gstreamer1-plugin-openh264
+        state: latest
+      tags:
+        - localpkgs
+
+    - name: start and enable vnstat
+      ansible.builtin.service:
+        name: vnstat
+        state: started
+        enabled: yes
+
+    - name: Add the flathub flatpak repository for current user
+      community.general.flatpak_remote:
+        name: flathub
+        state: present
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        method: user
+      become: no
+
+    - name: Install packages from flathub for current user
+      community.general.flatpak:
+        name: "{{item}}"
+        state: present
+        method: user
+      become: no
+      with_items:
+        - https://dl.flathub.org/repo/appstream/org.signal.Signal.flatpakref
+        - https://dl.flathub.org/repo/appstream/com.tdameritrade.ThinkOrSwim.flatpakref
+        - https://dl.flathub.org/repo/appstream/com.bluejeans.BlueJeans.flatpakref
+        - https://dl.flathub.org/repo/appstream/org.telegram.desktop.flatpakref
+        - https://dl.flathub.org/repo/appstream/com.microsoft.Teams.flatpakref
+        - https://dl.flathub.org/repo/appstream/us.zoom.Zoom.flatpakref
+#        - https://dl.flathub.org/repo/appstream/com.google.chrome-table.flatpakref
+
+    - name: disable Wayland
+      ansible.builtin.lineinfile:
+        path: /etc/gdm/custom.conf
+        regexp: '^#WaylandEnable='
+        line: WaylandEnable=false
+...

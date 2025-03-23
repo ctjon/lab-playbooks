@@ -1,0 +1,26 @@
+---
+# Beginning in Fedora 33, nano was configured to be the default editor.
+# 
+# Details here: https://fedoraproject.org/wiki/Changes/UseNanoByDefault
+#
+# I do not like nano when compared to vim so I wrote this role to force 
+# vim as the default in my envornments
+#
+# This will be updated if this change shows up in RHEL/CentOS someday
+
+- name: Remove stupid nano-default-editor package!  Real admins use vi :-)
+  package:
+    name: nano-default-editor
+    state: absent
+  when: 
+    - ansible_distribution == "Fedora"
+    - ansible_distribution_major_version > "32"
+
+- name: Install vim-default-editor 
+  package:
+    name: vim-default-editor
+    state: latest
+  when: 
+    - ansible_distribution == "Fedora"
+    - ansible_distribution_major_version > "32"
+

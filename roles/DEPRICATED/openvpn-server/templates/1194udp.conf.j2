@@ -1,0 +1,33 @@
+#plugin /usr/lib64/openvpn/plugins/openvpn-plugin-auth-pam.so openvpn 
+
+local {{ ovpn_server_ip }}
+port {{openvpn_internal_udp_port}}
+proto udp4
+dev tun
+ca /etc/openvpn/easyrsa/pki/ca.crt
+cert /etc/openvpn/easyrsa/pki/issued/main.crt
+key /etc/openvpn/easyrsa/pki/private/main.key
+dh /etc/openvpn/easyrsa/pki/dh.pem
+server {{openvpn_udp_subnet}} {{openvpn_udp_netmask}}
+ifconfig-pool-persist ipp.txt
+client-config-dir /etc/openvpn/ccd
+push "route {{primary_short_net}}.0 {{primary_netmask}}"
+push "redirect-gateway def1 bypass-dhcp"
+push "dhcp-option DNS {{primary_dns_servers|join(" ")}}"
+client-to-client
+keepalive 10 900
+tls-auth /etc/openvpn/easyrsa/pki/private/ta.key 0
+tls-cipher TLS-DHE-RSA-WITH-AES-256-CBC-SHA
+cipher AES-256-CFB8
+auth SHA512
+comp-lzo 
+max-clients 10
+user nobody
+group nobody
+persist-key
+persist-tun
+status /var/log/openvpn/openvpn-{{openvpn_internal_udp_port}}udp-status.log
+log /var/log/openvpn/openvpn-{{openvpn_internal_udp_port}}udp.log
+verb 3
+reneg-sec 10800
+explicit-exit-notify 1

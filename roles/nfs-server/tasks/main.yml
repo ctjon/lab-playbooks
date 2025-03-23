@@ -1,0 +1,64 @@
+---
+- name: Ensure NFS utilities are installed.
+  ansible.builtin.package: 
+    name: nfs-utils
+    state: latest
+
+- name: configure /etc/exports
+  ansible.builtin.template: 
+    src: exports.{{ansible_hostname}}.j2 
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart nfs server
+
+- name: enable and start nfs services for RHEL7-/Fedora29-
+  ansible.builtin.service:
+    name: "{{item}}"
+    state: started
+    enabled: yes
+  with_items:
+    - nfs-server
+    - rpcbind
+    - nfs-lock
+    - nfs-idmap
+  when:
+    - (((ansible_distribution == "RedHat" or ansible_distribution == "CentOS") and ansible_distribution_major_version <= "7") or ((ansible_distribution == "Fedora") and (ansible_distribution_major_version <= "29")))
+
+- name: enable and start nfs services for RHEL8+/Fedora30+
+  ansible.builtin.service:
+    name: "{{item}}"
+    state: started
+    enabled: yes
+  with_items:
+    - nfs-server
+    - rpcbind
+    - nfs-mountd
+    - nfs-idmapd
+  when:
+    - (((ansible_distribution == "RedHat" or ansible_distribution == "CentOS") and ansible_distribution_major_version >= "8") or ((ansible_distribution == "Fedora") and (ansible_distribution_major_version >= "30")))
+
+- name: configure firewall services for NFS
+  ansible.builtin.firewalld: 
+    service: "{{ item }}"
+    permanent: yes
+    state: enabled
+  with_items:
+    - nfs
+    - mountd
+    - rpc-bind
+  notify: restart firewalld
+
+- name: configure firewall ports for NFS
+  ansible.builtin.firewalld: 
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+  with_items:
+    - 54302/tcp
+    - 20048/tcp
+    - 46666/tcp
+    - 42955/tcp
+    - 875/tcp
+  notify: restart firewalld

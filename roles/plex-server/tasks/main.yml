@@ -1,0 +1,155 @@
+---
+- name: setup plex repo
+  ansible.builtin.yum_repository:
+    name: plex
+    description: "Plex Installation Repository"
+    file: /etc/yum.repos.d/plex
+    baseurl: https://downloads.plex.tv/repo/rpm/$basearch/
+    enabled: '1'
+    metadata_expire: '1d'
+    repo_gpgcheck: '0'
+    #type: rpm
+    gpgcheck: '1'
+    gpgkey: https://downloads.plex.tv/plex-keys/PlexSign.key
+    skip_if_unavailable: false
+    failovermethod: priority
+
+#- name: install plex rpm key
+#  ansible.builtin.rpm_key:
+#    key: https://downloads.plex.tv/plex-keys/PlexSign.key
+#    state: present
+#    validate_certs: false
+
+- name: enable and start firewalld service
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: create plex firewall service definition
+  ansible.builtin.copy:
+    src: plex-service.xml
+    dest: /etc/firewalld/services/plex.xml
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: open trusted network firewall zone for plex server
+  ansible.builtin.firewalld:
+    zone: "{{my_network_firewall_zone}}"
+    service: plex
+    immediate: yes
+    state: enabled
+    permanent: yes
+
+- name: create plex storage in {{plex_storage_path}}
+  ansible.builtin.lvol:
+    vg: "{{ plex_storage_vg }}"
+    lv: "{{ plex_storage_lv }}"
+    size: "{{ plex_storage_lv_size }}"
+    shrink: no
+    state: present
+    resizefs: yes
+
+- name: Create a filesystem on {{ plex_storage_lv }}
+  ansible.builtin.filesystem:
+    fstype: "{{ plex_storage_fs_type }}"
+    dev: "/dev/{{plex_storage_vg}}/{{plex_storage_lv}}"
+    force: no
+    resizefs: yes
+
+- name: Create {{plex_storage_path}} mount point
+  ansible.builtin.file:
+    path: "{{plex_storage_path}}"
+    state: directory
+    recurse: no
+    owner: root
+    group: root
+    mode: 0700
+
+- name: mount {{plex_storage_path}}
+  ansible.builtin.mount:
+    path: "{{ plex_storage_path }}"
+    src: "/dev/{{plex_storage_vg}}/{{plex_storage_lv}}"
+    fstype: "{{ plex_storage_fs_type }}"
+    opts: defaults
+    state: mounted
+
+- name: create {{ plex_group }}
+  ansible.builtin.group:
+    name: "{{ plex_group }}"
+    state: present
+
+- name: Set plex permissions for {{plex_storage_path}} mountpoint after mounted
+  ansible.builtin.file:
+    path: "{{plex_storage_path}}"
+    state: directory
+    recurse: no
+    owner: "{{plex_owner}}"
+    group: "{{plex_group}}"
+    mode: "2775"
+
+- name: install Plex Media Server
+  ansible.builtin.dnf:
+    name: plexmediaserver
+    state: latest
+    disable_gpg_check: true
+
+#- name: install plex Preference.xml
+#  ansible.builtin.template:
+#    src: Preferences.xml.j2
+#    dest: "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Preferences.xml"
+#    owner: plex
+#    group: "{{plex_group}}"
+#    mode: '0644'
+#  notify: restart plex service
+
+- name: install /etc/sysconfig/PlexMediaServer
+  ansible.builtin.copy:
+    src: PlexMediaServer.sysconfig
+    dest: /etc/sysconfig/PlexMediaServer
+    owner: root
+    group: root
+    mode: '0600'
+  notify: restart plex service
+
+- name: install plex Preference.xml
+  ansible.builtin.template:
+    src: Preferences.xml.j2
+    dest: "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Preferences.xml"
+    owner: plex
+    group: "{{plex_group}}"
+    mode: '0644'
+  notify: restart plex service
+
+- name: Create {{plex_storage_path}} subdirectories
+  ansible.builtin.file:
+    path: "{{plex_storage_path}}/{{item}}"
+    state: directory
+    recurse: yes
+    owner: "{{plex_owner}}"
+    group: "{{plex_group}}"
+    mode: "2775"
+  with_items:
+    - "Movies"
+    - "Music"
+    - "TV-Shows"
+    - "OtherImages"
+    - "OtherVideos"
+    - "HomeVideos"
+    - "Photos"
+
+- name: create crontab entries to reset permissions on repos
+  ansible.builtin.cron:
+    name: "plex chown"
+    user: "root"
+    minute: "20"
+    hour: "{{5 + start_hour_offset}}"
+    job: "/usr/bin/chown -R {{plex_owner}}:{{plex_group}} {{plex_storage_path}}  > /{{ansible_user_id}}/logs/chown-plex.log 2>&1"
+
+- name: enable and start plex service
+  ansible.builtin.service:
+    name: plexmediaserver
+    state: started
+    enabled: yes
+

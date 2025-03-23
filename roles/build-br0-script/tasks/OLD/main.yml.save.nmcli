@@ -1,0 +1,43 @@
+---
+- name: iproute utilities
+  dnf:
+    name: iproute
+    state: present
+
+- name: Create Linux bridge configuration
+  copy:
+    dest: "/etc/NetworkManager/system-connections/br0.nmconnection"
+    content: |
+      [connection]
+      id=br0
+      type=bridge
+      interface-name=br0
+      autoconnect=true
+
+      [bridge]
+      stp=false
+
+      [ipv4]
+      method=auto
+
+      [ipv6]
+      method=ignore
+  notify: Restart NetworkManager
+
+- name: Configure physical interface for bridge
+  copy:
+    dest: "/etc/NetworkManager/system-connections/eth0.nmconnection"
+    content: |
+      [connection]
+      id=eth0
+      type=ethernet
+      interface-name=eth0
+      autoconnect=true
+
+      [ethernet]
+      mac-address-blacklist=
+
+      [bridge-port]
+      bridge=br0
+  when: "'eth0' in ansible_facts['interfaces']"
+  notify: Restart NetworkManager

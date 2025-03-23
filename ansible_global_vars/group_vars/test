@@ -1,0 +1,11 @@
+use_ssh_agent: no
+copy_ssh_keys: no
+setup_ansible_config: no
+setup_git_update: no
+
+################################################################################
+# Installation Source Parameters                                               #
+################################################################################
+linux_install_server_url: "http://install.internal.tjon.net/Linux"
+linux_install_server_hostname: server0
+config_files_url: "http://install.internal.tjon.net/ConfigFiles"

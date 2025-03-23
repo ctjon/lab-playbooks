@@ -1,0 +1,37 @@
+# {{ansible_managed}}
+# Enable TFTP Server
+enable-tftp
+tftp-root={{tftpbootdir}}
+#tftp-secure
+
+# PXE Boot Configuration for Legacy BIOS Clients
+dhcp-match=set:bios,60,PXEClient:Arch:00000
+dhcp-boot=tag:bios,pxelinux.0
+
+# PXE Boot Configuration for UEFI 64-bit Clients
+#dhcp-match=set:efi64,60,PXEClient:Arch:00007
+#dhcp-match=set:efi64,60,PXEClient:Arch:00009
+#dhcp-boot=tag:efi64,grubx64.efi
+
+dhcp-match=set:efi64,option:client-arch,7
+dhcp-match=set:efi64,option:client-arch,9
+dhcp-boot=tag:efi64,grubx64.efi
+#dhcp-boot=tag:efi64,x86_64/shimx64.efi
+
+# PXE Boot Configuration for UEFI 32-bit Clients
+dhcp-match=set:efi32,60,PXEClient:Arch:00006
+dhcp-boot=tag:efi32,grubia32.efi
+
+# PXE Boot Configuration for UEFI ARM64 Clients
+dhcp-match=set:efiarm64,60,PXEClient:Arch:0000B
+dhcp-boot=tag:efiarm64,grubaa64.efi
+
+# Specify PXE Boot Menu
+pxe-prompt="PXE Booting from {{ansible_hostname}}",5
+pxe-service=x86PC, "Legacy BIOS PXE Boot", pxelinux.0
+pxe-service=BC_EFI, "UEFI PXE Boot (x64)", grubx64.efi
+pxe-service=X86-64_EFI, "UEFI PXE Boot (x64)", grubx64.efi
+pxe-service=ARM64_EFI, "UEFI PXE Boot (ARM64)", grubaa64.efi
+
+# Log PXE Boot Requests
+log-dhcp

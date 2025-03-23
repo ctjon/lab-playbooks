@@ -1,0 +1,64 @@
+---
+- name: add {{trusted_network_interface}} to {{trusted_network_firewall_zone}} zone
+  ansible.builtin.firewalld:
+    zone: "{{trusted_network_firewall_zone}}"
+    interface: "{{trusted_network_interface}}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+- name: Configure {{trusted_network_interface}} to be in {{trusted_network_firewall_zone}}
+  community.general.nmcli:
+    type: ethernet
+    conn_name: "{{trusted_network_interface}}"
+    ip4: "{{trusted_network_ipaddr}}/{{trusted_network_prefix}}"
+    zone: "{{trusted_network_firewall_zone}}"
+    state: present
+#    ifname: "{{trusted_network_interface}}"
+
+- name: add {{public_network_interface}} to {{public_network_firewall_zone}} zone
+  ansible.builtin.firewalld:
+    zone: "{{public_network_firewall_zone}}"
+    interface: "{{public_network_interface}}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+- name: Configure {{public_network_interface}} to be in {{public_network_firewall_zone}}
+  community.general.nmcli:
+    type: ethernet
+    conn_name: "{{public_network_interface}}"
+    zone: "{{public_network_firewall_zone}}"
+    state: present
+#    ifname: "{{public_network_interface}}"
+
+- name: Set {{trusted_network_firewall_zone}} as the default zone
+  command: firewall-cmd --set-default-zone={{trusted_network_firewall_zone}}
+
+- name: Set ip forwarding and reload if necessary
+  ansible.builtin.sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: enable masquerade 
+  ansible.builtin.firewalld:
+    masquerade: yes
+    state: enabled
+    permanent: yes
+    immediate: yes
+    zone: "{{ public_network_firewall_zone }}"
+
+- name: deploy interal-external.xml policy template
+  ansible.builtin.template:
+    src: internal-external.xml.j2
+    dest: /etc/firewalld/policies/internal-external.xml
+    owner: root
+    group: root
+    mode: 0644
+    setype: firewalld_etc_rw_t
+  notify: restart firewalld
+    
+...

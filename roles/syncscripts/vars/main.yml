@@ -1,0 +1,24 @@
+start_hour_offset: 0
+syncscripts_dir: "{{repo_owner_homedir}}/syncscripts/scripts"
+syncscripts_logs_dir: "{{repo_owner_homedir}}/syncscripts/logs"
+sync_script_retries: true
+
+syncscripts_vars_files_list:
+    - fedora.yml
+    - rocky.yml
+    - alma.yml
+    - epel.yml
+    - openbsd.yml
+    - rpmfusion.yml
+#    - openwrt.yml
+
+sync_scripts_list:
+  - sync-fedora.sh
+  - sync-rpmfusion.sh
+  - sync-rocky.sh
+  - sync-alma.sh
+  - sync-epel.sh
+  - sync-openbsd.sh
+  - sync-virtio-win.sh
+#  - sync-openwrt.sh
+

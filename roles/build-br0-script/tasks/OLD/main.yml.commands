@@ -1,0 +1,22 @@
+---
+- name: Ensure NetworkManager is installed
+  dnf:
+    name: NetworkManager
+    state: present
+
+- name: Create Linux bridge (br0)
+  command: nmcli connection add type bridge ifname br0 con-name br0 autoconnect yes
+  ignore_errors: true  # Ignore if already exists
+
+- name: Configure bridge br0 without ipv6
+  command: nmcli connection modify br0 ipv6.method ignore
+
+- name: Configure bridge br0
+  command: nmcli connection modify br0 ipv6.method ignore ipv4.addresses 172.16.1.253/24 ipv4.gateway 172.16.1.1 ipv4.dns 172.16.1.1,172.16.1.2
+
+- name: Add physical interface (eth0) to bridge br0
+  command: nmcli connection add type ethernet ifname eth0 master br0 autoconnect yes
+  when: "'eth0' in ansible_facts['interfaces']"
+
+- name: bring up bridge br0
+  command: nmcli connection up br0

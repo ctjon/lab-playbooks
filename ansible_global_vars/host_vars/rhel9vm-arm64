@@ -1,0 +1,6 @@
+personal_server: true
+work_server: false
+
+use_ssh_agent: no
+copy_ssh_keys: no
+

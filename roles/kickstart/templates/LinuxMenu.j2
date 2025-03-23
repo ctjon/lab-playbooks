@@ -1,0 +1,27 @@
+# {{ ansible_managed }}
+
+default vesamenu.c32
+default menu.c32
+prompt 0
+
+MENU TITLE Linux Install Main Menu
+
+LABEL Main Menu
+        MENU LABEL Main Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/default
+
+LABEL rhel
+        MENU RHEL Installs
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/rhel
+
+LABEL fedora
+        MENU Fedora Installs
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/fedora
+
+LABEL ubuntu
+        MENU Ubuntu Installs
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/ubuntu

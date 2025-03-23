@@ -1,0 +1,13 @@
+#!/bin/sh
+set -x
+sudo nmcli con down {{my_network_interface}}
+sudo nmcli con delete {{my_network_interface}}
+sudo nmcli connection add ifname {{my_bridge_name}} type bridge con-name {{my_bridge_name}}
+sudo nmcli con add type bridge-slave ifname {{my_network_interface}} master {{my_bridge_name}}
+sudo nmcli connection modify {{my_bridge_name}} ipv4.addresses {{my_network_ipaddr}}/{{my_network_prefix}} ipv4.method manual
+sudo nmcli connection modify {{my_bridge_name}} ipv4.gateway {{my_network_gateway}}
+sudo nmcli connection modify {{my_bridge_name}} ipv4.dns "{{my_network_dns_servers|join(',')}}"
+sudo nmcli connection modify {{my_bridge_name}} ipv6.method disabled
+sudo nmcli con down {{my_bridge_name}}
+sudo nmcli con up {{my_bridge_name}}
+sudo systemctl restart NetworkManager 

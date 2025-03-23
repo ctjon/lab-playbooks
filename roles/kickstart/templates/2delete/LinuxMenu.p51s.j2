@@ -1,0 +1,73 @@
+# {{ ansible_managed }}
+
+default vesamenu.c32
+default menu.c32
+prompt 0
+
+MENU TITLE Linux Install Main Menu
+
+LABEL Main Menu
+        MENU LABEL Main Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/default
+
+LABEL centos
+        MENU CentOS Installs
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/centos
+
+LABEL rhel
+        MENU RHEL Installs
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/rhel
+
+LABEL fedora
+        MENU Fedora Installs
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/fedora
+
+LABEL ubuntu
+        MENU Ubuntu Installs
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/ubuntu
+
+#
+# p51s
+#
+label p51s
+  menu label Install p51s Laptop
+  kernel images/fedora/29/x86_64/vmlinuz
+  append initrd=images/fedora/29/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/gitlabvm-ks.cfg
+
+#
+# gitlabvm
+#
+label gitlabvm
+  menu label Install GitLab VM
+  kernel images/centos/7/x86_64/vmlinuz
+  append initrd=images/centos/7/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/gitlabvm-ks.cfg
+
+#
+# plex server
+#
+label plex
+  menu label Install plex Server
+  kernel images/centos/7/x86_64/vmlinuz
+  append initrd=images/centos/7/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/plex-ks.cfg
+
+#
+# Ansible Tower in p51s KVM
+#
+label tower-p51s
+  menu label Install Ansible Tower Host System in KVM
+  kernel images/rhel/7/x86_64/vmlinuz
+  append initrd=images/rhel/7/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/tower-p51s-ks.cfg
+
+#
+# Satellite 6 in p51s KVM
+#
+label satellite6-p51s
+  menu label Install Satellite 6 Host System on p51s
+  kernel images/rhel/7/x86_64/vmlinuz
+  append initrd=images/rhel/7/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/satellite6-p51s-ks.cfg
+

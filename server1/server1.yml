@@ -1,0 +1,66 @@
+##---
+#
+# Configure Server1
+#
+
+- hosts: server1
+  become: yes
+
+  vars_files: 
+    - ../ansible_global_vars/group_vars/all
+    - ../ansible_global_vars/secret_vars/secrets.yml
+
+  roles:
+    - role: sm-register
+      tags: ['sm-register']
+
+    - role: insights-register
+      tags: ['insights-register']
+
+    - role: setup-br0
+      tags: ['setup-br0']
+
+    - role: setup-epel
+      tags: ['setup-epel']
+
+    - role: disable-ipv6
+      tags: ['disable-ipv6']
+
+    - role: selinux
+      tags: ['selinux']
+
+    - role: limit-kernels
+      tags: ['limit-kernels']
+
+    - role: sshd-config
+      tags: ['sshd-config']
+
+    - role: ssh-config
+      tags: ['ssh-config']
+
+    - role: cockpit
+      tags: ['cockpit']
+
+    - role: shell-env #including both ssh-keys on server and p51s ??
+      tags: ['shell-env']
+
+    - role: set-default-editor
+      tags: ['set-default-editor']
+
+#    - role: config-local-repos
+#      tags: ['config-local-repos']
+
+#    - role: config-local-rpmfusion-repos
+#      tags: ['config-local-rpmfusion-repos']
+
+#    - role: config-local-virtio-win-repos
+#      tags: ['config-local-virtio-win-repos']
+
+    - role: virt-server
+      tags: ['virt-server']
+
+    - role: apply-updates
+      tags: ['apply-updates']
+
+#    - role: reboot-if-required
+#      tags: ['reboot-if-required']

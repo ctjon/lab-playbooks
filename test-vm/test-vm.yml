@@ -1,0 +1,39 @@
+- name: Create KVM Virtual Machine without CDROM
+  hosts: server0
+  become: true
+
+  vars_files: 
+    - ../ansible_global_vars/group_vars/all
+    - ../ansible_global_vars/secret_vars/secrets.yml
+
+  vars:
+    vm_name: test-vm
+    vm_memory: 4096
+    vm_vcpus: 2
+    vm_disk_path: "/var/lib/libvirt/images/{{ vm_name }}.qcow2"
+    vm_disk_size: 20G
+    vm_network: bridge-br0
+    vm_iso_path: ""  # No ISO, so no CDROM attached
+
+#  roles:
+#    - role: kvm-create-vm
+
+  tasks:
+  - name: Ensure NVRAM directory exists
+    file:
+      path: "/var/lib/libvirt/qemu/nvram/"
+      state: directory
+      owner: qemu
+      group: qemu
+      mode: '0755'
+ 
+  - name: Create {{vm_name}} VM disk image
+    command: qemu-img create -f qcow2 "{{ vm_disk_path }}" "{{ vm_disk_size }}"
+    args:
+      creates: "{{ vm_disk_path }}"
+
+  - name: Define {{vm_name}} VM from XML
+    community.libvirt.virt:
+      name: "{{ vm_name }}"
+      command: define 
+      xml: "{{ lookup('file', 'files/{{ vm_name }}.xml') }}"

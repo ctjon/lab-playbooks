@@ -1,0 +1,10 @@
+---
+- name: reload systemd
+  ansible.builtin.command: systemctl daemon-reload
+
+- name: restart noip service
+  ansible.builtin.service:
+    name: noip2
+    enabled: yes
+    state: restarted
+

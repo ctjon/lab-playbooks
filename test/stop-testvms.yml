@@ -1,0 +1,11 @@
+---
+#
+# Shutdown Test VMs
+#
+
+- hosts: test
+  become: yes
+  gather_facts: yes
+
+  roles:
+    - role: shutdown

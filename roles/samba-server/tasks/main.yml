@@ -1,0 +1,126 @@
+---
+
+- name: include smb users data
+  include_vars:
+    file: samba_users.yml
+
+- name: install samba packages
+  ansible.builtin.package:
+    name: samba, samba-winbind
+    state: latest
+
+- name: set samba SELinux samba_export_all_ro=1 and persistent across reboots
+  ansible.builtin.seboolean:
+    name: samba_export_all_ro
+    state: yes
+    persistent: yes
+
+- name: set samba SELinux samba_export_all_rw=1 and persistent across reboots
+  ansible.builtin.seboolean:
+    name: samba_export_all_rw
+    state: yes
+    persistent: yes
+
+- name: set samba SELinux samba_enable_home_dirs=1 and persistent across reboots
+  ansible.builtin.seboolean:
+    name: samba_enable_home_dirs
+    state: yes
+    persistent: yes
+
+- name: setup smb.conf file
+  ansible.builtin.template:
+    src: templates/smb.conf.{{ansible_hostname}}.j2
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart samba
+
+- name: setup samba users
+  ansible.builtin.shell: (echo '{{ item.passwd }}'; echo '{{ item.passwd }}')
+    | smbpasswd -s -a {{ item.name }}
+  register: smbpasswd
+  changed_when: "'Added user' in smbpasswd.stdout"
+  with_items: "{{ samba_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+  no_log: true
+
+- name: create {{tm_group}} group
+  ansible.builtin.group:
+    name: "{{ tm_group }}"
+    state: present
+
+- name: add Time Machine users to {{tm_group }}
+  ansible.builtin.user:
+    name: "{{ item.tm_username }}"
+    groups: "{{ tm_group }}"
+    append: yes
+  with_items:
+    - "{{ tm_users }}"
+
+#- name: create {{ tm_storage_lv }}
+#  ansible.builtin.lvol:
+#    vg: "{{ tm_storage_vg }}"
+#    lv: "{{ tm_storage_lv }}"
+#    size: "{{ tm_storage_lv_size }}"
+#    shrink: no
+#    state: present
+#    resizefs: yes
+#
+#- name: Create an xfs filesystem on {{ tm_storage_lv }}
+#  community.general.filesystem:
+#    fstype: "{{ tm_storage_fs_type }}"
+#    dev: "/dev/{{tm_storage_vg}}/{{tm_storage_lv}}"
+#    force: no
+#    state: present
+#
+- name: mount {{tm_storage_path}}
+  ansible.builtin.mount:
+    path: "{{ tm_storage_path }}"
+    src: "/dev/{{tm_storage_vg}}/{{tm_storage_lv}}"
+    fstype: "{{ tm_storage_fs_type }}"
+    opts: defaults
+    state: mounted
+
+- name: set permissions on {{ tm_storage_path }}
+  ansible.builtin.file:
+    path: "{{ tm_storage_path }}"
+    state: directory
+    owner: root
+    group: "{{ tm_group }}"
+    mode: '0775'
+
+- name: create {{tm_storage_path}}/user directories
+  ansible.builtin.file:
+    path: '{{tm_storage_path}}/{{item.tm_username }}'
+    state: directory
+    owner: "{{ item.tm_username }}"
+    group: "{{ item.tm_username }}"
+    mode: '0700'
+  with_items:
+    - "{{ tm_users }}"
+
+- name: start and enable smb and nmb services
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items:
+    - smb
+    - nmb
+
+- name: make sure firewalld is running and enabled
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: open trusted network firewall zone for samba
+  ansible.builtin.firewalld:
+    zone: "{{my_network_firewall_zone}}"
+    service: samba
+    immediate: yes
+    state: enabled
+    permanent: yes
+

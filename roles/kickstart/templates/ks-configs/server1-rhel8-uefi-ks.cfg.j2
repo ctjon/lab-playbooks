@@ -1,0 +1,76 @@
+
+#version=RHEL8
+# Use graphical install
+#graphical
+repo --name="AppStream" --baseurl="{{linux_install_server_url}}/rhel/8/x86_64/AppStream"
+# Use network installation
+url --url="{{linux_install_server_url}}/rhel/8/x86_64/"
+# Keyboard layouts
+# old format: keyboard us
+# new format:
+keyboard --vckeymap=us --xlayouts='us'
+# System language
+lang en_US.UTF-8
+
+# Network information
+network  --hostname=server1.{{my_network_domain_name}} --bootproto=static --device=eth0 --gateway={{my_network_gateway}} --ip={{my_network_short_net}}.9 --nameserver={{my_network_dns_servers|join(",")}} --netmask={{my_network_netmask}} --activate
+
+# Root password
+rootpw --iscrypted {{root_pw_hash}}
+
+# Define user
+user --groups=wheel --name={{user_name}} --password={{user_pw_hash}} --iscrypted --gecos="{{gecos_name}}"
+
+# X Window System configuration information
+xconfig  --startxonboot
+# Run the Setup Agent on first boot
+firstboot --enable
+# System services
+services --enabled="chronyd"
+# System timezone
+timezone America/Phoenix --utc
+reboot
+
+#ignoredisk --only-use=nvme0n1
+# Partition clearing information
+zerombr
+clearpart --all --initlabel
+
+# Disk partitioning information
+part /boot --fstype="ext4" --ondisk=nvme0n1 --size=512
+part pv.409 --fstype="lvmpv" --ondisk=nvme0n1 --grow
+volgroup rootvg --pesize=4096 pv.409 
+logvol /  --fstype="ext4" --size=1024 --label="root" --name=rootlv --vgname=rootvg
+logvol /usr  --fstype="ext4" --size=8192 --label="usr" --name=usrlv --vgname=rootvg
+logvol /home  --fstype="ext4" --size=512 --label="home" --name=homelv --vgname=rootvg
+logvol swap  --fstype="swap" --size=65536 --name=swaplv --vgname=rootvg
+logvol /opt  --fstype="ext4" --size=32 --label="opt" --name=optlv --vgname=rootvg
+logvol /export  --fstype="ext4" --size=32 --label="export" --name=exportlv --vgname=rootvg
+logvol /var  --fstype="ext4" --size=1024 --label="var" --name=varlv --vgname=rootvg
+logvol /var/cache  --fstype="ext4" --size=4096 --label="cache" --name=cachelv --vgname=rootvg
+logvol /var/log  --fstype="ext4" --size=2048 --label="log" --name=loglv --vgname=rootvg
+logvol /tmp  --fstype="ext4" --size=1024 --label="tmp" --name=tmplv --vgname=rootvg
+logvol /var/lib/libvirt/images  --fstype="ext4" --size=102400 --label="images" --name=imageslv --vgname=rootvg
+
+%packages
+@^graphical-server-environment
+#@^minimal-environment
+@core
+python3
+
+%end
+
+%addon com_redhat_kdump --enable --reserve-mb='auto'
+
+%end
+
+%post
+# install ssh key for {{user_name}}
+curl {{config_files_url}}/{{user_name}}-server0-id_rsa.pub -o /home/{{user_name}}/.ssh/authorized_keys  --create-dirs
+curl  {{config_files_url}}/{{user_name}}-x1carbon-id_rsa.pub >> /home/{{user_name}}/.ssh/authorized_keys
+curl  {{config_files_url}}/{{user_name}}-mbp-id_rsa.pub >> /home/{{user_name}}/.ssh/authorized_keys
+chown -R {{user_name}}:{{group_name}} /home/{{user_name}}/.ssh
+chmod 700 /home/{{user_name}}/.ssh
+chmod 600 /home/{{user_name}}/.ssh/authorized_keys
+restorecon -RFv /home/{{user_name}}/.ssh/authorized_keys
+%end

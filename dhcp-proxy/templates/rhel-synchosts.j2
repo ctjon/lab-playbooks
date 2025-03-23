@@ -1,0 +1,44 @@
+# {{ ansible_managed }}
+
+LABEL Main Menu
+        MENU LABEL Main Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/default
+
+LABEL Linux Menu
+        MENU LABEL Linux Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/LinuxMenu
+
+#
+# synchost9 server
+#
+label synchost9
+  menu label Install RHEL9 SyncHost
+  kernel images/rhel/9/x86_64/vmlinuz
+  append initrd=images/rhel/9/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 inst.ks={{linux_install_server_url}}/ks-configs/synchost9-ks.cfg inst.stage2={{linux_install_server_url}}/rhel/9/x86_64
+
+#
+# synchost8 server
+#
+label synchost8
+  menu label Install RHEL8 SyncHost
+  kernel images/rhel/8/x86_64/vmlinuz
+  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/synchost8-ks.cfg inst.stage2={{linux_install_server_url}}/rhel/8/x86_64
+
+#
+# synchost7 server
+#
+label synchost7
+  menu label Install RHEL7 SyncHost
+  kernel images/rhel/7/x86_64/vmlinuz
+  append initrd=images/rhel/7/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/synchost7-ks.cfg
+
+#
+# synchost6 server
+#
+label synchost6
+  menu label Install RHEL6 SyncHost
+  kernel images/rhel/6/x86_64/vmlinuz
+  append initrd=images/rhel/6/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/synchost6-ks.cfg
+

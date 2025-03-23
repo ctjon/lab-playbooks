@@ -1,0 +1,61 @@
+---
+- name: install bridge-utils
+  package:
+    name: bridge-utils
+    state: latest
+
+#
+# "nmcli con add type bridge ifname br0"
+#
+- name: setup br0 with nmcli
+  community.general.nmcli:
+    conn_name: "{{ primary_bridge }}"
+    type: bridge
+    method4: auto
+    method6: disabled
+    state: present
+  notify: restart NetworkManager
+
+#
+# "nmcli con add type ethernet ifname eth0 master br0"
+#
+- name: setup eth0 as br0 bridge-slave
+  community.general.nmcli:
+    type: bridge-slave
+    conn_name: "bridge-slave-{{primary_interface}}"
+    hairpin: false
+    ifname: "{{ primary_interface }}"
+    master: "{{ primary_bridge }}"
+    state: present
+  notify: restart NetworkManager
+
+#
+# "nmcli con add type ethernet ifname wlan0 master br0"
+#
+- name: setup {{wireless_interface}} as br0 bridge-slave
+  community.general.nmcli:
+    type: bridge-slave
+    conn_name: "bridge-slave-{{wireless_interface}}"
+    hairpin: false
+    ifname: "{{ wireless_interface }}"
+    master: "{{ primary_bridge }}"
+    state: present
+  notify: restart NetworkManager
+  when: wireless_interface is defined
+
+- name: reconfigure firewall for bridge
+  ansible.builtin.firewalld:
+    zone: "{{public_firewall_zone}}"
+    interface: "{{primary_bridge}}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+- name: Set ip forwarding sysctl and reload if necessary
+  ansible.builtin.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+  notify: restart NetworkManager

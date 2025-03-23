@@ -1,0 +1,35 @@
+################################################################################
+# DNSMASQ Configuration Parameters                                             #
+################################################################################
+dnsmasq_interfaces:
+  - "{{my_network_interface}}"
+
+dhcp_network_interface: "{{my_network_interface}}"
+dhcp_network_short_net: "{{my_network_short_net}}"
+dhcp_ntp_server: "{{my_network_ipaddr}}"
+dhcp_router: "{{my_network_gateway}}"
+  
+dns_enabled: true
+dhcp_enabled: true
+pxe_enabled: true
+dhcp_range_start: 100
+dhcp_range_end: 199
+dhcp_lease_time: 4h
+
+dnsmasq_dhcp_interfaces:
+  - {name: "{{dhcp_network_interface}}", dhcp_start: "{{dhcp_network_short_net}}.{{dhcp_range_start}}", dhcp_end: "{{dhcp_network_short_net}}.{{dhcp_range_end}}", lease: "{{dhcp_lease_time}}", ntp_server: "{{dhcp_ntp_server}}", router: "{{dhcp_router}}" }
+
+
+upstream_dns_servers:
+  - 8.8.8.8
+  - 8.8.4.4
+
+efi_bootfiles_src_path: "/boot/efi/EFI/{{ansible_distribution|lower}}"
+
+efi_bootfiles:
+  - grubx64.efi
+  - mmx64.efi
+  - shim.efi
+  - shimx64.efi
+  
+

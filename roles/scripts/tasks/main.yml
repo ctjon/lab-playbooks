@@ -1,0 +1,12 @@
+---
+- name: deploy scripts to {{scripts_dir}}
+  ansible.builtin.copy:
+    src: "{{ansible_hostname}}/{{item}}.j2"
+    dest: "{{scripts_dir}}/{{item}}"
+    owner: chris
+    group: chris
+    mode: 0755
+  with_items:
+    - "{{scripts_list}}"
+
+

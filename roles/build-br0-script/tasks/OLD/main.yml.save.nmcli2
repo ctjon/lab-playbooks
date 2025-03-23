@@ -1,0 +1,41 @@
+---
+- name: Ensure NetworkManager is installed
+  ansible.builtin.dnf:
+    name: NetworkManager
+    state: present
+
+- name: Create Linux bridge {{my_bridge_name}}
+  community.general.nmcli:
+    conn_name: "{{my_bridge_name}}"
+    type: bridge
+    ifname: "{{my_bridge_name}}"
+    state: present
+    autoconnect: yes
+  notify: Restart NetworkManager
+
+- name: Configure bridge {{my_bridge_name}}
+  community.general.nmcli:
+    conn_name: "{{my_bridge_name}}"
+    type: bridge
+    ifname: "{{my_bridge_name}}"
+    ip4: "{{my_network_ipaddr}}/{{my_network_prefix}}"
+    gw4: "{{my_network_gateway}}"
+    dns4: "{{my_network_dns_servers}}"
+    method4: manual
+    method6: disabled
+    state: present
+  notify: Restart NetworkManager
+
+- name: Add physical interface {{my_network_interface}} to bridge {{my_bridge_name}}
+  community.general.nmcli:
+    conn_name: "{{my_network_interface}}"
+    type: ethernet
+    ifname: "{{my_network_interface}}"
+    master: "{{my_bridge_name}}"
+    autoconnect: yes
+    state: present
+  notify: Restart NetworkManager
+
+#  when: "my_network_interface in ansible_facts['interfaces']"
+#  when: "'eth0' in ansible_facts['interfaces']"
+#  when: "my_network_interface in ansible_facts['interfaces']"

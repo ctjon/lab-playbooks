@@ -1,0 +1,32 @@
+vm_storage_vg: datavg
+vm_storage_path: /var/lib/libvirt/images
+vm_storage_lv: imageslv
+vm_storage_lv_size: 2T
+vm_storage_fs_type: xfs
+
+macvlan_interface: eth1
+
+virt_nets:
+  - bridge-br0
+  - vnet_nat1
+  - vnet_nat2
+
+virt_packages_list:
+  - python3-libvirt
+  - python3-lxml
+  - libvirt
+  - virt-install
+  - virt-viewer
+  - virt-manager
+  - virt-manager-common
+  - virt-top
+  - edk2-ovmf
+  - efibootmgr
+  - syslinux
+  - syslinux-extlinux
+  - libguestfs-rescue
+  - libguestfs-tools
+  - guestfs-tools
+  - python3-libguestfs
+
+#  - libguestfs-winsupport

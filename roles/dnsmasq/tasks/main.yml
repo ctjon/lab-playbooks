@@ -1,0 +1,245 @@
+---
+- name: stop, disable, and mask systemd-resolved service
+  ansible.builtin.service:
+    name: systemd-resolved
+    state: stopped
+    enabled: false
+    masked: true
+  when:
+    - ansible_facts['distribution'] == "Fedora"
+
+- name: make sure firewalld is running
+  ansible.builtin.service:
+    name: firewalld
+    enabled: yes
+    state: started
+
+- name: install packages
+  ansible.builtin.package:
+    name: dnsmasq, firewalld
+    state: latest
+  notify: restart dnsmasq
+
+- name: install dnsmasq.conf file
+  ansible.builtin.template:
+    src: dnsmasq.conf.j2
+    dest: /etc/dnsmasq.conf
+    owner: dnsmasq
+    group: dnsmasq
+    mode: 0660
+  notify: restart dnsmasq
+
+- name: create /etc/dnsmasq.d directory
+  ansible.builtin.file: 
+    path: /etc/dnsmasq.d
+    owner: dnsmasq
+    group: dnsmasq
+    mode: 0770
+    state: directory
+
+################################################################################
+# Configure PXE Server Block                                                   #
+################################################################################
+- name: Confgure dnsmasq as PXE Server
+  block:
+    - name: install ipxe packages
+      ansible.builtin.package:
+        name: ipxe-bootimgs-aarch64.noarch, ipxe-bootimgs-x86.noarch, ipxe-roms.noarch, ipxe-roms-qemu.noarch
+        state: latest
+
+    - name: Verify dnsmasq loads config directory
+      lineinfile:
+        path: /etc/dnsmasq.conf
+        regexp: '^conf-dir='
+        line: 'conf-dir=/etc/dnsmasq.d'
+
+    - name: install dnsmasq.d/pxe.conf file
+      ansible.builtin.template:
+        src: pxe.conf.j2
+        dest: /etc/dnsmasq.d/pxe.conf
+        owner: dnsmasq
+        group: dnsmasq
+        mode: 0660
+      notify: restart dnsmasq
+
+    - name: create directories for EFI boot files
+      ansible.builtin.file:
+        path: "/var/lib/tftpboot/{{item}}"
+        owner: root
+        group: root
+        mode: 0644
+        state: directory
+      with_items: 
+        - arm64-efi
+        - x86-efi
+        - x86_64-efi
+
+    - name: install x86 EFI boot files
+      ansible.builtin.copy:
+        src: "/usr/share/ipxe/{{item}}"
+        dest: "/var/lib/tftpboot/x86-efi/{{item}}"
+        owner: root
+        group: root
+        mode: 0644
+        remote_src: true
+      with_items:
+        - ipxe-i386.efi
+
+    - name: install x86_64 EFI boot files
+      ansible.builtin.copy:
+        src: "/usr/share/ipxe/{{item}}"
+        dest: "/var/lib/tftpboot/x86_64-efi/{{item}}"
+        owner: root
+        group: root
+        mode: 0644
+        remote_src: true
+      with_items:
+        - ipxe-x86_64.efi
+        - undionly.kpxe
+        - ipxe-snponly-x86_64.efi
+
+    - name: install arm64 EFI boot files
+      ansible.builtin.copy:
+        src: "/usr/share/ipxe/arm64-efi/{{item}}"
+        dest: "/var/lib/tftpboot/arm64-efi/{{item}}"
+        owner: root
+        group: root
+        mode: 0644
+        remote_src: true
+      with_items:
+        - ipxe.efi
+        - snponly.efi
+      when:
+        - ansible_facts['distribution'] == "Fedora"
+
+    - name: configure firewall services for PXE Boot
+      ansible.builtin.firewalld:
+        zone: "{{my_network_firewall_zone}}"
+        service: "{{item}}"
+        immediate: yes
+        state: enabled
+        permanent: yes
+      with_items:
+        - tftp
+
+    - name: configure firewall ports for PXE Boot
+      ansible.builtin.firewalld:
+        zone: "{{my_network_firewall_zone}}"
+        port: "{{item}}"
+        immediate: yes
+        state: enabled
+        permanent: yes
+      with_items:
+        - "68/tcp"
+        - "68/udp"
+        - "4011/udp"
+
+  when: pxe_enabled == true       ##### # End Configure PXE Server Block
+
+################################################################################
+# Configure DHCP Server Block                                                  #
+################################################################################
+- name: Configure dnsmasq as DHCP Server
+  block: 
+    - name: Verify dnsmasq loads config directory
+      lineinfile:
+        path: /etc/dnsmasq.conf
+        regexp: '^conf-dir='
+        line: 'conf-dir=/etc/dnsmasq.d'
+
+    - name: install dnsmasq.d/dhcp.conf file
+      ansible.builtin.template:
+        src: dhcp.conf.j2
+        dest: /etc/dnsmasq.d/dhcp.conf
+        owner: dnsmasq
+        group: dnsmasq
+        mode: 0660
+      notify: restart dnsmasq
+
+    - name: configure {{my_network_firewall_zone}} firewall zone for DHCP
+      ansible.builtin.firewalld:
+        zone: "{{my_network_firewall_zone}}"
+        service: dhcp
+        immediate: yes
+        state: enabled
+        permanent: yes
+      notify: restart dnsmasq
+
+  when: dhcp_enabled == true       ##### # End Configure DHCP  Server Block
+
+################################################################################
+# Configure DNS Server Block                                                   #
+################################################################################
+- name: Configure dnsmasq as DNS server
+  block:
+    - name: bind-utils install package
+      ansible.builtin.package:
+        name: bind-utils
+        state: latest
+
+    - name: install /etc/hosts file
+      ansible.builtin.copy:
+        src: etc.hosts
+        dest: /etc/hosts
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart dnsmasq
+
+    - name: configure {{my_network_firewall_zone}} firewall zone for DNS
+      ansible.builtin.firewalld:
+        zone: "{{my_network_firewall_zone}}"
+        service: dns
+        immediate: yes
+        state: enabled
+        permanent: yes
+      notify: restart dnsmasq
+
+    - name: configure dns to point at local server
+      community.general.nmcli:
+        conn_name: "{{my_network_interface}}"
+        type: ethernet
+        ip4: "{{my_network_ipaddr}}/{{my_network_prefix}}"
+        gw4: "{{my_network_gateway}}"
+        dns4: "{{my_network_dns_servers}}"
+        state: present
+          #  notify: restart NetworkManager # handler does not work here?
+
+  when: dns_enabled == true       ##### # End Configure DNS Server Block
+
+
+# This should be in the handler but handlers need to support blocks first
+# see https://github.com/ansible/ansible/issues/14270 for details
+- name: restore selinux context on /etc/dnsmasq.conf and etc/dnsmasq.d
+  ansible.builtin.command: restorecon -RFv {{item}}
+  with_items:
+    - /etc/dnsmasq.conf 
+    - /etc/dnsmasq.d
+
+- name: create dnsmasq systemd override directory 
+  file:
+    path: /etc/systemd/system/dnsmasq.service.d
+    state: directory
+    mode: '0755'
+
+- name: Create systemd override for dnsmasq to load proper configs
+  copy:
+    dest: /etc/systemd/system/dnsmasq.service.d/override.conf
+    content: |
+      [Service]
+      ExecStart=
+      ExecStart=/usr/sbin/dnsmasq --conf-file=/etc/dnsmasq.conf --conf-dir=/etc/dnsmasq.d
+  notify:
+    - reload systemd
+    - restart dnsmasq
+
+- name: restart dnsmask #  I shouldn't have to do this but I do
+  ansible.builtin.service:
+    name: dnsmasq
+    state: restarted
+
+- name: restart NetworkManager # I wanted to reload but restart required
+  ansible.builtin.service:
+    name: NetworkManager
+    state: restarted
+...

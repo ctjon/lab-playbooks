@@ -1,0 +1,56 @@
+---
+- name: setup bash_profiles
+  ansible.builtin.template:
+    src: templates/bash_profile.j2
+    dest: "~{{ansible_user}}/.bash_profile"
+    owner: "{{ansible_user}}"
+    group: "{{ansible_user}}"
+    mode: 0600
+
+- name: setup .ansible.cfg
+  ansible.builtin.template:
+    src: templates/ansible.cfg.j2
+    dest: "~{{ansible_user}}/.ansible.cfg"
+    owner: "{{ansible_user}}"
+    group: "{{ansible_user}}"
+    mode: 0600
+  when: setup_ansible_config == true
+
+- name: copy .bash_profile to root
+  ansible.builtin.copy:
+    src: files/bash_profile
+    dest: /root/.bash_profile
+    owner: root
+    group: root
+    mode: 0600
+
+- name: install xauth for systems other than RHEL8
+  ansible.builtin.package:
+    name: xauth
+    state: latest
+  when: not ((ansible_distribution == "RedHat") and (ansible_distribution_major_version == "8"))
+
+- name: copy ssh-keys to remote host
+  block:
+    - name: copy private ssh-keys to remote host
+      ansible.builtin.copy:
+        src: "~/.ssh/{{item}}"
+        dest: "~{{ansible_user}}/.ssh/{{item}}"
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+        mode: 0600
+      with_items:
+        - "{{ssh_private_key_list}}"
+
+    - name: copy public ssh-keys to remote host
+      ansible.builtin.copy:
+        src: "~/.ssh/{{item}}.pub"
+        dest: "~{{ansible_user}}/.ssh/{{item}}.pub"
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+        mode: 0600
+      with_items:
+        - "{{ssh_public_key_list}}"
+  when: copy_ssh_keys == true
+
+...

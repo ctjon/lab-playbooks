@@ -1,0 +1,95 @@
+#
+# Playbook to Perform Common Configuration on {RHEL,CentOS}{6,7} Systems
+# Author: Chris Tjon
+#
+# Tasks Performed:
+#  - Install Of GPG Keys for Distribution Repo and EPEL
+#  - Configuration of Local Distribution Repo and Local EPEL Repo
+#  - Disable Public Internet Repos for Distribution and EPEL
+#  - Install Required Packages
+#  - Configure for Retention of only latest kernel 
+#
+---
+#
+# We need libselinux-python for the next set of tasks to work.  For CentOS-6
+# it will just install with the package module but with RHEL-6, we have the 
+# problem that our system is unregistered and so no yum repos are enabled.
+# Given that I don't want to register every test system I create, I chose to
+# install the libselinux-python rpm in my ks-config.  This has the added 
+# benefit of getting any necessary prerequisite packages as well.  I considered 
+# the alternative of installing directly from the URL but concluded this would
+# require version specifics to be in the playbook and this would break as soon
+# as the next version of libselinux-python was release.  This problem goes away
+# in RHEL/CentOS 7 so eventually when RHEL/CentOS 6 are deprecated this will no
+# longer be necessary
+#
+- name: rhel-centos6.yml - Install RHEL GPG Key and Repo Files
+  block:
+    - name: rhel-centos6.yml - install RHEL rpm_gpg_key
+      rpm_key:
+        state: present
+        key: "{{ rhel_gpg_key_url }}"
+
+    - name: rhel-centos6.yml - install custom rhel repo files
+      template:
+        src: rhel/server0-rhel.repo.j2
+        dest: /etc/yum.repos.d/server0-rhel.repo
+        owner: root
+        group: root
+        mode: 0644
+  when: ansible_distribution == "RedHat"
+
+- name: rhel-centos6.yml - Install CentOS GPG Key and Repo Files
+  block:
+    - name: rhel-centos6.yml - install CentOS rpm_gpg_key
+      rpm_key:
+        state: present
+        key: "{{ centos_gpg_key_url }}"
+
+    - name: rhel-centos6.yml - install custom CentOS repo files
+      template:
+        src: centos/server0-centos.repo.j2
+        dest: /etc/yum.repos.d/server0-centos.repo
+        owner: root
+        group: root
+        mode: 0644
+  when: ansible_distribution == "CentOS"
+
+- name: rhel-centos6.yml - install EPEL rpm_gpg_key
+  rpm_key:
+    state: present
+    key: "{{ epel_gpg_key_url }}"
+
+- name: rhel-centos6.yml - install custom epel repo files
+  template:
+    src: epel/server0-epel.repo.j2
+    dest: /etc/yum.repos.d/server0-epel.repo
+    owner: root
+    group: root
+    mode: 0644
+
+- name: rhel-centos6.yml - Install yum-utils and libselinux-python
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - yum-utils
+    - libselinux-python
+
+- name: rhel-centos6.yml - disable RHEL/CentOS internet repositories
+  command: yum-config-manager --disable "{{ item }}" --save
+  with_items: 
+    - "{{ rhel_repos_list }}"
+    - "{{ epel_repos_list }}"
+  when: ansible_distribution == "RedHat"
+
+- name: rhel-centos6.yml - disable RHEL/CentOS internet repositories
+  command: yum-config-manager --disable "{{ item }}" --save
+  with_items: 
+    - "{{ centos_repos_list }}"
+    - "{{ epel_repos_list }}"
+  when: ansible_distribution == "CentOS"
+
+- name: rhel-centos6.yml - Clean up all but the most recent kernel
+  command: package-cleanup --oldkernels --count="{{installed_kernel_limit}}" -y
+...

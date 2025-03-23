@@ -1,0 +1,16 @@
+##---
+#
+# Configure test vm on server0
+#
+
+- hosts: server0
+  become: yes
+
+  vars_files: 
+    - ../ansible_global_vars/group_vars/all
+    - ../ansible_global_vars/secret_vars/secrets.yml
+
+  roles:
+    - role: kvm-create-vm
+      tags: ['kvm-create-vm']
+

@@ -1,0 +1,25 @@
+---
+- name: Install tftp-server
+  ansible.builtin.package:
+    name: tftp-server,firewalld
+    state: latest
+  notify: restart tftp
+
+- name: configure trusted firewall zone for TFTP services
+  ansible.builtin.firewalld:
+    zone: "{{trusted_network_firewall_zone}}"
+    service: tftp
+    immediate: yes
+    state: enabled
+    permanent: yes
+  when: trusted_network_firewall_zone is defined
+
+- name: start and enable tftp service
+  ansible.builtin.service:
+    name: tftp
+    state: started
+    enabled: yes
+
+- name: make sure tftp is enabled (there seems to be a bug to work around here)
+  command: systemctl enable tftp
+  become: yes

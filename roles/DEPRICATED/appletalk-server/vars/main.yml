@@ -1,0 +1,21 @@
+---
+tm_group: "tm_users"
+tm_group_id: 999
+
+tm_ports:
+  - 201/tcp   #at-rtmp
+  - 201/udp   #at-rtmp
+  - 202/tcp   #at-nbp
+  - 202/udp   #at-nbp
+  - 204/tcp   #at-echo
+  - 204/udp   #at-echo
+  - 206/tcp   #at-zis
+  - 206/udp   #at-zis
+  - 427/tcp   #svrloc
+  - 427/udp   #svrloc
+  - 548/tcp   #afpovertcp
+  - 548/udp   #afpovertcp
+  - 1900/tcp  #ssdp
+  - 1900/udp  #ssdp
+  - 5353/tcp  #mdns
+  - 5353/udp  #mdns

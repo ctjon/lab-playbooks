@@ -1,0 +1,64 @@
+---
+- name: Install NetworkManager if necessary
+  ansible.builtin.dnf:
+    name: NetworkManager
+    state: present
+
+- name: Install NetworkManager if necessary
+  ansible.builtin.service:
+    name: NetworkManager
+    state: started
+    enabled: true
+
+#- name: Delete existing eth0 interface connection
+#  community.general.nmcli: 
+#    conn_name: "{{my_network_interface}}"
+#    state: absent
+#  ignore_errors: true  # Connection may not exist which generates an error
+
+- name: Configure bridge {{my_bridge_name}}
+  community.general.nmcli:
+    conn_name: "{{my_bridge_name}}"
+    ifname: "{{my_bridge_name}}"
+    type: bridge
+    ip4: "{{my_network_ipaddr}}/{{my_network_prefix}}"
+    gw4: "{{my_network_gateway}}"
+    dns4: "{{my_network_dns_servers | join(',')}}"
+    method6: disabled
+    state: present
+
+- name: Add physical interface {{my_network_interface}} to bridge {{my_bridge_name}}
+  community.general.nmcli:
+    conn_name: "{{my_network_interface}}-slave"
+    ifname: "{{my_network_interface}}"
+    type: ethernet
+    method6: disabled
+    master: "{{my_bridge_name}}"
+    slave_type: bridge
+    autoconnect: yes
+    state: present
+
+- name: Activate bridge connection
+  community.general.nmcli:
+    conn_name: "{{ my_bridge_name }}"
+    state: up
+  changed_when: false
+
+- name: Activate slave (eth0) connection
+  community.general.nmcli:
+    conn_name: "{{ my_network_interface }}-slave"
+    state: up
+  changed_when: false
+
+- name: Wait for SSH to reconnect in case of network disconnect
+  ansible.builtin.wait_for_connection:
+    timeout: 300  # Wait up to 5 minutes
+
+- name: validate bridge is up and has a valid IP assignment
+  ansible.builtin.shell: ip addr show "{{ my_bridge_name }}"
+  register: bridge_status
+  changed_when: false
+
+- name: Use debug to display bridge status
+  ansible.builtin.debug:
+    var: bridge_status.stdout_lines

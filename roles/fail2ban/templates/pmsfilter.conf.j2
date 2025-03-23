@@ -1,0 +1,23 @@
+# Fail2Ban filter for plexmediaserver
+#
+#
+
+[INCLUDES]
+
+# Read common prefixes. If any customizations available -- read them from
+# common.local
+before = common.conf
+
+[Definition]
+
+failregex = ^ \[.*\] VERBOSE - We didn't receive any data from <HOST>:\d+ in time, dropping connection\.$
+
+ignoreregex =
+
+[Init]
+
+# "maxlines" is number of log lines to buffer for multi-line regex searches
+maxlines = 10
+datepattern = %%b %%d, %%Y %%H:%%M:%%S.%%f
+
+# Author: dthomson

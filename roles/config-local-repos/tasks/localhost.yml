@@ -1,0 +1,77 @@
+---
+- name: localhost.yml - Check to see if {{repoName}}.repo requires backup
+  ansible.builtin.stat:
+    path: "/etc/yum.repos.d/{{repoName}}.repo"
+  register: result
+
+- name: localhost.yml - Backup original {{repoName}}.repo to /etc/yum.repos.d/save directory
+  ansible.builtin.copy:
+    src: "/etc/yum.repos.d/{{repoName}}.repo"
+    dest: "/etc/yum.repos.d/save/{{repoName}}.repo"
+    owner: root
+    group: root
+    mode: '0644'
+    remote_src: true
+  when: result.stat.exists
+    
+- name: localhost.yml - Remove original {{repoName}}.repo from /etc/yum.repos.d
+  ansible.builtin.file:
+    path: "/etc/yum.repos.d/{{repoName}}.repo"
+    state: absent
+
+- name: localhost.yml - Configure {{repoName}}.repo to install/update from local server filesystem
+  template: 
+    src: "fedora/localhost/{{repoName}}-local.repo.j2"
+    dest: "/etc/yum.repos.d/{{repoName}}-local.repo"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Create {{install_dir}} mount point
+  ansible.builtin.file:
+    path: "{{install_dir}}"
+    state: directory
+    recurse: no
+    owner: root
+    group: root
+    mode: 0700
+
+- name: mount {{install_dir}}
+  ansible.builtin.mount:
+    path: "{{ install_dir }}"
+    src: "{{install_dev}}"
+    fstype: "{{ install_vol_fstype }}"
+    opts: "{{ install_vol_opts }}"
+    state: mounted
+
+- name: set permissions on {{install_dir}} after mount
+  ansible.builtin.file:
+    path: "{{install_dir}}"
+    state: directory
+    recurse: no
+    owner: "{{install_dir_owner}}"
+    group: "{{install_dir_group}}"
+    mode: 0755
+
+- name: Special Configuration of {{archive_dir}} on server0 only
+  block:
+    - name: Create {{archive_dir}} mount point
+      ansible.builtin.file:
+        path: "{{archive_dir}}"
+        state: directory
+        recurse: no
+        owner: "{{archive_dir_owner}}"
+        group: "{{archive_dir_group}}"
+        mode: 0755
+
+    - name: mount {{archive_dir}}
+      ansible.builtin.mount:
+        path: "{{ archive_dir }}"
+        src: "{{archive_dev}}"
+        fstype: "{{ archive_vol_fstype }}"
+        opts: "{{archive_vol_opts}}"
+        state: mounted
+
+  when: ansible_hostname == "server0"
+
+...

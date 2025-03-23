@@ -1,0 +1,29 @@
+---
+- name: Configure DNS Resolver for systemd-resolved 
+  block:
+    - name: create /etc/systemd/resolv.conf.d
+      ansible.builtin.file:
+        path: "/etc/systemd/resolv.conf.d"
+        state: directory
+        mode: 0755
+        owner: root
+        group: root
+        seuser: system_u
+        serole: object_r
+        setype: etc_t
+        selevel: s0
+
+    - name: fedora 34+ setup /etc/systemd/resolved.conf.d/{{ansible_hostname}}.conf
+      ansible.builtin.template:
+        src: resolved.conf.j2
+        dest: /etc/systemd/resolved.conf.d/{{ansible_hostname}}.conf
+        owner: root
+        group: root
+        mode: 0644
+        seuser: system_u
+        serole: object_r
+        setype: etc_t
+        selevel: s0
+      notify: restart systemd-resolved
+  when: (((ansible_distribution == "Fedora") and (ansible_distribution_major_version >= "33")) or (((ansible_distribution == "RedHat") or (ansible_distribution == "CentOS")) and (ansible_distribution_major_version >= "8")))
+

@@ -1,0 +1,35 @@
+
+TIMEZONE: "America/Phoenix"
+time_servers:
+  - 0.rhel.pool.ntp.org
+  - 1.rhel.pool.ntp.org
+  - 2.rhel.pool.ntp.org
+  - 3.rhel.pool.ntp.org
+
+################################################################################
+# Network Configuration Parameters                                             #
+################################################################################
+primary_hostname: gatekeeper
+domain_name: internal.tjon.net
+primary_subnet: 172.16.1.0/24
+primary_ipaddr: 172.16.1.1
+primary_prefix: 24
+primary_short_net: 172.16.1
+primary_broadcast: 172.16.1.255
+primary_netmask: 255.255.255.0
+primary_gateway: 172.16.1.1
+mtu_size: 9000
+ipv6_enabled: "no"
+search_domains: 
+ - internal.tjon.net
+ - tjon.net
+dns_servers: 
+ - 172.16.1.1
+primary_interface: eth0
+primary_bridge: br0
+
+################################################################################
+# OPENVPN Server Configuration Parameters                                      #
+################################################################################
+openvpn_udp_server_subnet: 172.16.5.0/24
+openvpn_tcp_server_subnet: 172.16.6.0/24

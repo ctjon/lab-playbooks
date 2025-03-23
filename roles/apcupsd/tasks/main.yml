@@ -1,0 +1,48 @@
+---
+- name: install apcupsd and firewalld packages
+  ansible.builtin.package:
+    name: apcupsd,firewalld
+    state: latest
+
+- name: setup apcupsd.conf file
+  ansible.builtin.template:
+    src: apcupsd.conf.j2
+    dest: /etc/apcupsd/apcupsd.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart apcupsd
+
+- name: restore selinux permissions on /etc/apcupsd
+  ansible.builtin.command: restorecon -RFv /etc/apcupsd
+
+- name: create {{logdir}} directory
+  ansible.builtin.file:
+    path: "{{logdir}}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: restore selinux permissions on {{logdir}}
+  ansible.builtin.command: restorecon -RFv "{{logdir}}"
+
+- name: start and enable apcupsd
+  ansible.builtin.service:
+    name: apcupsd
+    state: started
+    enabled: yes
+
+- name: make sure firewalld is running and enabled
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: open NIS port in internal Firewall zone
+  ansible.builtin.firewalld:
+    zone: "{{my_network_firewall_zone}}"
+    service: apcupsd
+    immediate: yes
+    state: enabled
+    permanent: yes

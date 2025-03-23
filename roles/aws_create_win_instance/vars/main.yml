@@ -1,0 +1,21 @@
+---
+aws_access_key:
+aws_secret_key:
+aws_win_prefix: ctjon_win_
+aws_instance_name: default
+aws_region: us-west-1 
+aws_zone: us-west-1c
+#aws_image: ami-0bb7f096ddf7390b7
+aws_image: ami-0f82c8e9ef453b0fa
+#aws_instance_type: t2.micro
+aws_instance_type: t2.medium
+aws_key_pair_name: ctjon 
+aws_security_group: demo
+aws_sg_id: sg-64299403
+aws_vpc_id: vpc-7b35821e
+aws_vpc_subnet_id: subnet-6f16cb36
+aws_instance_count: 3
+aws_win_vm_group: win_aws_ctjon
+public_ip_needed: yes
+admin_password: "myTempPassword123!"
+#new_hostname: "{{aws_win_prefix + aws_instance_name + item| regex_replace('_','-')}}"

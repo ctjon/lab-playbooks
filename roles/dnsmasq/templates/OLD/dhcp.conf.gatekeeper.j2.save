@@ -1,0 +1,33 @@
+# {{ansible_managed}}
+
+# Test for the architecture of a netboot client. PXE clients are
+# supposed to send their architecture as option 93. (See RFC 4578) 
+dhcp-match=x86PC, option:client-arch, 0 #BIOS x86
+dhcp-match=BC_EFI, option:client-arch, 7 #EFI x86-64 
+
+# Load different PXE boot image depending on client architecture
+pxe-service=tag:x86PC,X86PC, "Install Linux on x86 legacy BIOS", pxelinux
+pxe-service=tag:BC_EFI,BC_EFI, "Install Linux on x86-64 UEFI", uefi/bootx64.efi
+
+# Set boot file name only when tag is "bios" or "uefi"
+dhcp-boot=tag:x86PC,pxelinux.0  # for Legacy BIOS detected by dhcp-match above
+dhcp-boot=tag:BC_EFI,uefi/bootx64.efi # for UEFI arch detected by dhcp-match above
+
+# DHCP range
+{% for item in dnsmasq_dhcp_interfaces %}
+# {{item.name}}
+dhcp-range={{item.name}},{{item.dhcp_start}},{{item.dhcp_end}},{{item.lease}}
+dhcp-option={{item.name}},option:ntp-server,{{item.ntp_server}}
+dhcp-option={{item.name}},option:router,{{item.router}}
+{% endfor %}
+
+# global
+dhcp-lease-max=155
+# LOCAL DNS SETUP HERE
+# server={{primary_gateway}}
+{% for item in dns_servers %}
+server={{item}}
+{% endfor %}
+
+#dhcp-host=d0:50:99:82:e7:2b,192.168.10.46
+#dhcp-host=turnip,192.168.10.45

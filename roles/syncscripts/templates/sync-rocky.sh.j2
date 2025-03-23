@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+# rsync of Rocky Linux Binary Distribution
+# {{ ansible_managed }}
+#
+
+echo "********************************************************************************"
+echo "* UPDATING ROCKY LINUX BINARIES                                                *"
+echo "********************************************************************************"
+export SRCDIR=rsync://{{rocky_linux_rsync_server}}/
+export TGTDIR={{linux_install_server_path}}/rocky/
+
+mkdir -p $TGTDIR
+
+{% if sync_script_retries == true %}
+# set return code to be false to force first iteration of while loop ironically this give error because it is an error:-)
+$? = 1
+
+while [ "$?" -ne "0" ]
+do
+	sleep 10
+{% endif %}
+	date
+	rsync -aHKvz --keep-dirlinks --delete --delete-during --delete-excluded --progress \
+{% for item in rocky_version_includes_list %}
+        --include '{{item}}' \
+{% endfor %}
+{% for item in rocky_repo_includes_list %}
+        --include '{{item}}' \
+{% endfor %}
+{% for item in rocky_version_excludes_list %}
+        --exclude '{{item}}' \
+{% endfor %}
+{% for item in rocky_repo_excludes_list %}
+        --exclude '{{item}}' \
+{% endfor %}
+ 	$SRCDIR $TGTDIR
+{% if sync_script_retries == true %}
+done
+{% endif %}
+date

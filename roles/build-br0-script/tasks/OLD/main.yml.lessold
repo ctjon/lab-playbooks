@@ -1,0 +1,68 @@
+---
+- name: install packages for Fedora Systems
+  package:
+    name: bridge-utils, firewalld
+    state: latest
+  when:
+    - ansible_facts['distribution'] == "fedora"
+
+- name: install packages for RHEL9 Systems
+  package:
+    name: firewalld
+    state: latest
+  when:
+    - ansible_facts['distribution'] == "RedHat"
+    - ansible_facts['distribution_major_version'] == "9"
+#
+# "nmcli con add type bridge ifname br0"
+#
+- name: setup br0 with nmcli
+  community.general.nmcli:
+    conn_name: "{{ trusted_network_bridge }}"
+    type: bridge
+    ip4: "{{ trusted_network_ipaddr }}"
+    gw4: "{{ trusted_network_gateway }}"
+    dns4: "{{ trusted_network_dns_servers }}"
+    dns4_search: "{{ trusted_network_domain_name }}"
+    method6: disabled
+    mtu: 1500
+    stp: yes
+    state: present
+  notify: restart NetworkManager
+
+#
+# "nmcli con add type ethernet ifname eth0 master br0"
+#
+- name: setup eth0 as br0 bridge-slave
+  community.general.nmcli:
+    type: bridge-slave
+    conn_name: "bridge-slave-{{trusted_network_interface}}"
+    hairpin: false
+    ifname: "{{ trusted_network_interface }}"
+    master: "{{ trusted_network_bridge }}"
+    mtu: 1500
+    state: present
+  notify: restart NetworkManager
+
+- name: make sure firewalld is running and enabled
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: reconfigure firewall for bridge
+  ansible.builtin.firewalld:
+    zone: "{{trusted_network_firewall_zone}}"
+    interface: "{{trusted_network_bridge}}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+- name: Set ip forwarding sysctl and reload if necessary
+  ansible.builtin.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+  notify: restart NetworkManager

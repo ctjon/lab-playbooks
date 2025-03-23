@@ -1,0 +1,53 @@
+---
+- name: RHEL/CentOS 6+ Reboot
+  block:
+    - name: RHEL/CentOS 6+ - check to see if we need a reboot
+      ansible.builtin.shell: "needs-restarting|grep '^[0-9]'|wc -l"
+      register: result
+
+#    - name: RHEL/CentOS 6+ Reboot - display result
+#      ansible.builtin.debug:
+#        var: result.stdout
+#
+    - name: RHEL/CentOS 6+ - Reboot Servers
+      ansible.builtin.reboot:
+      become: true
+      async: 0
+      poll: 0
+      when: result.stdout > "0"
+  when: 
+    - ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
+    - ansible_distribution_major_version >= "6"
+
+- name: Fedora 29+ Reboot
+  block:
+    - name: Fedora 29+ - check to see if we need a reboot
+      ansible.builtin.shell: "dnf needs-restarting|wc -l"
+      register: result
+      args:
+        warn: false
+
+#    - name: Fedora 29+ Reboot - display result
+#      ansible.builtin.debug:
+#        var: result.stdout
+#
+    - name: Fedora 29+ - Reboot Servers
+      ansible.builtin.reboot:
+      become: true
+      async: 0
+      poll: 0
+      when: result.stdout > "0"
+  when: 
+    - ansible_distribution == "Fedora"
+    - ansible_distribution_major_version >= "29"
+
+- name: wait for Servers to reboot
+  ansible.builtin.wait_for:
+    port: 22
+    host: "{{ inventory_hostname }}"
+    state: started
+    delay: 30
+    timeout: 900 # set this long for the case of selinux autorelabeling
+  become: false
+  delegate_to: localhost
+...

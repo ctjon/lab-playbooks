@@ -1,0 +1,10 @@
+---
+#
+# AWS Windows Test
+#
+
+- hosts: localhost
+
+  roles:
+    - role: aws_teardown_win_instance
+      tags: ['aws_teardown_win_instance']

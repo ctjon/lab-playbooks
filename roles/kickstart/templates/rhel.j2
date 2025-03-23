@@ -1,0 +1,100 @@
+# {{ ansible_managed }}
+
+LABEL Main Menu
+        MENU LABEL Main Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/default
+
+LABEL Linux Menu
+        MENU LABEL Linux Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/LinuxMenu
+
+LABEL rhel-synchosts
+        MENU RHEL-synchost Installs
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/rhel-synchosts
+
+LABEL rhel-testvms
+        MENU RHEL-testvm Installs
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/rhel-testvms
+
+LABEL rhel-satclients
+        MENU RHEL-satclient Installs
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/Linux/rhel-satclients
+
+#
+# RHEL 9
+#
+label RHEL-9-x86_64-Latest
+  menu label Install RHEL-9-x86_64-Latest Server
+  kernel images/rhel/9/x86_64/vmlinuz
+  append initrd=images/rhel/9/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/9/x86_64
+
+label RHEL-9-x86_64-rescue
+  menu label Rescue RHEL-9-x86_64 system
+  kernel images/rhel/9/x86_64/vmlinuz
+  append initrd=images/rhel/9/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/9/x86_64 rescue
+
+#
+# RHEL 8
+#
+label RHEL-8-x86_64-Latest
+  menu label Install RHEL-8-x86_64-Latest Server
+  kernel images/rhel/8/x86_64/vmlinuz
+  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/8/x86_64
+
+label RHEL-8-x86_64-rescue
+  menu label Rescue RHEL-8-x86_64 system
+  kernel images/rhel/8/x86_64/vmlinuz
+  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 keymap=us lang=en_US ksdevice=eth0 ip=dhcp inst.repo={{linux_install_server_url}}/rhel/8/x86_64 rescue
+
+#
+# Server1-RHEL9-BIOS
+#
+label server1-rhel9-bios
+  menu label RHEL9 on Server1 w/BIOS (server1-rhel9-bios-ks.cfg)
+  kernel images/rhel/9/x86_64/vmlinuz
+  append initrd=images/rhel/9/x86_64/initrd.img net.ifnames=0 zram.enabled=0 biosdevname=0 noipv6 ksdevice=eth0 inst.ks={{linux_install_server_url}}/ks-configs/server1-rhel9-bios-ks.cfg
+
+#
+#
+# Server1-RHEL8-BIOS
+#
+label server1-rhel8-bios
+  menu label RHEL8 on Server1 w/BIOS (server1-rhel8-bios-ks.cfg)
+  kernel images/rhel/8/x86_64/vmlinuz
+  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 zram.enabled=0 biosdevname=0 noipv6 ksdevice=eth0 inst.ks={{linux_install_server_url}}/ks-configs/server1-rhel8-bios-ks.cfg
+
+#
+# Satellite 6 on RHEL8
+#
+label satellite6-rhel8
+  menu label satellite6 on RHEL8
+  kernel images/rhel/8/x86_64/vmlinuz
+  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 noipv6 ksdevice=eth0 inst.repo={{linux_install_server_url}}/rhel/8/x86_64 inst.ks={{linux_install_server_url}}/ks-configs/satellite6-rhel8-ks.cfg
+
+#       
+# kvmhost1
+#       
+label kvmhost1
+  menu label Install KVM Host #1
+  kernel images/rhel/9/x86_64/vmlinuz
+  append initrd=images/rhel/9/x86_64/initrd.img net.ifnames=0 zram.enabled=0 biosdevname=0 noipv6 ksdevice=eth0 inst.ks={{linux_install_server_url}}/ks-configs/kvmhost1-ks.cfg
+
+#
+# kvmhost2
+#
+label kvmhost2
+  menu label Install KVM Host #2
+  kernel images/rhel/9/x86_64/vmlinuz
+  append initrd=images/rhel/9/x86_64/initrd.img net.ifnames=0 zram.enabled=0 biosdevname=0 noipv6 ksdevice=eth0 inst.ks={{linux_install_server_url}}/ks-configs/kvmhost2-ks.cfg
+
+label fipstest
+  menu label fipstest
+  kernel images/rhel/8/x86_64/vmlinuz
+  append initrd=images/rhel/8/x86_64/initrd.img net.ifnames=0 biosdevname=0 fips=1 ipv6.disable=1 ksdevice=eth0 ks={{linux_install_server_url}}/ks-configs/fipstest-ks.cfg
+
+

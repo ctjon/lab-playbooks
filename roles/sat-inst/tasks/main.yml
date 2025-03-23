@@ -1,0 +1,167 @@
+---
+#
+# Satellite 6.11 Installer Playbook
+#
+
+- name: Disable all Repos
+  ansible.builtin.command: subscription-manager repos --disable "*"
+  tags:
+    - sat-inst
+    - sat-config
+
+- name: Enable Required Repos for RHEL8
+  ansible.builtin.command: subscription-manager repos \
+      --enable=rhel-8-for-x86_64-baseos-rpms \
+      --enable=rhel-8-for-x86_64-appstream-rpms \
+      --enable=satellite-6.13-for-rhel-8-x86_64-rpms \
+      --enable=satellite-maintenance-6.13-for-rhel-8-x86_64-rpms
+  when: ansible_distribution_major_version == "8"
+  tags:
+    - sat-inst
+    - sat-config
+
+- name: Enable the Satellite dnf module for RHEL8
+  ansible.builtin.command: dnf -y module enable satellite:el8
+  when: ansible_distribution_major_version == "8"
+  register: result
+  changed_when:
+    - '"Enabling module streams" in result.stdout'
+    - '"Complete!" in result.stdout'
+  tags:
+    - sat-inst
+    - sat-config
+
+- name: Apply Updates
+  ansible.builtin.package:
+    name: "*"
+    state: latest
+  tags:
+    - sat-inst
+    - sat-config
+    
+- name: install packages
+  ansible.builtin.package:
+    name: sos
+    state: latest
+  tags:
+    - sat-inst
+    - sat-config
+
+- name: Ensure that firewalld is installed
+  ansible.builtin.package:
+    name: firewalld
+    state: latest
+  tags:
+    - sat-inst
+    - sat-config
+
+- name: Ensure that firewalld is started
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+  tags: 
+    - sat-inst
+    - sat-config
+
+- name: assign eth0 to "public" zone
+  ansible.builtin.firewalld:
+    zone: public
+    interface: eth0
+    state: enabled
+  tags: 
+    - sat-inst
+    - sat-config
+
+- name: deploy firewalld rules
+  ansible.builtin.firewalld:
+    zone: public
+    immediate: yes
+    port: "{{ item }}"
+    state: enabled
+    permanent: yes
+  with_items:
+    - "53/udp"
+    - "53/tcp"
+    - "67/udp"
+    - "69/udp"
+    - "80/tcp"
+    - "443/tcp"
+    - "5647/tcp"
+    - "8000/tcp"
+    - "8140/tcp"
+    - "9090/tcp"
+  tags: 
+    - sat-inst
+    - sat-config
+
+- name: Install satellite
+  ansible.builtin.package:
+    name: satellite
+    state: latest
+  tags: 
+    - sat-inst
+    - sat-config
+
+- name: Execute satellite-installer
+  ansible.builtin.command: satellite-installer --scenario satellite \
+    --foreman-initial-organization "{{ foreman_initial_organization }}" \
+    --foreman-initial-location "{{ foreman_initial_location }}" \
+    --foreman-initial-admin-username "{{ foreman_admin_username }}" \
+    --foreman-initial-admin-password "{{ foreman_admin_password }}" \
+    --enable-foreman-proxy-plugin-ansible \
+    --foreman-proxy-dns-managed=false \
+    --foreman-proxy-dhcp-managed=false
+  tags: 
+    - sat-inst
+
+#  - name: Execute satellite-installer
+#    ansible.builtin.command: satellite-installer --scenario satellite \
+#      --foreman-initial-organization "{{ foreman_initial_organization }}" \
+#      --foreman-initial-location "{{ foreman_initial_location }}" \
+#      --foreman-proxy-dns "{{ foreman_proxy_dns }}" \
+#      --foreman-proxy-dns-interface "{{ foreman_proxy_dns_interface }}" \
+#      --foreman-proxy-dns-zone "{{ foreman_proxy_dns_zone }}" \
+#      --foreman-proxy-dns-forwarders "{{ foreman_proxy_dns_forwarders }}"  \
+#      --foreman-proxy-dns-reverse "{{ foreman_proxy_dns_reverse }}" \
+#      --foreman-proxy-tftp "{{ foreman_proxy_tftp }}" \
+#      --foreman-proxy-tftp-servername "{{ foreman_proxy_tftp_servername }}" \
+#      --foreman-initial-admin-username "{{ foreman_admin_username }}" \
+#      --foreman-initial-admin-password "{{ foreman_admin_password }}"
+#  tags: 
+#    - sat-inst
+
+- name: create {{user_home_dir}}/.hammer directory
+  ansible.builtin.file:
+    path: "{{user_home_dir}}/.hammer"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0700
+    state: directory
+  tags: 
+    - sat-inst
+    - sat-config
+
+- name: install {{user_home_dir}}/.hammer/cli_config.yml
+  ansible.builtin.template:
+    src: cli_config.yml.j2
+    dest: "{{user_home_dir}}/.hammer/cli_config.yml"
+    owner: "{{user}}"
+    group: "{{user}}"
+    mode: 0600
+  tags: 
+    - sat-inst
+    - sat-config
+
+- name: Install RedHat Insights on Satellite Server
+  ansible.builtin.command: satellite-maintain packages install -y insights-client
+  tags:
+    - sat-inst
+    - sat-config
+
+- name: Register Satellite Server with RedHat Insights
+  ansible.builtin.command: satellite-installer --register-with-insights
+  tags:
+    - sat-inst
+    - sat-config
+
+

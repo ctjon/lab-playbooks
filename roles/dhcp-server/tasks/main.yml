@@ -1,0 +1,30 @@
+---
+- name: Install dhcp-server
+  ansible.builtin.package:
+    name: dhcp-server,firewalld
+    state: latest
+  notify: restart dhcpd
+
+- name: configure trusted firewall zone for DHCP services
+  ansible.builtin.firewalld:
+    zone: "{{trusted_network_firewall_zone}}"
+    service: dhcp
+    immediate: yes
+    state: enabled
+    permanent: yes
+  when: trusted_network_firewall_zone is defined
+
+- name: install dhcpd.conf
+  ansible.builtin.template:
+    src: dhcpd.conf.{{ansible_hostname}}.j2
+    dest: /etc/dhcp/dhcpd.conf
+    owner: root
+    group: dhcpd
+    mode: 0644
+  notify: restart dhcpd
+
+- name: start and enable dhcpd service
+  ansible.builtin.service:
+    name: dhcpd
+    state: started
+    enabled: yes

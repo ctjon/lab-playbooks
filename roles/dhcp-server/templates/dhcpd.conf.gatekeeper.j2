@@ -1,0 +1,44 @@
+#{{ansible_managed}}
+# dhcpd.conf
+#
+# configuration file for ISC dhcpd on gatekeeper
+#
+
+# option definitions common to all supported networks...
+option domain-name "{{domain_name}}";
+option domain-name-servers {{ dns_servers | join(",") }};
+option option-128 code 128 = string;
+option option-129 code 129 = text;
+
+default-lease-time {{dhcpd_default_lease_time}};
+max-lease-time {{dhcpd_max_lease_time}};
+
+# Use this to enble / disable dynamic dns updates globally.
+ddns-update-style {{dhcpd_ddns_update_style}};
+
+# If this DHCP server is the official DHCP server for the local
+# network, the authoritative directive should be uncommented.
+{% if dhcpd_authoratative|bool == true %}
+authoritative;
+{% else %}
+#authoritative;
+{% endif %}
+
+# Use this to send dhcp log messages to a different log file (you also
+# have to hack syslog.conf to complete the redirection).
+log-facility {{dhcpd_log_level}};
+
+# {{domain_name}} subnet declaration
+subnet {{primary_short_net}}.0 netmask {{primary_netmask}} {
+  range dynamic-bootp {{dhcpd_range_start}} {{dhcpd_range_end}};
+  option domain-name-servers {{ dns_servers | join(",") }};
+  option domain-name "{{domain_name}}";
+  option routers {{primary_gateway}};
+  option broadcast-address {{primary_short_net}}.255;
+  default-lease-time {{dhcpd_default_lease_time}};
+  max-lease-time {{dhcpd_max_lease_time}};
+  allow booting;
+  allow bootp;
+  next-server {{my_tftp_server}};
+  filename "{{my_tftp_bootfile}}";
+}

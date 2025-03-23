@@ -1,0 +1,21 @@
+DEVICE={{ primary_bridge }}
+STP=no
+TYPE=Bridge
+BOOTPROTO=none
+DEFROUTE=yes
+NAME={{ primary_bridge }}
+ONBOOT=yes
+IPADDR={{primary_ipaddr}}
+PREFIX={{primary_prefix}}
+GATEWAY={{primary_gateway}}
+{% for dns_server in primary_dns_servers %}
+DNS{{loop.index}}={{dns_server}}
+{% endfor %}
+ZONE={{ public_firewall_zone }}
+IPV4_FAILURE_FATAL=no
+IPV6INIT=no
+IPV6_AUTOCONF=no
+IPV6_DEFROUTE=no
+IPV6_FAILURE_FATAL=no
+IPV6_PRIVACY=no
+

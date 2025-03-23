@@ -1,0 +1,40 @@
+#
+# group_vars/all file for linux_common
+#
+
+################################################################################
+# SSH Configuration Parameters                                                 #
+################################################################################
+ssh_root_login_permited: "no"
+ansible_XAuthLocation: /usr/bin/xauth
+use_ssh_agent: no
+copy_ssh_keys: no
+
+################################################################################
+# shell_env Configuration Parameters                                           #
+################################################################################
+setup_ansible_config: no
+setup_git_update: no
+
+################################################################################
+# Time Server/Timezone Configuration Parameters                                #
+################################################################################
+public_time_servers:
+  - 0.rhel.pool.ntp.org
+  - 1.rhel.pool.ntp.org
+  - 2.rhel.pool.ntp.org
+  - 3.rhel.pool.ntp.org
+
+################################################################################
+# Can't Remember what these are for:-(
+################################################################################
+#setup_ansible_config: no
+#setup_git_update: no
+
+################################################################################
+# Linux Operating System Default Parameters                                    #
+################################################################################
+mtu_size: 9000  
+ipv6_enabled: 'no'
+installed_kernel_limit: 2
+
