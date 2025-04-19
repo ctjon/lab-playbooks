@@ -4,9 +4,12 @@
 #
 
 - hosts: ds224
-  become: yes
+  become: no
 
   vars:
+    repo_owner: "{{ansible_user_id}}"
+    repo_group: users
+    repo_owner_homedir: "{{ansible_user_dir}}"
     linux_install_server_path: /volume1/Install/Linux
     openbsd_install_server_path: /volume1/Install/Linux
     virtio_win_rsync_path: /volume1/Install/Linux/virtio-win
