@@ -11,7 +11,7 @@
     repo_group: users
     repo_owner_homedir: "{{ansible_user_dir}}"
     linux_install_server_path: /volume1/Install/Linux
-    openbsd_install_server_path: /volume1/Install/Linux
+    openbsd_install_server_path: /volume1/Install/OpenBSD
     virtio_win_rsync_path: /volume1/Install/Linux/virtio-win
 
   roles:
