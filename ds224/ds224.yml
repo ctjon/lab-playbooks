@@ -6,6 +6,11 @@
 - hosts: ds224
   become: yes
 
+  vars:
+    linux_install_server_path: /volume1/Install/Linux
+    openbsd_install_server_path: /volume1/Install/Linux
+    virtio_win_rsync_path: /volume1/Install/Linux/virtio-win
+
   roles:
     - role: syncscripts
       tags: ['syncscripts']

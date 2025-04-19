@@ -24,7 +24,7 @@ enable_public_sshd: true
 # Trusted Network Interface Configuration Parameters                           #
 ################################################################################
 my_network_interface: eth0
-my_network_ipaddr: 172.16.1.2
+my_network_ipaddr: 172.16.1.3
 my_bridge_name: br0
 
 
@@ -151,7 +151,7 @@ tm_users:
   - {tm_username: 'chris', tm_vol_size_bytes: '1000000000000'}
   - {tm_username: 'kelly', tm_vol_size_bytes: '1000000000000'}
   
-tm_storage_vg: datavg
+tm_storage_vg: rootvg
 tm_group: tm_users
 tm_storage_lv: tmlv
 tm_storage_lv_size: 5t
@@ -198,11 +198,11 @@ fedora_architectures:
 #  - s390x
 
 fedora_versions:
-  - 40
   - 41
+  - 42
 
 openbsd_versions:
-  - 7.6
+  - 7.7
 
 vmware_versions:
   - 6.7.0

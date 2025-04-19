@@ -3,10 +3,10 @@
 #
 openbsd_rsync_server_path: mirrors.ocf.berkeley.edu/openbsd
 
-openbsd_prev_dot_release: 5
+openbsd_prev_dot_release: 6
 
 openbsd_version_includes:
-  - 7.6
+  - 7.7
 
 openbsd_version_excludes:
   - '2.*'

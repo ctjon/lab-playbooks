@@ -1,10 +1,11 @@
-vm_storage_vg: datavg
+vm_storage_vg: rootvg
 vm_storage_path: /var/lib/libvirt/images
 vm_storage_lv: imageslv
-vm_storage_lv_size: 2T
+vm_storage_lv_size: 512g
+#vm_storage_lv_size: 2T
 vm_storage_fs_type: xfs
 
-macvlan_interface: eth1
+#macvlan_interface: eth1
 
 virt_nets:
   - bridge-br0
