@@ -5,8 +5,10 @@
 rocky_linux_rsync_server: mirror.usi.edu/rocky
 
 rocky_version_includes_list:
-  - 8
   - 9
+  - 9.*
+  - 10
+  - 10.*
 
 rocky_repo_includes_list:
   - source
@@ -19,6 +21,7 @@ rocky_repo_includes_list:
 rocky_repo_excludes_list:
   - ppc64le
   - s390x
+  - riscv64
   - debug
   - "*.torrent"
   - "*.box"
@@ -26,3 +29,6 @@ rocky_repo_excludes_list:
 
 rocky_version_excludes_list:
   - 7
+  - 7.*
+  - 8
+  - 8.*
