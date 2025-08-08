@@ -3,7 +3,7 @@
 # Configure Server0
 #
 
-- hosts: server0
+- hosts: server0.nd
   become: yes
 
   vars_files: 
@@ -50,56 +50,56 @@
     - role: syncscripts
       tags: ['syncscripts']
 
-    - role: dnsmasq
-      tags: ['dnsmasq']
+#    - role: dnsmasq
+#      tags: ['dnsmasq']
 
-    - role: rsync-server
-      tags: ['rsync-server']
+#    - role: rsync-server
+#      tags: ['rsync-server']
 
     - role: apcupsd
       tags: ['apcupsd']
 
-    - role: rsyslog-server
-      tags: ['rsyslog-server']
+#    - role: rsyslog-server
+#      tags: ['rsyslog-server']
 
-    - role: http-repo
-      tags: ['http-repo']
+#    - role: http-repo
+#      tags: ['http-repo']
 
-    - role: samba-server
-      tags: ['samba-server']
+#    - role: samba-server
+#      tags: ['samba-server']
 
-    - role: time-server
-      tags: ['time-server']
+#    - role: time-server
+#      tags: ['time-server']
 
-    - role: tftp-server
-      tags: ['tftp-server']
+#    - role: tftp-server
+#      tags: ['tftp-server']
 
-    - role: plex-server
-      tags: ['plex-server']
+#    - role: plex-server
+#      tags: ['plex-server']
 
-#    - role: config-local-repos
-#      tags: ['config-local-repos']
+##    - role: config-local-repos
+##      tags: ['config-local-repos']
 
-#    - role: config-local-rpmfusion-repos
-#      tags: ['config-local-rpmfusion-repos']
+##    - role: config-local-rpmfusion-repos
+##      tags: ['config-local-rpmfusion-repos']
 
-    - role: config-local-virtio-win-repos
-      tags: ['config-local-virtio-win-repos']
+#    - role: config-local-virtio-win-repos
+#      tags: ['config-local-virtio-win-repos']
 
-    - role: virt-server
-      tags: ['virt-server']
+#    - role: virt-server
+#      tags: ['virt-server']
 
-    - role: kickstart
-      tags: ['kickstart']
+#    - role: kickstart
+#      tags: ['kickstart']
 
-    - role: fail2ban
-      tags: ['fail2ban']
+#    - role: fail2ban
+#      tags: ['fail2ban']
 
-    - role: apply-updates
-      tags: ['apply-updates']
+#    - role: apply-updates
+#      tags: ['apply-updates']
 
-#    - role: reboot-if-required
-#      tags: ['reboot-if-required']
+##    - role: reboot-if-required
+##      tags: ['reboot-if-required']
 
   tasks:
     - name: install other packages 

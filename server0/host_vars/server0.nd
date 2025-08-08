@@ -24,7 +24,7 @@ enable_public_sshd: true
 # Trusted Network Interface Configuration Parameters                           #
 ################################################################################
 my_network_interface: eth0
-my_network_ipaddr: 172.16.1.3
+my_network_ipaddr: 172.16.2.2
 my_bridge_name: br0
 
 
@@ -48,7 +48,7 @@ install_vol_opts: defaults
 install_vol_fstype: xfs
 install_dir_owner: chris
 install_dir_group: chris
-install_url: "http://install.internal.tjon.net"
+install_url: "http://install.nd.internal.tjon.net"
 
 archive_dir: /export/archive
 archive_vol: archivelv
@@ -58,7 +58,7 @@ archive_vol_fstype: xfs
 archive_vol_opts: defaults
 archive_dir_owner: chris
 archive_dir_group: chris
-archive_url: http://archive.internal.tjon.net
+archive_url: http://archive.nd.internal.tjon.net
 
 linux_install_server_hostname: server0
 linux_install_server_url: "{{install_url}}/Linux"
@@ -113,7 +113,7 @@ upstream_dns_servers:
 ################################################################################
 # Samba Configuration Parameters                                               #
 ################################################################################
-samba_workgroup: PARANOID
+samba_workgroup: TJON-ND
 samba_netbios_name: SERVER0
 
 trusted_interfaces:
@@ -121,7 +121,7 @@ trusted_interfaces:
   - "{{my_bridge_name}}"
 
 trusted_subnets:
-  - 172.16.1.0/24
+  - 172.16.2.0/24
   - 172.16.5.0/24
   - 172.16.6.0/24
   - 192.168.122.0/24
@@ -178,13 +178,12 @@ linux_distros:
   - alma
 
 rhel_versions:
-  - 8
   - 9
-#  - 10
+  - 10
 
 # rhel versions that include upgrade.img
 rhel_upgrade_versions:
-  - 7
+  - 9
 
 rhel_architectures:
   - x86_64

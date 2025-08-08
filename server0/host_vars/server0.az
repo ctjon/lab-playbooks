@@ -1,0 +1,220 @@
+#
+# host_vars file for server0
+#
+
+
+personal_server: true
+work_server: false
+test_nmcli: false
+
+use_ssh_agent: yes
+copy_ssh_keys: yes
+setup_ansible_config: yes
+setup_git_update: yes
+ssh_private_key_list:
+  - ctjon.pem
+  - ctjon-github_rsa
+
+ssh_public_key_list:
+  - ctjon-github_rsa
+
+enable_public_sshd: true
+
+################################################################################
+# Trusted Network Interface Configuration Parameters                           #
+################################################################################
+my_network_interface: eth0
+my_network_ipaddr: 172.16.1.2
+my_bridge_name: br0
+
+
+################################################################################
+# Firewall Configuration Parameters                                            #
+################################################################################
+my_network_firewall_zone: public
+additional_fw_ports:
+  - 8443
+offer_public_services: true
+
+
+################################################################################
+# Installation Source Parameters                                               #
+################################################################################
+install_dir: /export/install
+install_vol: installlv
+install_vg: rootvg
+install_dev: "/dev/{{install_vg}}/{{install_vol}}"
+install_vol_opts: defaults
+install_vol_fstype: xfs
+install_dir_owner: chris
+install_dir_group: chris
+install_url: "http://install.nd.internal.tjon.net"
+
+archive_dir: /export/archive
+archive_vol: archivelv
+archive_vg: rootvg
+archive_dev: "/dev/{{archive_vg}}/{{archive_vol}}"
+archive_vol_fstype: xfs
+archive_vol_opts: defaults
+archive_dir_owner: chris
+archive_dir_group: chris
+archive_url: http://archive.nd.internal.tjon.net
+
+linux_install_server_hostname: server0
+linux_install_server_url: "{{install_url}}/Linux"
+config_files_url: "{{install_url}}/ConfigFiles"
+
+doc_files_url: "{{install_url}}/Documentation"
+doc_files_dir: "{{install_dir}}/Documentation"
+
+################################################################################
+# Time Server Configuration Parameters                                         #
+################################################################################
+time_client_servers:
+  - "time.{{my_network_domain_name}}"
+#  - "time.{{public_network_domain_name}}"
+
+################################################################################
+# TFTP Boot Server Parameters                                                  #
+################################################################################
+tftpbootdir: /var/lib/tftpboot
+
+################################################################################
+# HTTP Server Parameters                                                       #
+################################################################################
+vhosts: 
+  - {name: server0, document_root: /var/www/html, alias: server0, fcontext: httpd_sys_content_t, lv_name: /dev/rootvg/varlv}
+  - {name: install, document_root: /export/install, alias: install, fcontext: public_content_rw_t, lv_name: "/dev/{{install_vg}}/installlv"}
+  - {name: archive, document_root: /export/archive, alias: archive, fcontext: public_content_rw_t, lv_name: "{{archive_dev}}"}
+
+################################################################################
+# SSH Configuration Parameters                                                 #
+################################################################################
+#ssh_root_login_permited: "yes"
+#allowed_ssh_users: chris root
+ssh_root_login_permited: "no"
+allowed_ssh_users: chris ctjon
+
+################################################################################
+# DNSMASQ Configuration Parameters                                             #
+################################################################################
+dnsmasq_interfaces:
+  - "{{my_network_interface}}"
+  - "{{my_bridge_name}}"
+ 
+dns_enabled: true
+dhcp_enabled: true
+pxe_enabled: true
+upstream_dns_servers:
+  - 68.105.28.11
+  - 68.105.29.11
+# Cox Servers: 68.105.28.11,68.105.29.11
+
+################################################################################
+# Samba Configuration Parameters                                               #
+################################################################################
+samba_workgroup: PARANOID
+samba_netbios_name: SERVER0
+
+trusted_interfaces:
+  - "{{my_network_interface}}"
+  - "{{my_bridge_name}}"
+
+trusted_subnets:
+  - 172.16.1.0/24
+  - 172.16.5.0/24
+  - 172.16.6.0/24
+  - 192.168.122.0/24
+
+samba_trusted_write_users:
+  - chris
+  - kelly
+
+tm_trusted_write_users:
+  - chris
+  - kelly
+
+backup_trusted_write_users:
+  - chris
+#  - kelly
+
+samba_shares:
+  - {path: /export/install, name: Install, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
+  - {path: /export/archive, name: Archive, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
+#  - {path: /export/plex, name: PlexMedia, public: 'yes', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{samba_trusted_write_users}}'}
+#  - {path: /export/backup, name: Backup, public: 'no', guest_ok: 'yes', browseable: 'yes', writeable: 'yes', printable: 'no', trusted_write_users: '{{backup_trusted_write_users}}'}
+
+################################################################################
+# Time Machine Specific Configuration Paramters (AFP & SMB)                    #
+################################################################################
+tm_users:
+  - {tm_username: 'chris', tm_vol_size_bytes: '1000000000000'}
+  - {tm_username: 'kelly', tm_vol_size_bytes: '1000000000000'}
+  
+tm_storage_vg: rootvg
+tm_group: tm_users
+tm_storage_lv: tmlv
+tm_storage_lv_size: 5t
+tm_storage_fs_type: xfs
+tm_storage_path: /export/time_machine
+  
+################################################################################
+# SSH Keys to Install on Managed Hosts                                         #
+################################################################################
+ssh_keys_required:
+  - chris-x1carbon-id_rsa.pub
+
+################################################################################
+# syncscripts variables override                                               #
+################################################################################
+repo_owner: chris
+repo_group: chris
+repo_owner_homedir: /home/chris
+
+linux_distros:
+  - fedora
+  - rhel
+  - rocky
+  - alma
+
+rhel_versions:
+  - 8
+  - 9
+#  - 10
+
+# rhel versions that include upgrade.img
+rhel_upgrade_versions:
+  - 7
+
+rhel_architectures:
+  - x86_64
+  - aarch64
+
+# DON'T THINK I NEED THIS, WAITING TO DELETE TO BE SURE
+fedora_architectures:
+  - x86_64
+  - aarch64
+#  - ppc64le
+#  - s390x
+
+fedora_versions:
+  - 41
+  - 42
+
+openbsd_versions:
+  - 7.7
+
+vmware_versions:
+  - 6.7.0
+
+vmware_architectures:
+  - x86_64
+
+windows_versions:
+  - 10
+
+windows_architectures:
+  - amd64
+
+centos8_gpg_key_url: /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+
